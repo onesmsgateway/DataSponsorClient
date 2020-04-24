@@ -20,7 +20,7 @@ export class MainComponent {
   public user: User = this.authService.currentUserValue;
   public dataMenu: any = [];
   public viewQuyTinCSKH = 0;
-  public viewQuyTinQC = 0;
+  public viewQuyTien = 0;
   public isAdmin: boolean = false;
 
   constructor(private authService: AuthService, private utilityService: UtilityService, private dataService: DataService) {
@@ -95,22 +95,24 @@ export class MainComponent {
         }
         else this.viewQuyTinCSKH = this.authService.viewQuyTinCSKH = 0;
 
-        let getQuotaQC: any = await this.dataService.getAsync('/api/AccountCimast/GetAccountCimastByAccountService?accountID=' +
-          accountID + '&serviceName=QC');
-        if (getQuotaQC.data.length > 0) {
-          quota_con_qc = getQuotaQC.data[0].VOL;
-          this.viewQuyTinQC = this.authService.viewQuyTinQC = (quota_con_qc != null && quota_con_qc > 0) ? quota_con_qc : 0;
+        // get money by account
+        let getDataAccount: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' +
+          accountID);
+        if (getDataAccount != null && getDataAccount.data.length > 0) {
+          this.viewQuyTien = getDataAccount.data[0].TOTAL_REMAIN;
         }
-        else this.viewQuyTinQC = this.authService.viewQuyTinQC = 0;
+        else {
+          this.viewQuyTien = 0;
+        }
       }
       else {
         this.viewQuyTinCSKH = this.authService.viewQuyTinCSKH = 0;
-        this.viewQuyTinQC = this.authService.viewQuyTinQC = 0;
+        this.viewQuyTien = this.authService.viewQuyTinQC = 0;
       }
     }
     else {
       this.viewQuyTinCSKH = this.authService.viewQuyTinCSKH;
-      this.viewQuyTinQC = this.authService.viewQuyTinQC
+      this.viewQuyTien = this.authService.viewQuyTinQC
     }
   }
   //#endregion

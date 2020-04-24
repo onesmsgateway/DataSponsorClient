@@ -14,7 +14,7 @@ import { UtilityService } from 'src/app/core/services/utility.service';
   styleUrls: ['./send-data.component.css']
 })
 export class SendDataComponent implements OnInit {
-
+  @ViewChild('contentSMS', { static: false }) public contentSMS;
   @ViewChild('confirmDeleteModal', { static: false }) public confirmDeleteModal: ModalDirective;
   @ViewChild('confirmDeleteFilePhoneModal', { static: false }) public confirmDeleteFilePhoneModal: ModalDirective;
   @ViewChild('confirmAfterSuccessModal', { static: false }) public confirmAfterSuccessModal: ModalDirective;
@@ -67,6 +67,7 @@ export class SendDataComponent implements OnInit {
   public PACKAGE_ID: any = null;
   public packageNum: string = "";
 
+  public amt_expected = null;
   public numberPhone = 0;
   public totalNumber = 0;
   public numberChar = 0;
@@ -82,6 +83,7 @@ export class SendDataComponent implements OnInit {
   public quota = 0;
   public role: Role = new Role();
   public loading: boolean = false;
+  public isAdmin: boolean = false;
 
   constructor(private dataService: DataService,
     private modalService: BsModalService,
@@ -150,16 +152,27 @@ export class SendDataComponent implements OnInit {
     this.minDate.setDate(this.minDate.getDate());
   }
   ngOnInit() {
+    this.getAccountLogin();
+    this.selectedItemComboboxType.push({ id: "0", itemName: this.utilityService.translate('package.send_from_sys') });
+  }
+
+  async getAccountLogin() {
+    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
+    let roleAccess = result.data[0].ROLE_ACCESS;
+    if (roleAccess != null && roleAccess == 50) {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
     this.getDataAccount();
     this.getDataPackage();
-    this.selectedItemComboboxType.push({ id: "0", itemName: this.utilityService.translate('package.send_from_sys') });
   }
 
   //#region view quy data
   public async viewQuyData(accountID) {
     if (accountID != undefined && accountID != "") {
       // get money by account
-      let getDataAccount: any = await this.dataService.getDataAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' +
+      let getDataAccount: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?account_id=' +
         accountID);
       if (getDataAccount != null && getDataAccount.data.length > 0) {
         this.total_amt = getDataAccount.data[0].TOTAL_REMAIN;
@@ -169,7 +182,7 @@ export class SendDataComponent implements OnInit {
       }
 
       // get quota by account
-      let getQuotaAccount: any = await this.dataService.getDataAsync('/api/AccountCimast/GetAccountCimastByAccountService?accountID=' +
+      let getQuotaAccount: any = await this.dataService.getAsync('/api/AccountCimast/GetAccountCimastByAccountService?accountID=' +
         accountID + '&serviceName=CSKH');
       if (getQuotaAccount != null && getQuotaAccount.data.length > 0) {
         this.quota = getQuotaAccount.data[0].VOL;
@@ -191,7 +204,7 @@ export class SendDataComponent implements OnInit {
     this.selectedItemComboboxFileList = [];
     if (this.selectedItemComboboxAccount.length > 0) {
       let accountId = this.accountId == null || this.accountId == "" ? this.selectedItemComboboxAccount[0].id : this.accountId;
-      let response: any = await this.dataService.getDataAsync('/api/AccountPhoneList/GetPhoneListByAccountAndType?accountID=' +
+      let response: any = await this.dataService.getAsync('/api/AccountPhoneList/GetPhoneListByAccountAndType?accountID=' +
         accountId + '&listType=Data-Sponsor');
       for (let index in response.data) {
         this.dataFileList.push({ "id": response.data[index].ID, "itemName": response.data[index].LIST_NAME });
@@ -206,6 +219,8 @@ export class SendDataComponent implements OnInit {
         this.isSendExcel = true;
       } else {
         this.isSendExcel = false;
+        this.amt_expected = null;
+        this.selectedItemComboboxPackage = [];
       }
     }
   }
@@ -233,7 +248,7 @@ export class SendDataComponent implements OnInit {
     }
     // get và lọc trùng sđt
     let listTelco = "VIETTEL,GPC,VMS";
-    let response: any = await this.dataService.getDataAsync('/api/AccountPhoneListDetail/GetPhoneByListID?listID=' + ids + '&listTelco=' + listTelco)
+    let response: any = await this.dataService.getAsync('/api/AccountPhoneListDetail/GetPhoneByListID?listID=' + ids + '&listTelco=' + listTelco)
     if (response) {
       this.dataPhone = response.data.listPhoneTelco;
       response = [];
@@ -251,6 +266,7 @@ export class SendDataComponent implements OnInit {
       this.totalNumber = this.dataPhoneTamp.length;
       this.phonePaging(response.data);
     }
+    this.GetPackage();
   }
   //#endregion
 
@@ -304,17 +320,17 @@ export class SendDataComponent implements OnInit {
 
   //#region load data account
   async getDataAccount() {
-    let result = await this.dataService.getDataAsync('/api/account/GetInfoAccountLogin');
+    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
     let roleAccess = result.data[0].ROLE_ACCESS;
     if (roleAccess == 50) {
       this.selectedItemComboboxAccount = [{ "id": 0, "itemName": "Chọn tài khoản" }];
-      let response: any = await this.dataService.getDataAsync('/api/account')
+      let response: any = await this.dataService.getAsync('/api/account')
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
       }
     }
     else {
-      let response = await this.dataService.getDataAsync('/api/account/GetLisAccountParentAndChild?account_id=' +
+      let response = await this.dataService.getAsync('/api/account/GetLisAccountParentAndChild?account_id=' +
         this.authService.currentUserValue.ACCOUNT_ID);
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
@@ -348,7 +364,7 @@ export class SendDataComponent implements OnInit {
   async getDataSenderName(accountID) {
     this.selectedItemComboboxSender = [];
     this.dataSenderName = [];
-    let response: any = await this.dataService.getDataAsync('/api/SenderName/GetSenderByAccountAndType?accountID=' +
+    let response: any = await this.dataService.getAsync('/api/SenderName/GetSenderByAccountAndType?accountID=' +
       accountID + "&smsType=CSKH")
     for (let index in response.data) {
       this.dataSenderName.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
@@ -361,7 +377,7 @@ export class SendDataComponent implements OnInit {
   async getDataPackage() {
     this.selectedItemComboboxPackage = [];
     this.dataPackage = [];
-    let response: any = await this.dataService.getDataAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=1&pageSize=9999&package_name=')
+    let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=1&pageSize=9999&package_name=')
     for (let index in response.data) {
       this.dataPackage.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].DATA + "MB" + " - Giá: " + response.data[index].TOTAL_AMT + " VNĐ - " + response.data[index].DATE_USE + " ngày" });
     }
@@ -556,17 +572,29 @@ export class SendDataComponent implements OnInit {
         let response: any = await this.dataService.getDataFromExcelAsync(null, file.files);
         if (response && response.err_code == 0) {
           let listSmsSend = [];
-          for (let i = 0; i < response.data.length; i++) {
-            let phone = response.data[i].PHONE;
-            let DATA_VOL = response.data[i].DATA_VOL;
-            listSmsSend.push({
-              ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: DATA_VOL, SENDER_ID: this.SENDER_ID, SMS_CONTENT: this.SMS_TEMPLATE
-              , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS
-              , PACKAGE_ID: this.PACKAGE_ID
-            });
+          if (this.isSendSMS) {
+            for (let i = 0; i < response.data.length; i++) {
+              let phone = response.data[i].PHONE;
+              let DATA_VOL = response.data[i].DATA_VOL;
+              listSmsSend.push({
+                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: DATA_VOL, SENDER_ID: this.SENDER_ID, SMS_CONTENT: this.SMS_TEMPLATE
+                , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS
+                , PACKAGE_ID: this.PACKAGE_ID
+              });
+            }
+          } else {
+            for (let i = 0; i < response.data.length; i++) {
+              let phone = response.data[i].PHONE;
+              let DATA_VOL = response.data[i].DATA_VOL;
+              listSmsSend.push({
+                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: DATA_VOL
+                , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS
+                , PACKAGE_ID: this.PACKAGE_ID
+              });
+            }
           }
 
-          let insertSms: any = await this.dataService.postDataAsync('/api/DataSMS/InsertListSMS', listSmsSend);
+          let insertSms: any = await this.dataService.postAsync('/api/DataSMS/InsertListSMS', listSmsSend);
           if (insertSms != null && insertSms.err_code == 0)
             this.notificationService.displaySuccessMessage(insertSms.err_message);
           else this.notificationService.displayErrorMessage(insertSms.err_message);
@@ -620,8 +648,8 @@ export class SendDataComponent implements OnInit {
           });
         }
       }
-      
-      let insertSms = await this.dataService.postDataAsync('/api/DataSMS/InsertListDataCampaign', listSmsSend);
+
+      let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign', listSmsSend);
       if (insertSms.err_code == 0)
         this.notificationService.displaySuccessMessage(insertSms.err_message);
       else this.notificationService.displayErrorMessage(insertSms.err_message);
@@ -632,6 +660,46 @@ export class SendDataComponent implements OnInit {
     this.loading = false;
   }
   //#endregion
+
+  // enable/disable sms content
+  enableSend(event) {
+    if (event) {
+      this.contentSMS.nativeElement.readOnly = false;
+    }
+    else {
+      this.contentSMS.nativeElement.readOnly = true;
+    }
+  }
+
+  // input money to choose package
+  async GetPackage() {
+    if (this.isSendExcel) {
+      let file = this.uploadFile.nativeElement;
+      if (this.amt_expected > 0 && file.files.length > 0) {
+        let phoneList = await this.dataService.getDataFromExcelAsync(null, file.files);
+        if (phoneList.data.length > 0) {
+          let total_amt = this.amt_expected * phoneList.data.length;
+          let detail = await this.dataService.getAsync('/api/PackageDomain/GetPackageDomainByAmt?&amt=' + total_amt);
+          if (detail.err_code == 0) {
+            this.selectedItemComboboxPackage = [];
+            this.selectedItemComboboxPackage.push({ "id": detail.data[0].ID, "itemName": detail.data[0].PACKAGE_NAME + " - " + detail.data[0].DATA + "MB" + " - Giá: " + detail.data[0].TOTAL_AMT + " VNĐ - " + detail.data[0].DATE_USE + " ngày" });
+          }
+        }
+      }
+    }
+    else {
+      if (this.selectedItemComboboxFileList.length > 0 && this.amt_expected > 0) {
+        if (this.dataPhoneTamp.length > 0) {
+          let total_amt = this.amt_expected * this.dataPhoneTamp.length;
+          let detail = await this.dataService.getAsync('/api/PackageDomain/GetPackageDomainByAmt?&amt=' + total_amt);
+          if (detail.err_code == 0) {
+            this.selectedItemComboboxPackage = [];
+            this.selectedItemComboboxPackage.push({ "id": detail.data[0].ID, "itemName": detail.data[0].PACKAGE_NAME + " - " + detail.data[0].DATA + "MB" + " - Giá: " + detail.data[0].TOTAL_AMT + " VNĐ - " + detail.data[0].DATE_USE + " ngày" });
+          }
+        }
+      }
+    }
+  }
 
   //send sms continue
   confirmAfterSuccess() {
@@ -680,7 +748,7 @@ export class SendDataComponent implements OnInit {
 
   // delete phone
   async confirmDelete() {
-    let response: any = await this.dataService.deleteDataAsync('/api/accountphonelistdetail/DeletePhone?lstId=' + this.lstId + '&phone=' + this.phone)
+    let response: any = await this.dataService.deleteAsync('/api/accountphonelistdetail/DeletePhone?lstId=' + this.lstId + '&phone=' + this.phone)
     if (response.err_code == 0) {
       this.phonePaging(response.data);
       this.confirmDeleteModal.hide();
@@ -703,9 +771,9 @@ export class SendDataComponent implements OnInit {
 
   // delete file phone list
   async confirmDeleteListFile() {
-    let response: any = await this.dataService.deleteDataAsync('/api/AccountPhoneList/' + this.lstId)
+    let response: any = await this.dataService.deleteAsync('/api/AccountPhoneList/' + this.lstId)
     if (response.err_code == 0) {
-      let responseDetail: any = await this.dataService.deleteDataAsync('/api/AccountPhoneListDetail/DeleteAccountPhoneListDetailByAccountPhoneList?id=' + this.lstId)
+      let responseDetail: any = await this.dataService.deleteAsync('/api/AccountPhoneListDetail/DeleteAccountPhoneListDetailByAccountPhoneList?id=' + this.lstId)
       if (responseDetail.err_code == 0) {
         this.bindDataPhoneList();
         this.dataPhone = [];

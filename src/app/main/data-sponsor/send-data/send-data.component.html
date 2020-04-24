@@ -17,11 +17,13 @@
                     <div class="x_content">
                         <div class="row" style="margin-bottom: 5px !important">
                             <div class="col-md-6 col-sm-6 col-xs-12 form-group">
-                                <label style="color: red;">{{ 'send_data.label' | translate }}
-                                    {{ total_amt }} VNĐ</label>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <label style="color: red;" *ngIf="isSendSMS">{{ 'send_data.quota' | translate }}
-                                    {{ quota }}</label>
+                                <div *ngIf="isAdmin">
+                                    <label style="color: red;">{{ 'send_data.label' | translate }}
+                                        {{ total_amt | number: '.0' }} VNĐ</label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label style="color: red;" *ngIf="isSendSMS">{{ 'send_data.quota' | translate }}
+                                        {{ quota }}</label>
+                                </div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12 form-group text-right">
                                 <button type="submit" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
@@ -56,16 +58,16 @@
                         <div class="row">
                             <div class="col-md-7 col-sm-12 col-xs-12">
                                 <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
-                                    <label style="margin-bottom: 0;">{{'campaign.text_countmes1' | translate}}
+                                    <label style="margin-bottom: 0;">{{'data-sms.text_countmes1' | translate}}
                                         (<span style="display:inline-block !important">{{numberChar}}</span>
-                                        {{'campaign.text_countmes2' | translate}}) (<span
-                                            style="display:inline-block !important">{{numberSMS}}</span>{{'campaign.text_countmes3' | translate}})
+                                        {{'data-sms.text_countmes2' | translate}}) (<span
+                                            style="display:inline-block !important">{{numberSMS}}</span>{{'data-sms.text_countmes3' | translate}})
                                     </label>
                                 </div>
                                 <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0">
-                                    <textarea type="text" class="form-control has-feedback-left modal-popup"
-                                        name="smsContent" rows="3" maxlength="459"
-                                        placeholder="{{ 'campaign.iSms_content' | translate }}" [(ngModel)]="smsContent"
+                                    <textarea type="text" class="form-control has-feedback-left modal-popup" #contentSMS
+                                        name="smsContent" rows="3" maxlength="459" readonly
+                                        placeholder="{{ 'data-sms.iSms_content' | translate }}" [(ngModel)]="smsContent"
                                         (change)="countSMS($event.target.value)" (keyup)="countSMS($event.target.value)"
                                         (keydow)="countSMS($event.target.value)"></textarea>
                                 </div>
@@ -75,24 +77,16 @@
                                     <label style="margin-bottom: 0;">&nbsp;
                                     </label>
                                 </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0"
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0;"
                                     *ngIf="!isSendExcel">
-                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback"
-                                        style="padding: 0;">
-                                        <angular2-multiselect [data]="dataFileList"
-                                            [(ngModel)]="selectedItemComboboxFileList"
-                                            [settings]="settingsFilterFileList" name="slFileList"
-                                            (onSelect)="getPhoneNumber($event)" (onDeSelect)="getPhoneNumber($event)">
-                                        </angular2-multiselect>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0;">
-                                        <angular2-multiselect [data]="dataPackage" [(ngModel)]="selectedItemComboboxPackage"
-                                            [settings]="settingsFilterPackage" name="slPackage">
-                                        </angular2-multiselect>
-                                    </div>
+                                    <angular2-multiselect [data]="dataFileList"
+                                        [(ngModel)]="selectedItemComboboxFileList" [settings]="settingsFilterFileList"
+                                        name="slFileList" (onSelect)="getPhoneNumber($event)"
+                                        (onDeSelect)="getPhoneNumber($event)">
+                                    </angular2-multiselect>
                                 </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0"
-                                    *ngIf="isSendExcel">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback"
+                                    style="padding: 0;margin:0" *ngIf="isSendExcel">
                                     <div class="input-group">
                                         <input type="file" #uploadFile name="uploadFile" class="form-control">
                                         <div class="input-group-btn">
@@ -106,6 +100,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12" style="padding-left: 0;">
+                                    <input type="number" class="form-control" name="amt_expected"
+                                        [(ngModel)]="amt_expected" style="padding-right: 10px;"
+                                        placeholder="{{ 'send_data.amt_expected' | translate }}"
+                                        (change)="GetPackage($event.target.value)">
+                                </div>
+                                <div class="col-md-8 col-sm-12 col-xs-12" style="padding: 0;">
+                                    <angular2-multiselect [data]="dataPackage" [(ngModel)]="selectedItemComboboxPackage"
+                                        [settings]="settingsFilterPackage" name="slPackage">
+                                    </angular2-multiselect>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -113,7 +118,7 @@
                                 <div class="checkbox" style="margin: 0;">
                                     <label><input type="checkbox" value="" class="checkbox"
                                             (change)="checkTimeSchedule($event.currentTarget.checked)">
-                                        <span>{{ 'campaign.timer' | translate }}</span> </label>
+                                        <span>{{ 'data-sms.timer' | translate }}</span> </label>
                                 </div>
                             </div>
                             <div class="col-md-2 col-sm-6 col-xs-6 form-group has-feedback" style="margin-bottom: 5px;"
@@ -127,7 +132,7 @@
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback" style="margin: 0;">
                                 <div class="checkbox" style="margin: 0;">
                                     <label><input type="checkbox" value="" class="checkbox" name="isSendSMS"
-                                            [(ngModel)]="isSendSMS">
+                                            [(ngModel)]="isSendSMS" (click)="enableSend($event.currentTarget.checked)">
                                         <span>{{ 'send_data.is_send_sms' | translate }}</span> </label>
                                 </div>
                             </div>
@@ -149,7 +154,7 @@
                                         <span
                                             style="display:inline-block !important">{{ 'send_data.total_num' | translate }}</span>
                                         (<span
-                                            style="display:inline-block !important">{{totalNumber}}</span>{{ 'campaign.text_num' | translate }})
+                                            style="display:inline-block !important">{{totalNumber}}</span>{{ 'data-sms.text_num' | translate }})
                                     </label>
                                 </div>
                             </div>
@@ -430,15 +435,15 @@
                 <div class="row">
                     <div class="col-md-7 col-sm-12 col-xs-12">
                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
-                            <label style="margin-bottom: 0;">{{'campaign.text_countmes1' | translate}}
+                            <label style="margin-bottom: 0;">{{'data-sms.text_countmes1' | translate}}
                                 (<span style="display:inline-block !important">{{numberChar}}</span>
-                                {{'campaign.text_countmes2' | translate}}) (<span
-                                    style="display:inline-block !important">{{numberSMS}}</span>{{'campaign.text_countmes3' | translate}})
+                                {{'data-sms.text_countmes2' | translate}}) (<span
+                                    style="display:inline-block !important">{{numberSMS}}</span>{{'data-sms.text_countmes3' | translate}})
                             </label>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0">
                             <textarea type="text" class="form-control has-feedback-left modal-popup" name="smsContent"
-                                rows="3" placeholder="{{ 'campaign.iSms_content' | translate }}"
+                                rows="3" placeholder="{{ 'data-sms.iSms_content' | translate }}"
                                 [(ngModel)]="smsContent" readonly></textarea>
                         </div>
                     </div>
@@ -489,7 +494,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                    <img *ngIf="loading" class="pl-2" style="margin-right: 10px"
+                <img *ngIf="loading" class="pl-2" style="margin-right: 10px"
                     src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                 <button type="button" class="btn btn-default"
                     (click)="confirmSendDataSMSModal.hide()">{{'global.cancel' | translate}}</button>

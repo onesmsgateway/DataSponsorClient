@@ -1,0 +1,193 @@
+<article>
+    <section>
+        <div class="page-title clearfix">
+            <div class="title_left">
+                <h3>{{'statistic-data-sms.title' | translate}}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>{{ 'global.search' | translate }}</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link" onclick="collapseBox(this)"><i
+                                        class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="x_content">
+                        <form class="row form-horizontal form-label-left input_mask" #formSearch="ngForm"
+                            (ngSubmit)="searchSms(formSearch.value)">
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount"
+                                    [settings]="settingsFilterAccount" name="account" (onSelect)="ChangeDropdownList()"
+                                    (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <angular2-multiselect [data]="dataPackage" [(ngModel)]="selectedPackage"
+                                    [settings]="settingsFilterPackage" name="package" (onSelect)="ChangeDropdownList()"
+                                    (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <input type="text" class="form-control" name="fromDate" bsDatepicker
+                                    [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
+                                    (ngModelChange)="onChangeFromDate($event)"
+                                    placeholder="{{ 'statistic-data-sms.from_date' | translate }}"
+                                    [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <input type="text" class="form-control" name="toDate" bsDatepicker
+                                    [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
+                                    placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo"
+                                    (ngModelChange)="onChangeToDate($event)">
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus"
+                                    [settings]="settingsFilterStatus" name="status" (onSelect)="ChangeDropdownList()"
+                                    (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <input type="text" class="form-control"
+                                    placeholder="{{'statistic-data-sms.content' | translate}}" name="smsContent"
+                                    ngModel>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <input type="text" class="form-control"
+                                    placeholder="{{'statistic-data-sms.phone' | translate}}" name="phone" ngModel>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <div class="checkbox" style="display: inline-block">
+                                    <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                            checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
+                                        <span>Viettel</span> </label>
+                                </div>
+                                <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                    <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                            checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                        <span>Mobiphone</span> </label>
+                                </div>
+                                <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                    <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                            checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                        <span>Vinaphone</span> </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group" style="float: right;">
+                                <button type="submit" style="float: right; margin-right: 0;"
+                                    class="btn btn-primary btn-sm">
+                                    {{ 'global.search' | translate }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <label>
+                            {{ 'statistic-data-sms.total_sms' | translate }}: {{countAll}}
+                            ({{ 'statistic-data-sms.viettel' | translate }}: {{countVTL}},
+                            {{ 'statistic-data-sms.gpc' | translate }}: {{countGPC}},
+                            {{ 'statistic-data-sms.vms' | translate }}: {{countVMS}})
+                        </label>
+                        <button type="button" style="float: right; margin-right: 0;" class="btn btn-success btn-sm"
+                            (click)="exportExcel()">
+                            {{ 'global.export_excel' | translate }}</button>
+                    </div>
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 form-group has-feedback">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered clear-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width: 40px; vertical-align: middle;">
+                                                    {{'global.order' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="width: 140px; vertical-align: middle; white-space: nowrap;">
+                                                    {{'statistic-data-sms.account' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="width: 90px; vertical-align: middle; white-space: nowrap;">
+                                                    {{'statistic-data-sms.package' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="width: 90px; vertical-align: middle; white-space: nowrap;">
+                                                    {{'statistic-data-sms.data' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="width: 100px; vertical-align: middle; white-space: nowrap;">
+                                                    {{'statistic-data-sms.amt' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="width: 120px; vertical-align: middle; white-space: nowrap;">
+                                                    {{'statistic-data-sms.phone' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="width: 250px; vertical-align: middle; white-space: nowrap;">
+                                                    {{'statistic-data-sms.content' | translate}}</th>
+                                                <th class="text-center" style="width: 150px; vertical-align: middle;">
+                                                    {{'statistic-data-sms.time_send' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="width: 70px; vertical-align: middle; white-space: nowrap;">
+                                                    {{'statistic-data-sms.is_send' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="width: 130px; vertical-align: middle; white-space: nowrap;">
+                                                    {{'statistic-data-sms.status' | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of dataSms; let i = index" [attr.data-index]="i">
+                                                <td class="text-center">
+                                                    {{pagination.pageSize * (pagination.pageIndex -1) + (i+1)}}</td>
+                                                <td>{{item.USER_NAME}}</td>
+                                                <td class="text-center">{{item.PACKAGE_NAME}}</td>
+                                                <td class="text-center">{{item.DATA_VOL}}</td>
+                                                <td class="text-center">{{item.DATA_AMT}}</td>
+                                                <td class="text-center">{{item.PHONE}}</td>
+                                                <td>{{item.SMS_CONTENT}}</td>
+                                                <td class="text-center">{{item.TIME_SCHEDULE}}</td>
+                                                <td class="box-checkbox-table"><input type="checkbox"
+                                                        [checked]="item.IS_SEND_SMS == 1 ? true : false" class="checkbox"
+                                                        disabled></td>
+                                                <td class="text-center">{{item.CODE_RECEIVE}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }}
+                                        trang. Hiển thị
+                                        <select (change)="changePageSize($event.target.value)"
+                                            [value]="pagination.pageSize">
+                                            <option value="5" selected="">5</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="99999999">{{ 'global.all' | translate }}</option>
+                                        </select>
+                                        bản ghi.
+                                    </div>
+                                    <div class="col-md-6 col-sm-6" style="margin-bottom:10px">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize"
+                                            [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)"
+                                            (numPages)="pagination.totalPage = $event"
+                                            [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;"
+                                            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        </pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>

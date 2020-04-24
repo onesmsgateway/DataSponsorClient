@@ -13,10 +13,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { DataCimastComponent } from './data-cimast/data-cimast.component';
 import { SendDataComponent } from './send-data/send-data.component';
-import { FreeDomainComponent } from './free-domain/free-domain.component';
 import { PackageComponent } from './package/package.component';
 import { DataCampaignComponent } from './data-campaign/data-campaign.component';
 import { PackageTelcoComponent } from './package-telco/package-telco.component';
+import { ScenariosComponent } from './scenarios/scenarios.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
@@ -25,7 +25,6 @@ export const managerRoutes: Routes = [{
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'data-cimast', component: DataCimastComponent, data: { MENU_CODE: 'DATA-CIMAST' }, canActivate: [AuthGuard] },
     { path: 'send-data', component: SendDataComponent, data: { MENU_CODE: 'SEND-DATA' }, canActivate: [AuthGuard] },
-    { path: 'free-domain', component: FreeDomainComponent, data: { MENU_CODE: 'FREE-DOMAIN' }, canActivate: [AuthGuard] },
     { path: 'package', component: PackageComponent, data: { MENU_CODE: 'PACKAGE' }, canActivate: [AuthGuard] },
     { path: 'data-campaign', component: DataCampaignComponent, data: { MENU_CODE: 'DATA-CAMPAIGN' }, canActivate: [AuthGuard] },
     { path: 'package-telco', component: PackageTelcoComponent, data: { MENU_CODE: 'PACKAGE-TELCO' }, canActivate: [AuthGuard] }
@@ -33,7 +32,7 @@ export const managerRoutes: Routes = [{
 }];
 
 @NgModule({
-  declarations: [DataSponsorComponent, DataCimastComponent, SendDataComponent, FreeDomainComponent, PackageComponent, DataCampaignComponent, PackageTelcoComponent],
+  declarations: [DataSponsorComponent, DataCimastComponent, SendDataComponent, PackageComponent, DataCampaignComponent, PackageTelcoComponent, ScenariosComponent],
   imports: [
     FormsModule,
     ReactiveFormsModule,

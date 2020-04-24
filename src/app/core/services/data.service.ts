@@ -60,17 +60,6 @@ export class DataService {
     }
   }
 
-  public async getDataAsync(uri: string): Promise<any> {
-    try {
-      const response = await this.http.get(AppConst.DATA_SPONSOR_API + uri).toPromise();
-      return response;
-    }
-    catch (error) {
-      console.log('getDataAsync.:', error);
-      return null;
-    }
-  }
-
   public async postAsync(uri: string, data?: any): Promise<any> {
     try {
       const response = await this.http.post(AppConst.DATA_SPONSOR_API + uri, data).toPromise();
@@ -78,17 +67,6 @@ export class DataService {
     }
     catch (error) {
       console.log('postAsync.:', error);
-      return null;
-    }
-  }
-
-  public async postDataAsync(uri: string, data?: any): Promise<any> {
-    try {
-      const response = await this.http.post(AppConst.DATA_SPONSOR_API + uri, data).toPromise();
-      return response;
-    }
-    catch (error) {
-      console.log('postDataAsync.:', error);
       return null;
     }
   }
@@ -104,17 +82,6 @@ export class DataService {
     }
   }
 
-  public async putDataAsync(uri: string, data?: any): Promise<any> {
-    try {
-      const response = await this.http.put(AppConst.DATA_SPONSOR_API + uri, data).toPromise();
-      return response;
-    }
-    catch (error) {
-      console.log('putDataAsync.:', error);
-      return null;
-    }
-  }
-
   public async deleteAsync(uri: string): Promise<any> {
     try {
       const response = await this.http.delete(AppConst.DATA_SPONSOR_API + uri).toPromise();
@@ -122,17 +89,6 @@ export class DataService {
     }
     catch (error) {
       console.log('deleteAsync.:', error);
-      return null;
-    }
-  }
-
-  public async deleteDataAsync(uri: string): Promise<any> {
-    try {
-      const response = await this.http.delete(AppConst.DATA_SPONSOR_API + uri).toPromise();
-      return response;
-    }
-    catch (error) {
-      console.log('deleteDataAsync.:', error);
       return null;
     }
   }
@@ -228,11 +184,11 @@ export class DataService {
           }
         }
       }
-      const response = await this.postDataAsync("/api/FileExtention/ImportExcelAndSavePhoneList?listType=" + listType + "&lstName=" + lstName, formData);
+      const response = await this.postAsync("/api/FileExtention/ImportExcelAndSavePhoneList?listType=" + listType + "&lstName=" + lstName, formData);
       return response;
     }
     catch (error) {
-      console.log('importExcelAsync.:', error);
+      console.log('importExcelAndSavePhoneListDataAsync.:', error);
       return null;
     }
   }
@@ -248,8 +204,8 @@ export class DataService {
           }
         }
       }
-      const response = await this.postAsync("/api/FileExtention/ImportExcelAndSave?listType=" + listType + "&lstName=" + 
-      lstName + "&accountID=" + accountID + "&accountName=" + accountName, formData);
+      const response = await this.postAsync("/api/FileExtention/ImportExcelAndSave?listType=" + listType + "&lstName=" +
+        lstName + "&accountID=" + accountID + "&accountName=" + accountName, formData);
       return response;
     }
     catch (error) {
@@ -446,14 +402,12 @@ export class DataService {
     return result;
   }
 
-  public async getFileExtentionSmsStatisticAsync(uri: string, accountId: any, sender_id: string, sms_content: string, phone: string,
-    sms_type: any, viettel: string, vina: string, mobi: string, vnMobile: string, gtel: string, sfone: string, ddMobile: string, tu_ngay: string,
-    den_ngay: string, partner_code: string, sms_status: string, fileName: string): Promise<boolean> {
+  public async getFileExtentionDataSmsStatisticAsync(uri: string, accountId: any, pack: string, status: string, fromDate: string, toDate: string, content: string
+    , phone: string, viettel: string, vina: string, mobi: string, fileName: string): Promise<boolean> {
     let result: boolean = false;
-    let url = AppConst.DATA_SPONSOR_API + uri + '?account_id=' + accountId + '&sender_id=' + sender_id + '&sms_content=' + sms_content
-      + '&phone=' + phone + '&sms_type=' + sms_type + '&viettel=' + viettel + '&vina=' + vina + '&mobi=' + mobi + '&vnMobile=' + vnMobile
-      + '&gtel=' + gtel + '&sfone=' + sfone + '&ddMobile=' + ddMobile + '&tu_ngay=' + tu_ngay + '&den_ngay=' + den_ngay + '&partner_code=' + partner_code
-      + '&sms_status=' + sms_status + '&fileName=' + fileName;
+    let url = AppConst.DATA_SPONSOR_API + uri + '?account_id=' + accountId + '&package=' + pack + '&status=' + status +
+      '&from_date=' + fromDate + + '&to_date=' + toDate + '&content=' + content + '&phone=' + phone +
+      "&viettel=" + viettel + '&vina=' + vina + '&mobi=' + mobi + '&fileName=' + fileName;
     let response = await this.http.get(url, { responseType: 'arraybuffer' }).toPromise();
     if (response) {
       let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });

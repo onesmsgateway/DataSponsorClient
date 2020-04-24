@@ -108,21 +108,21 @@ export class PackageComponent implements OnInit {
   }
 
   async getPackageViettel(){
-    let response: any = await this.dataService.getDataAsync('/api/packageDomain/GetPackageViettel')
+    let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageViettel')
       for (let index in response.data) {
         this.dataPackVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].DATA + "MB" + " - Giá: " + response.data[index].AMT + " VNĐ - "  + response.data[index].DATE_USE + " ngày"});
       }
   }
 
   async getPackageGPC(){
-    let response: any = await this.dataService.getDataAsync('/api/packageDomain/GetPackageGPC ')
+    let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageGPC ')
       for (let index in response.data) {
         this.dataPackGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].DATA + "MB" + " - Giá: " + response.data[index].AMT + " VNĐ - "  + response.data[index].DATE_USE + " ngày" });
       }
   }
 
   async getPackageVMS(){
-    let response: any = await this.dataService.getDataAsync('/api/packageDomain/GetPackageVMS')
+    let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageVMS')
       for (let index in response.data) {
         this.dataPackVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].DATA + "MB" + " - Giá: " + response.data[index].AMT + " VNĐ - "  + response.data[index].DATE_USE + " ngày" });
       }
@@ -130,7 +130,7 @@ export class PackageComponent implements OnInit {
 
   // bind data to grid
   async getData() {
-    let response: any = await this.dataService.getDataAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=' + this.pagination.pageIndex +
+    let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&package_name=" + this.inPackageName.trim())
     this.loadData(response);
   }
@@ -207,7 +207,7 @@ export class PackageComponent implements OnInit {
     if (data.packVMS.value != null && data.packVMS.value.length > 0)
       ID_PACKAGE_VMS = data.packVMS.value[0].id.toString();
 
-    let response: any = await this.dataService.postDataAsync('/api/PackageDomain', {
+    let response: any = await this.dataService.postAsync('/api/PackageDomain', {
       PACKAGE_NAME, DATA, TOTAL_AMT, DATE_USE, ID_PACKAGE_VTL, ID_PACKAGE_GPC, ID_PACKAGE_VMS
     })
     if (response.err_code == 0) {
@@ -232,7 +232,7 @@ export class PackageComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
-    let response: any = await this.dataService.getDataAsync('/api/PackageDomain/' + id)
+    let response: any = await this.dataService.getAsync('/api/PackageDomain/' + id)
     if (response.err_code == 0) {
       let dataSmsTemp = response.data[0];
       this.formEditPackage = new FormGroup({
@@ -284,7 +284,7 @@ export class PackageComponent implements OnInit {
     let ID_PACKAGE_GPC = formData.packGPC.value.length > 0 ? formData.packGPC.value[0].id.toString() : null;
     let ID_PACKAGE_VMS = formData.packVMS.value.length > 0 ? formData.packVMS.value[0].id.toString() : null;
 
-    let response: any = await this.dataService.putDataAsync('/api/PackageDomain/' + ID, {
+    let response: any = await this.dataService.putAsync('/api/PackageDomain/' + ID, {
       PACKAGE_NAME, DATA, TOTAL_AMT, DATE_USE, ID_PACKAGE_VTL, ID_PACKAGE_GPC, ID_PACKAGE_VMS
     })
     if (response.err_code == 0) {
@@ -312,7 +312,7 @@ export class PackageComponent implements OnInit {
 
   // delete
   async confirmDelete(id) {
-    let response: any = await this.dataService.deleteDataAsync('/api/PackageDomain/' + id + "?pageIndex=" + this.pagination.pageIndex + '&pageSize=' + this.pagination.pageSize)
+    let response: any = await this.dataService.deleteAsync('/api/PackageDomain/' + id + "?pageIndex=" + this.pagination.pageIndex + '&pageSize=' + this.pagination.pageSize)
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();

@@ -13,18 +13,21 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { defineLocale, viLocale, PaginationModule, ModalModule, TabsModule, BsDatepickerModule, BsLocaleService } from 'ngx-bootstrap';
 
 import { StatisticComponent } from './statistic.component';
+import { DataSmsComponent } from './data-sms/data-sms.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
 export const smsRoutes: Routes = [{
   path: '', component: StatisticComponent, children: [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'statistic-data', component: DataSmsComponent, data: {MENU_CODE: 'STATISTIC-DATA'}, canActivate: [AuthGuard] }
   ]
 }];
 
 @NgModule({
   declarations: [
-    StatisticComponent
+    StatisticComponent,
+    DataSmsComponent
   ],
   imports: [
     FormsModule,

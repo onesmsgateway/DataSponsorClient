@@ -81,10 +81,10 @@ export class DataCampaignComponent implements OnInit {
   // bind data account
   //#region account
   async bindDataAccount() {
-    let result = await this.dataService.getDataAsync('/api/account/GetInfoAccountLogin');
+    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
     this.roleAccess = result.data[0].ROLE_ACCESS;
     if (this.roleAccess == 50) {
-      let response: any = await this.dataService.getDataAsync('/api/account');
+      let response: any = await this.dataService.getAsync('/api/account');
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
       }
@@ -92,7 +92,7 @@ export class DataCampaignComponent implements OnInit {
     }
     else {
       this.isAdmin = false;
-      let response = await this.dataService.getDataAsync('/api/account/GetLisAccountParentAndChild?account_id=' +
+      let response = await this.dataService.getAsync('/api/account/GetLisAccountParentAndChild?account_id=' +
         this.authService.currentUserValue.ACCOUNT_ID);
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
@@ -108,7 +108,7 @@ export class DataCampaignComponent implements OnInit {
   // bind data to grid
   async getData() {
     let account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
-    let response: any = await this.dataService.getDataAsync('/api/DataCampaign/GetDataCampaignPaging?pageIndex=' + this.pagination.pageIndex +
+    let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&from_date=" + this.fromDate + "&to_date=" + this.toDate + 
       "&isAdmin=" + this.isAdmin)
     this.loadData(response);
@@ -126,7 +126,7 @@ export class DataCampaignComponent implements OnInit {
 
   async getDataDetail() {
     let account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
-    let response: any = await this.dataService.getDataAsync('/api/DataSms/GetDataSmsPaging?pageIndex=' + this.pageIndex +
+    let response: any = await this.dataService.getAsync('/api/DataSms/GetDataSmsPaging?pageIndex=' + this.pageIndex +
       "&pageSize=" + this.pageSize + "&account_id=" + account + "&data_campaign_id=" + this.data_campaign_id + "&from_date=" + this.fromDate + "&to_date=" + this.toDate
       + "&phone=&sms_content=");
     this.loadDataDetail(response);
@@ -185,7 +185,7 @@ export class DataCampaignComponent implements OnInit {
   //#region view lich su cap tin
   async showConfirmViewDetail(id) {
     this.data_campaign_id = id;
-    let response: any = await this.dataService.getDataAsync('/api/DataCampaign/GetDataCampaignDetailPaging?pageIndex=' + this.pageIndex +
+    let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignDetailPaging?pageIndex=' + this.pageIndex +
       "&pageSize=" + this.pageSize + "&data_campaign_id=" + this.data_campaign_id);
     if (response.err_code == 0) {
       if (response.data != null && response.data.length > 0) {
@@ -211,7 +211,7 @@ export class DataCampaignComponent implements OnInit {
     public async approveSms(campaign_id) {
       this.loading = true;
       if (campaign_id != undefined && campaign_id > 0) {
-        let respone = await this.dataService.postDataAsync('/api/DataSms/ApproveDataCampaign?campaignId=' + campaign_id);
+        let respone = await this.dataService.postAsync('/api/DataSms/ApproveDataCampaign?campaignId=' + campaign_id);
         if (respone.err_code == 0) this.notificationService.displaySuccessMessage(respone.err_message);
         else this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
       }
@@ -234,7 +234,7 @@ export class DataCampaignComponent implements OnInit {
       this.notificationService.displayWarnMessage("Bạn phải nhập lý do hủy đơn");
       return;
     }
-    let data = await this.dataService.putDataAsync('/api/DataCampaign/DeleteDataCampaign?id=' + campaign_id +
+    let data = await this.dataService.putAsync('/api/DataCampaign/DeleteDataCampaign?id=' + campaign_id +
       '&description=' + this.reasonContent);
     if (data.err_code == 0) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-88"));

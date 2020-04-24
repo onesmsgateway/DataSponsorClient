@@ -77,7 +77,7 @@ export class PackageTelcoComponent implements OnInit {
   // bind data to grid
   async getData() {
     let telco = this.selectedTelco != null && this.selectedTelco.length > 0 ? this.selectedTelco[0].itemName : "";
-    let response: any = await this.dataService.getDataAsync('/api/packageTelco/GetPackageTelcoPaging?pageIndex=' + this.pagination.pageIndex +
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&package_name=" + this.inPackageName.trim() + "&telco=" + telco + "&data=" + this.inDataNum + "&date_use=" + this.inDateUse)
     this.loadData(response);
   }
@@ -146,7 +146,7 @@ export class PackageTelcoComponent implements OnInit {
       return;
     }
 
-    let response: any = await this.dataService.postDataAsync('/api/PackageTelco', {
+    let response: any = await this.dataService.postAsync('/api/PackageTelco', {
       PACKAGE_NAME, TELCO, DATA, AMT, DATE_USE
     })
     if (response.err_code == 0) {
@@ -171,7 +171,7 @@ export class PackageTelcoComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
-    let response: any = await this.dataService.getDataAsync('/api/PackageTelco/' + id)
+    let response: any = await this.dataService.getAsync('/api/PackageTelco/' + id)
     if (response.err_code == 0) {
       let dataSmsTemp = response.data[0];
       this.formEditPackage = new FormGroup({
@@ -219,7 +219,7 @@ export class PackageTelcoComponent implements OnInit {
       return;
     }
 
-    let response: any = await this.dataService.putDataAsync('/api/PackageTelco/' + ID, {
+    let response: any = await this.dataService.putAsync('/api/PackageTelco/' + ID, {
       PACKAGE_NAME, TELCO, DATA, AMT, DATE_USE
     })
     if (response.err_code == 0) {
@@ -247,7 +247,7 @@ export class PackageTelcoComponent implements OnInit {
 
   // delete
   async confirmDelete(id) {
-    let response: any = await this.dataService.deleteDataAsync('/api/PackageTelco/' + id)
+    let response: any = await this.dataService.deleteAsync('/api/PackageTelco/' + id)
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();

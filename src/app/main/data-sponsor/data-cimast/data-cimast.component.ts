@@ -85,13 +85,13 @@ export class DataCimastComponent implements OnInit {
 
   // get total data
   async getDataTotal() {
-    let result: any = await this.dataService.getDataAsync('/api/DataSponsor/GetDataSponsorBalance');
+    let result: any = await this.dataService.getAsync('/api/DataSponsor/GetDataSponsorBalance');
     if (result != null && result.data.length > 0) {
       this.total_amt_telco = Math.round(result.data[0].TOTAL_REMAIN);
     }
 
     let account = this.selectedAccountID.length != 0 && this.selectedAccountID[0].id != "" ? this.selectedAccountID[0].id : "";
-    let response: any = await this.dataService.getDataAsync('/api/DataCimast/GetDataAccount?isAdmin=' + this.isAdmin + '&account_id=' + account);
+    let response: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=' + this.isAdmin + '&account_id=' + account);
     if (response != null && response.data.length > 0) {
       this.total_amt_system = Math.round(response.data[0].TOTAL_AMT);
       this.total_amt_system_remain = Math.round(response.data[0].TOTAL_REMAIN);
@@ -103,17 +103,17 @@ export class DataCimastComponent implements OnInit {
 
   //#region account
   public async bindDataAccount() {
-    let result = await this.dataService.getDataAsync('/api/account/GetInfoAccountLogin');
+    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
     let roleAccess = result.data[0].ROLE_ACCESS;
     if (roleAccess == 50) {
-      let response: any = await this.dataService.getDataAsync('/api/account');
+      let response: any = await this.dataService.getAsync('/api/account');
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
       }
       this.isAdmin = true;
     }
     else {
-      let response = await this.dataService.getDataAsync('/api/account/GetLisAccountParentAndChild?account_id=' +
+      let response = await this.dataService.getAsync('/api/account/GetLisAccountParentAndChild?account_id=' +
         this.authService.currentUserValue.ACCOUNT_ID);
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
@@ -151,7 +151,7 @@ export class DataCimastComponent implements OnInit {
   public async getDataAccountCimast() {
     let account = this.selectedAccountID.length != 0 && this.selectedAccountID[0].id != "" ? this.selectedAccountID[0].id : "";
     let type = this.selectedType.length != 0 && this.selectedType[0].id != "" ? this.selectedType[0].id : "";
-    let response = await this.dataService.getDataAsync('/api/DataCimast/GetDataCimastPaging?pageIndex=' + this.pagination.pageIndex + '&pageSize=' +
+    let response = await this.dataService.getAsync('/api/DataCimast/GetDataCimastPaging?pageIndex=' + this.pagination.pageIndex + '&pageSize=' +
       this.pagination.pageSize + "&account_id=" + account + "&type=" + type + "&isAdmin=" + this.isAdmin);
     this.loadData(response);
   }
@@ -192,7 +192,7 @@ export class DataCimastComponent implements OnInit {
       return;
     }
 
-    let account: any = await this.dataService.getDataAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' + ACCOUNT_ID);
+    let account: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' + ACCOUNT_ID);
     if (account != null && account.data.length > 0) {
       // update data account cimast
       if (account.data[0].USER_NAME != "admin") {
@@ -210,7 +210,7 @@ export class DataCimastComponent implements OnInit {
       let TOTAL_REMAIN = TOTAL_AMT;
       let TOTAL_DATA = 0;
 
-      let response = await this.dataService.putDataAsync('/api/DataCimast', {
+      let response = await this.dataService.putAsync('/api/DataCimast', {
         ACCOUNT_ID, TYPE, DESCRIPTION, TOTAL_DATA, TOTAL_USE, TOTAL_REMAIN, TOTAL_AMT
       });
       if (response.err_code == 0) {
@@ -241,7 +241,7 @@ export class DataCimastComponent implements OnInit {
         return;
       }
 
-      let response = await this.dataService.postDataAsync('/api/DataCimast', {
+      let response = await this.dataService.postAsync('/api/DataCimast', {
         ACCOUNT_ID, TYPE, DESCRIPTION, TOTAL_DATA, TOTAL_USE, TOTAL_REMAIN, TOTAL_AMT
       });
       if (response.err_code == 0) {
@@ -269,7 +269,7 @@ export class DataCimastComponent implements OnInit {
 
   //#region view lich su cap tin
   public async showConfirmViewHis(accountID) {
-    let response: any = await this.dataService.getDataAsync('/api/DataCimast/GetDataCimastTran?account_id=' + accountID);
+    let response: any = await this.dataService.getAsync('/api/DataCimast/GetDataCimastTran?account_id=' + accountID);
     if (response.err_code == 0) {
       this.dataQuotaHistory = response.data;
     }
