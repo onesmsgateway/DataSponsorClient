@@ -16,7 +16,6 @@ import { defineLocale, viLocale, PaginationModule, ModalModule, TabsModule, BsDa
 import { SystemComponent } from './system.component';
 import { MenuComponent } from './menu/menu.component';
 import { SysvarComponent } from './sysvar/sysvar.component';
-import { AccountVendorComponent } from './account-vendor/account-vendor.component';
 import { RoleComponent } from './role/role.component';
 import { RoleMenuComponent } from './role-menu/role-menu.component';
 import { AccountComponent } from './account/account.component';
@@ -32,7 +31,6 @@ export const systemRoutes: Routes = [{
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'sysvar', component: SysvarComponent, data: { MENU_CODE: 'SYSTEM_CONFIG' }, canActivate: [AuthGuard] },
     { path: 'menu', component: MenuComponent, data: { MENU_CODE: 'MENU' }, canActivate: [AuthGuard] },
-    { path: 'account-vendor', component: AccountVendorComponent, data: { MENU_CODE: 'ACCOUNT_VENDOR' }, canActivate: [AuthGuard] },
     { path: 'role', component: RoleComponent, data: { MENU_CODE: 'ROLE_GROUP' }, canActivate: [AuthGuard] },
     { path: 'role-menu', component: RoleMenuComponent, data: { MENU_CODE: 'ROLE_GROUP_MENU' }, canActivate: [AuthGuard] },
     { path: 'account', component: AccountComponent, data: { MENU_CODE: 'ACCOUNT_LIST' }, canActivate: [AuthGuard] },
@@ -48,7 +46,6 @@ export const systemRoutes: Routes = [{
     SystemComponent,
     MenuComponent,
     SysvarComponent,
-    AccountVendorComponent,
     RoleComponent,
     RoleMenuComponent,
     AccountComponent,

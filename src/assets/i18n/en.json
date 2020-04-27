@@ -435,5 +435,26 @@
     "text_num": " num",
     "iSms_content": "Input SMS content...",
     "timer": "Timer"
+  },
+  "scenarios": {
+    "title": "Scenarios manager",
+    "code_scenar": "Code",
+    "name_scenar": "Nam",
+    "inCode_scenar": "Input code",
+    "inName_scenar": "Input name",
+    "inValue": "Input value",
+    "inData": "Input data",
+    "start_date": "Start date",
+    "end_date": "End date",
+    "active": "Active",
+    "inActive": "In active",
+    "accumulate_points": "Accumulate points",
+    "value": "Value",
+    "phone": "Phone",
+    "data": "Data",
+    "add": "Create scenarios",
+    "edit": "Edit scenarios",
+    "delete": "Delete scenarios",
+    "delete_notify": "Are you sure delete scenario "
   }
 }

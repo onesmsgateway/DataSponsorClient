@@ -441,5 +441,26 @@
     "text_num": " số",
     "iSms_content": "Nhập nội dung tin nhắn...",
     "timer": "Hẹn giờ"
+  },
+  "scenarios": {
+    "title": "Quản lý kịch bản",
+    "code_scenar": "Mã kịch bản",
+    "name_scenar": "Tên kịch bản",
+    "inCode_scenar": "Nhập mã kịch bản",
+    "inName_scenar": "Nhập tên kịch bản",
+    "inValue": "Nhập giá trị",
+    "inData": "Nhập lưu lượng",
+    "start_date": "Ngày bắt đầu",
+    "end_date": "Ngày kết thúc",
+    "active": "Hiệu lực",
+    "inActive": "Không hiệu lực",
+    "accumulate_points": "Tích điểm",
+    "value": "Giá trị",
+    "phone": "Số điện thoại",
+    "data": "Lưu lượng",
+    "add": "Thêm kịch bản",
+    "edit": "Sửa kịch bản",
+    "delete": "Xóa kịch bản",
+    "delete_notify": "Bạn có chắc chắn muốn xóa kịch bản "
   }
 }

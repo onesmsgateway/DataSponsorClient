@@ -27,7 +27,8 @@ export const managerRoutes: Routes = [{
     { path: 'send-data', component: SendDataComponent, data: { MENU_CODE: 'SEND-DATA' }, canActivate: [AuthGuard] },
     { path: 'package', component: PackageComponent, data: { MENU_CODE: 'PACKAGE' }, canActivate: [AuthGuard] },
     { path: 'data-campaign', component: DataCampaignComponent, data: { MENU_CODE: 'DATA-CAMPAIGN' }, canActivate: [AuthGuard] },
-    { path: 'package-telco', component: PackageTelcoComponent, data: { MENU_CODE: 'PACKAGE-TELCO' }, canActivate: [AuthGuard] }
+    { path: 'package-telco', component: PackageTelcoComponent, data: { MENU_CODE: 'PACKAGE-TELCO' }, canActivate: [AuthGuard] },
+    { path: 'scenarios', component: ScenariosComponent, data: { MENU_CODE: 'SCENARIOS' }, canActivate: [AuthGuard] }
   ]
 }];
 
