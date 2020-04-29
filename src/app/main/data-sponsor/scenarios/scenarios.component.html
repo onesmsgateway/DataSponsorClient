@@ -11,28 +11,32 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel portlet">
                     <div class="x_content">
-                            <div class="row">
-                                <div class="col-md-2 col-sm-3 col-xs-6">
-                                    <input type="text" class="form-control" name="inCodeScenar"
-                                        [(ngModel)]="inCodeScenar"
-                                        placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
-                                </div>
-                                <div class="col-md-2 col-sm-3 col-xs-6">
-                                    <input type="text" class="form-control" name="inNameScenar"
-                                        [(ngModel)]="inNameScenar"
-                                        placeholder="{{ 'scenarios.inName_scenar' | translate }}">
-                                </div>
-                                <div class="col-md-2 col-sm-3 col-xs-6">
-                                    <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus"
-                                        [settings]="settingsFilterStatus" name="status"
-                                        (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-6 col-sm-4 col-xs-6">
-                                    <button type="button" style="float: right;" (click)="getData()"
-                                        class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount"
+                                    [settings]="settingsFilterAccount" name="slAccount"
+                                    (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
                             </div>
+                            <div class="col-md-2 col-sm-3 col-xs-6">
+                                <input type="text" class="form-control" name="inCodeScenar" [(ngModel)]="inCodeScenar"
+                                    placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-6">
+                                <input type="text" class="form-control" name="inNameScenar" [(ngModel)]="inNameScenar"
+                                    placeholder="{{ 'scenarios.inName_scenar' | translate }}">
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-6">
+                                <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus"
+                                    [settings]="settingsFilterStatus" name="status"
+                                    (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-6">
+                                <button type="button" style="float: right;" (click)="getData()"
+                                    class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -59,12 +63,13 @@
                                             <tr>
                                                 <th class="text-center" style="width:5%">STT</th>
                                                 <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'scenarios.account' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;">
                                                     {{ 'scenarios.code_scenar' | translate }}</th>
                                                 <th class="text-center" style="width:15%">
                                                     {{ 'scenarios.name_scenar' | translate }}</th>
-                                                <th class="text-center">{{ 'scenarios.value' | translate }}</th>
                                                 <th class="text-center" style="white-space: nowrap;">
-                                                    {{ 'scenarios.data' | translate }}
+                                                    {{ 'scenarios.content' | translate }}
                                                 </th>
                                                 <th class="text-center" style="white-space: nowrap;">
                                                     {{ 'scenarios.start_date' | translate }}
@@ -82,12 +87,12 @@
                                         <tbody>
                                             <tr *ngFor="let item of dataScenarios; let i = index" [attr.data-index]="i">
                                                 <td class="text-center" scope="row">{{i+1}}</td>
+                                                <td>{{item.USER_NAME}}</td>
                                                 <td>{{item.CODE}}</td>
                                                 <td>{{item.NAME}}</td>
-                                                <td>{{item.VALUE}}</td>
-                                                <td>{{item.DATA}}</td>
-                                                <td>{{item.START_DATE}}</td>
-                                                <td>{{item.END_DATE}}</td>
+                                                <td class="text-center">{{item.CONTENT}}</td>
+                                                <td class="text-center">{{item.START_DATE}}</td>
+                                                <td class="text-center">{{item.END_DATE}}</td>
                                                 <td class="box-checkbox-table"><input type="checkbox"
                                                         [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox"
                                                         disabled></td>
@@ -153,47 +158,50 @@
             <form #formAdd="ngForm" (ngSubmit)="createScenarios(formAdd)">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios.account' | translate}}</label>
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate"
+                                [settings]="settingsFilterAccount" name="slAccount">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios.code_scenar' | translate}}</label>
                             <input type="text" class="form-control" name="code" ngModel
                                 placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios.name_scenar' | translate}}</label>
                             <input type="text" class="form-control" name="name"
                                 placeholder="{{ 'scenarios.inName_scenar' | translate }}" ngModel>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.value' | translate}}</label>
-                            <input type="number" class="form-control" name="valueScenar"
-                                placeholder="{{ 'scenarios.inValue' | translate }}" ngModel>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.data' | translate}}</label>
-                            <input type="number" class="form-control" name="dataScenar"
-                                placeholder="{{ 'scenarios.inData' | translate }}" ngModel>
-                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios.start_date' | translate}}</label>
                             <input type="text" class="form-control" name="startDate" bsDatepicker
                                 [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="startDate"
                                 placeholder="{{ 'scenarios.start_date' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios.end_date' | translate}}</label>
                             <input type="text" class="form-control" name="endDate" bsDatepicker
                                 [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="endDate"
                                 placeholder="{{ 'scenarios.end_date' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
                             <label>&nbsp;</label>
                             <div class="checkbox">
                                 <label><input type="checkbox" value="" class="checkbox" name="checkActive"
-                                        [(ngModel)]="isActive">
+                                    ngModel>
                                     <span>{{'scenarios.active' | translate}}</span> </label>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                            <label>{{'scenarios.content' | translate}}</label>
+                            <textarea type="text" class="form-control" name="content" rows="3"
+                                placeholder="{{ 'scenarios.inContent' | translate }}" ngModel></textarea>
                         </div>
                     </div>
                 </div>
@@ -222,44 +230,50 @@
             <form [formGroup]="formEditScenarios" (ngSubmit)="editScenarios()">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios.account' | translate}}</label>
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit"
+                                [settings]="settingsFilterAccount" formControlName="account">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios.code_scenar' | translate}}</label>
                             <input type="hidden" formControlName="id">
-                            <input type="text" class="form-control" formControlName="code"
+                            <input type="text" class="form-control" formControlName="code" readonly
                                 placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios.name_scenar' | translate}}</label>
                             <input type="text" class="form-control" formControlName="name"
                                 placeholder="{{ 'scenarios.inName_scenar' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.value' | translate}}</label>
-                            <input type="number" class="form-control" formControlName="valueScenar"
-                                placeholder="{{ 'scenarios.inValue' | translate }}">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.data' | translate}}</label>
-                            <input type="number" class="form-control" formControlName="dataScenar"
-                                placeholder="{{ 'scenarios.inData' | translate }}">
-                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios.start_date' | translate}}</label>
                             <input type="text" class="form-control" formControlName="startDate" bsDatepicker
                                 [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
                                 placeholder="{{ 'scenarios.start_date' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios.end_date' | translate}}</label>
                             <input type="text" class="form-control" formControlName="endDate" bsDatepicker
                                 [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
                                 placeholder="{{ 'scenarios.end_date' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <label>&nbsp;</label>
                             <div class="checkbox">
                                 <label><input type="checkbox" value="" class="checkbox" formControlName="isActive">
                                     <span>{{'scenarios.active' | translate}}</span> </label>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                            <label>{{'scenarios.content' | translate}}</label>
+                            <textarea type="text" class="form-control" formControlName="content" rows="3"
+                                placeholder="{{ 'scenarios.inContent' | translate }}"></textarea>
                         </div>
                     </div>
                 </div>

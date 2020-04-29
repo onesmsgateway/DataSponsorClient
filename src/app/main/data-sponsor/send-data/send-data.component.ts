@@ -320,9 +320,7 @@ export class SendDataComponent implements OnInit {
 
   //#region load data account
   async getDataAccount() {
-    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
-    let roleAccess = result.data[0].ROLE_ACCESS;
-    if (roleAccess == 50) {
+    if (this.isAdmin) {
       this.selectedItemComboboxAccount = [{ "id": 0, "itemName": "Chọn tài khoản" }];
       let response: any = await this.dataService.getAsync('/api/account')
       for (let index in response.data) {
@@ -567,17 +565,18 @@ export class SendDataComponent implements OnInit {
         this.confirmSendDataSMSModal.hide();
         return;
       }
+      let DATA_VOL = this.selectedItemComboboxPackage[0].itemName.substr(this.selectedItemComboboxPackage[0].itemName.indexOf('-'), this.selectedItemComboboxPackage[0].itemName.indexOf('-') - 1).replace('-', '').replace('-', '').replace('MB', '').trim();
       let file = this.uploadFile.nativeElement;
       if (file.files.length > 0) {
         let response: any = await this.dataService.getDataFromExcelAsync(null, file.files);
         if (response && response.err_code == 0) {
           let listSmsSend = [];
           if (this.isSendSMS) {
+            
             for (let i = 0; i < response.data.length; i++) {
-              let phone = response.data[i].PHONE;
-              let DATA_VOL = response.data[i].DATA_VOL;
+              let phone = response.data[i];
               listSmsSend.push({
-                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: DATA_VOL, SENDER_ID: this.SENDER_ID, SMS_CONTENT: this.SMS_TEMPLATE
+                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA_VOL), SENDER_ID: this.SENDER_ID, SMS_CONTENT: this.SMS_TEMPLATE
                 , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS
                 , PACKAGE_ID: this.PACKAGE_ID
               });
@@ -585,9 +584,8 @@ export class SendDataComponent implements OnInit {
           } else {
             for (let i = 0; i < response.data.length; i++) {
               let phone = response.data[i].PHONE;
-              let DATA_VOL = response.data[i].DATA_VOL;
               listSmsSend.push({
-                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: DATA_VOL
+                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA_VOL)
                 , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS
                 , PACKAGE_ID: this.PACKAGE_ID
               });

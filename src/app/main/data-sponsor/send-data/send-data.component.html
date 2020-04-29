@@ -104,7 +104,7 @@
                                     <input type="number" class="form-control" name="amt_expected"
                                         [(ngModel)]="amt_expected" style="padding-right: 10px;"
                                         placeholder="{{ 'send_data.amt_expected' | translate }}"
-                                        (change)="GetPackage($event.target.value)">
+                                        (change)="GetPackage()">
                                 </div>
                                 <div class="col-md-8 col-sm-12 col-xs-12" style="padding: 0;">
                                     <angular2-multiselect [data]="dataPackage" [(ngModel)]="selectedItemComboboxPackage"

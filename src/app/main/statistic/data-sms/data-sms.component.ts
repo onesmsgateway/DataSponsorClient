@@ -80,7 +80,6 @@ export class DataSmsComponent implements OnInit {
 
   ngOnInit() {
     this.getAccountLogin();
-    
     this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd");
     this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd");
   }
@@ -101,9 +100,7 @@ export class DataSmsComponent implements OnInit {
 
   //#region account
   public async bindDataAccount() {
-    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
-    let is_admin = result.data[0].IS_ADMIN;
-    if (is_admin != null && is_admin == 1) {
+    if (this.isAdmin) {
       let response: any = await this.dataService.getAsync('/api/account');
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });

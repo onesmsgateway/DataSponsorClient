@@ -6,45 +6,44 @@ import { Role } from 'src/app/core/models/role';
 import { DataService } from 'src/app/core/services/data.service';
 import { ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/core/services/notification.service';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
-  selector: 'app-scenarios',
-  templateUrl: './scenarios.component.html',
-  styleUrls: ['./scenarios.component.css']
+  selector: 'app-scenarios-detail',
+  templateUrl: './scenarios-detail.component.html',
+  styleUrls: ['./scenarios-detail.component.css']
 })
-export class ScenariosComponent implements OnInit {
+export class ScenariosDetailComponent implements OnInit {
 
   @ViewChild('showModalCreate', { static: false }) public showModalCreate: ModalDirective;
   @ViewChild('showModalUpdate', { static: false }) public showModalUpdate: ModalDirective;
   @ViewChild('confirmDeleteModal', { static: false }) public confirmDeleteModal: ModalDirective;
 
-  public dataScenarios = [];
+  public dataScenarioDetail = [];
   public pagination: Pagination = new Pagination();
   public id;
   public name;
-  public inCodeScenar: string = '';
-  public inNameScenar: string = '';
   public formEditScenarios: FormGroup;
   public role: Role = new Role();
   public isAdmin: boolean = false;
-  public startDate: Date = new Date();
-  public endDate: Date = new Date();
-  public checkActive = true;
-  public dataStatus = [];
-  public dataAccount = [];
-  public dataPackage = [];
+  public loading: boolean = true;
 
-  public settingsFilterStatus = {};
-  public selectedStatus = [];
+  public dataScenarios = [];
+  public dataScenariosCreate = [];
+  public dataScenariosEdit = [];
+  public dataPackage = [];
+  public dataAccount = [];
   public settingsFilterAccount = {};
   public selectedAccount = [];
+  public settingsFilterScenarios = {};
+  public selectedScenarios = [];
   public settingsFilterPackage = {};
   public selectedPackage = [];
-  public selectedItemComboboxAccount = [];
-  public selectedItemComboboxAccountEdit = [];
-  public selectedItemComboboxAccountCreate = [];
+  public selectedScenariosEdit = [];
+  public selectedScenariosCreate = [];
+  public selectedAccountEdit = [];
+  public selectedAccountCreate = [];
 
   constructor(
     private dataService: DataService,
@@ -61,8 +60,8 @@ export class ScenariosComponent implements OnInit {
       })
     });
 
-    this.settingsFilterStatus = {
-      text: this.utilityService.translate('global.choose_status'),
+    this.settingsFilterAccount = {
+      text: this.utilityService.translate('global.choose_account'),
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -71,8 +70,8 @@ export class ScenariosComponent implements OnInit {
       showCheckbox: false
     };
 
-    this.settingsFilterAccount = {
-      text: this.utilityService.translate('global.choose_account'),
+    this.settingsFilterScenarios = {
+      text: this.utilityService.translate('scenarios-detail.inScenario'),
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -93,13 +92,10 @@ export class ScenariosComponent implements OnInit {
 
     this.formEditScenarios = new FormGroup({
       id: new FormControl(),
-      account: new FormControl(),
-      code: new FormControl(),
-      name: new FormControl(),
-      content: new FormControl(),
-      startDate: new FormControl(),
-      endDate: new FormControl(),
-      isActive: new FormControl()
+      accountEdit: new FormControl(),
+      scenariosEdit: new FormControl(),
+      valueScenar: new FormControl(),
+      package: new FormControl()
     });
   }
 
@@ -116,11 +112,11 @@ export class ScenariosComponent implements OnInit {
       this.isAdmin = false;
     }
     this.getDataAccount();
-    this.bindDataStatus();
     this.getDataPackage();
     this.getData();
   }
 
+  // get account
   async getDataAccount() {
     if (this.isAdmin) {
       this.selectedAccount = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
@@ -143,7 +139,20 @@ export class ScenariosComponent implements OnInit {
     }
   }
 
-  ChangeDropdownList(){
+  OnSelectAccount() {
+    this.getScenarios();
+  }
+
+  async getScenarios() {
+    this.selectedScenarios = [];
+    this.dataScenarios = [];
+    let accountId = this.selectedAccount.length > 0 ? this.selectedAccount[0].id : 0;
+    let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosByAccount?account_id=' + accountId)
+    for (let index in response.data) {
+      this.dataScenarios.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
+    }
+    if (this.dataScenarios.length == 1)
+      this.selectedScenarios.push({ "id": this.dataScenarios[0].id, "itemName": this.dataScenarios[0].itemName });
     this.getData();
   }
 
@@ -153,25 +162,27 @@ export class ScenariosComponent implements OnInit {
     this.dataPackage = [];
     let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=1&pageSize=9999&package_name=')
     for (let index in response.data) {
-      this.dataPackage.push({ "id": response.data[index].ID, "itemName": response.data[index].DATA + "MB" });
+      this.dataPackage.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME });
     }
     if (this.dataPackage.length == 1)
       this.selectedPackage.push({ "id": this.dataPackage[0].id, "itemName": this.dataPackage[0].itemName });
   }
 
+  ChangeDropdownList() {
+    this.getData();
+  }
+
   //#region load data
   async getData() {
-    let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
-    let active = this.selectedStatus.length > 0 && this.selectedStatus[0].id != "" ? this.selectedStatus[0].id : "";
-    let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosPaging?pageIndex=' + this.pagination.pageIndex +
-      "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&code=" + this.inCodeScenar +
-      "&name=" + this.inNameScenar + "&active=" + active)
+    let scenarioId = this.selectedScenarios.length > 0 ? this.selectedScenarios[0].id : "";
+    let response: any = await this.dataService.getAsync('/api/ScenariosDetail/GetScenariosDetailPaging?pageIndex=' + this.pagination.pageIndex +
+      "&pageSize=" + this.pagination.pageSize + "&scenario_id=" + scenarioId)
     this.loadData(response);
   }
 
   loadData(response?: any) {
     if (response) {
-      this.dataScenarios = response.data;
+      this.dataScenarioDetail = response.data;
       if ('pagination' in response) {
         this.pagination.pageSize = response.pagination.PageSize;
         this.pagination.totalRow = response.pagination.TotalRows;
@@ -195,54 +206,52 @@ export class ScenariosComponent implements OnInit {
   }
   //#endregion
 
-  //#region smsType
-  public async bindDataStatus() {
-    this.dataStatus = [];
-    this.dataStatus.push({ "id": "1", "itemName": this.utilityService.translate('scenarios.active') });
-    this.dataStatus.push({ "id": "0", "itemName": this.utilityService.translate('scenarios.inActive') });
+  async ChangeDropdownCreate() {
+    this.selectedScenariosCreate = [];
+    this.dataScenariosCreate = [];
+    let accountId = this.selectedAccountCreate.length > 0 ? this.selectedAccountCreate[0].id : 0;
+    let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosByAccount?account_id=' + accountId)
+    for (let index in response.data) {
+      this.dataScenariosCreate.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
+    }
+    if (this.dataScenariosCreate.length == 1)
+      this.selectedScenariosCreate.push({ "id": this.dataScenariosCreate[0].id, "itemName": this.dataScenariosCreate[0].itemName });
   }
-  //#endregion
+
+  async ChangeDropdownEdit() {
+    this.selectedScenariosEdit = [];
+    this.dataScenariosEdit = [];
+    let accountId = this.selectedAccountEdit.length > 0 ? this.selectedAccountEdit[0].id : 0;
+    let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosByAccount?account_id=' + accountId)
+    for (let index in response.data) {
+      this.dataScenariosEdit.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
+    }
+    if (this.dataScenariosEdit.length == 1)
+      this.selectedScenariosEdit.push({ "id": this.dataScenariosEdit[0].id, "itemName": this.dataScenariosEdit[0].itemName });
+  }
 
   //#region create new
-  async createScenarios(item) {
+  async createScenariosDetail(item) {
     let scenar = item.value;
     let combobox = item.controls;
-    if (combobox.slAccount.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
-      return;
-    }
-    let ACCOUNT_ID = combobox.slAccount.value[0].id;
-    let CODE = scenar.code;
-    if (CODE == "" || CODE == null) {
+    if (combobox.scenariosCreate.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-92"));
       return;
     }
-    let NAME = scenar.name;
-    if (NAME == "" || NAME == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-93"));
+    let SCENARIO_ID = combobox.scenariosCreate.value[0].id;
+    let VALUE = scenar.valueScenar.toString();
+    if (VALUE == "" || VALUE == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
       return;
     }
-    let CONTENT = scenar.content;
-    if (CONTENT == "" || CONTENT == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
+    if (combobox.package.value.length == 0) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-82"));
       return;
     }
-    let START_DATE = scenar.startDate;
-    let END_DATE = scenar.endDate;
-    if (START_DATE != '' && START_DATE != null && END_DATE != '' && END_DATE != null) {
-      let fromDate = this.utilityService.formatDateTempalte(START_DATE.toString());
-      let toDate = this.utilityService.formatDateTempalte(END_DATE.toString());
-      if (fromDate > toDate) {
-        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-35"));
-        return;
-      }
-    }
-    START_DATE = this.utilityService.formatDateToString(START_DATE, "yyyyMMddHHmmss");
-    END_DATE = this.utilityService.formatDateToString(END_DATE, "yyyyMMddHHmmss");
-    let IS_ACTIVE = this.checkActive == true ? 1 : 0;
+    let PACKAGE_ID = combobox.package.value[0].id;
 
-    let response: any = await this.dataService.postAsync('/api/Scenarios', {
-      ACCOUNT_ID, CODE, NAME, CONTENT, START_DATE, END_DATE, IS_ACTIVE
+    let response: any = await this.dataService.postAsync('/api/ScenariosDetail', {
+      SCENARIO_ID, VALUE, PACKAGE_ID
     })
     if (response.err_code == 0) {
       item.reset();
@@ -251,7 +260,7 @@ export class ScenariosComponent implements OnInit {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
     }
     else if (response.err_code == -19) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-19"));
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-19"));
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
@@ -261,19 +270,18 @@ export class ScenariosComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
-    let response: any = await this.dataService.getAsync('/api/Scenarios/' + id)
+    let response: any = await this.dataService.getAsync('/api/ScenariosDetail/' + id)
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
       this.formEditScenarios = new FormGroup({
         id: new FormControl(id),
-        account: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
-          : this.utilityService.translate('global.choose_account')),
-        code: new FormControl(dataDetail.CODE),
-        name: new FormControl(dataDetail.NAME),
-        content: new FormControl(dataDetail.CONTENT),
-        startDate: new FormControl(dataDetail.START_DATE),
-        endDate: new FormControl(dataDetail.END_DATE),
-        isActive: new FormControl(dataDetail.IS_ACTIVE)
+        accountEdit: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
+          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }]),
+        scenariosEdit: new FormControl(dataDetail.SCENARIO_ID != "" && dataDetail.SCENARIO_ID != null ? [{ "id": dataDetail.SCENARIO_ID, "itemName": dataDetail.SCENARIO_NAME }]
+          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_scenario') }]),
+        valueScenar: new FormControl(dataDetail.VALUE),
+        package: new FormControl(dataDetail.PACKAGE_ID != "" && dataDetail.PACKAGE_ID != null ? [{ "id": dataDetail.PACKAGE_ID, "itemName": dataDetail.PACKAGE_NAME }]
+          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }])
       });
       this.showModalUpdate.show();
     } else {
@@ -282,57 +290,38 @@ export class ScenariosComponent implements OnInit {
   }
 
   // update tin mẫu
-  async editScenarios() {
+  async editScenariosDetail() {
     let formData = this.formEditScenarios.controls;
     let ID = formData.id.value;
-    if (formData.account.value.length == 0) {
+    if (formData.scenariosEdit.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
     }
-    let ACCOUNT_ID = formData.account.value[0].id;
-    let CODE = formData.code.value;
-    if (CODE == "" || CODE == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-92"));
+    let SCENARIO_ID = formData.scenariosEdit.value[0].id;
+    let VALUE = formData.valueScenar.value.toString();
+    if (VALUE == "" || VALUE == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
       return;
     }
-    let NAME = formData.name.value;
-    if (NAME == "" || NAME == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-93"));
+    if (formData.package.value.length == 0) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-82"));
       return;
     }
-    let CONTENT = formData.content.value;
-    if (CONTENT == "" || CONTENT == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
-      return;
-    }
-    let START_DATE = formData.startDate.value;
-    let END_DATE = formData.endDate.value;
-    if (START_DATE != '' && START_DATE != null && END_DATE != '' && END_DATE != null) {
-      let fromDate = this.utilityService.formatDateTempalte(START_DATE.toString());
-      let toDate = this.utilityService.formatDateTempalte(END_DATE.toString());
-      if (fromDate > toDate) {
-        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-35"));
-        return;
-      }
-    }
-    START_DATE = this.utilityService.formatDateToString(START_DATE, "yyyyMMddHHmmss");
-    END_DATE = this.utilityService.formatDateToString(END_DATE, "yyyyMMddHHmmss");
-    let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
+    let PACKAGE_ID = formData.package.value[0].id;
 
-    let response: any = await this.dataService.putAsync('/api/Scenarios/' + ID, {
-      ACCOUNT_ID, CODE, NAME, CONTENT, START_DATE, END_DATE, IS_ACTIVE
+    let response: any = await this.dataService.putAsync('/api/ScenariosDetail/' + ID, {
+      SCENARIO_ID, VALUE, PACKAGE_ID
     })
     if (response.err_code == 0) {
-      this.selectedStatus = [];
       this.showModalUpdate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
       this.getData();
     }
     else if (response.err_code == 103) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-103"));
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-103"));
     }
     else if (response.err_code == -19) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-19"));
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-19"));
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
@@ -347,7 +336,7 @@ export class ScenariosComponent implements OnInit {
 
   // delete
   async confirmDelete(id) {
-    let response: any = await this.dataService.deleteAsync('/api/Scenarios/' + id)
+    let response: any = await this.dataService.deleteAsync('/api/ScenariosDetail/' + id)
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();

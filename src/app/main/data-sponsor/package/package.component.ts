@@ -295,8 +295,8 @@ export class PackageComponent implements OnInit {
     else if (response.err_code == 103) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("103"));
     }
-    else if (response.err_code == -10) {
-      this.notificationService.displayErrorMessage(response.err_message);
+    else if (response.err_code == -19) {
+      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-19"));
       return;
     }
     else {

@@ -38,6 +38,7 @@
     "choose_account": "Chọn tài khoản",
     "choose_package": "Chọn gói cước",
     "choose_status": "Chọn trạng thái",
+    "choose_scenario": "Chọn kịch bản",
     "no_data": "Không có dữ liệu",
     "choose_sender": "Chọn thương hiệu",
     "choose_servicetype": "Chọn loại dịch vụ",
@@ -448,19 +449,27 @@
     "name_scenar": "Tên kịch bản",
     "inCode_scenar": "Nhập mã kịch bản",
     "inName_scenar": "Nhập tên kịch bản",
-    "inValue": "Nhập giá trị",
-    "inData": "Nhập lưu lượng",
     "start_date": "Ngày bắt đầu",
     "end_date": "Ngày kết thúc",
     "active": "Hiệu lực",
     "inActive": "Không hiệu lực",
     "accumulate_points": "Tích điểm",
-    "value": "Giá trị",
     "phone": "Số điện thoại",
-    "data": "Lưu lượng",
     "add": "Thêm kịch bản",
     "edit": "Sửa kịch bản",
     "delete": "Xóa kịch bản",
-    "delete_notify": "Bạn có chắc chắn muốn xóa kịch bản "
+    "delete_notify": "Bạn có chắc chắn muốn xóa kịch bản ",
+    "inContent": "Nhập nội dung tin nhắn",
+    "content": "Nội dung",
+    "account": "Tài khoản"
+  },
+  "scenarios-detail": {
+    "title": "Quản lý Kịch bản chi tiết",
+    "scenario": "Kịch bản",
+    "inScenario": "Chọn kịch bản",
+    "inValue": "Nhập giá trị",
+    "value": "Giá trị",
+    "package": "Gói cước",
+    "account": "Tài khoản"
   }
 }

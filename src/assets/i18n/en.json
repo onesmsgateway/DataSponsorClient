@@ -37,6 +37,7 @@
     "choose_account": "Select account",
     "choose_package": "Select package",
     "choose_status": "Select status",
+    "choose_scenario": "Select scenario",
     "no_data": "No data",
     "choose_sender": "Select sender",
     "choose_servicetype": "Select service type",
@@ -455,6 +456,18 @@
     "add": "Create scenarios",
     "edit": "Edit scenarios",
     "delete": "Delete scenarios",
-    "delete_notify": "Are you sure delete scenario "
+    "delete_notify": "Are you sure delete scenario ",
+    "inContent": "Input content sms",
+    "content": "Content",
+    "account": "Account"
+  },
+  "scenarios-detail": {
+    "title": "Scenarios detail manager",
+    "scenario": "Scenario code",
+    "inScenario": "Select scenario",
+    "inValue": "Input value",
+    "value": "value",
+    "package": "Package",
+    "account": "Account"
   }
 }
