@@ -295,7 +295,8 @@
     "add_mapping": "Add new",
     "edit_mapping": "Edit thread",
     "delete_mapping": "Delete",
-    "active": "Active"
+    "active": "Active",
+    "account": "Account"
   },
   "data_cimast": {
     "tittle": "Data account manager",
@@ -371,7 +372,8 @@
     "choose_sender": "Choose sender name",
     "choose_package": "Choose package",
     "send_from_sys": "Send list from system",
-    "send_from_excel": "Send from excel"
+    "send_from_excel": "Send from excel",
+    "send_from_group": "Send from group"
   },
   "package_telco": {
     "title": "Package manager telco",
@@ -469,5 +471,72 @@
     "value": "value",
     "package": "Package",
     "account": "Account"
+  },
+  "group": {
+    "title": " Manager group customer",
+    "account": "Account",
+    "group_code": "Group code",
+    "group_name": "Group name",
+    "note": "Note",
+    "isActive": "Active",
+    "inGroup_code": "Input group code",
+    "inGroup_name": "Input group name",
+    "inNote": "Input note"
+  },
+  "partner": {
+    "partner_management": "Partner Management",
+    "partner_detail": "Partner Detail",
+    "list_partner": "List Partner",
+    "quota_status": "Quota status",
+    "partner_status": "Partner status",
+    "name_email": "Name/Email",
+    "config_quota": "Cấp Quota",
+    "add_partner": "Add new partner",
+    "partner_product": "Partner service pack by management",
+    "partner_sender": "Partner sender by management",
+    "partner_name": "input partner name",
+    "select_partner": "Choose partner",
+    "edit_partner": "Update partner",
+    "btn_view_detail": "Detail",
+    "name": "Partner name",
+    "shortName": "Short name",
+    "userSupport": "User API CSKH",
+    "userAds": "User API QC",
+    "userSmpp": "User SMPP",
+    "email": "Email receive report",
+    "thread_sending": "Thread sending",
+    "create_date": "Create date",
+    "create_user": "Create user"
+  },
+  "partner_sender": {
+    "partner_sender_management": "partner sender management",
+    "list_partner_sender": "List partner sender",
+    "iPartner": "Choose partner",
+    "iSender_grroup": "Choose sender group",
+    "iSender_name": "Choose sender name",
+    "iTelco": "input telco",
+    "partner_name": "Partner",
+    "sender_name": "Sender name",
+    "sender_group": "Sender group",
+    "telco": "Telco",
+    "create_date": "Create date",
+    "create_user": "Create user",
+    "active": "Active",
+    "fee_in_month": "Fee in month",
+    "create_partner_sender": "Create partner sender",
+    "edit_partner_sender": "Update partner sender",
+    "order": "Order",
+    "order_tmp": "Order tamp",
+    "time_reset": "Time reset"
+  },
+  "sender_group": {
+    "sender_group_management": "Sender group management",
+    "list_sender_group": "List sender group",
+    "iSender_group_code": "Input sender group code",
+    "iSender_group_name": "Input sender group name",
+    "sender_group_code": "Group code",
+    "sender_group_name": "Group name",
+    "add_sender_group": "Add sender group",
+    "edit_sender_group": "Update sender group"
   }
 }

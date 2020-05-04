@@ -147,6 +147,7 @@ export class SendDataComponent implements OnInit {
 
     this.dataType.push({ id: "0", itemName: this.utilityService.translate('package.send_from_sys') });
     this.dataType.push({ id: "1", itemName: this.utilityService.translate('package.send_from_excel') });
+    this.dataType.push({ id: "2", itemName: this.utilityService.translate('package.send_from_group') });
 
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate());

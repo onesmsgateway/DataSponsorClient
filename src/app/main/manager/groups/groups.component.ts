@@ -6,43 +6,33 @@ import { Role } from 'src/app/core/models/role';
 import { DataService } from 'src/app/core/services/data.service';
 import { ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/core/services/notification.service';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
-  selector: 'app-scenarios',
-  templateUrl: './scenarios.component.html',
-  styleUrls: ['./scenarios.component.css']
+  selector: 'app-groups',
+  templateUrl: './groups.component.html',
+  styleUrls: ['./groups.component.css']
 })
-export class ScenariosComponent implements OnInit {
+export class GroupsComponent implements OnInit {
 
   @ViewChild('showModalCreate', { static: false }) public showModalCreate: ModalDirective;
   @ViewChild('showModalUpdate', { static: false }) public showModalUpdate: ModalDirective;
   @ViewChild('confirmDeleteModal', { static: false }) public confirmDeleteModal: ModalDirective;
 
-  public dataScenarios = [];
+  public dataGroup = [];
+  public dataAccount = [];
   public pagination: Pagination = new Pagination();
-  public id;
-  public name;
-  public inCodeScenar: string = '';
-  public inNameScenar: string = '';
-  public formEditScenarios: FormGroup;
+  public groupId;
+  public groupName: string = '';
+  public groupCode: string = '';
+  public formEditGroup: FormGroup;
   public role: Role = new Role();
   public isAdmin: boolean = false;
-  public startDate: Date = new Date();
-  public endDate: Date = new Date();
-  public checkActive = true;
-  public isCheckAccumulatePoint = false;
-  public dataStatus = [];
-  public dataAccount = [];
-  public dataPackage = [];
+  public isActive = true;
 
-  public settingsFilterStatus = {};
-  public selectedStatus = [];
   public settingsFilterAccount = {};
   public selectedAccount = [];
-  public settingsFilterPackage = {};
-  public selectedPackage = [];
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxAccountEdit = [];
   public selectedItemComboboxAccountCreate = [];
@@ -62,16 +52,6 @@ export class ScenariosComponent implements OnInit {
       })
     });
 
-    this.settingsFilterStatus = {
-      text: this.utilityService.translate('global.choose_status'),
-      singleSelection: true,
-      enableSearchFilter: true,
-      enableFilterSelectAll: true,
-      searchPlaceholderText: this.utilityService.translate('global.search'),
-      noDataLabel: this.utilityService.translate('global.no_data'),
-      showCheckbox: false
-    };
-
     this.settingsFilterAccount = {
       text: this.utilityService.translate('global.choose_account'),
       singleSelection: true,
@@ -82,26 +62,13 @@ export class ScenariosComponent implements OnInit {
       showCheckbox: false
     };
 
-    this.settingsFilterPackage = {
-      text: this.utilityService.translate('global.choose_package'),
-      singleSelection: true,
-      enableSearchFilter: true,
-      enableFilterSelectAll: true,
-      searchPlaceholderText: this.utilityService.translate('global.search'),
-      noDataLabel: this.utilityService.translate('global.no_data'),
-      showCheckbox: false
-    };
-
-    this.formEditScenarios = new FormGroup({
-      id: new FormControl(),
+    this.formEditGroup = new FormGroup({
+      groupId: new FormControl(),
       account: new FormControl(),
-      code: new FormControl(),
-      name: new FormControl(),
-      content: new FormControl(),
-      startDate: new FormControl(),
-      endDate: new FormControl(),
-      isActive: new FormControl(),
-      isCheckAccumulatePoint: new FormControl()
+      groupCode: new FormControl(),
+      groupName: new FormControl(),
+      note: new FormControl(),
+      isActive: new FormControl()
     });
   }
 
@@ -118,8 +85,6 @@ export class ScenariosComponent implements OnInit {
       this.isAdmin = false;
     }
     this.getDataAccount();
-    this.bindDataStatus();
-    this.getDataPackage();
     this.getData();
   }
 
@@ -145,35 +110,21 @@ export class ScenariosComponent implements OnInit {
     }
   }
 
-  ChangeDropdownList(){
+  ChangeDropdownList() {
     this.getData();
-  }
-
-  // get data package
-  async getDataPackage() {
-    this.selectedPackage = [];
-    this.dataPackage = [];
-    let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=1&pageSize=9999&package_name=')
-    for (let index in response.data) {
-      this.dataPackage.push({ "id": response.data[index].ID, "itemName": response.data[index].DATA + "MB" });
-    }
-    if (this.dataPackage.length == 1)
-      this.selectedPackage.push({ "id": this.dataPackage[0].id, "itemName": this.dataPackage[0].itemName });
   }
 
   //#region load data
   async getData() {
     let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
-    let active = this.selectedStatus.length > 0 && this.selectedStatus[0].id != "" ? this.selectedStatus[0].id : "";
-    let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosPaging?pageIndex=' + this.pagination.pageIndex +
-      "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&code=" + this.inCodeScenar +
-      "&name=" + this.inNameScenar + "&active=" + active)
+    let response: any = await this.dataService.getAsync('/api/Group/GetGroupPaging?pageIndex=' + this.pagination.pageIndex +
+      "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_code=" + this.groupCode + "&group_name=" + this.groupName)
     this.loadData(response);
   }
 
   loadData(response?: any) {
     if (response) {
-      this.dataScenarios = response.data;
+      this.dataGroup = response.data;
       if ('pagination' in response) {
         this.pagination.pageSize = response.pagination.PageSize;
         this.pagination.totalRow = response.pagination.TotalRows;
@@ -197,55 +148,30 @@ export class ScenariosComponent implements OnInit {
   }
   //#endregion
 
-  //#region smsType
-  public async bindDataStatus() {
-    this.dataStatus = [];
-    this.dataStatus.push({ "id": "1", "itemName": this.utilityService.translate('scenarios.active') });
-    this.dataStatus.push({ "id": "0", "itemName": this.utilityService.translate('scenarios.inActive') });
-  }
-  //#endregion
-
   //#region create new
-  async createScenarios(item) {
-    let scenar = item.value;
+  async createGroup(item) {
+    let group = item.value;
     let combobox = item.controls;
     if (combobox.slAccount.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
     }
     let ACCOUNT_ID = combobox.slAccount.value[0].id;
-    let CODE = scenar.code;
-    if (CODE == "" || CODE == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-92"));
+    let GROUP_CODE = group.code;
+    if (GROUP_CODE == "" || GROUP_CODE == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-95"));
       return;
     }
-    let NAME = scenar.name;
-    if (NAME == "" || NAME == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-93"));
+    let GROUP_NAME = group.groupName;
+    if (GROUP_NAME == "" || GROUP_NAME == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-96"));
       return;
     }
-    let CONTENT = scenar.content;
-    if (CONTENT == "" || CONTENT == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
-      return;
-    }
-    let START_DATE = scenar.startDate;
-    let END_DATE = scenar.endDate;
-    if (START_DATE != '' && START_DATE != null && END_DATE != '' && END_DATE != null) {
-      let fromDate = this.utilityService.formatDateTempalte(START_DATE.toString());
-      let toDate = this.utilityService.formatDateTempalte(END_DATE.toString());
-      if (fromDate > toDate) {
-        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-35"));
-        return;
-      }
-    }
-    START_DATE = this.utilityService.formatDateToString(START_DATE, "yyyyMMddHHmmss");
-    END_DATE = this.utilityService.formatDateToString(END_DATE, "yyyyMMddHHmmss");
-    let IS_ACTIVE = this.checkActive == true ? 1 : 0;
-    let IS_ACCUMULATE_POINT = this.isCheckAccumulatePoint == true ? 1 : 0;
+    let NOTES = group.note;
+    let IS_ACTIVE = this.isActive == true ? 1 : 0;
 
-    let response: any = await this.dataService.postAsync('/api/Scenarios', {
-      ACCOUNT_ID, CODE, NAME, CONTENT, START_DATE, END_DATE, IS_ACTIVE, IS_ACCUMULATE_POINT
+    let response: any = await this.dataService.postAsync('/api/Group', {
+      ACCOUNT_ID, GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
     })
     if (response.err_code == 0) {
       item.reset();
@@ -264,20 +190,17 @@ export class ScenariosComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
-    let response: any = await this.dataService.getAsync('/api/Scenarios/' + id)
+    let response: any = await this.dataService.getAsync('/api/Group/' + id)
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
-      this.formEditScenarios = new FormGroup({
-        id: new FormControl(id),
+      this.formEditGroup = new FormGroup({
+        groupId: new FormControl(id),
         account: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
           : this.utilityService.translate('global.choose_account')),
-        code: new FormControl(dataDetail.CODE),
-        name: new FormControl(dataDetail.NAME),
-        content: new FormControl(dataDetail.CONTENT),
-        startDate: new FormControl(dataDetail.START_DATE),
-        endDate: new FormControl(dataDetail.END_DATE),
-        isActive: new FormControl(dataDetail.IS_ACTIVE),
-        isCheckAccumulatePoint: new FormControl(dataDetail.IS_ACCUMULATE_POINT)
+        groupCode: new FormControl(dataDetail.CODE),
+        groupName: new FormControl(dataDetail.NAME),
+        note: new FormControl(dataDetail.CONTENT),
+        isActive: new FormControl(dataDetail.IS_ACTIVE)
       });
       this.showModalUpdate.show();
     } else {
@@ -286,49 +209,31 @@ export class ScenariosComponent implements OnInit {
   }
 
   // update tin mẫu
-  async editScenarios() {
-    let formData = this.formEditScenarios.controls;
+  async editGroup() {
+    let formData = this.formEditGroup.controls;
     let ID = formData.id.value;
     if (formData.account.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
     }
     let ACCOUNT_ID = formData.account.value[0].id;
-    let CODE = formData.code.value;
-    if (CODE == "" || CODE == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-92"));
+    let GROUP_CODE = formData.groupCode.value;
+    if (GROUP_CODE == "" || GROUP_CODE == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-95"));
       return;
     }
-    let NAME = formData.name.value;
-    if (NAME == "" || NAME == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-93"));
+    let GROUP_NAME = formData.groupName.value;
+    if (GROUP_NAME == "" || GROUP_NAME == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-96"));
       return;
     }
-    let CONTENT = formData.content.value;
-    if (CONTENT == "" || CONTENT == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
-      return;
-    }
-    let START_DATE = formData.startDate.value;
-    let END_DATE = formData.endDate.value;
-    if (START_DATE != '' && START_DATE != null && END_DATE != '' && END_DATE != null) {
-      let fromDate = this.utilityService.formatDateTempalte(START_DATE.toString());
-      let toDate = this.utilityService.formatDateTempalte(END_DATE.toString());
-      if (fromDate > toDate) {
-        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-35"));
-        return;
-      }
-    }
-    START_DATE = this.utilityService.formatDateToString(START_DATE, "yyyyMMddHHmmss");
-    END_DATE = this.utilityService.formatDateToString(END_DATE, "yyyyMMddHHmmss");
+    let NOTES = formData.note.value;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
-    let IS_ACCUMULATE_POINT = formData.isCheckAccumulatePoint.value == true ? 1 : 0;
 
     let response: any = await this.dataService.putAsync('/api/Scenarios/' + ID, {
-      ACCOUNT_ID, CODE, NAME, CONTENT, START_DATE, END_DATE, IS_ACTIVE, IS_ACCUMULATE_POINT
+      ACCOUNT_ID, GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
     })
     if (response.err_code == 0) {
-      this.selectedStatus = [];
       this.showModalUpdate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
       this.getData();
@@ -345,14 +250,14 @@ export class ScenariosComponent implements OnInit {
   }
 
   showConfirmDelete(id, name) {
-    this.id = id;
-    this.name = name;
+    this.groupId = id;
+    this.groupName = name;
     this.confirmDeleteModal.show();
   }
 
   // delete
   async confirmDelete(id) {
-    let response: any = await this.dataService.deleteAsync('/api/Scenarios/' + id)
+    let response: any = await this.dataService.deleteAsync('/api/Group/' + id)
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();

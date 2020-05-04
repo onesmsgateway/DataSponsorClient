@@ -301,7 +301,8 @@
     "add_mapping": "Thêm luồng mới",
     "edit_mapping": "Sửa luồng",
     "delete_mapping": "Xóa luồng",
-    "active": "Hiệu lực"
+    "active": "Hiệu lực",
+    "account": "Tài khoản"
   },
   "data_cimast": {
     "tittle": "Quản lý dữ liệu tài khoản",
@@ -377,7 +378,8 @@
     "choose_sender": "Chọn thương hiệu",
     "choose_package": "Chọn gói cước",
     "send_from_sys": "Gửi từ danh sách trên hệ thống",
-    "send_from_excel": "Gửi từ file excel"
+    "send_from_excel": "Gửi từ file excel",
+    "send_from_group": "Gửi từ nhóm"
   },
   "package_telco": {
     "title": "Quản lý gói cước nhà mạng",
@@ -464,12 +466,79 @@
     "account": "Tài khoản"
   },
   "scenarios-detail": {
-    "title": "Quản lý Kịch bản chi tiết",
+    "title": "Quản lý kịch bản chi tiết",
     "scenario": "Kịch bản",
     "inScenario": "Chọn kịch bản",
     "inValue": "Nhập giá trị",
     "value": "Giá trị",
     "package": "Gói cước",
     "account": "Tài khoản"
+  },
+  "group": {
+    "title": "Quản lý nhóm khách hàng",
+    "account": "Tài khoản",
+    "group_code": "Mã nhóm",
+    "group_name": "Tên nhóm",
+    "note": "Ghi chú",
+    "isActive": "Kích hoạt",
+    "inGroup_code": "Nhập mã nhóm",
+    "inGroup_name": "Nhập tên nhóm",
+    "inNote": "Nhập ghi chú"
+  },
+  "partner": {
+    "partner_management": "Quản lý đối tác",
+    "partner_detail": "Chi tiết đối tác",
+    "list_partner": "Danh sách đối tác",
+    "quota_status": "Trạng thái Quota",
+    "partner_status": "Trạng thái tài khoản",
+    "name_email": "Tên/Email",
+    "config_quota": "Cấp Quota",
+    "add_partner": "Thêm đối tác",
+    "partner_product": "Quản lý gói cước theo đối tác",
+    "partner_sender": "Quản lý thương hiệu đối theo tác",
+    "partner_name": "Nhập tên đối tác",
+    "select_partner": "Chọn đối tác",
+    "edit_partner": "Sửa đối tác",
+    "btn_view_detail": "Chi tiết",
+    "name": "Tên đối tác",
+    "shortName": "Tên viết tắt",
+    "userSupport": "Tài khoản API CSKH",
+    "userAds": "Tài khoản API QC",
+    "userSmpp": "Tài khoản Smpp",
+    "email": "Thư nhận báo cáo",
+    "thread_sending": "Phân luồng gửi tin",
+    "create_date": "Ngày tạo",
+    "create_user": "Người tạo"
+  },
+  "partner_sender": {
+    "partner_sender_management": "Quản lý thương hiệu theo đối tác",
+    "list_partner_sender": "Danh sách thương hiệu theo đối tác",
+    "iPartner": "Chọn đối tác",
+    "iSender_grroup": "Chọn nhóm thương hiệu",
+    "iSender_name": "Chọn thương hiệu",
+    "iTelco": "Chọn nhà mạng",
+    "partner_name": "Đối tác",
+    "sender_name": "Thương hiệu",
+    "sender_group": "Nhóm thương hiệu",
+    "telco": "Nhà mạng",
+    "create_date": "Ngày tạo",
+    "create_user": "Người tạo",
+    "active": "Hiệu lực",
+    "fee_in_month": "Phí duy trì (/tháng)",
+    "create_partner_sender": "Thêm mới thương hiệu đối tác",
+    "edit_partner_sender": "Cập nhật thương hiệu đối tác",
+    "order": "Thứ tự",
+    "order_tmp": "Thứ tự tạm thời",
+    "time_reset": "Thời gian reset"
+  },
+  "sender_group": {
+    "sender_group_management": "Quản lý nhóm thương hiệu",
+    "list_sender_group": "Danh sách nhóm thương hiệu",
+    "iSender_group_code": "Nhập mã nhóm thương hiệu",
+    "iSender_group_name": "Nhập tên nhóm thương hiệu",
+    "sender_group_code": "Mã nhóm thương hiệu",
+    "sender_group_name": "Tên nhóm thương hiệu",
+    "add_sender_group": "Thêm nhóm thương hiệu",
+    "edit_sender_group": "Cập nhật nhóm thương hiệu"
   }
 }

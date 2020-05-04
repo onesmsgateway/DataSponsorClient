@@ -23,7 +23,8 @@ export const mainRoutes: Routes = [{
     { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule), canActivate: [AuthGuard] },
     { path: 'system', loadChildren: () => import('./system/system.module').then(m => m.SystemModule), canActivate: [AuthGuard] },
     { path: 'statistic', loadChildren: () => import('./statistic/statistic.module').then(m => m.StatisticModule), canActivate: [AuthGuard] },
-    { path: 'data-sponsor', loadChildren: () => import('./data-sponsor/data-sponsor.module').then(m => m.DataSponsorModule), canActivate: [AuthGuard] }
+    { path: 'data-sponsor', loadChildren: () => import('./data-sponsor/data-sponsor.module').then(m => m.DataSponsorModule), canActivate: [AuthGuard] },
+    { path: 'manager', loadChildren: () => import('./manager/manager.module').then(m => m.ManagerModule), canActivate: [AuthGuard] }
     ]
   }
 ];

@@ -2,7 +2,7 @@
     <section>
         <div class="page-title clearfix">
             <div class="title_left">
-                <h3>{{ 'scenarios.title' | translate }}</h3>
+                <h3>{{ 'group.title' | translate }}</h3>
             </div>
         </div>
     </section>
@@ -19,18 +19,12 @@
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
-                                <input type="text" class="form-control" name="inCodeScenar" [(ngModel)]="inCodeScenar"
-                                    placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
+                                <input type="text" class="form-control" name="groupCode" [(ngModel)]="groupCode"
+                                    placeholder="{{ 'group.inGroup_code' | translate }}">
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
-                                <input type="text" class="form-control" name="inNameScenar" [(ngModel)]="inNameScenar"
-                                    placeholder="{{ 'scenarios.inName_scenar' | translate }}">
-                            </div>
-                            <div class="col-md-2 col-sm-3 col-xs-6">
-                                <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus"
-                                    [settings]="settingsFilterStatus" name="status" (onSelect)="ChangeDropdownList()"
-                                    (onDeSelect)="ChangeDropdownList()">
-                                </angular2-multiselect>
+                                <input type="text" class="form-control" name="groupName" [(ngModel)]="groupName"
+                                    placeholder="{{ 'group.inGroup_name' | translate }}">
                             </div>
                             <div class="col-md-4 col-sm-4 col-xs-6">
                                 <button type="button" style="float: right;" (click)="getData()"
@@ -63,36 +57,27 @@
                                             <tr>
                                                 <th class="text-center" style="width:5%">STT</th>
                                                 <th class="text-center" style="white-space: nowrap;">
-                                                    {{ 'scenarios.account' | translate }}</th>
+                                                    {{ 'group.account' | translate }}</th>
                                                 <th class="text-center" style="white-space: nowrap;">
-                                                    {{ 'scenarios.code_scenar' | translate }}</th>
-                                                <th class="text-center" style="width:15%">
-                                                    {{ 'scenarios.name_scenar' | translate }}</th>
+                                                    {{ 'group.group_code' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;width:15%">
+                                                    {{ 'group.group_name' | translate }}</th>
                                                 <th class="text-center" style="white-space: nowrap;">
-                                                    {{ 'scenarios.content' | translate }}
+                                                    {{ 'group.note' | translate }}
                                                 </th>
                                                 <th class="text-center" style="white-space: nowrap;">
-                                                    {{ 'scenarios.start_date' | translate }}
-                                                </th>
-                                                <th class="text-center" style="white-space: nowrap;">
-                                                    {{ 'scenarios.end_date' | translate }}
-                                                </th>
-                                                <th class="text-center" style="white-space: nowrap;">
-                                                    {{ 'scenarios.active' | translate }}
+                                                    {{ 'group.active' | translate }}
                                                 </th>
                                                 <th class="text-center" style="width:8%">{{ 'global.tool' | translate }}
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let item of dataScenarios; let i = index" [attr.data-index]="i">
+                                            <tr *ngFor="let item of dataGroup; let i = index" [attr.data-index]="i">
                                                 <td class="text-center" scope="row">{{i+1}}</td>
                                                 <td>{{item.USER_NAME}}</td>
-                                                <td>{{item.CODE}}</td>
-                                                <td>{{item.NAME}}</td>
-                                                <td class="text-center">{{item.CONTENT}}</td>
-                                                <td class="text-center">{{item.START_DATE}}</td>
-                                                <td class="text-center">{{item.END_DATE}}</td>
+                                                <td>{{item.GROUP_CODE}}</td>
+                                                <td>{{item.GROUP_NAME}}</td>
                                                 <td class="box-checkbox-table"><input type="checkbox"
                                                         [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox"
                                                         disabled></td>
@@ -103,7 +88,7 @@
                                                             class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
                                                         <button type="button" class="btn btn-danger btn-sm"
                                                             *ngIf="role.IS_DELETE"
-                                                            (click)="showConfirmDelete(item.ID, item.NAME)">{{ 'global.delete' | translate }}</button>
+                                                            (click)="showConfirmDelete(item.GROUP_ID, item.GROUP_NAME)">{{ 'global.delete' | translate }}</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -143,72 +128,50 @@
     </section>
 </article>
 
-<!-- Thêm kịch bản -->
+<!-- Thêm nhóm -->
 <div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
     aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="dialog-static-name" class="modal-title pull-left">{{'scenarios.add' | translate}}
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'group.add' | translate}}
                 </h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="showModalCreate.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form #formAdd="ngForm" (ngSubmit)="createScenarios(formAdd)">
+            <form #formAdd="ngForm" (ngSubmit)="createGroup(formAdd)">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'scenarios.account' | translate}}</label>
+                            <label>{{'group.account' | translate}}</label>
                             <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate"
                                 [settings]="settingsFilterAccount" name="slAccount">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.code_scenar' | translate}}</label>
-                            <input type="text" class="form-control" name="code" ngModel
-                                placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
+                            <label>{{'group.group_code' | translate}}</label>
+                            <input type="text" class="form-control" name="groupCode" ngModel
+                                placeholder="{{ 'group.inGroup_code' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.name_scenar' | translate}}</label>
-                            <input type="text" class="form-control" name="name"
-                                placeholder="{{ 'scenarios.inName_scenar' | translate }}" ngModel>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.start_date' | translate}}</label>
-                            <input type="text" class="form-control" name="startDate" bsDatepicker
-                                [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="startDate"
-                                placeholder="{{ 'scenarios.start_date' | translate }}">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.end_date' | translate}}</label>
-                            <input type="text" class="form-control" name="endDate" bsDatepicker
-                                [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="endDate"
-                                placeholder="{{ 'scenarios.end_date' | translate }}">
+                            <label>{{'group.group_name' | translate}}</label>
+                            <input type="text" class="form-control" name="groupName"
+                                placeholder="{{ 'group.inGroup_name' | translate }}" ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>&nbsp;</label>
                             <div class="checkbox">
                                 <label><input type="checkbox" value="" class="checkbox" name="checkActive" ngModel>
-                                    <span>{{'scenarios.active' | translate}}</span> </label>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <label>&nbsp;</label>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" name="isCheckAccumulatePoint"
-                                        ngModel>
-                                    <span>{{'scenarios.accumulate_points' | translate}}</span> </label>
+                                    <span>{{'scenarios.isActive' | translate}}</span> </label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                            <label>{{'scenarios.content' | translate}}</label>
-                            <textarea type="text" class="form-control" name="content" rows="3"
-                                placeholder="{{ 'scenarios.inContent' | translate }}" ngModel></textarea>
+                            <label>{{'group.note' | translate}}</label>
+                            <textarea type="text" class="form-control" name="note" rows="3"
+                                placeholder="{{ 'group.inNote' | translate }}" ngModel></textarea>
                         </div>
                     </div>
                 </div>
@@ -222,7 +185,7 @@
     </div>
 </div>
 
-<!-- modal sửa kịch bản-->
+<!-- modal sửa nhóm-->
 <div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
     aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
@@ -234,60 +197,39 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form [formGroup]="formEditScenarios" (ngSubmit)="editScenarios()">
+            <form [formGroup]="formEditgroup" (ngSubmit)="editgroup()">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'scenarios.account' | translate}}</label>
+                            <label>{{'group.account' | translate}}</label>
                             <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit"
                                 [settings]="settingsFilterAccount" formControlName="account">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.code_scenar' | translate}}</label>
-                            <input type="hidden" formControlName="id">
-                            <input type="text" class="form-control" formControlName="code" readonly
-                                placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
+                            <label>{{'group.group_code' | translate}}</label>
+                            <input type="hidden" formControlName="groupId">
+                            <input type="text" class="form-control" formControlName="groupCode" readonly
+                                placeholder="{{ 'group.inGroup_code' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.name_scenar' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="name"
-                                placeholder="{{ 'scenarios.inName_scenar' | translate }}">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.start_date' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="startDate" bsDatepicker
-                                [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
-                                placeholder="{{ 'scenarios.start_date' | translate }}">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.end_date' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="endDate" bsDatepicker
-                                [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
-                                placeholder="{{ 'scenarios.end_date' | translate }}">
+                            <label>{{'group.group_name' | translate}}</label>
+                            <input type="text" class="form-control" formControlName="groupName"
+                                placeholder="{{ 'group.inGroup_name' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>&nbsp;</label>
                             <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" formControlName="isActive">
-                                    <span>{{'scenarios.active' | translate}}</span> </label>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <label>&nbsp;</label>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" formControlName="isCheckAccumulatePoint">
-                                    <span>{{'scenarios.accumulate_points' | translate}}</span> </label>
+                                <label><input type="checkbox" value="" class="checkbox" formControlName="checkActive">
+                                    <span>{{'scenarios.isActive' | translate}}</span> </label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                            <label>{{'scenarios.content' | translate}}</label>
-                            <textarea type="text" class="form-control" formControlName="content" rows="3"
-                                placeholder="{{ 'scenarios.inContent' | translate }}"></textarea>
+                            <label>{{'group.note' | translate}}</label>
+                            <textarea type="text" class="form-control" formControlName="note" rows="3"
+                                placeholder="{{ 'group.inNote' | translate }}"></textarea>
                         </div>
                     </div>
                 </div>
@@ -301,7 +243,7 @@
     </div>
 </div>
 
-<!-- modal xác nhận xóa kịch bản-->
+<!-- modal xác nhận xóa nhóm-->
 <div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
     role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-sm">
@@ -313,13 +255,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div>{{'scenarios.delete_notify' | translate}} "<b class="text-success">{{name}}</b>"?</div>
+                <div>{{'group.delete_notify' | translate}} "<b class="text-success">{{groupName}}</b>"?</div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default"
                     (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
                 <button type="submit" class="btn btn-success"
-                    (click)="confirmDelete(id)">{{'global.confirm' | translate}}</button>
+                    (click)="confirmDelete(groupId)">{{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>
