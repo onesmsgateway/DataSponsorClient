@@ -39,6 +39,7 @@
     "choose_package": "Chọn gói cước",
     "choose_status": "Chọn trạng thái",
     "choose_scenario": "Chọn kịch bản",
+    "choose_group": "Chọn nhóm",
     "no_data": "Không có dữ liệu",
     "choose_sender": "Chọn thương hiệu",
     "choose_servicetype": "Chọn loại dịch vụ",
@@ -540,5 +541,26 @@
     "sender_group_name": "Tên nhóm thương hiệu",
     "add_sender_group": "Thêm nhóm thương hiệu",
     "edit_sender_group": "Cập nhật nhóm thương hiệu"
+  },
+  "member": {
+    "code": "Mã member",
+    "inName": "Nhập tên member",
+    "name": "Tên member",
+    "inPhone": "Nhập số điện thoại",
+    "phone": "Số điện thoại",
+    "accumulated_point": "Tích điểm",
+    "inMail": "Nhập email",
+    "mail": "Email",
+    "inAddress": "Nhập địa chỉ",
+    "address": "Địa chỉ",
+    "inNotes": "Nhập ghi chú",
+    "notes": "Ghi chú",
+    "account": "Tài khoản",
+    "is_active": "Active",
+    "create_date": "Ngày tạo",
+    "add": "Thêm member",
+    "edit": "Sửa member",
+    "delete_notify": "Bạn có chắc chắn muốn xóa ",
+    "group": "Nhóm"
   }
 }

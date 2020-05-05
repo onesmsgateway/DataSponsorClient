@@ -38,6 +38,7 @@
     "choose_package": "Select package",
     "choose_status": "Select status",
     "choose_scenario": "Select scenario",
+    "choose_group": "Select group",
     "no_data": "No data",
     "choose_sender": "Select sender",
     "choose_servicetype": "Select service type",
@@ -538,5 +539,26 @@
     "sender_group_name": "Group name",
     "add_sender_group": "Add sender group",
     "edit_sender_group": "Update sender group"
+  },
+  "member": {
+    "code": "Member code",
+    "inName": "Input member name",
+    "name": "Member name",
+    "inPhone": "Input phone",
+    "phone": "Phone",
+    "accumulated_point": "Accumulated point",
+    "inMail": "Input email",
+    "mail": "Email",
+    "inAddress": "Input address",
+    "address": "Address",
+    "inNotes": "Input notes",
+    "notes": "Note",
+    "account": "Account",
+    "is_active": "Active",
+    "create_date": "Create date",
+    "add": "Add member",
+    "edit": "Edit member",
+    "delete_notify": "Are you sure delete ",
+    "group": "Group"
   }
 }

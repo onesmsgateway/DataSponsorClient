@@ -13,6 +13,7 @@ import { ManagerComponent } from './manager.component';
 import { AuthGuard } from 'src/app/core/guards/auth.guard';
 import { SenderGroupComponent } from './sender-group/sender-group.component';
 import { GroupsComponent } from './groups/groups.component';
+import { MemberComponent } from './member/member.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
@@ -30,7 +31,8 @@ export const managerRoutes: Routes = [{
     ManagerComponent,
     SenderComponent,
     SenderGroupComponent,
-    GroupsComponent],
+    GroupsComponent,
+    MemberComponent],
   imports: [
     FormsModule,
     ReactiveFormsModule,

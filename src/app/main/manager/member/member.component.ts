@@ -10,31 +10,39 @@ import { UtilityService } from 'src/app/core/services/utility.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
-  selector: 'app-groups',
-  templateUrl: './groups.component.html',
-  styleUrls: ['./groups.component.css']
+  selector: 'app-member',
+  templateUrl: './member.component.html',
+  styleUrls: ['./member.component.css']
 })
-export class GroupsComponent implements OnInit {
+export class MemberComponent implements OnInit {
 
   @ViewChild('showModalCreate', { static: false }) public showModalCreate: ModalDirective;
   @ViewChild('showModalUpdate', { static: false }) public showModalUpdate: ModalDirective;
   @ViewChild('confirmDeleteModal', { static: false }) public confirmDeleteModal: ModalDirective;
 
-  public dataGroup = [];
+  public dataMember = [];
   public dataAccount = [];
+  public dataGroup = [];
+  public lstChecked = [];
   public pagination: Pagination = new Pagination();
-  public groupId;
-  public groupName: string = '';
-  public groupCode: string = '';
-  public formEditGroup: FormGroup;
+  public personId;
+  public fullName: string = '';
+  public name: string = '';
+  public phone: string = '';
+  public ids: string = '';
+  public formEditMember: FormGroup;
   public role: Role = new Role();
   public isAdmin: boolean = false;
   public isActive = true;
 
   public settingsFilterAccount = {};
+  public settingsFilterGroup = {};
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxAccountEdit = [];
   public selectedItemComboboxAccountCreate = [];
+  public selectedItemComboboxGroup = [];
+  public selectedItemComboboxGroupEdit = [];
+  public selectedItemComboboxGroupCreate = [];
 
   constructor(
     private dataService: DataService,
@@ -61,12 +69,26 @@ export class GroupsComponent implements OnInit {
       showCheckbox: false
     };
 
-    this.formEditGroup = new FormGroup({
-      groupId: new FormControl(),
+    this.settingsFilterAccount = {
+      text: this.utilityService.translate('global.choose_group'),
+      singleSelection: false,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+
+    this.formEditMember = new FormGroup({
+      personId: new FormControl(),
       account: new FormControl(),
-      groupCode: new FormControl(),
-      groupName: new FormControl(),
-      note: new FormControl(),
+      group: new FormControl(),
+      name: new FormControl(),
+      phone: new FormControl(),
+      mail: new FormControl(),
+      address: new FormControl(),
+      notes: new FormControl(),
+      accumulatedPoint: new FormControl(),
       isActive: new FormControl()
     });
   }
@@ -84,6 +106,7 @@ export class GroupsComponent implements OnInit {
       this.isAdmin = false;
     }
     this.getDataAccount();
+    this.getDataGroup();
     this.getData();
   }
 
@@ -109,6 +132,21 @@ export class GroupsComponent implements OnInit {
     }
   }
 
+  //#region load group sender
+  async getDataGroup() {
+    let account = "";
+    if (this.isAdmin)
+      account = this.selectedItemComboboxAccount.length > 0 ? this.selectedItemComboboxAccount[0].id : "";
+    else
+      account = this.selectedItemComboboxAccount.length > 0 ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+    let response: any = await this.dataService.getAsync('/api/GetGroupByAccount?accountId=' + account)
+    if (response)
+      for (let index in response.data) {
+        this.dataGroup.push({ "id": response.data[index].GROUP_ID, "itemName": response.data[index].GROUP_NAME });
+      }
+  }
+  //#endregion
+
   ChangeDropdownList() {
     this.getData();
   }
@@ -116,14 +154,14 @@ export class GroupsComponent implements OnInit {
   //#region load data
   async getData() {
     let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
-    let response: any = await this.dataService.getAsync('/api/Group/GetGroupPaging?pageIndex=' + this.pagination.pageIndex +
-      "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_code=" + this.groupCode + "&group_name=" + this.groupName)
+    let response: any = await this.dataService.getAsync('/api/Person/GetPersonPaging?pageIndex=' + this.pagination.pageIndex +
+      "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&name=" + this.name + "&phone=" + this.phone)
     this.loadData(response);
   }
 
   loadData(response?: any) {
     if (response) {
-      this.dataGroup = response.data;
+      this.dataMember = response.data;
       if ('pagination' in response) {
         this.pagination.pageSize = response.pagination.PageSize;
         this.pagination.totalRow = response.pagination.TotalRows;
@@ -147,30 +185,48 @@ export class GroupsComponent implements OnInit {
   }
   //#endregion
 
+  getIdGroup(event) {
+    this.ids = '';
+    if (!this.lstChecked.includes(event.id)) {
+      this.lstChecked.push(event.id);
+    }
+    else {
+      let index = this.lstChecked.indexOf(event.id);
+      if (index != -1) {
+        this.lstChecked.splice(index, 1);
+      }
+    }
+    this.ids = this.lstChecked.join(",");
+  }
+
   //#region create new
-  async createGroup(item) {
-    let group = item.value;
+  async createMember(item) {
+    let member = item.value;
     let combobox = item.controls;
     if (combobox.slAccount.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
     }
     let ACCOUNT_ID = combobox.slAccount.value[0].id;
-    let GROUP_CODE = group.code;
-    if (GROUP_CODE == "" || GROUP_CODE == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-95"));
+    let NAME = member.name;
+    if (NAME == "" || NAME == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-97"));
       return;
     }
-    let GROUP_NAME = group.groupName;
-    if (GROUP_NAME == "" || GROUP_NAME == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-96"));
+    let PHONE = member.phone;
+    if (PHONE == "" || PHONE == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-62"));
       return;
     }
-    let NOTES = group.note;
+    let GROUP_IDS = this.ids;
+    let EMAIL = member.mail;
+    let ADDRESS = member.address;
+    let NOTES = member.notes;
     let IS_ACTIVE = this.isActive == true ? 1 : 0;
+    let ACCUMULATED_POINTS = this.isActive == true ? 1 : 0;
 
-    let response: any = await this.dataService.postAsync('/api/Group', {
-      ACCOUNT_ID, GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
+    let response: any = await this.dataService.postAsync('/api/Person', {
+      ACCOUNT_ID, NAME, PHONE, EMAIL, ADDRESS, NOTES, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS
     })
     if (response.err_code == 0) {
       item.reset();
@@ -189,16 +245,21 @@ export class GroupsComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
-    let response: any = await this.dataService.getAsync('/api/Group/' + id)
+    let response: any = await this.dataService.getAsync('/api/Person/' + id)
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
-      this.formEditGroup = new FormGroup({
-        groupId: new FormControl(id),
+      this.formEditMember = new FormGroup({
+        personId: new FormControl(id),
         account: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
           : this.utilityService.translate('global.choose_account')),
-        groupCode: new FormControl(dataDetail.CODE),
-        groupName: new FormControl(dataDetail.NAME),
-        note: new FormControl(dataDetail.CONTENT),
+        group: new FormControl(dataDetail.GROUP_ID != "" && dataDetail.GROUP_ID != null ? [{ "id": dataDetail.GROUP_ID, "itemName": dataDetail.GROUP_NAME }]
+          : this.utilityService.translate('global.choose_group')),
+        name: new FormControl(dataDetail.NAME),
+        phone: new FormControl(dataDetail.PHONE),
+        mail: new FormControl(dataDetail.EMAIL),
+        address: new FormControl(dataDetail.ADDRESS),
+        notes: new FormControl(dataDetail.NOTES),
+        accumulatedPoint: new FormControl(dataDetail.ACCUMULATED_POINTS),
         isActive: new FormControl(dataDetail.IS_ACTIVE)
       });
       this.showModalUpdate.show();
@@ -208,29 +269,33 @@ export class GroupsComponent implements OnInit {
   }
 
   // update tin mẫu
-  async editGroup() {
-    let formData = this.formEditGroup.controls;
+  async editMember() {
+    let formData = this.formEditMember.controls;
     let ID = formData.id.value;
     if (formData.account.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
     }
     let ACCOUNT_ID = formData.account.value[0].id;
-    let GROUP_CODE = formData.groupCode.value;
-    if (GROUP_CODE == "" || GROUP_CODE == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-95"));
+    let NAME = formData.name.value;
+    if (NAME == "" || NAME == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-97"));
       return;
     }
-    let GROUP_NAME = formData.groupName.value;
-    if (GROUP_NAME == "" || GROUP_NAME == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-96"));
+    let PHONE = formData.phone.value;
+    if (PHONE == "" || PHONE == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-62"));
       return;
     }
-    let NOTES = formData.note.value;
+    let GROUP_IDS = this.ids;
+    let EMAIL = formData.mail.value;
+    let ADDRESS = formData.address.value;
+    let NOTES = formData.notes.value;
+    let ACCUMULATED_POINTS = formData.accumulatedPoint.value == true ? 1 : 0;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
 
-    let response: any = await this.dataService.putAsync('/api/Group/' + ID, {
-      ACCOUNT_ID, GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
+    let response: any = await this.dataService.putAsync('/api/Person/' + ID, {
+      ACCOUNT_ID, NAME, PHONE, EMAIL, ADDRESS, NOTES, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS
     })
     if (response.err_code == 0) {
       this.showModalUpdate.hide();
@@ -249,14 +314,14 @@ export class GroupsComponent implements OnInit {
   }
 
   showConfirmDelete(id, name) {
-    this.groupId = id;
-    this.groupName = name;
+    this.personId = id;
+    this.fullName = name;
     this.confirmDeleteModal.show();
   }
 
   // delete
   async confirmDelete(id) {
-    let response: any = await this.dataService.deleteAsync('/api/Group/' + id)
+    let response: any = await this.dataService.deleteAsync('/api/Person/' + id)
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();
