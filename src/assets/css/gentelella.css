@@ -164,7 +164,7 @@
 }
 
 .left_col {
-    background: #2A3F54
+    background: #290e3e
 }
 
 .nav-sm .container.body .col-md-3.left_col {
@@ -415,7 +415,7 @@ body .container.body .right_col {
 .nav_title {
     width: 230px;
     float: left;
-    background: #2A3F54;
+    background: #290e3e;
     border-radius: 0;
     height: 57px
 }
@@ -931,7 +931,7 @@ a {
 }
 
 .nav.child_menu>li>a {
-    color: rgba(255, 255, 255, .75);
+    color: rgba(255, 255, 255, .85);
     font-size: 12px;
     padding: 9px
 }
@@ -1841,7 +1841,7 @@ span.right {
     padding: 5px 0 0;
     position: fixed;
     width: 230px;
-    background: #2A3F54;
+    background: #290e3e;
     z-index: 999
 }
 
@@ -4640,7 +4640,7 @@ ul.notifications {
 }
 
 .main_container {
-    background: #2A3F54;
+    background: #290e3e;
 }
 
 @media (max-width:460px) {

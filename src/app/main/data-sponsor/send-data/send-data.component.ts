@@ -26,18 +26,21 @@ export class SendDataComponent implements OnInit {
   public dataPhoneTamp = [];
   public dataType = [];
   public dataFileList = [];
+  public dataGroup = [];
   public dataPackage = [];
   public dataAccount = [];
   public dataPhonePaging = [];
   public dataSenderName = [];
   public settingsFilterAccount = {};
   public settingsFilterFileList = {};
+  public settingsFilterGroup = {};
   public settingsFilterPackage = {};
   public settingsFilterSender = {};
   public settingsFilterType = {};
   public selectedItemComboboxType = [];
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxFileList = [];
+  public selectedItemComboboxGroup = [];
   public selectedItemComboboxPackage = [];
   public selectedItemComboboxSender = [];
   public lstIdsAccountPhoneList = [];
@@ -50,6 +53,8 @@ export class SendDataComponent implements OnInit {
   public isShowDateTime;
   public isSendSMS: boolean = false;
   public isSendExcel: boolean = false;
+  public isSendFileList: boolean = false;
+  public isSendGroup: boolean = false;
   public phoneList: string = "";
   public fileName;
   public slType;
@@ -77,7 +82,7 @@ export class SendDataComponent implements OnInit {
   public pagination: Pagination = new Pagination();
 
   public timeSchedule: Date;
-  public programName: string = '';
+  public programName: string = 'Tên chiến dịch';
 
   public total_amt = 0;
   public quota = 0;
@@ -111,6 +116,15 @@ export class SendDataComponent implements OnInit {
 
     this.settingsFilterFileList = {
       text: this.utilityService.translate('package.choose_phone_list'),
+      singleSelection: false,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data')
+    };
+
+    this.settingsFilterGroup = {
+      text: this.utilityService.translate('global.choose_group'),
       singleSelection: false,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -155,6 +169,7 @@ export class SendDataComponent implements OnInit {
   ngOnInit() {
     this.getAccountLogin();
     this.selectedItemComboboxType.push({ id: "0", itemName: this.utilityService.translate('package.send_from_sys') });
+    this.isSendFileList = true;
   }
 
   async getAccountLogin() {
@@ -217,9 +232,17 @@ export class SendDataComponent implements OnInit {
   changeType() {
     if (this.selectedItemComboboxType.length > 0) {
       if (this.selectedItemComboboxType[0].id == 1) {
+        this.isSendFileList = false;
         this.isSendExcel = true;
-      } else {
+        this.isSendGroup = false;
+      } else if (this.selectedItemComboboxType[0].id == 2) {
         this.isSendExcel = false;
+        this.isSendFileList = false;
+        this.isSendGroup = true;
+      } else {
+        this.isSendFileList = true;
+        this.isSendExcel = false;
+        this.isSendGroup = false;
         this.amt_expected = null;
         this.selectedItemComboboxPackage = [];
       }
@@ -230,42 +253,50 @@ export class SendDataComponent implements OnInit {
   async getPhoneNumber(event) {
     this.dataPhoneTamp = [];
     this.dataPhone = [];
-    if (!this.lstChecked.includes(event.id)) {
-      this.lstChecked.push(event.id);
-      this.lstCheckedName.push(event.itemName);
-    }
-    else {
-      let index = this.lstChecked.indexOf(event.id);
-      if (index != -1) {
-        this.lstChecked.splice(index, 1);
-        this.lstCheckedName.splice(index, 1);
+    if (this.isSendFileList) {
+      if (!this.lstChecked.includes(event.id)) {
+        this.lstChecked.push(event.id);
+        this.lstCheckedName.push(event.itemName);
       }
+      else {
+        let index = this.lstChecked.indexOf(event.id);
+        if (index != -1) {
+          this.lstChecked.splice(index, 1);
+          this.lstCheckedName.splice(index, 1);
+        }
+      }
+    } else if (this.isSendGroup) {
+
     }
     let ids = this.lstChecked.join(",");
     this.fileList = this.lstCheckedName.join(",");
-    if (ids != "") {
-      this.lstIdsAccountPhoneList = [];
-      this.lstIdsAccountPhoneList.push(ids);
-    }
+    // if (ids != "") {
+    //   this.lstIdsAccountPhoneList = [];
+    //   this.lstIdsAccountPhoneList.push(ids);
+    // }
     // get và lọc trùng sđt
-    let listTelco = "VIETTEL,GPC,VMS";
-    let response: any = await this.dataService.getAsync('/api/AccountPhoneListDetail/GetPhoneByListID?listID=' + ids + '&listTelco=' + listTelco)
-    if (response) {
-      this.dataPhone = response.data.listPhoneTelco;
-      response = [];
-      let tamp = Array.from(new Set(this.dataPhone.map(s => s.PHONE))).map(p => {
-        return {
-          LIST_ID: this.dataPhone.find(s => s.PHONE == p).LIST_ID,
-          PHONE: p,
-          TELCO: this.dataPhone.find(s => s.PHONE == p).TELCO
+    if (this.isSendFileList) {
+      let listTelco = "VIETTEL,GPC,VMS";
+      let response: any = await this.dataService.getAsync('/api/AccountPhoneListDetail/GetPhoneByListID?listID=' + ids + '&listTelco=' + listTelco)
+      if (response) {
+        this.dataPhone = response.data.listPhoneTelco;
+        response = [];
+        let tamp = Array.from(new Set(this.dataPhone.map(s => s.PHONE))).map(p => {
+          return {
+            LIST_ID: this.dataPhone.find(s => s.PHONE == p).LIST_ID,
+            PHONE: p,
+            TELCO: this.dataPhone.find(s => s.PHONE == p).TELCO
+          }
+        });
+        this.dataPhone = tamp;
+        for (let i in this.dataPhone) {
+          this.dataPhoneTamp.push(this.dataPhone[i]);
         }
-      });
-      this.dataPhone = tamp;
-      for (let i in this.dataPhone) {
-        this.dataPhoneTamp.push(this.dataPhone[i]);
+        this.totalNumber = this.dataPhoneTamp.length;
+        this.phonePaging(response.data);
       }
-      this.totalNumber = this.dataPhoneTamp.length;
-      this.phonePaging(response.data);
+    } else if (this.isSendGroup) {
+
     }
     this.GetPackage();
   }
@@ -566,20 +597,18 @@ export class SendDataComponent implements OnInit {
         this.confirmSendDataSMSModal.hide();
         return;
       }
-      let DATA_VOL = this.selectedItemComboboxPackage[0].itemName.substr(this.selectedItemComboboxPackage[0].itemName.indexOf('-'), this.selectedItemComboboxPackage[0].itemName.indexOf('-') - 1).replace('-', '').replace('-', '').replace('MB', '').trim();
+      let DATA_VOL = this.selectedItemComboboxPackage[0].itemName.substr(this.selectedItemComboboxPackage[0].itemName.indexOf('-'), this.selectedItemComboboxPackage[0].itemName.indexOf('-') - 1).replace('-', '').replace('-', '').replace('M', '').replace('B', '').trim();
       let file = this.uploadFile.nativeElement;
       if (file.files.length > 0) {
         let response: any = await this.dataService.getDataFromExcelAsync(null, file.files);
         if (response && response.err_code == 0) {
           let listSmsSend = [];
           if (this.isSendSMS) {
-            
             for (let i = 0; i < response.data.length; i++) {
               let phone = response.data[i];
               listSmsSend.push({
-                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA_VOL), SENDER_ID: this.SENDER_ID, SMS_CONTENT: this.SMS_TEMPLATE
-                , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS
-                , PACKAGE_ID: this.PACKAGE_ID
+                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA_VOL), SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
+                , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: this.PACKAGE_ID
               });
             }
           } else {
@@ -587,8 +616,7 @@ export class SendDataComponent implements OnInit {
               let phone = response.data[i].PHONE;
               listSmsSend.push({
                 ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA_VOL)
-                , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS
-                , PACKAGE_ID: this.PACKAGE_ID
+                , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: this.PACKAGE_ID
               });
             }
           }
@@ -617,7 +645,7 @@ export class SendDataComponent implements OnInit {
         this.confirmSendDataSMSModal.hide();
         return;
       }
-      let DATA: number = this.selectedItemComboboxPackage[0].itemName.substr(this.selectedItemComboboxPackage[0].itemName.indexOf('-'), this.selectedItemComboboxPackage[0].itemName.indexOf('-') - 1).replace('-', '').replace('-', '').replace('MB', '').trim();
+      let DATA: number = this.selectedItemComboboxPackage[0].itemName.substr(this.selectedItemComboboxPackage[0].itemName.indexOf('-'), this.selectedItemComboboxPackage[0].itemName.indexOf('-') - 1).replace('-', '').replace('-', '').replace('M', '').replace('B', '').trim();
 
       // check exists phone list
       if (this.dataPhoneTamp.length == 0) {
@@ -632,9 +660,8 @@ export class SendDataComponent implements OnInit {
         for (let i = 0; i < this.dataPhoneTamp.length; i++) {
           let phone = this.dataPhoneTamp[i].PHONE;
           listSmsSend.push({
-            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA), SENDER_ID: this.SENDER_ID, SMS_CONTENT: this.SMS_TEMPLATE
-            , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS
-            , PACKAGE_ID: this.PACKAGE_ID
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA), SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
+            , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: this.PACKAGE_ID
           });
         }
       }
@@ -642,7 +669,7 @@ export class SendDataComponent implements OnInit {
         for (let i = 0; i < this.dataPhoneTamp.length; i++) {
           let phone = this.dataPhoneTamp[i].PHONE;
           listSmsSend.push({
-            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA), SENDER_ID: this.SENDER_ID, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA), SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
             , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: this.PACKAGE_ID
           });
         }

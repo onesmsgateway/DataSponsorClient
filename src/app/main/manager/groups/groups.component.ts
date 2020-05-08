@@ -24,12 +24,13 @@ export class GroupsComponent implements OnInit {
   public dataAccount = [];
   public pagination: Pagination = new Pagination();
   public groupId;
+  public name;
   public groupName: string = '';
   public groupCode: string = '';
   public formEditGroup: FormGroup;
   public role: Role = new Role();
   public isAdmin: boolean = false;
-  public isActive = true;
+  public isActive: boolean = true;
 
   public settingsFilterAccount = {};
   public selectedItemComboboxAccount = [];
@@ -113,6 +114,10 @@ export class GroupsComponent implements OnInit {
     this.getData();
   }
 
+  searchForm(){
+    this.getData();
+  }
+
   //#region load data
   async getData() {
     let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
@@ -156,7 +161,7 @@ export class GroupsComponent implements OnInit {
       return;
     }
     let ACCOUNT_ID = combobox.slAccount.value[0].id;
-    let GROUP_CODE = group.code;
+    let GROUP_CODE = group.groupCode;
     if (GROUP_CODE == "" || GROUP_CODE == null) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-95"));
       return;
@@ -196,9 +201,9 @@ export class GroupsComponent implements OnInit {
         groupId: new FormControl(id),
         account: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
           : this.utilityService.translate('global.choose_account')),
-        groupCode: new FormControl(dataDetail.CODE),
-        groupName: new FormControl(dataDetail.NAME),
-        note: new FormControl(dataDetail.CONTENT),
+        groupCode: new FormControl(dataDetail.GROUP_CODE),
+        groupName: new FormControl(dataDetail.GROUP_NAME),
+        note: new FormControl(dataDetail.NOTES),
         isActive: new FormControl(dataDetail.IS_ACTIVE)
       });
       this.showModalUpdate.show();
@@ -210,7 +215,7 @@ export class GroupsComponent implements OnInit {
   // update tin mẫu
   async editGroup() {
     let formData = this.formEditGroup.controls;
-    let ID = formData.id.value;
+    let ID = formData.groupId.value;
     if (formData.account.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
@@ -250,7 +255,7 @@ export class GroupsComponent implements OnInit {
 
   showConfirmDelete(id, name) {
     this.groupId = id;
-    this.groupName = name;
+    this.name = name;
     this.confirmDeleteModal.show();
   }
 

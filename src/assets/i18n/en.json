@@ -482,7 +482,10 @@
     "isActive": "Active",
     "inGroup_code": "Input group code",
     "inGroup_name": "Input group name",
-    "inNote": "Input note"
+    "inNote": "Input note",
+    "create_date": "Create date",
+    "add": "Add group",
+    "edit": "Edit group"
   },
   "partner": {
     "partner_management": "Partner Management",
@@ -541,6 +544,8 @@
     "edit_sender_group": "Update sender group"
   },
   "member": {
+    "title": "Member manager",
+    "inCode": "Input member code",
     "code": "Member code",
     "inName": "Input member name",
     "name": "Member name",

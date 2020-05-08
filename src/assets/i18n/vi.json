@@ -484,7 +484,10 @@
     "isActive": "Kích hoạt",
     "inGroup_code": "Nhập mã nhóm",
     "inGroup_name": "Nhập tên nhóm",
-    "inNote": "Nhập ghi chú"
+    "inNote": "Nhập ghi chú",
+    "create_date": "Ngày tạo",
+    "add": "Thêm nhóm",
+    "edit": "Sửa nhóm"
   },
   "partner": {
     "partner_management": "Quản lý đối tác",
@@ -543,9 +546,11 @@
     "edit_sender_group": "Cập nhật nhóm thương hiệu"
   },
   "member": {
-    "code": "Mã member",
-    "inName": "Nhập tên member",
-    "name": "Tên member",
+    "title": "Quản lý thành viên",
+    "inCode": "Nhập mã thành viên",
+    "code": "Mã thành viên",
+    "inName": "Nhập tên thành viên",
+    "name": "Tên thành viên",
     "inPhone": "Nhập số điện thoại",
     "phone": "Số điện thoại",
     "accumulated_point": "Tích điểm",
@@ -558,8 +563,8 @@
     "account": "Tài khoản",
     "is_active": "Active",
     "create_date": "Ngày tạo",
-    "add": "Thêm member",
-    "edit": "Sửa member",
+    "add": "Thêm thành viên",
+    "edit": "Sửa thành viên",
     "delete_notify": "Bạn có chắc chắn muốn xóa ",
     "group": "Nhóm"
   }

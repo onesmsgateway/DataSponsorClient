@@ -78,7 +78,7 @@
                                     </label>
                                 </div>
                                 <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0;"
-                                    *ngIf="!isSendExcel">
+                                    *ngIf="isSendFileList">
                                     <angular2-multiselect [data]="dataFileList"
                                         [(ngModel)]="selectedItemComboboxFileList" [settings]="settingsFilterFileList"
                                         name="slFileList" (onSelect)="getPhoneNumber($event)"
@@ -99,6 +99,14 @@
                                                 (click)="excelTemplate()">{{'send_data.export_template' | translate}}</button>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0;"
+                                    *ngIf="isSendGroup">
+                                    <angular2-multiselect [data]="dataGroup"
+                                        [(ngModel)]="selectedItemComboboxGroup" [settings]="settingsFilterGroup"
+                                        name="slGroup" (onSelect)="getPhoneNumber($event)"
+                                        (onDeSelect)="getPhoneNumber($event)">
+                                    </angular2-multiselect>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12" style="padding-left: 0;">
                                     <input type="number" class="form-control" name="amt_expected"

@@ -22,7 +22,8 @@ export const managerRoutes: Routes = [{
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'sender', component: SenderComponent, data: { MENU_CODE: 'SENDER' }, canActivate: [AuthGuard] },
     { path: 'sender-group', component: SenderGroupComponent, data: { MENU_CODE: 'SENDER-GROUP' }, canActivate: [AuthGuard] },
-    { path: 'group', component: GroupsComponent, data: { MENU_CODE: 'GROUP' }, canActivate: [AuthGuard] }
+    { path: 'group', component: GroupsComponent, data: { MENU_CODE: 'GROUP' }, canActivate: [AuthGuard] },
+    { path: 'member', component: MemberComponent, data: { MENU_CODE: 'MEMBER' }, canActivate: [AuthGuard] }
   ]
 }];
 
