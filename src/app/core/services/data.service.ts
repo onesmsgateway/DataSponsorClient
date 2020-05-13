@@ -173,7 +173,7 @@ export class DataService {
     }
   }
 
-  public async importExcelAndSavePhoneListDataAsync(postData: any, files: File[], listType: any, lstName: any) {
+  public async importExcelAndSavePhoneListDataAsync(postData: any, files: File[], groupId: any, groupCode: any, groupName: any, accountID: any) {
     try {
       let formData: FormData = new FormData();
       formData.append('files', files[0], files[0].name);
@@ -184,7 +184,7 @@ export class DataService {
           }
         }
       }
-      const response = await this.postAsync("/api/FileExtention/ImportExcelAndSavePhoneList?listType=" + listType + "&lstName=" + lstName, formData);
+      const response = await this.postAsync("/api/FileExtention/ImportExcelAndSavePhoneList?groupId=" + groupId + "&groupCode=" + groupCode + "&groupName=" + groupName + "&accountID=" + accountID, formData);
       return response;
     }
     catch (error) {

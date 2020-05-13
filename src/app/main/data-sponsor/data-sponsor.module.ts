@@ -18,6 +18,7 @@ import { DataCampaignComponent } from './data-campaign/data-campaign.component';
 import { PackageTelcoComponent } from './package-telco/package-telco.component';
 import { ScenariosComponent } from './scenarios/scenarios.component';
 import { ScenariosDetailComponent } from './scenarios-detail/scenarios-detail.component';
+import { SmsBirthdayComponent } from './sms-birthday/sms-birthday.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
@@ -30,12 +31,13 @@ export const managerRoutes: Routes = [{
     { path: 'data-campaign', component: DataCampaignComponent, data: { MENU_CODE: 'DATA-CAMPAIGN' }, canActivate: [AuthGuard] },
     { path: 'package-telco', component: PackageTelcoComponent, data: { MENU_CODE: 'PACKAGE-TELCO' }, canActivate: [AuthGuard] },
     { path: 'scenarios', component: ScenariosComponent, data: { MENU_CODE: 'SCENARIOS' }, canActivate: [AuthGuard] },
-    { path: 'scenarios-detail', component: ScenariosDetailComponent, data: { MENU_CODE: 'SCENARIOS_DETAIL' }, canActivate: [AuthGuard] }
+    { path: 'scenarios-detail', component: ScenariosDetailComponent, data: { MENU_CODE: 'SCENARIOS_DETAIL' }, canActivate: [AuthGuard] },
+    { path: 'sms-birthday', component: SmsBirthdayComponent, data: { MENU_CODE: 'SMS-BIRTHDAY' }, canActivate: [AuthGuard] }
   ]
 }];
 
 @NgModule({
-  declarations: [DataSponsorComponent, DataCimastComponent, SendDataComponent, PackageComponent, DataCampaignComponent, PackageTelcoComponent, ScenariosComponent, ScenariosDetailComponent],
+  declarations: [DataSponsorComponent, DataCimastComponent, SendDataComponent, PackageComponent, DataCampaignComponent, PackageTelcoComponent, ScenariosComponent, ScenariosDetailComponent, SmsBirthdayComponent],
   imports: [
     FormsModule,
     ReactiveFormsModule,

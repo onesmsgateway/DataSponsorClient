@@ -1,150 +1,194 @@
 <article>
     <section>
         <div class="clearfix"></div>
+        <div class="col-md-5" style="padding:0">
+            <h2>{{ 'send_data.tittle' | translate }}</h2>
+        </div>
+        <div class="col-md-1 col-sm-2 col-xs-4 form-group pull-right text-right">
+            <button type="submit" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
+                (click)="sendDataSMS()">{{ 'send_data.send' | translate }}</button>
+        </div>
+        <div class="radio">
+            <div class="col-md-1 col-sm-2 col-xs-4 form-group pull-right text-right">
+                <label><input class="form-check-input" type="radio" value="0" name="sendData" ngModel checked
+                        (click)="checkTimeSchedule('0')">{{ 'send_data.sendNow' | translate }}</label>
+            </div>
+            <div class="col-md-1 col-sm-2 col-xs-4 form-group pull-right text-right">
+                <label><input class="form-check-input" type="radio" value="1" name="sendData" ngModel
+                        (click)="checkTimeSchedule('1')">{{ 'send_data.timer' | translate }}</label>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-6 col-xs-6 form-group has-feedback pull-right" style="margin:0"
+            [ngStyle]="{'visibility':isShowDateTime ? 'visible' : 'hidden'}">
+            <input type="text" class="form-control has-feedback-left modal-popup" name="timeSchedule" bsDatepicker
+                [bsConfig]="{adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY HH:mm'}" [minDate]="minDate"
+                [(ngModel)]="timeSchedule" placeholder="{{ 'send_data.date_time' | translate }}">
+        </div>
         <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
-                <div class="x_panel portlet" style="padding-bottom: 0; margin-bottom:0 !important">
-                    <div class="x_title clearfix">
-                        <h2>{{ 'send_data.tittle' | translate }}</h2>
-                        <ul class="nav navbar-right panel_toolbox">
-                            <li><a class="collapse-link" onclick="collapseBox(this)"><i
-                                        class="fa fa-chevron-up"></i></a>
-                            </li>
-                            <li><a class="close-link" onclick="closeBox(this)"><i class="fa fa-close"></i></a>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="col-md-12 col-sm-12 col-xs-12 form-group" style="margin:0">
+                <div class="x_panel portlet">
                     <div class="x_content">
-                        <div class="row" style="margin-bottom: 5px !important">
-                            <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                 <div *ngIf="isAdmin">
-                                    <label style="color: red;">{{ 'send_data.label' | translate }}
+                                    <label style="color: red;">{{ 'send_data.label_total' | translate }}
                                         {{ total_amt | number: '.0' }} VNĐ</label>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     <label style="color: red;" *ngIf="isSendSMS">{{ 'send_data.quota' | translate }}
                                         {{ quota }}</label>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-6 col-xs-12 form-group text-right">
-                                <button type="submit" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
-                                    (click)="sendDataSMS()">{{ 'send_data.send' | translate }}</button>
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="!isSendExcel"
-                                    (click)="showModalUpload()">{{ 'send_data.up_load' | translate }}</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
-                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount"
-                                    [settings]="settingsFilterAccount" name="slAccount" (onSelect)="changeAccount()"
-                                    (onDeSelect)="deSelectAccount()">
-                                </angular2-multiselect>
-                            </div>
-                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
-                                <angular2-multiselect [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender"
-                                    [settings]="settingsFilterSender" name="slSenderName">
-                                </angular2-multiselect>
-                            </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                <input type="text" class="form-control" name="programName" [(ngModel)]="programName"
-                                    placeholder="{{ 'send_data.inProgram' | translate }}">
-                            </div>
-                            <div class="col-md-5 col-sm-5 col-xs-12 form-group has-feedback">
-                                <angular2-multiselect [data]="dataType" [(ngModel)]="selectedItemComboboxType"
-                                    [settings]="settingsFilterType" (onSelect)="changeType()"
-                                    (onDeSelect)="changeType()" name="slType">
-                                </angular2-multiselect>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-7 col-sm-12 col-xs-12">
-                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
-                                    <label style="margin-bottom: 0;">{{'data-sms.text_countmes1' | translate}}
-                                        (<span style="display:inline-block !important">{{numberChar}}</span>
-                                        {{'data-sms.text_countmes2' | translate}}) (<span
-                                            style="display:inline-block !important">{{numberSMS}}</span>{{'data-sms.text_countmes3' | translate}})
-                                    </label>
-                                </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0">
-                                    <textarea type="text" class="form-control has-feedback-left modal-popup" #contentSMS
-                                        name="smsContent" rows="3" maxlength="459" readonly
-                                        placeholder="{{ 'data-sms.iSms_content' | translate }}" [(ngModel)]="smsContent"
-                                        (change)="countSMS($event.target.value)" (keyup)="countSMS($event.target.value)"
-                                        (keydow)="countSMS($event.target.value)"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-5 col-sm-12 col-xs-12">
-                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
-                                    <label style="margin-bottom: 0;">&nbsp;
-                                    </label>
-                                </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0;"
-                                    *ngIf="isSendFileList">
-                                    <angular2-multiselect [data]="dataFileList"
-                                        [(ngModel)]="selectedItemComboboxFileList" [settings]="settingsFilterFileList"
-                                        name="slFileList" (onSelect)="getPhoneNumber($event)"
-                                        (onDeSelect)="getPhoneNumber($event)">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount"
+                                        [settings]="settingsFilterAccount" name="slAccount" (onSelect)="changeAccount()"
+                                        (onDeSelect)="deSelectAccount()">
                                     </angular2-multiselect>
                                 </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback"
-                                    style="padding: 0;margin:0" *ngIf="isSendExcel">
-                                    <div class="input-group">
-                                        <input type="file" #uploadFile name="uploadFile" class="form-control">
-                                        <div class="input-group-btn">
-                                            <button type="button" title="Loại bỏ các tệp đã chọn" (click)="clearData()"
-                                                class="btn btn-default fileinput-remove fileinput-remove-button"
-                                                style="background-color:rgba(128, 128, 128, 0.10);">
-                                                <i class="glyphicon glyphicon-trash"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-primary btn-sm"
-                                                (click)="excelTemplate()">{{'send_data.export_template' | translate}}</button>
-                                        </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <angular2-multiselect [data]="dataSenderName"
+                                        [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender"
+                                        name="slSenderName">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- chiến dịch -->
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="row">
+                                <div class="radio">
+                                    <label style="text-transform: uppercase; padding-right: 30px;"><input
+                                            class="form-check-input" type="radio" value="0" name="campaign" ngModel
+                                            defaultChecked
+                                            (click)="checkCampaign('0')">{{ 'send_data.campaign_new' | translate }}</label>
+                                    <label style="text-transform: uppercase;"><input class="form-check-input"
+                                            type="radio" value="1" name="campaign" ngModel
+                                            (click)="checkCampaign('1')">{{ 'send_data.campaign_old' | translate }}</label>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="chkcampaign">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" class="form-control" name="programName" [(ngModel)]="programName"
+                                        placeholder="{{ 'send_data.inProgram_name' | translate }}">
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" class="form-control" name="programCode" [(ngModel)]="programCode"
+                                        placeholder="{{ 'send_data.inProgram_code' | translate }}">
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="!chkcampaign">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                                    <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign"
+                                        [settings]="settingsFilterCampaign" name="slCampaign">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <div class="checkbox" style="margin: 0;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="chkOnlyOne"
+                                                [(ngModel)]="chkOnlyOne">
+                                            <span>{{ 'send_data.only_one' | translate }}</span> </label>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0;"
-                                    *ngIf="isSendGroup">
-                                    <angular2-multiselect [data]="dataGroup"
-                                        [(ngModel)]="selectedItemComboboxGroup" [settings]="settingsFilterGroup"
-                                        name="slGroup" (onSelect)="getPhoneNumber($event)"
-                                        (onDeSelect)="getPhoneNumber($event)">
-                                    </angular2-multiselect>
+                                <div class="col-md-6 col-sm-6 col-xs-6 form-group text-right">
+                                    <label>{{ 'send_data.time_donate' | translate }}</label>
                                 </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12" style="padding-left: 0;">
-                                    <input type="number" class="form-control" name="amt_expected"
-                                        [(ngModel)]="amt_expected" style="padding-right: 10px;"
-                                        placeholder="{{ 'send_data.amt_expected' | translate }}"
-                                        (change)="GetPackage()">
-                                </div>
-                                <div class="col-md-8 col-sm-12 col-xs-12" style="padding: 0;">
-                                    <angular2-multiselect [data]="dataPackage" [(ngModel)]="selectedItemComboboxPackage"
-                                        [settings]="settingsFilterPackage" name="slPackage">
-                                    </angular2-multiselect>
+                                <div class="col-md-3 col-sm-3 col-xs-3 form-group">
+                                    <input type="number" class="form-control" name="timeDonate"
+                                        [(ngModel)]="timeDonate">
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-1 col-sm-6 col-xs-12 form-group has-feedback" style="margin: 0;">
-                                <div class="checkbox" style="margin: 0;">
-                                    <label><input type="checkbox" value="" class="checkbox"
-                                            (change)="checkTimeSchedule($event.currentTarget.checked)">
-                                        <span>{{ 'data-sms.timer' | translate }}</span> </label>
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-sm-6 col-xs-6 form-group has-feedback" style="margin-bottom: 5px;"
-                                [ngStyle]="{'visibility':isShowDateTime ? 'visible' : 'hidden'}">
-                                <input type="text" class="form-control has-feedback-left modal-popup"
-                                    name="timeSchedule" bsDatepicker
-                                    [bsConfig]="{adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY HH:mm'}"
-                                    [minDate]="minDate" [(ngModel)]="timeSchedule"
-                                    placeholder="{{ 'campaign.date_time' | translate }}">
-                            </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback" style="margin: 0;">
-                                <div class="checkbox" style="margin: 0;">
-                                    <label><input type="checkbox" value="" class="checkbox" name="isSendSMS"
-                                            [(ngModel)]="isSendSMS" (click)="enableSend($event.currentTarget.checked)">
-                                        <span>{{ 'send_data.is_send_sms' | translate }}</span> </label>
-                                </div>
+                    </div>
+                </div>
+
+                <!-- upload and chon group -->
+                <div class="x_panel portlet" style="width:49.5%;">
+                    <div class="x_title clearfix">
+                        <h2>{{ 'send_data.tittle_upload' | translate }}</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link" onclick="collapseBox(this)"><i
+                                        class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="x_content">
+                        <div class="col-md-3 col-sm-4 col-xs-6 form-group">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                (click)="showModalUpload()">{{ 'send_data.up_load' | translate }}</button>
+                        </div>
+                        <div class="col-md-9 col-sm-8 col-xs-6 form-group has-feedback" style="padding: 0;">
+                            <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedGroup"
+                                [settings]="settingsFilterGroup" name="slGroup" (onSelect)="getPhoneNumber($event)"
+                                (onDeSelect)="getPhoneNumber($event)">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                            <label>{{'send_data.phone_new' | translate}}: ({{numberPhone}}
+                                {{ 'data-sms.text_num' | translate }})</label>
+                            <input type="text" class="form-control" name="phoneNew"
+                                (change)="countPhone($event.target.value)" (keyup)="countPhone($event.target.value)"
+                                (keydow)="countPhone($event.target.value)"
+                                placeholder="{{'send_data.iText_add_phone_number' | translate}}" [(ngModel)]="phoneNew">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- sms content -->
+                <div class="x_panel portlet pull-right" style="width:49.5%">
+                    <div class="x_title clearfix">
+                        <h2>{{ 'send_data.tittle_sms' | translate }}</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link" onclick="collapseBox(this)"><i
+                                        class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="x_content">
+                        <div class="col-md-6 col-sm-12 col-xs-12 form-group pull-right text-right" style="padding: 0">
+                            <label style="margin-bottom: 0;">{{'data-sms.text_countmes1' | translate}}
+                                (<span style="display:inline-block !important">{{numberChar}}</span>
+                                {{'data-sms.text_countmes2' | translate}}) (<span
+                                    style="display:inline-block !important">{{numberSMS}}</span>{{'data-sms.text_countmes3' | translate}})
+                            </label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0">
+                            <div class="checkbox" style="margin: 0;">
+                                <label><input type="checkbox" value="" class="checkbox" name="isSendSMS"
+                                        [(ngModel)]="isSendSMS" (click)="enableSend($event.currentTarget.checked)">
+                                    <span>{{ 'send_data.is_send_sms' | translate }}</span> </label>
                             </div>
                         </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0">
+                            <textarea type="text" class="form-control has-feedback-left modal-popup" #contentSMS
+                                name="smsContent" rows="3" maxlength="459"
+                                placeholder="{{ 'data-sms.iSms_content' | translate }}" [(ngModel)]="smsContent"
+                                (change)="countSMS($event.target.value)" (keyup)="countSMS($event.target.value)"
+                                (keydow)="countSMS($event.target.value)"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- chọn gói cước -->
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>{{ 'send_data.tittle_package' | translate }}</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link" onclick="collapseBox(this)"><i
+                                        class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="x_content">
+                        <button type="button" class="btn btn-primary btn-sm" style="margin-bottom: 5px;"
+                            (click)="showModalPackage()">{{ 'send_data.inPackage' | translate }}</button>
+                        <label style="padding-left: 20px; font-weight: normal;">Viettel: <span
+                                style="font-size: 16px;font-weight: bold;">{{packViettel}}</span>, VinaPhone:
+                            <span style="font-size: 16px;font-weight: bold;">{{packGPC}}</span>, MobiPhone:
+                            <span style="font-size: 16px;font-weight: bold;">{{packVMS}}</span> --> <span
+                                style="text-transform: uppercase; font-weight: bold;">{{ 'send_data.total_amt' | translate }}:
+                                <span style="color: green; font-size: 16px;">{{totalAmt | number: '.0'}}</span></span>
+                            VNĐ</label>
                     </div>
                 </div>
             </div>
@@ -163,6 +207,27 @@
                                             style="display:inline-block !important">{{ 'send_data.total_num' | translate }}</span>
                                         (<span
                                             style="display:inline-block !important">{{totalNumber}}</span>{{ 'data-sms.text_num' | translate }})
+                                    </label>
+                                </div>
+                                <div style="display: inline-block; padding-right:15px">
+                                    <label>
+                                        <span style="display:inline-block !important">Viettel</span>
+                                        (<span
+                                            style="display:inline-block !important">{{countVTL}}</span>{{ 'data-sms.text_num' | translate }})
+                                    </label>
+                                </div>
+                                <div style="display: inline-block; padding-right:15px">
+                                    <label>
+                                        <span style="display:inline-block !important">VinaPhone</span>
+                                        (<span
+                                            style="display:inline-block !important">{{countGPC}}</span>{{ 'data-sms.text_num' | translate }})
+                                    </label>
+                                </div>
+                                <div style="display: inline-block; padding-right:15px">
+                                    <label>
+                                        <span style="display:inline-block !important">MobiPhone</span>
+                                        (<span
+                                            style="display:inline-block !important">{{countVMS}}</span>{{ 'data-sms.text_num' | translate }})
                                     </label>
                                 </div>
                             </div>
@@ -238,84 +303,63 @@
 <!-- upload excel -->
 <div class="modal fade" bsModal #uploadExcelModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
     aria-labelledby="dialog-static-name">
-    <div class="modal-dialog modal-md">
+    <div class="modal-dialog modal-lg">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
-                <div class="x_panel portlet" style="padding-bottom: 0; margin-bottom:0 !important">
-                    <div class="x_panel portlet">
-                        <div class="x_title clearfix">
-                            <h2 style="display: inline-block;margin:0">{{ 'send_data.phone_list_manage' | translate }}
-                            </h2>
-                            <button type="button" class="close pull-right" aria-label="Close"
-                                (click)="uploadExcelModal.hide()">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="x_content">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control" name="lstName" [(ngModel)]="lstName"
-                                    placeholder="{{ 'send_data.code_name' | translate }}">
-                            </div>
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
-                                <div class="input-group">
-                                    <input type="file" #uploadFile name="uploadFile" class="form-control">
-                                    <div class="input-group-btn">
-                                        <button type="button" title="Loại bỏ các tệp đã chọn" (click)="clearData()"
-                                            class="btn btn-default fileinput-remove fileinput-remove-button"
-                                            style="background-color:rgba(128, 128, 128, 0.10);">
-                                            <i class="glyphicon glyphicon-trash"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-primary btn-sm"
-                                            (click)="excelTemplateOnlyPhone()">{{'send_data.export_template' | translate}}</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback text-right">
-                                <img *ngIf="loading" class="pl-2" style="margin-right: 10px"
-                                    src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-
-                                <button type="submit" class="btn btn-success" (click)="submitUploadFile()"
-                                    [disabled]="loading">{{'global.confirm' | translate}}</button>
-                            </div>
-                        </div>
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2 style="display: inline-block;margin:0">{{ 'send_data.phone_list_manage' | translate }}
+                        </h2>
+                        <button type="button" class="close pull-right" aria-label="Close"
+                            (click)="uploadExcelModal.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="x_panel portlet">
-                        <div class="x_content">
-                            <div class="row">
-                                <div class="col-sm-12 col-xs-12 form-group has-feedback">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered clear-bottom">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center" style="width:7%">STT</th>
-                                                    <th class="text-center">{{ 'send_data.list_file' | translate }}</th>
-                                                    <th class="text-center" style="width:20%">
-                                                        {{ 'global.tool' | translate }}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let item of dataFileList; let i=index"
-                                                    [attr.data-index]="i">
-                                                    <td scope="row">{{i+1}}</td>
-                                                    <td>{{item.itemName}}</td>
-                                                    <td>
-                                                        <div class="tool">
-                                                            <button type="submit"
-                                                                (click)="showConfirmDeleteFile(item.id, item.itemName)"
-                                                                class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                    <div class="x_content">
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                            <label>{{'send_data.lb_upload' | translate}}</label>
+                            <div class="input-group">
+                                <input type="file" #uploadFile name="uploadFile" class="form-control">
+                                <div class="input-group-btn" style="padding:0">
+                                    <button type="button" title="Loại bỏ các tệp đã chọn" (click)="clearData()"
+                                        class="btn btn-default fileinput-remove fileinput-remove-button"
+                                        style="background-color:rgba(128, 128, 128, 0.10);">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-link"
+                                        (click)="excelTemplate()">{{'send_data.export_template' | translate}}</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-12 col-xs-12 form-group has-feedback text-right" style="padding: 0">
-                        <button type="button" class="btn btn-default"
-                            (click)="uploadExcelModal.hide()">{{'global.cancel' | translate}}</button>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                <label>{{'send_data.group' | translate}}</label>
+                                <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedGroupUpload"
+                                    [settings]="settingsFilterGroupUpload" name="slGroupUpload">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-12 form-group">
+                                <label style="padding-top: 30px;">Hoặc</label>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                <label>{{'send_data.group_code' | translate}}</label>
+                                <input type="text" class="form-control" name="groupCode"
+                                    placeholder="{{'send_data.inGroup_code' | translate}}" [(ngModel)]="groupCode">
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-12 form-group">
+                                <label>{{'send_data.group_name' | translate}}</label>
+                                <input type="text" class="form-control" name="groupName"
+                                    placeholder="{{'send_data.inGroup_name' | translate}}" [(ngModel)]="groupName">
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group text-right" style="padding:0">
+                            <img *ngIf="loading" class="pl-2" style="margin-right: 10px"
+                                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                            <button type="button" class="btn btn-default"
+                                (click)="uploadExcelModal.hide()">{{'global.cancel' | translate}}</button>
+                            <button type="submit" class="btn btn-success" (click)="submitUploadFile()"
+                                [disabled]="loading">{{'global.confirm' | translate}}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -323,33 +367,175 @@
     </div>
 </div>
 
-<!-- confirm gửi tin -->
-<!-- <div class="modal fade" bsModal #confirmSendSMSModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+<!-- chon goi cuoc -->
+<div class="modal fade" bsModal #choosePackageModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
     role="dialog" aria-labelledby="dialog-static-name">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 id="dialog-static-name" class="modal-title pull-left">{{'global.confirm' | translate}}</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmSendSMSModal.hide()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    Bạn có chắc chắn muốn gửi data?
+    <div class="modal-dialog modal-lg" style="width:90%">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                <div class="x_panel portlet">
+                    <div class="x_panel portlet">
+                        <div class="x_title clearfix">
+                            <h2 style="display: inline-block;margin:0">{{ 'send_data.tittle_package' | translate }}
+                            </h2>
+                            <button type="button" class="close pull-right" aria-label="Close"
+                                (click)="choosePackageModal.hide()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{ 'send_data.telco' | translate }}</label>
+                                    <input type="text" class="form-control" value="VIETTEL" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.inPackage' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL"
+                                        [settings]="settingsFilterPackageVTL" name="slPackageVTL"
+                                        (onSelect)="changePackageVTL()" (onDeSelect)="changePackageVTL()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.effective' | translate}}</label>
+                                    <input type="text" class="form-control" name="effectiveDateVTL" readonly
+                                        [(ngModel)]="effectiveDateVTL">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtVTL" readonly
+                                        [(ngModel)]="packageAmtVTL">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.amount' | translate}}</label>
+                                    <input type="number" class="form-control " name="packCountVTL"
+                                        [(ngModel)]="packCountVTL" (change)="changeCountVTL($event.target.value)"
+                                        (keyup)="changeCountVTL($event.target.value)"
+                                        (keydown)="changeCountVTL($event.target.value)">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12 text-center">
+
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.total_package' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalPackVTL"
+                                        [(ngModel)]="totalPackVTL" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <label>{{'send_data.amt_expected' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalAmtVTL" [(ngModel)]="totalAmtVTL"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{ 'send_data.telco' | translate }}</label>
+                                    <input type="text" class="form-control" value="VINAPHONE" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.inPackage' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC"
+                                        [settings]="settingsFilterPackageGPC" name="slPackageGPC"
+                                        (onSelect)="changePackageGPC()" (onDeSelect)="changePackageGPC()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.effective' | translate}}</label>
+                                    <input type="text" class="form-control" name="effectiveDateGPC" readonly
+                                        [(ngModel)]="effectiveDateGPC">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtGPC" readonly
+                                        [(ngModel)]="packageAmtGPC">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.amount' | translate}}</label>
+                                    <input type="number" class="form-control" name="packCountGPC"
+                                        [(ngModel)]="packCountGPC" (change)="changeCountGPC($event.target.value)"
+                                        (keyup)="changeCountGPC($event.target.value)"
+                                        (keydown)="changeCountGPC($event.target.value)">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12 text-center">
+
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.total_package' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalPackGPC"
+                                        [(ngModel)]="totalPackGPC" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <label>{{'send_data.amt_expected' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalAmtGPC" [(ngModel)]="totalAmtGPC"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{ 'send_data.telco' | translate }}</label>
+                                    <input type="text" class="form-control" value="MOBIPHONE" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.inPackage' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS"
+                                        [settings]="settingsFilterPackageVMS" name="slPackageVMS"
+                                        (onSelect)="changePackageVMS()" (onDeSelect)="changePackageVMS()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.effective' | translate}}</label>
+                                    <input type="text" class="form-control" name="effectiveDateVMS" readonly
+                                        [(ngModel)]="effectiveDateVMS">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtVMS" readonly
+                                        [(ngModel)]="packageAmtVMS">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.amount' | translate}}</label>
+                                    <input type="number" class="form-control" name="packCountVMS"
+                                        [(ngModel)]="packCountVMS" (change)="changeCountVMS($event.target.value)"
+                                        (keyup)="changeCountVMS($event.target.value)"
+                                        (keydown)="changeCountVMS($event.target.value)">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12 text-center">
+
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.total_package' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalPackVMS"
+                                        [(ngModel)]="totalPackVMS" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <label>{{'send_data.amt_expected' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalAmtVMS" [(ngModel)]="totalAmtVMS"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 col-sm-1 col-xs-12 col-md-offset-9 text-center"
+                                    style="padding-top: 5px;">
+                                    <label>{{'send_data.total_amt' | translate}}</label>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <input type="text" class="form-control" name="totalAmt" [(ngModel)]="totalAmt"
+                                        readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 form-group has-feedback text-right" style="padding: 0">
+                        <button type="button" class="btn btn-default"
+                            (click)="choosePackageModal.hide()">{{'global.cancel' | translate}}</button>
+                        <button type="submit" class="btn btn-primary" (click)="submitPackage()"
+                            [disabled]="loading">{{'global.confirm' | translate}}</button>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <img *ngIf="loading" class="pl-2" style="margin-right: 10px"
-                    src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                <button type="button" class="btn btn-default"
-                    (click)="confirmSendSMSModal.hide()">{{'global.cancel' | translate}}</button>
-                <button type="submit" class="btn btn-success" (click)="confirmSendSMS()"
-                    [disabled]="loading">{{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>
-</div> -->
+</div>
 
 <!-- Confirm after send sms success -->
 <div class="modal fade" bsModal #confirmAfterSuccessModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
@@ -467,7 +653,7 @@
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
-                            <label>{{'campaign.total' | translate}}</label>
+                            <label>{{'send_data.total_phone' | translate}}</label>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
                             <label style="font-weight:unset">{{totalNumber}}</label>
@@ -485,7 +671,7 @@
                 <div class="row" style="padding-top: 10px;" *ngIf="isSendSMS">
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
-                            <label>{{'general.sender' | translate}}</label>
+                            <label>{{'send_data.sender' | translate}}</label>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
                             <label style="font-weight:unset">{{senderName}}</label>

@@ -40,8 +40,8 @@ const appRoutes: Routes = [
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: function (http: HttpClient) {
-          return new TranslateHttpLoader(http)
+        useFactory: function(http: HttpClient) {
+          return new TranslateHttpLoader(http);
         },
         deps: [HttpClient]
       }
