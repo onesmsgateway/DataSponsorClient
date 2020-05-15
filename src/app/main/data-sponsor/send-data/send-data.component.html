@@ -67,26 +67,46 @@
                                             (click)="checkCampaign('1')">{{ 'send_data.campaign_old' | translate }}</label>
                                 </div>
                             </div>
+                            <!-- campaign new -->
                             <div class="row" *ngIf="chkcampaign">
-                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group">
                                     <input type="text" class="form-control" name="programName" [(ngModel)]="programName"
                                         placeholder="{{ 'send_data.inProgram_name' | translate }}">
                                 </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group">
                                     <input type="text" class="form-control" name="programCode" [(ngModel)]="programCode"
                                         placeholder="{{ 'send_data.inProgram_code' | translate }}">
                                 </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <div class="checkbox" style="margin: 0;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="chkOnlyOneCreate"
+                                                [(ngModel)]="chkOnlyOneCreate"
+                                                (change)="chkSendOne($event.currentTarget.checked)">
+                                            <span>{{ 'send_data.only_one' | translate }}</span> </label>
+                                    </div>
+                                </div>
+                                <div  class="col-md-6 col-sm-6 col-xs-6 pull-right" style="padding: 0;" *ngIf="isOneSend">
+                                    <div class="col-md-6 col-sm-6 col-xs-6 form-group text-right">
+                                        <label>{{ 'send_data.time_donate' | translate }}</label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 form-group">
+                                        <input type="number" class="form-control" name="timeDonateCreate"
+                                            [(ngModel)]="timeDonateCreate">
+                                    </div>
+                                </div>
                             </div>
+                            <!-- campaign old -->
                             <div class="row" *ngIf="!chkcampaign">
                                 <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
                                     <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign"
-                                        [settings]="settingsFilterCampaign" name="slCampaign">
+                                        [settings]="settingsFilterCampaign" name="slCampaign" (onSelect)="selectCampaign()"
+                                        (onDeSelect)="deSelectCampaign()">
                                     </angular2-multiselect>
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-xs-3">
                                     <div class="checkbox" style="margin: 0;">
-                                        <label><input type="checkbox" value="" class="checkbox" name="chkOnlyOne"
-                                                [(ngModel)]="chkOnlyOne">
+                                        <label><input type="checkbox" value="" class="checkbox" name="chkOnlyOneOld"
+                                                [(ngModel)]="chkOnlyOneOld" disabled>
                                             <span>{{ 'send_data.only_one' | translate }}</span> </label>
                                     </div>
                                 </div>
@@ -94,8 +114,8 @@
                                     <label>{{ 'send_data.time_donate' | translate }}</label>
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-xs-3 form-group">
-                                    <input type="number" class="form-control" name="timeDonate"
-                                        [(ngModel)]="timeDonate">
+                                    <input type="number" class="form-control" name="timeDonateOld"
+                                        [(ngModel)]="timeDonateOld" readonly>
                                 </div>
                             </div>
                         </div>
@@ -126,10 +146,11 @@
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                             <label>{{'send_data.phone_new' | translate}}: ({{numberPhone}}
                                 {{ 'data-sms.text_num' | translate }})</label>
-                            <input type="text" class="form-control" name="phoneNew"
+                            <input type="text" class="form-control" name="phoneList"
                                 (change)="countPhone($event.target.value)" (keyup)="countPhone($event.target.value)"
                                 (keydow)="countPhone($event.target.value)"
-                                placeholder="{{'send_data.iText_add_phone_number' | translate}}" [(ngModel)]="phoneNew">
+                                placeholder="{{'send_data.iText_add_phone_number' | translate}}"
+                                [(ngModel)]="phoneList">
                         </div>
                     </div>
                 </div>
@@ -409,9 +430,9 @@
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
                                     <input type="number" class="form-control " name="packCountVTL"
-                                        [(ngModel)]="packCountVTL" (change)="changeCountVTL($event.target.value)"
-                                        (keyup)="changeCountVTL($event.target.value)"
-                                        (keydown)="changeCountVTL($event.target.value)">
+                                        [(ngModel)]="packCountVTL" (change)="changeCountVTL()"
+                                        (keyup)="changeCountVTL()"
+                                        (keydown)="changeCountVTL()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -452,9 +473,9 @@
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
                                     <input type="number" class="form-control" name="packCountGPC"
-                                        [(ngModel)]="packCountGPC" (change)="changeCountGPC($event.target.value)"
-                                        (keyup)="changeCountGPC($event.target.value)"
-                                        (keydown)="changeCountGPC($event.target.value)">
+                                        [(ngModel)]="packCountGPC" (change)="changeCountGPC()"
+                                        (keyup)="changeCountGPC()"
+                                        (keydown)="changeCountGPC()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -495,9 +516,9 @@
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
                                     <input type="number" class="form-control" name="packCountVMS"
-                                        [(ngModel)]="packCountVMS" (change)="changeCountVMS($event.target.value)"
-                                        (keyup)="changeCountVMS($event.target.value)"
-                                        (keydown)="changeCountVMS($event.target.value)">
+                                        [(ngModel)]="packCountVMS" (change)="changeCountVMS()"
+                                        (keyup)="changeCountVMS()"
+                                        (keydown)="changeCountVMS()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -580,33 +601,6 @@
                     (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
                 <button type="submit" class="btn btn-success"
                     (click)="confirmDelete()">{{'global.confirm' | translate}}</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Xóa file phone -->
-<div class="modal fade" bsModal #confirmDeleteFilePhoneModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-    role="dialog" aria-labelledby="dialog-static-name">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 id="dialog-static-name" class="modal-title pull-left">Xác nhận</h4>
-                <button type="button" class="close pull-right" aria-label="Close"
-                    (click)="confirmDeleteFilePhoneModal.hide()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    Bạn có chắc chắn muốn xóa file "<b class="text-success">{{fileName}}</b>" không?
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default"
-                    (click)="confirmDeleteFilePhoneModal.hide()">{{'global.cancel' | translate}}</button>
-                <button type="submit" class="btn btn-success"
-                    (click)="confirmDeleteListFile()">{{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>

@@ -52,51 +52,51 @@ export class AuthService {
     return response;
   }
 
-  public loginWithGoogle(): void {
-    this.authSocial.signIn(GoogleLoginProvider.PROVIDER_ID).then(async response => {
-      if (response) {
-        let user: User = new User(
-          response.id,
-          response.name,
-          "******",
-          response.name,
-          response.authToken,
-          response.photoUrl,
-          response.provider,
-          ''
-        );
-        let result: any = await this.dataService.postAsync("/api/auth/LoginGoogle", user);
-        if (result && result.err_code == 0) {
-          this.setLogin(<User>result.data);
-        }
-      }
-    }, error => {
-      console.log("loginWithGoogle", error);
-    });
-  }
+  // public loginWithGoogle(): void {
+  //   this.authSocial.signIn(GoogleLoginProvider.PROVIDER_ID).then(async response => {
+  //     if (response) {
+  //       let user: User = new User(
+  //         response.id,
+  //         response.name,
+  //         "******",
+  //         response.name,
+  //         response.authToken,
+  //         response.photoUrl,
+  //         response.provider,
+  //         ''
+  //       );
+  //       // let result: any = await this.dataService.postAsync("/api/auth/LoginGoogle", user);
+  //       // if (result && result.err_code == 0) {
+  //       //   this.setLogin(<User>result.data);
+  //       // }
+  //     }
+  //   }, error => {
+  //     console.log("loginWithGoogle", error);
+  //   });
+  // }
 
-  public loginWithFacebook(): void {
-    this.authSocial.signIn(FacebookLoginProvider.PROVIDER_ID).then(async response => {
-      if (response) {
-        let user: User = new User(
-          response.id,
-          response.name,
-          "******",
-          response.name,
-          response.authToken,
-          response.photoUrl,
-          response.provider,
-          ''
-        );
-        let result: any = await this.dataService.postAsync("/api/auth/LoginFacebook", user);
-        if (result && result.err_code == 0) {
-          this.setLogin(<User>result.data);
-        }
-      }
-    }, error => {
-      console.log("loginWithFacebook", error);
-    });
-  }
+  // public loginWithFacebook(): void {
+  //   this.authSocial.signIn(FacebookLoginProvider.PROVIDER_ID).then(async response => {
+  //     if (response) {
+  //       let user: User = new User(
+  //         response.id,
+  //         response.name,
+  //         "******",
+  //         response.name,
+  //         response.authToken,
+  //         response.photoUrl,
+  //         response.provider,
+  //         ''
+  //       );
+  //       let result: any = await this.dataService.postAsync("/api/auth/LoginFacebook", user);
+  //       if (result && result.err_code == 0) {
+  //         this.setLogin(<User>result.data);
+  //       }
+  //     }
+  //   }, error => {
+  //     console.log("loginWithFacebook", error);
+  //   });
+  // }
 
   private setLogin(user: User) {
     localStorage.setItem(AppConst.CURRENT_USER, JSON.stringify(user));

@@ -2,8 +2,8 @@ import { environment } from '../../../environments/environment';
 
 export class AppConst {
     public static DATA_SPONSOR_API = environment.data_sponsor_api;
-    public static GOOGLE_PROVIDER_ID = environment.google_provider_id;
-    public static FACEBOOK_PROVIDER_ID = environment.facebook_provider_id;
+    //public static GOOGLE_PROVIDER_ID = environment.google_provider_id;
+    //public static FACEBOOK_PROVIDER_ID = environment.facebook_provider_id;
 
     public static IS_LOGGED = "IS_LOGGED";
     public static CURRENT_USER = "CURRENT_USER";

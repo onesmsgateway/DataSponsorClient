@@ -26,6 +26,7 @@ export class SendDataComponent implements OnInit {
 
   public dataPhone = [];
   public dataPhoneTamp = [];
+  public dataPhoneAddNew = [];
   public dataAccount = [];
   public dataSenderName = [];
   public dataPackageVTL = [];
@@ -58,9 +59,9 @@ export class SendDataComponent implements OnInit {
   public effectiveDateVTL;
   public effectiveDateGPC;
   public effectiveDateVMS;
-  public packageAmtVTL;
-  public packageAmtGPC;
-  public packageAmtVMS;
+  public packageAmtVTL = 0;
+  public packageAmtGPC = 0;
+  public packageAmtVMS = 0;
   public groupCode = "";
   public groupName = "";
   public packCountVTL = 1;
@@ -72,15 +73,24 @@ export class SendDataComponent implements OnInit {
   public totalAmtVTL = 0;
   public totalAmtGPC = 0;
   public totalAmtVMS = 0;
+  public cntVTL = 0;
+  public cntGPC = 0;
+  public cntVMS = 0;
   public countVTL = 0;
   public countGPC = 0;
   public countVMS = 0;
   public totalAmt = 0;
-  public timeDonate: string = "";
+  public timeDonateCreate = 0;
+  public timeDonateOld = 0;
   public isSendSMS: boolean = true;
   public chkcampaign: boolean = true;
-  public chkOnlyOne: boolean = false;
+  public chkOnlyOneCreate: boolean = false;
+  public chkOnlyOneOld: boolean = false;
   public campaign: boolean = true;
+  public isSendVTL: boolean = false;
+  public isSendGPC: boolean = false;
+  public isSendVMS: boolean = false;
+  public isOneSend: boolean = false;
   public phoneList: string = "";
   public fileName;
   public senderName: string = "";
@@ -88,7 +98,7 @@ export class SendDataComponent implements OnInit {
   public timeSend: string = "";
   public quotaExpected: string = "";
   public fileList: string = "";
-  public phoneNew: string = "";
+  public telco: string = "";
   public packViettel: string = "0";
   public packGPC: string = "0";
   public packVMS: string = "0";
@@ -105,11 +115,13 @@ export class SendDataComponent implements OnInit {
   public totalNumber = 0;
   public numberChar = 0;
   public numberSMS = 0;
+  public dataViettel = 0;
   public smsContent: string = '';
   public minDate: Date;
   public pagination: Pagination = new Pagination();
 
   public timeSchedule: Date;
+  public programCode: string = '';
   public programName: string = '';
 
   public total_amt = 0;
@@ -191,17 +203,8 @@ export class SendDataComponent implements OnInit {
       showCheckbox: false
     };
 
-    this.settingsFilterGroup = {
-      text: this.utilityService.translate('send_data.group'),
-      singleSelection: false,
-      enableSearchFilter: true,
-      enableFilterSelectAll: true,
-      searchPlaceholderText: this.utilityService.translate('global.search'),
-      noDataLabel: this.utilityService.translate('global.no_data')
-    };
-
     this.settingsFilterGroupUpload = {
-      text: this.utilityService.translate('send_data.phone_list'),
+      text: this.utilityService.translate('send_data.inGroup'),
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -288,6 +291,30 @@ export class SendDataComponent implements OnInit {
     }
   }
 
+  async selectCampaign() {
+    let campaignId = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != null ? this.selectedCampaign[0].id : 0;
+    let response: any = await this.dataService.getAsync('/api/DataCampaign/' + campaignId);
+    if (response.err_code == 0) {
+      if (response.data[0].IS_REWARD_ONE_TIME == 1)
+        this.chkOnlyOneOld = true;
+      else
+        this.chkOnlyOneOld = false;
+      this.timeDonateOld = response.data[0].REWARD_ONE_TIME_IN_DAYS;
+    }
+  }
+
+  deSelectCampaign() {
+    this.chkOnlyOneOld = false;
+    this.timeDonateOld = 0;
+  }
+
+  chkSendOne(event) {
+    if (event)
+      this.isOneSend = true;
+    else
+      this.isOneSend = false;
+  }
+
   // get phone by file list 
   async getPhoneNumber(event) {
     this.dataPhoneTamp = [];
@@ -322,27 +349,27 @@ export class SendDataComponent implements OnInit {
         this.dataPhoneTamp.push(this.dataPhone[i]);
       }
       this.countVTL = data.countVIETTEL;
-      this.countGPC = data.countGPC;
-      this.countVMS = data.countVMS;
+      this.countGPC = data.countVINAPHONE;
+      this.countVMS = data.countMOBIFONE;
       this.totalNumber = this.dataPhoneTamp.length;
 
       // total amt by telco
-      if (this.packCountVTL != null && this.packCountVTL > 0 && this.packageAmtVTL != null && this.packageAmtVTL > 0 && this.dataPhoneTamp.length > 0) {
-        this.totalPackVTL = this.packCountVTL * this.countVTL;
+      if (this.packCountVTL != null && this.packCountVTL > 0 && this.packageAmtVTL > 0) {
+        this.totalPackVTL = (this.packCountVTL * this.countVTL) + (this.packCountVTL * this.cntVTL);
         this.totalAmtVTL = this.packageAmtVTL * this.totalPackVTL;
       }
-      if (this.packCountGPC != null && this.packCountGPC > 0 && this.packageAmtGPC != null && this.packageAmtGPC > 0 && this.dataPhoneTamp.length > 0) {
-        this.totalPackGPC = this.packCountGPC * this.countGPC;
+      if (this.packCountGPC != null && this.packCountGPC > 0 && this.packageAmtGPC > 0) {
+        this.totalPackGPC = (this.packCountGPC * this.countGPC) + (this.packCountGPC * this.cntGPC);
         this.totalAmtGPC = this.packageAmtGPC * this.totalPackGPC;
       }
-      if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS != null && this.packageAmtVMS > 0 && this.dataPhoneTamp.length > 0) {
-        this.totalPackVMS = this.packCountVMS * this.countVMS;
+      if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
+        this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
         this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
       }
       this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
-      if(this.selectedPackageVTL.length > 0) this.packViettel = this.selectedPackageVTL[0].itemName + " x " + this.totalPackVTL;
-      if(this.selectedPackageGPC.length > 0) this.packGPC = this.selectedPackageGPC[0].itemName + " x " + this.totalPackGPC;
-      if(this.selectedPackageVMS.length > 0) this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+      if (this.selectedPackageVTL.length > 0) this.packViettel = this.selectedPackageVTL[0].itemName + " x " + this.totalPackVTL;
+      if (this.selectedPackageGPC.length > 0) this.packGPC = this.selectedPackageGPC[0].itemName + " x " + this.totalPackGPC;
+      if (this.selectedPackageVMS.length > 0) this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
       this.phonePaging(response.data);
     } else {
       this.totalAmtVTL = 0;
@@ -354,14 +381,56 @@ export class SendDataComponent implements OnInit {
   }
 
   countPhone(phone) {
+    this.cntVTL = 0;
+    this.cntGPC = 0;
+    this.cntVMS = 0;
     let phoneList: any = [];
+    this.dataPhoneAddNew = [];
     phoneList = this.checkPhone(phone);
-    if (phoneList.length == 0)
+    if (phoneList.length == 0) {
       this.numberPhone = 0;
-    else if (phoneList.includes(";"))
+    }
+    else if (phoneList.includes(";")) {
       this.numberPhone = phoneList.split(';').length - 1;
-    else
+      let lstSplit = phoneList.substr(0, phoneList.length - 1).split(';');
+      for (let i in lstSplit) {
+        let phone = this.dataPhoneAddNew.filter(s => lstSplit[i].includes(s.PHONE));
+        if (phone == null || phone.length == 0) {
+          let telco = this.utilityService.getTelco(lstSplit[i]);
+          this.dataPhoneAddNew.push({ PHONE: lstSplit[i], TELCO: telco });
+          if (telco == "VIETTEL") {
+            this.cntVTL++;
+          }
+          else if (telco == "GPC") {
+            this.cntGPC++;
+          }
+          else if (telco == "VMS") {
+            this.cntVMS++;
+          }
+        }
+      }
+    }
+    else {
       this.numberPhone = 1;
+      this.dataPhoneAddNew.push({ PHONE: phoneList.substr(0, phoneList.length - 1), TELCO: this.telco });
+    }
+
+    if (this.packCountVTL != null && this.packCountVTL > 0 && this.packageAmtVTL > 0) {
+      this.totalPackVTL = (this.packCountVTL * this.countVTL) + (this.packCountVTL * this.cntVTL);
+      this.totalAmtVTL = this.packageAmtVTL * this.totalPackVTL;
+      this.packViettel = this.selectedPackageVTL[0].itemName + " x " + this.totalPackVTL;
+    }
+    if (this.packCountGPC != null && this.packCountGPC > 0 && this.packageAmtGPC > 0) {
+      this.totalPackGPC = (this.packCountGPC * this.countGPC) + (this.packCountGPC * this.cntGPC);
+      this.totalAmtGPC = this.packageAmtGPC * this.totalPackGPC;
+      this.packGPC = this.selectedPackageGPC[0].itemName + " x " + this.totalPackGPC;
+    }
+    if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
+      this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
+      this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
+      this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+    }
+    this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
   }
 
   // count phone
@@ -499,12 +568,14 @@ export class SendDataComponent implements OnInit {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
       if (response != null && response.err_code == 0) {
         this.effectiveDateVTL = response.data[0].DATE_USE + " ngày";
-        this.packageAmtVTL = response.data[0].AMT;
-        if (this.packCountVTL != null && this.packCountVTL > 0 && this.packageAmtVTL != null && this.packageAmtVTL > 0 && this.dataPhoneTamp.length > 0) {
-          this.totalPackVTL = this.packCountVTL * this.countVTL;
+        this.packageAmtVTL = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+        if (this.packCountVTL != null && this.packCountVTL > 0 && this.packageAmtVTL > 0) {
+          this.totalPackVTL = (this.packCountVTL * this.countVTL) + (this.packCountVTL * this.cntVTL);
           this.totalAmtVTL = this.packageAmtVTL * this.totalPackVTL;
           this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
           this.packViettel = this.selectedPackageVTL[0].itemName + " x " + this.totalPackVTL;
+          this.dataViettel = response.data[0].DATA;
+          this.isSendVTL = true;
         }
       }
     }
@@ -512,8 +583,8 @@ export class SendDataComponent implements OnInit {
 
   changeCountVTL() {
     this.packViettel = "0";
-    if (this.packCountVTL != null && this.packCountVTL > 0 && this.packageAmtVTL != null && this.packageAmtVTL > 0 && this.dataPhoneTamp.length > 0) {
-      this.totalPackVTL = this.packCountVTL * this.countVTL;
+    if (this.packCountVTL != null && this.packCountVTL > 0 && this.packageAmtVTL > 0) {
+      this.totalPackVTL = (this.packCountVTL * this.countVTL) + (this.packCountVTL * this.cntVTL);
       this.totalAmtVTL = this.packageAmtVTL * this.totalPackVTL;
       this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
       this.packViettel = this.selectedPackageVTL[0].itemName + " x " + this.totalPackVTL;
@@ -537,12 +608,13 @@ export class SendDataComponent implements OnInit {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageGPC[0].id);
       if (response != null && response.err_code == 0) {
         this.effectiveDateGPC = response.data[0].DATE_USE + " ngày";
-        this.packageAmtGPC = response.data[0].AMT;
-        if (this.packCountGPC != null && this.packCountGPC > 0 && this.packageAmtGPC != null && this.packageAmtGPC > 0 && this.dataPhoneTamp.length > 0) {
-          this.totalPackGPC = this.packCountGPC * this.countGPC;
+        this.packageAmtGPC = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+        if (this.packCountGPC != null && this.packCountGPC > 0 && this.packageAmtGPC > 0) {
+          this.totalPackGPC = (this.packCountGPC * this.countGPC) + (this.packCountGPC * this.cntGPC);
           this.totalAmtGPC = this.packageAmtGPC * this.totalPackGPC;
           this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
           this.packGPC = this.selectedPackageGPC[0].itemName + " x " + this.totalPackGPC;
+          this.isSendGPC = true;
         }
       }
     }
@@ -550,8 +622,8 @@ export class SendDataComponent implements OnInit {
 
   changeCountGPC() {
     this.packGPC = "0";
-    if (this.packCountGPC != null && this.packCountGPC > 0 && this.packageAmtGPC != null && this.packageAmtGPC > 0 && this.dataPhoneTamp.length > 0) {
-      this.totalPackGPC = this.packCountGPC * this.countGPC;
+    if (this.packCountGPC != null && this.packCountGPC > 0 && this.packageAmtGPC > 0) {
+      this.totalPackGPC = (this.packCountGPC * this.countGPC) + (this.packCountGPC * this.cntGPC);
       this.totalAmtGPC = this.packageAmtGPC * this.totalPackGPC;
       this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
       this.packGPC = this.selectedPackageGPC[0].itemName + " x " + this.totalPackGPC;
@@ -575,12 +647,13 @@ export class SendDataComponent implements OnInit {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);
       if (response != null && response.err_code == 0) {
         this.effectiveDateVMS = response.data[0].DATE_USE + " ngày";
-        this.packageAmtVMS = response.data[0].AMT;
-        if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS != null && this.packageAmtVMS > 0 && this.dataPhoneTamp.length > 0) {
-          this.totalPackVMS = this.packCountVMS * this.countVMS;
+        this.packageAmtVMS = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+        if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
+          this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
           this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
           this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
           this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+          this.isSendVMS = true;
         }
       }
     }
@@ -588,8 +661,8 @@ export class SendDataComponent implements OnInit {
 
   changeCountVMS() {
     this.packVMS = "0";
-    if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS != null && this.packageAmtVMS > 0 && this.dataPhoneTamp.length > 0) {
-      this.totalPackVMS = this.packCountVMS * this.countVMS;
+    if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
+      this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
       this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
       this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
       this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
@@ -693,6 +766,8 @@ export class SendDataComponent implements OnInit {
           return;
         }
         this.getDataGroup();
+        this.selectedGroup.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME });
+        this.getPhoneNumber(this.selectedGroup[0]);
         this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("130"));
         this.groupCode = "";
         this.groupName = "";
@@ -752,6 +827,21 @@ export class SendDataComponent implements OnInit {
       }
       this.senderName = this.selectedItemComboboxSender[0].itemName;
 
+    // check chiến dịch
+    if (this.chkcampaign) {
+      this.PROGRAM_NAME = this.programName;
+      if (this.PROGRAM_NAME === '' || this.PROGRAM_NAME === null) {
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-23"));
+        this.confirmSendDataSMSModal.hide();
+        return;
+      }
+    } else {
+      if (this.selectedCampaign.length == 0 || this.selectedCampaign[0].id == "") {
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-101"));
+        this.confirmSendDataSMSModal.hide();
+        return;
+      }
+    }
       // check đã nhập nội dung tin nhắn chưa
       this.SMS_TEMPLATE = this.utilityService.removeSign4VietnameseString(this.utilityService.removeDiacritics(this.smsContent));
       if (this.SMS_TEMPLATE === '' || this.SMS_TEMPLATE === null) {
@@ -760,15 +850,6 @@ export class SendDataComponent implements OnInit {
         return;
       }
     }
-
-    // check tên chương trình
-    this.PROGRAM_NAME = this.programName;
-    if (this.PROGRAM_NAME === '' || this.PROGRAM_NAME === null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-23"));
-      this.confirmSendDataSMSModal.hide();
-      return;
-    }
-    
     // check package
     if (this.selectedPackageVTL.length == 0 && this.selectedPackageGPC.length == 0 && this.selectedPackageVMS.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
@@ -784,69 +865,17 @@ export class SendDataComponent implements OnInit {
     this.TIMESCHEDULE = this.utilityService.formatDateToString(time, "yyyyMMddHHmmss");
     this.timeSend = this.utilityService.formatDateToString(time, "yyyy/MM/dd HH:mm:ss");
     this.IS_SEND_SMS = this.isSendSMS ? 1 : 0;
-
-    // check gói cước
-    this.PACKAGE_ID = this.selectedPackageVTL.length > 0 ? this.selectedPackageVTL[0].id : "";
-    if (this.PACKAGE_ID == "") {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
-      this.confirmSendDataSMSModal.hide();
-      return;
-    }
-
     this.confirmSendDataSMSModal.show();
   }
 
   // send data sms
   async confirmSendSMS() {
     this.loading = true;
-    // if (this.isSendExcel) {
-    //   if (this.lstName === '' || this.lstName === null || this.lstName === 'undefined') {
-    //     this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-23"));
-    //     this.loading = false;
-    //     this.confirmSendDataSMSModal.hide();
-    //     return;
-    //   }
-    //   let DATA_VOL = this.selectedPackageVTL[0].itemName.substr(this.selectedPackageVTL[0].itemName.indexOf('-'), this.selectedPackageVTL[0].itemName.indexOf('-') - 1).replace('-', '').replace('-', '').replace('M', '').replace('B', '').trim();
-    //   let file = this.uploadFile.nativeElement;
-    //   if (file.files.length > 0) {
-    //     let response: any = await this.dataService.getDataFromExcelAsync(null, file.files);
-    //     if (response && response.err_code == 0) {
-    //       let listSmsSend = [];
-    //       if (this.isSendSMS) {
-    //         for (let i = 0; i < response.data.length; i++) {
-    //           let phone = response.data[i];
-    //           listSmsSend.push({
-    //             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA_VOL), SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
-    //             , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: this.PACKAGE_ID
-    //           });
-    //         }
-    //       } else {
-    //         for (let i = 0; i < response.data.length; i++) {
-    //           let phone = response.data[i].PHONE;
-    //           listSmsSend.push({
-    //             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA_VOL)
-    //             , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: this.PACKAGE_ID
-    //           });
-    //         }
-    //       }
-
-    //       let insertSms: any = await this.dataService.postAsync('/api/DataSMS/InsertListSMS', listSmsSend);
-    //       if (insertSms != null && insertSms.err_code == 0)
-    //         this.notificationService.displaySuccessMessage(insertSms.err_message);
-    //       else this.notificationService.displayErrorMessage(insertSms.err_message);
-
-    //       this.viewQuyData(this.ACCOUNT_ID);
-    //       this.confirmSendDataSMSModal.hide();
-    //     }
-    //     else {
-    //       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
-    //       this.loading = false;
-    //       return;
-    //     }
-    //     this.dataFileList = [];
-    //   }
-    // }
-    let DATA: number = this.selectedPackageVTL[0].itemName.substr(this.selectedPackageVTL[0].itemName.indexOf('-'), this.selectedPackageVTL[0].itemName.indexOf('-') - 1).replace('-', '').replace('-', '').replace('M', '').replace('B', '').trim();
+    if(this.dataPhoneAddNew.length > 0){
+      for(let i in this.dataPhoneAddNew){
+        this.dataPhoneTamp.push({ PHONE: this.dataPhoneAddNew[i].PHONE, TELCO: this.dataPhoneAddNew[i].TELCO });
+      }
+    }
 
     // check exists phone list
     if (this.dataPhoneTamp.length == 0) {
@@ -856,27 +885,81 @@ export class SendDataComponent implements OnInit {
       return;
     }
 
+    let PACKAGE_VTL = "";
+    let DATA_VTL = 0;
+    if (this.selectedPackageVTL.length > 0 && this.selectedPackageVTL[0].id != "") {
+      PACKAGE_VTL = this.selectedPackageVTL[0].id;
+      DATA_VTL = this.dataViettel;
+    }
+    let PACKAGE_GPC = "";
+    let DATA_GPC = 0;
+    if (this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != "") {
+      PACKAGE_GPC = this.selectedPackageGPC[0].id;
+      DATA_GPC = this.dataViettel;
+    }
+    let PACKAGE_VMS = "";
+    let DATA_VMS = 0;
+    if (this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != "") {
+      PACKAGE_VMS = this.selectedPackageVMS[0].id;
+      DATA_VMS = this.dataViettel;
+    }
+    let SEND_ONE = this.chkOnlyOneCreate == true ? 1 : 0;
+    let TIME_DONATE = this.timeDonateCreate;
+    let chkCampaign = this.chkcampaign == true ? 0 : 1;
+    let DATA_CAMPAIGN_ID = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : null;
+
     let listSmsSend = [];
     if (this.isSendSMS) {
       for (let i = 0; i < this.dataPhoneTamp.length; i++) {
         let phone = this.dataPhoneTamp[i].PHONE;
-        listSmsSend.push({
-          ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA), SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
-          , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: this.PACKAGE_ID
-        });
+        if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "VIETTEL") {
+          listSmsSend.push({
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VTL, DATA_AMT: this.packageAmtVTL, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
+            , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: Number(PACKAGE_VTL)
+            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+          });
+        }
+        else if (this.isSendGPC && this.dataPhoneTamp[i].TELCO == "GPC") {
+          listSmsSend.push({
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_GPC, DATA_AMT: this.packageAmtGPC, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
+            , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_GPC
+            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+          });
+        }
+        else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
+          listSmsSend.push({
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
+            , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_VMS
+            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+          });
+        }
       }
     }
     else {
       for (let i = 0; i < this.dataPhoneTamp.length; i++) {
         let phone = this.dataPhoneTamp[i].PHONE;
-        listSmsSend.push({
-          ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, DATA_VOL: Number(DATA), SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
-          , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: this.PACKAGE_ID
-        });
+        if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "VIETTEL") {
+          listSmsSend.push({
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VTL, DATA_AMT: this.packageAmtVTL, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_VTL, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+          });
+        }
+        else if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "GPC") {
+          listSmsSend.push({
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_GPC, DATA_AMT: this.packageAmtGPC, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_GPC, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+          });
+        }
+        else if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "VMS") {
+          listSmsSend.push({
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_VMS, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+          });
+        }
       }
     }
 
-    let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign', listSmsSend);
+    let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, listSmsSend);
     if (insertSms.err_code == 0)
       this.notificationService.displaySuccessMessage(insertSms.err_message);
     else this.notificationService.displayErrorMessage(insertSms.err_message);
@@ -986,24 +1069,9 @@ export class SendDataComponent implements OnInit {
     this.confirmDeleteFilePhoneModal.show();
   }
 
-  // delete file phone list
-  async confirmDeleteListFile() {
-    let response: any = await this.dataService.deleteAsync('/api/AccountPhoneList/' + this.lstId)
-    if (response.err_code == 0) {
-      let responseDetail: any = await this.dataService.deleteAsync('/api/AccountPhoneListDetail/DeleteAccountPhoneListDetailByAccountPhoneList?id=' + this.lstId)
-      if (responseDetail.err_code == 0) {
-        this.getDataGroup();
-        this.dataPhone = [];
-        this.lstChecked = [];
-        this.confirmDeleteFilePhoneModal.hide();
-      }
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("200"));
-    }
-    else if (response.err_code == 103) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("103"));
-    }
-    else {
-      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
-    }
+  async getTelco(phone: any) {
+    debugger
+    let response: any = await this.dataService.getAsync('/api/Person/GetTelco?phone=' + phone);
+    this.telco = "";
   }
 }

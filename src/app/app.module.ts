@@ -34,7 +34,6 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    SocialLoginModule,
     ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: 'never' }),
     RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules }),
     TranslateModule.forRoot({
@@ -49,8 +48,7 @@ const appRoutes: Routes = [
   ],
   providers: [AuthGuard, UtilityService, NotificationService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: AuthServiceConfig, useFactory: ConfigSocial }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
@@ -58,15 +56,16 @@ const appRoutes: Routes = [
 export class AppModule {
 }
 
-export function ConfigSocial() {
-  return new AuthServiceConfig([
-    {
-      id: GoogleLoginProvider.PROVIDER_ID,
-      provider: new GoogleLoginProvider(AppConst.GOOGLE_PROVIDER_ID)
-    },
-    {
-      id: FacebookLoginProvider.PROVIDER_ID,
-      provider: new FacebookLoginProvider(AppConst.FACEBOOK_PROVIDER_ID)
-    }
-  ]);
-}
+// export function ConfigSocial() {
+//   return new AuthServiceConfig([
+//     {
+//       id: GoogleLoginProvider.PROVIDER_ID,
+//       provider: new GoogleLoginProvider(AppConst.GOOGLE_PROVIDER_ID)
+//     }
+//     ,
+//     // {
+//     //   id: FacebookLoginProvider.PROVIDER_ID,
+//     //   provider: new FacebookLoginProvider(AppConst.FACEBOOK_PROVIDER_ID)
+//     // }
+//   ]);
+// }
