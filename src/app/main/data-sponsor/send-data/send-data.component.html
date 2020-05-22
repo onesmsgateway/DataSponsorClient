@@ -166,19 +166,24 @@
                         </ul>
                     </div>
                     <div class="x_content">
-                        <div class="col-md-6 col-sm-12 col-xs-12 form-group pull-right text-right" style="padding: 0">
+                        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right text-right" style="padding: 0">
                             <label style="margin-bottom: 0;">{{'data-sms.text_countmes1' | translate}}
                                 (<span style="display:inline-block !important">{{numberChar}}</span>
                                 {{'data-sms.text_countmes2' | translate}}) (<span
                                     style="display:inline-block !important">{{numberSMS}}</span>{{'data-sms.text_countmes3' | translate}})
                             </label>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0">
+                        <div class="col-md-3 col-sm-4 col-xs-12" style="padding:0">
                             <div class="checkbox" style="margin: 0;">
                                 <label><input type="checkbox" value="" class="checkbox" name="isSendSMS"
                                         [(ngModel)]="isSendSMS" (click)="enableSend($event.currentTarget.checked)">
                                     <span>{{ 'send_data.is_send_sms' | translate }}</span> </label>
                             </div>
+                        </div>
+                        <div class="col-md-4 col-sm-3 col-xs-12 form-group has-feedback" style="padding: 0;">
+                            <angular2-multiselect [data]="dataOptionInsert" [(ngModel)]="selectedOptionInsert"
+                                [settings]="settingsFilterOptionInsert" name="slOptionInsert" (onSelect)="changeOptionInsert()">
+                            </angular2-multiselect>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0">
                             <textarea type="text" class="form-control has-feedback-left modal-popup" #contentSMS
@@ -267,8 +272,6 @@
                                                 <th class="text-center" style="width:7%">STT</th>
                                                 <th class="text-center">{{ 'send_data.phone' | translate }}</th>
                                                 <th class="text-center">{{ 'send_data.telco' | translate }}</th>
-                                                <th class="text-center" style="width:7%">{{ 'global.tool' | translate }}
-                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -276,14 +279,6 @@
                                                 <td scope="row">{{i+1}}</td>
                                                 <td>{{item.PHONE}}</td>
                                                 <td>{{item.TELCO}}</td>
-                                                <td class="text-center">
-                                                    <div class="tool">
-                                                        <button type="submit"
-                                                            (click)="showConfirmDelete(item.LIST_ID,item.PHONE)"
-                                                            *ngIf="role.IS_DELETE"
-                                                            class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
-                                                    </div>
-                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>

@@ -374,7 +374,12 @@
     "inCampaign": "Choose campaign",
     "phone_new": "input phone receive data",
     "total_phone": "Total phone",
-    "sender": "Brand name"
+    "sender": "Brand name",
+    "option_insert": "Option insert",
+    "inPhone": "[Phone]",
+    "inData": "[Data]",
+    "inPack": "[Package]",
+    "inDateUse": "[DateExpired]"
   },
   "package": {
     "title": "Package manager",
@@ -417,7 +422,9 @@
     "create_date": "Create date",
     "create_user": "Create user",
     "create_domain": "Insert package",
-    "edit_domain": "Edit package"
+    "edit_domain": "Edit package",
+    "inPackage_name_display": "Input package name display",
+    "package_name_display": "Package name display"
   },
   "data-campaign": {
     "title": "Manage operations of the business",
@@ -438,7 +445,15 @@
     "status_sms": "Status sms",
     "status": "Status",
     "program_name": "Program name",
-    "package": "package"
+    "package": "package",
+    "edit_campaign": "Edit campaign",
+    "content_old": "Content old",
+    "sender_name": "Brand name",
+    "telco": "Telco",
+    "amt_telco": "Money by telco",
+    "total_amt": "Total money",
+    "ask_approve": "Are you sure approve campaign?",
+    "coefficient": "Coefficient"
   },
   "statistic-data-sms": {
     "title": "Statistic Data",
@@ -497,8 +512,14 @@
     "inScenario": "Select scenario",
     "inValue": "Input value",
     "value": "value",
-    "package": "Package",
-    "account": "Account"
+    "packageVTL": "Package Viettel",
+    "packageGPC": "Package Vina",
+    "packageVMS": "Package Mobi",
+    "quantityVTL": "Quantity Viettel",
+    "quantityGPC": "Quantity Vina",
+    "quantityVMS": "Quantity Mobi",
+    "account": "Account",
+    "delete_notify": "Are you sure delete scenario detail "
   },
   "group": {
     "title": " Manager group customer",

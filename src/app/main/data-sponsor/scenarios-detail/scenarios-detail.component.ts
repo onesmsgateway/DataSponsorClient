@@ -24,26 +24,24 @@ export class ScenariosDetailComponent implements OnInit {
   public pagination: Pagination = new Pagination();
   public id;
   public name;
+  public scenarioId = "";
+  public quantityVTL = 1;
+  public quantityGPC = 1;
+  public quantityVMS = 1;
   public formEditScenarios: FormGroup;
   public role: Role = new Role();
   public isAdmin: boolean = false;
   public loading: boolean = true;
 
-  public dataScenarios = [];
-  public dataScenariosCreate = [];
-  public dataScenariosEdit = [];
-  public dataPackage = [];
-  public dataAccount = [];
-  public settingsFilterAccount = {};
-  public selectedAccount = [];
-  public settingsFilterScenarios = {};
-  public selectedScenarios = [];
-  public settingsFilterPackage = {};
-  public selectedPackage = [];
-  public selectedScenariosEdit = [];
-  public selectedScenariosCreate = [];
-  public selectedAccountEdit = [];
-  public selectedAccountCreate = [];
+  public dataPackageVTL = [];
+  public settingsFilterPackageVTL = {};
+  public selectedPackageVTL = [];
+  public dataPackageGPC = [];
+  public settingsFilterPackageGPC = {};
+  public selectedPackageGPC = [];
+  public dataPackageVMS = [];
+  public settingsFilterPackageVMS = {};
+  public selectedPackageVMS = [];
 
   constructor(
     private dataService: DataService,
@@ -60,8 +58,8 @@ export class ScenariosDetailComponent implements OnInit {
       })
     });
 
-    this.settingsFilterAccount = {
-      text: this.utilityService.translate('global.choose_account'),
+    this.settingsFilterPackageVTL = {
+      text: this.utilityService.translate('global.choose_package'),
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -70,8 +68,8 @@ export class ScenariosDetailComponent implements OnInit {
       showCheckbox: false
     };
 
-    this.settingsFilterScenarios = {
-      text: this.utilityService.translate('scenarios-detail.inScenario'),
+    this.settingsFilterPackageGPC = {
+      text: this.utilityService.translate('global.choose_package'),
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -80,7 +78,7 @@ export class ScenariosDetailComponent implements OnInit {
       showCheckbox: false
     };
 
-    this.settingsFilterPackage = {
+    this.settingsFilterPackageVMS = {
       text: this.utilityService.translate('global.choose_package'),
       singleSelection: true,
       enableSearchFilter: true,
@@ -92,91 +90,61 @@ export class ScenariosDetailComponent implements OnInit {
 
     this.formEditScenarios = new FormGroup({
       id: new FormControl(),
-      accountEdit: new FormControl(),
-      scenariosEdit: new FormControl(),
       valueScenar: new FormControl(),
-      package: new FormControl()
+      packageVTL: new FormControl(),
+      packageGPC: new FormControl(),
+      packageVMS: new FormControl(),
+      quantityVTL: new FormControl(),
+      quantityGPC: new FormControl(),
+      quantityVMS: new FormControl()
     });
   }
 
   ngOnInit() {
-    this.getAccountLogin();
+    this.getDataPackageVTL();
+    this.getDataPackageGPC();
+    this.getDataPackageVMS();
+    //this.getData();
   }
 
-  async getAccountLogin() {
-    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
-    let roleAccess = result.data[0].ROLE_ACCESS;
-    if (roleAccess != null && roleAccess == 50) {
-      this.isAdmin = true;
-    } else {
-      this.isAdmin = false;
-    }
-    this.getDataAccount();
-    this.getDataPackage();
-    this.getData();
-  }
-
-  // get account
-  async getDataAccount() {
-    if (this.isAdmin) {
-      this.selectedAccount = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
-      let response: any = await this.dataService.getAsync('/api/account')
-      for (let index in response.data) {
-        this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
-      }
-    }
-    else {
-      let response = await this.dataService.getAsync('/api/account/GetLisAccountParentAndChild?account_id=' +
-        this.authService.currentUserValue.ACCOUNT_ID);
-      for (let index in response.data) {
-        this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
-      }
-      if (this.dataAccount.length == 1) {
-        this.selectedAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
-      }
-      else
-        this.selectedAccount.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
-    }
-  }
-
-  OnSelectAccount() {
-    this.getScenarios();
-  }
-
-  async getScenarios() {
-    this.selectedScenarios = [];
-    this.dataScenarios = [];
-    let accountId = this.selectedAccount.length > 0 ? this.selectedAccount[0].id : 0;
-    let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosByAccount?account_id=' + accountId)
+  // get data package viettel
+  async getDataPackageVTL() {
+    this.dataPackageVTL = [];
+    this.selectedPackageVTL = [];
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL')
     for (let index in response.data) {
-      this.dataScenarios.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
+      this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
     }
-    if (this.dataScenarios.length == 1)
-      this.selectedScenarios.push({ "id": this.dataScenarios[0].id, "itemName": this.dataScenarios[0].itemName });
-    this.getData();
+    if (this.dataPackageVTL.length == 1)
+      this.selectedPackageVTL.push({ "id": this.dataPackageVTL[0].id, "itemName": this.dataPackageVTL[0].itemName });
   }
 
-  // get data package
-  async getDataPackage() {
-    this.selectedPackage = [];
-    this.dataPackage = [];
-    let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=1&pageSize=9999&package_name=')
+  // get data package vina
+  async getDataPackageGPC() {
+    this.dataPackageGPC = [];
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC')
     for (let index in response.data) {
-      this.dataPackage.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME });
+      this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
     }
-    if (this.dataPackage.length == 1)
-      this.selectedPackage.push({ "id": this.dataPackage[0].id, "itemName": this.dataPackage[0].itemName });
+    if (this.dataPackageGPC.length == 1)
+      this.selectedPackageGPC.push({ "id": this.dataPackageGPC[0].id, "itemName": this.dataPackageGPC[0].itemName });
   }
 
-  ChangeDropdownList() {
-    this.getData();
+  // get data package mobi
+  async getDataPackageVMS() {
+    this.dataPackageVMS = [];
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS')
+    for (let index in response.data) {
+      this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
+    }
+    if (this.dataPackageVMS.length == 1)
+      this.selectedPackageVMS.push({ "id": this.dataPackageVMS[0].id, "itemName": this.dataPackageVMS[0].itemName });
   }
 
   //#region load data
   async getData() {
-    let scenarioId = this.selectedScenarios.length > 0 ? this.selectedScenarios[0].id : "";
     let response: any = await this.dataService.getAsync('/api/ScenariosDetail/GetScenariosDetailPaging?pageIndex=' + this.pagination.pageIndex +
-      "&pageSize=" + this.pagination.pageSize + "&scenario_id=" + scenarioId)
+      "&pageSize=" + this.pagination.pageSize + "&scenario_id=" + this.scenarioId)
     this.loadData(response);
   }
 
@@ -206,52 +174,29 @@ export class ScenariosDetailComponent implements OnInit {
   }
   //#endregion
 
-  async ChangeDropdownCreate() {
-    this.selectedScenariosCreate = [];
-    this.dataScenariosCreate = [];
-    let accountId = this.selectedAccountCreate.length > 0 ? this.selectedAccountCreate[0].id : 0;
-    let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosByAccount?account_id=' + accountId)
-    for (let index in response.data) {
-      this.dataScenariosCreate.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
-    }
-    if (this.dataScenariosCreate.length == 1)
-      this.selectedScenariosCreate.push({ "id": this.dataScenariosCreate[0].id, "itemName": this.dataScenariosCreate[0].itemName });
-  }
-
-  async ChangeDropdownEdit() {
-    this.selectedScenariosEdit = [];
-    this.dataScenariosEdit = [];
-    let accountId = this.selectedAccountEdit.length > 0 ? this.selectedAccountEdit[0].id : 0;
-    let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosByAccount?account_id=' + accountId)
-    for (let index in response.data) {
-      this.dataScenariosEdit.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
-    }
-    if (this.dataScenariosEdit.length == 1)
-      this.selectedScenariosEdit.push({ "id": this.dataScenariosEdit[0].id, "itemName": this.dataScenariosEdit[0].itemName });
-  }
-
   //#region create new
   async createScenariosDetail(item) {
     let scenar = item.value;
     let combobox = item.controls;
-    if (combobox.scenariosCreate.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-92"));
-      return;
-    }
-    let SCENARIO_ID = combobox.scenariosCreate.value[0].id;
+    let SCENARIO_ID = this.scenarioId;
     let VALUE = scenar.valueScenar.toString();
     if (VALUE == "" || VALUE == null) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
       return;
     }
-    if (combobox.package.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-82"));
+    if (combobox.packageVTL.value.length == 0 && combobox.packageGPC.value.length == 0 && combobox.packageVMS.value.length == 0) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
       return;
     }
-    let PACKAGE_ID = combobox.package.value[0].id;
+    let PACKAGE_ID_VIETTEL = combobox.packageVTL.value.length > 0 && combobox.packageVTL.value[0].id != "" ? combobox.packageVTL.value[0].id : null;
+    let PACKAGE_ID_VINAPHONE = combobox.packageGPC.value.length > 0 && combobox.packageGPC.value[0].id != "" ? combobox.packageGPC.value[0].id : null;
+    let PACKAGE_ID_MOBIFONE = combobox.packageVMS.value.length > 0 && combobox.packageVMS.value[0].id != "" ? combobox.packageVMS.value[0].id : null;
+    let PACKAGE_QUANTITY_VIETTEL = scenar.quantityVTL != "" && scenar.quantityVTL != "" ? scenar.quantityVTL : 0;
+    let PACKAGE_QUANTITY_VINAPHONE = scenar.quantityGPC != "" && scenar.quantityGPC != "" ? scenar.quantityGPC : 0;
+    let PACKAGE_QUANTITY_MOBIFONE = scenar.quantityVMS != "" && scenar.quantityVMS != "" ? scenar.quantityVMS : 0;
 
     let response: any = await this.dataService.postAsync('/api/ScenariosDetail', {
-      SCENARIO_ID, VALUE, PACKAGE_ID
+      SCENARIO_ID, VALUE, PACKAGE_ID_VIETTEL, PACKAGE_ID_VINAPHONE, PACKAGE_ID_MOBIFONE, PACKAGE_QUANTITY_VIETTEL, PACKAGE_QUANTITY_VINAPHONE, PACKAGE_QUANTITY_MOBIFONE
     })
     if (response.err_code == 0) {
       item.reset();
@@ -275,13 +220,16 @@ export class ScenariosDetailComponent implements OnInit {
       let dataDetail = response.data[0];
       this.formEditScenarios = new FormGroup({
         id: new FormControl(id),
-        accountEdit: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
-          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }]),
-        scenariosEdit: new FormControl(dataDetail.SCENARIO_ID != "" && dataDetail.SCENARIO_ID != null ? [{ "id": dataDetail.SCENARIO_ID, "itemName": dataDetail.SCENARIO_NAME }]
-          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_scenario') }]),
         valueScenar: new FormControl(dataDetail.VALUE),
-        package: new FormControl(dataDetail.PACKAGE_ID != "" && dataDetail.PACKAGE_ID != null ? [{ "id": dataDetail.PACKAGE_ID, "itemName": dataDetail.PACKAGE_NAME }]
-          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }])
+        packageVTL: new FormControl(dataDetail.PACKAGE_ID_VIETTEL != "" && dataDetail.PACKAGE_ID_VIETTEL != null ? [{ "id": dataDetail.PACKAGE_ID_VIETTEL, "itemName": dataDetail.PACKAGE_NAME_VIETTEL }]
+          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
+        packageGPC: new FormControl(dataDetail.PACKAGE_ID_VINAPHONE != "" && dataDetail.PACKAGE_ID_VINAPHONE != null ? [{ "id": dataDetail.PACKAGE_ID_VINAPHONE, "itemName": dataDetail.PACKAGE_NAME_VINAPHONE }]
+          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
+        packageVMS: new FormControl(dataDetail.PACKAGE_ID_MOBIFONE != "" && dataDetail.PACKAGE_ID_MOBIFONE != null ? [{ "id": dataDetail.PACKAGE_ID_MOBIFONE, "itemName": dataDetail.PACKAGE_NAME_MOBIPHONE }]
+          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
+        quantityVTL: new FormControl(dataDetail.PACKAGE_QUANTITY_VIETTEL),
+        quantityGPC: new FormControl(dataDetail.PACKAGE_QUANTITY_VINAPHONE),
+        quantityVMS: new FormControl(dataDetail.PACKAGE_QUANTITY_MOBIFONE)
       });
       this.showModalUpdate.show();
     } else {
@@ -289,28 +237,29 @@ export class ScenariosDetailComponent implements OnInit {
     }
   }
 
-  // update tin mẫu
+  // update chi tiet kich ban
   async editScenariosDetail() {
     let formData = this.formEditScenarios.controls;
     let ID = formData.id.value;
-    if (formData.scenariosEdit.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
-      return;
-    }
-    let SCENARIO_ID = formData.scenariosEdit.value[0].id;
+    let SCENARIO_ID = this.scenarioId;
     let VALUE = formData.valueScenar.value.toString();
     if (VALUE == "" || VALUE == null) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
       return;
     }
-    if (formData.package.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-82"));
+    if (formData.packageVTL.value.length == 0 && formData.packageGPC.value.length == 0 && formData.packageVMS.value.length == 0) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
       return;
     }
-    let PACKAGE_ID = formData.package.value[0].id;
+    let PACKAGE_ID_VIETTEL = formData.packageVTL.value.length > 0 && formData.packageVTL.value[0].id != "" ? formData.packageVTL.value[0].id : null;
+    let PACKAGE_ID_VINAPHONE = formData.packageGPC.value.length > 0 && formData.packageGPC.value[0].id != "" ? formData.packageGPC.value[0].id : null;
+    let PACKAGE_ID_MOBIFONE = formData.packageVMS.value.length > 0 && formData.packageVMS.value[0].id != "" ? formData.packageVMS.value[0].id : null;
+    let PACKAGE_QUANTITY_VIETTEL = formData.quantityVTL.value != "" && formData.quantityVTL.value != null ? formData.quantityVTL.value : 0;
+    let PACKAGE_QUANTITY_VINAPHONE = formData.quantityGPC.value != "" && formData.quantityGPC.value != null ? formData.quantityGPC.value : 0;
+    let PACKAGE_QUANTITY_MOBIFONE = formData.quantityVMS.value != "" && formData.quantityVMS.value != null ? formData.quantityVMS.value : 0;
 
     let response: any = await this.dataService.putAsync('/api/ScenariosDetail/' + ID, {
-      SCENARIO_ID, VALUE, PACKAGE_ID
+      SCENARIO_ID, VALUE, PACKAGE_ID_VIETTEL, PACKAGE_ID_VINAPHONE, PACKAGE_ID_MOBIFONE, PACKAGE_QUANTITY_VIETTEL, PACKAGE_QUANTITY_VINAPHONE, PACKAGE_QUANTITY_MOBIFONE
     })
     if (response.err_code == 0) {
       this.showModalUpdate.hide();

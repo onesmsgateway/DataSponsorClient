@@ -162,6 +162,11 @@
                                 placeholder="{{ 'package.inPackage_name' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
+                            <label>{{'package.package_name_display' | translate}}</label>
+                            <input type="text" class="form-control" name="packageNameDisplay" [(ngModel)]="packageNameDisplay"
+                                placeholder="{{ 'package.inPackage_name_display' | translate }}">
+                        </div>
+                        <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package_telco.telco' | translate}}</label>
                             <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco"
                                 [settings]="settingsFilterTelco" name="telco">
@@ -213,6 +218,11 @@
                             <label>{{'package.package_name' | translate}}</label>
                             <input type="text" class="form-control" formControlName="packageName"
                                 [(ngModel)]="packageName" placeholder="{{ 'package.inPackage_name' | translate }}">
+                        </div>
+                        <div class="col-md-3 col-sm-4 col-xs-12 form-group">
+                            <label>{{'package.package_name_display' | translate}}</label>
+                            <input type="text" class="form-control" formControlName="packageNameDisplay" [(ngModel)]="packageNameDisplay"
+                                placeholder="{{ 'package.inPackage_name_display' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package_telco.telco' | translate}}</label>

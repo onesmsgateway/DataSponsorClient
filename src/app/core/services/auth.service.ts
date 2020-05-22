@@ -23,14 +23,18 @@ export class AuthService {
 
   constructor(private dataService: DataService,
     private router: Router,
-    private authSocial: AuthSocial,
+    //private authSocial: AuthSocial,
     private utilityService: UtilityService) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(AppConst.CURRENT_USER)));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
   public get currentUserValue(): User {
-    return this.currentUserSubject.value;
+    if (this.currentUserSubject)
+      return this.currentUserSubject.value;
+    else {
+      return null;
+    }
   }
 
   public async routerWebsite() {
@@ -113,11 +117,11 @@ export class AuthService {
     localStorage.removeItem(AppConst.ERROR_CODE);
     this.currentUserSubject.next(null);
     localStorage.setItem(AppConst.IS_LOGGED, "false");
-    this.authSocial.authState.subscribe((user) => {
-      if (user) {
-        this.authSocial.signOut();
-      }
-    });
+    // this.authSocial.authState.subscribe((user) => {
+    //   if (user) {
+    //     this.authSocial.signOut();
+    //   }
+    // });
     this.router.navigate([UrlConst.LOGIN]);
   }
 

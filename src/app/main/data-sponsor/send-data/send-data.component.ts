@@ -35,6 +35,7 @@ export class SendDataComponent implements OnInit {
   public dataPhonePaging = [];
   public dataGroup = [];
   public dataCampaign = [];
+  public dataOptionInsert = [];
   public settingsFilterAccount = {};
   public settingsFilterSender = {};
   public settingsFilterPackageVTL = {};
@@ -43,6 +44,7 @@ export class SendDataComponent implements OnInit {
   public settingsFilterGroup = {};
   public settingsFilterCampaign = {};
   public settingsFilterGroupUpload = {};
+  public settingsFilterOptionInsert = {};
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxSender = [];
   public selectedGroup = [];
@@ -51,6 +53,7 @@ export class SendDataComponent implements OnInit {
   public selectedPackageVTL = [];
   public selectedPackageGPC = [];
   public selectedPackageVMS = [];
+  public selectedOptionInsert = [];
   public lstChecked = [];
   public lstCheckedName = [];
   public phone;
@@ -223,8 +226,23 @@ export class SendDataComponent implements OnInit {
       showCheckbox: false
     };
 
+    this.settingsFilterOptionInsert = {
+      text: this.utilityService.translate('send_data.option_insert'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate());
+
+    this.dataOptionInsert.push({"id": this.utilityService.translate('send_data.inPack'), "itemName": this.utilityService.translate('send_data.inPack')});
+    this.dataOptionInsert.push({"id": this.utilityService.translate('send_data.inData'), "itemName": this.utilityService.translate('send_data.inData')});
+    this.dataOptionInsert.push({"id": this.utilityService.translate('send_data.inDateUse'), "itemName": this.utilityService.translate('send_data.inDateUse')});
+    this.dataOptionInsert.push({"id": this.utilityService.translate('send_data.inPhone'), "itemName": this.utilityService.translate('send_data.inPhone')});
   }
   ngOnInit() {
     this.getAccountLogin();
@@ -380,7 +398,7 @@ export class SendDataComponent implements OnInit {
     //this.GetPackage();
   }
 
-  countPhone(phone) {
+  async countPhone(phone) {
     this.cntVTL = 0;
     this.cntGPC = 0;
     this.cntVMS = 0;
@@ -396,7 +414,7 @@ export class SendDataComponent implements OnInit {
       for (let i in lstSplit) {
         let phone = this.dataPhoneAddNew.filter(s => lstSplit[i].includes(s.PHONE));
         if (phone == null || phone.length == 0) {
-          let telco = this.utilityService.getTelco(lstSplit[i]);
+          let telco = await this.getTelco(lstSplit[i]);
           this.dataPhoneAddNew.push({ PHONE: lstSplit[i], TELCO: telco });
           if (telco == "VIETTEL") {
             this.cntVTL++;
@@ -538,6 +556,15 @@ export class SendDataComponent implements OnInit {
   }
   //#endregion
 
+  //option insert
+  changeOptionInsert(){
+    this.contentSMS.nativeElement.focus();
+    let startString = this.contentSMS.nativeElement.value.substr(0, this.contentSMS.nativeElement.selectionStart);
+    let endString = this.contentSMS.nativeElement.value.substr(this.contentSMS.nativeElement.selectionStart, this.contentSMS.nativeElement.value.length);
+    this.smsContent = startString.trim() + this.selectedOptionInsert[0].id + endString.trim();
+    this.contentSMS.nativeElement.focus();
+  }
+
   // get data sender
   async getDataSenderName(accountID) {
     this.selectedItemComboboxSender = [];
@@ -556,7 +583,7 @@ export class SendDataComponent implements OnInit {
     this.dataPackageVTL = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL')
     for (let index in response.data) {
-      this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
+      this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
     if (this.dataPackageVTL.length == 1)
       this.selectedPackageVTL.push({ "id": this.dataPackageVTL[0].id, "itemName": this.dataPackageVTL[0].itemName });
@@ -579,6 +606,14 @@ export class SendDataComponent implements OnInit {
         }
       }
     }
+    else{
+      this.effectiveDateVTL = "0";
+      this.packCountVTL = 1;
+      this.packageAmtVTL = 0;
+      this.totalPackVTL = 0;
+      this.totalAmt = this.totalAmt - this.totalAmtVTL;
+      this.totalAmtVTL = 0;
+    }
   }
 
   changeCountVTL() {
@@ -596,7 +631,7 @@ export class SendDataComponent implements OnInit {
     this.dataPackageGPC = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC')
     for (let index in response.data) {
-      this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
+      this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
     if (this.dataPackageGPC.length == 1)
       this.selectedPackageGPC.push({ "id": this.dataPackageGPC[0].id, "itemName": this.dataPackageGPC[0].itemName });
@@ -618,6 +653,14 @@ export class SendDataComponent implements OnInit {
         }
       }
     }
+    else{
+      this.effectiveDateGPC = "0";
+      this.packCountGPC = 1;
+      this.packageAmtGPC = 0;
+      this.totalPackGPC = 0;
+      this.totalAmt = this.totalAmt - this.totalAmtGPC;
+      this.totalAmtGPC = 0;
+    }
   }
 
   changeCountGPC() {
@@ -635,7 +678,7 @@ export class SendDataComponent implements OnInit {
     this.dataPackageVMS = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS')
     for (let index in response.data) {
-      this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
+      this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
     if (this.dataPackageVMS.length == 1)
       this.selectedPackageVMS.push({ "id": this.dataPackageVMS[0].id, "itemName": this.dataPackageVMS[0].itemName });
@@ -656,6 +699,14 @@ export class SendDataComponent implements OnInit {
           this.isSendVMS = true;
         }
       }
+    }
+    else{
+      this.effectiveDateVMS = "0";
+      this.packCountVMS = 1;
+      this.packageAmtVMS = 0;
+      this.totalPackVMS = 0;
+      this.totalAmt = this.totalAmt - this.totalAmtVMS;
+      this.totalAmtVMS = 0;
     }
   }
 
@@ -827,21 +878,21 @@ export class SendDataComponent implements OnInit {
       }
       this.senderName = this.selectedItemComboboxSender[0].itemName;
 
-    // check chiến dịch
-    if (this.chkcampaign) {
-      this.PROGRAM_NAME = this.programName;
-      if (this.PROGRAM_NAME === '' || this.PROGRAM_NAME === null) {
-        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-23"));
-        this.confirmSendDataSMSModal.hide();
-        return;
+      // check chiến dịch
+      if (this.chkcampaign) {
+        this.PROGRAM_NAME = this.programName;
+        if (this.PROGRAM_NAME === '' || this.PROGRAM_NAME === null) {
+          this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-23"));
+          this.confirmSendDataSMSModal.hide();
+          return;
+        }
+      } else {
+        if (this.selectedCampaign.length == 0 || this.selectedCampaign[0].id == "") {
+          this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-101"));
+          this.confirmSendDataSMSModal.hide();
+          return;
+        }
       }
-    } else {
-      if (this.selectedCampaign.length == 0 || this.selectedCampaign[0].id == "") {
-        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-101"));
-        this.confirmSendDataSMSModal.hide();
-        return;
-      }
-    }
       // check đã nhập nội dung tin nhắn chưa
       this.SMS_TEMPLATE = this.utilityService.removeSign4VietnameseString(this.utilityService.removeDiacritics(this.smsContent));
       if (this.SMS_TEMPLATE === '' || this.SMS_TEMPLATE === null) {
@@ -871,8 +922,8 @@ export class SendDataComponent implements OnInit {
   // send data sms
   async confirmSendSMS() {
     this.loading = true;
-    if(this.dataPhoneAddNew.length > 0){
-      for(let i in this.dataPhoneAddNew){
+    if (this.dataPhoneAddNew.length > 0) {
+      for (let i in this.dataPhoneAddNew) {
         this.dataPhoneTamp.push({ PHONE: this.dataPhoneAddNew[i].PHONE, TELCO: this.dataPhoneAddNew[i].TELCO });
       }
     }
@@ -885,22 +936,28 @@ export class SendDataComponent implements OnInit {
       return;
     }
 
-    let PACKAGE_VTL = "";
+    let PACKAGE_ID_VTL = null;
+    let PACKAGE_NAME_VTL = "";
     let DATA_VTL = 0;
     if (this.selectedPackageVTL.length > 0 && this.selectedPackageVTL[0].id != "") {
-      PACKAGE_VTL = this.selectedPackageVTL[0].id;
+      PACKAGE_ID_VTL = this.selectedPackageVTL[0].id;
+      PACKAGE_NAME_VTL = this.selectedPackageVTL[0].itemName.substr(0, this.selectedPackageVTL[0].itemName.indexOf('-') - 1).trim();
       DATA_VTL = this.dataViettel;
     }
-    let PACKAGE_GPC = "";
+    let PACKAGE_ID_GPC = null;
+    let PACKAGE_NAME_GPC = "";
     let DATA_GPC = 0;
     if (this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != "") {
-      PACKAGE_GPC = this.selectedPackageGPC[0].id;
+      PACKAGE_ID_GPC = this.selectedPackageGPC[0].id;
+      PACKAGE_NAME_GPC = this.selectedPackageGPC[0].itemName.substr(0, this.selectedPackageGPC[0].itemName.indexOf('-') - 1).trim();
       DATA_GPC = this.dataViettel;
     }
-    let PACKAGE_VMS = "";
+    let PACKAGE_ID_VMS = null;
+    let PACKAGE_NAME_VMS = "";
     let DATA_VMS = 0;
     if (this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != "") {
-      PACKAGE_VMS = this.selectedPackageVMS[0].id;
+      PACKAGE_ID_VMS = this.selectedPackageVMS[0].id;
+      PACKAGE_NAME_VMS = this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim();
       DATA_VMS = this.dataViettel;
     }
     let SEND_ONE = this.chkOnlyOneCreate == true ? 1 : 0;
@@ -913,24 +970,30 @@ export class SendDataComponent implements OnInit {
       for (let i = 0; i < this.dataPhoneTamp.length; i++) {
         let phone = this.dataPhoneTamp[i].PHONE;
         if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "VIETTEL") {
+          let SMS_CONTENT = this.SMS_TEMPLATE.replace(this.utilityService.translate('send_data.inPack'),PACKAGE_NAME_VTL).replace(this.utilityService.translate('send_data.inPhone'),phone)
+          .replace(this.utilityService.translate('send_data.inData'),DATA_VTL).replace(this.utilityService.translate('send_data.inDateUse'),this.effectiveDateVTL.replace("ngày","").trim());
           listSmsSend.push({
-            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VTL, DATA_AMT: this.packageAmtVTL, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
-            , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: Number(PACKAGE_VTL)
-            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VTL, DATA_AMT: this.packageAmtVTL, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
+            , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: Number(PACKAGE_ID_VTL), PACKAGE_NAME: PACKAGE_NAME_VTL
+            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVTL
           });
         }
         else if (this.isSendGPC && this.dataPhoneTamp[i].TELCO == "GPC") {
+          let SMS_CONTENT = this.SMS_TEMPLATE.replace(this.utilityService.translate('send_data.inPack'),PACKAGE_NAME_GPC).replace(this.utilityService.translate('send_data.inPhone'),phone)
+          .replace(this.utilityService.translate('send_data.inData'),DATA_GPC).replace(this.utilityService.translate('send_data.inDateUse'),this.effectiveDateGPC.replace("ngày","").trim());
           listSmsSend.push({
-            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_GPC, DATA_AMT: this.packageAmtGPC, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
-            , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_GPC
-            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_GPC, DATA_AMT: this.packageAmtGPC, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
+            , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_GPC, PACKAGE_NAME: PACKAGE_NAME_GPC
+            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackGPC
           });
         }
         else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
+          let SMS_CONTENT = this.SMS_TEMPLATE.replace(this.utilityService.translate('send_data.inPack'),PACKAGE_NAME_VMS).replace(this.utilityService.translate('send_data.inPhone'),phone)
+          .replace(this.utilityService.translate('send_data.inData'),DATA_VMS).replace(this.utilityService.translate('send_data.inDateUse'),this.effectiveDateVMS.replace("ngày","").trim());
           listSmsSend.push({
-            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: this.SMS_TEMPLATE
-            , TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_VMS
-            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
+            , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS
+            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS
           });
         }
       }
@@ -941,23 +1004,30 @@ export class SendDataComponent implements OnInit {
         if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "VIETTEL") {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VTL, DATA_AMT: this.packageAmtVTL, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
-            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_VTL, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VTL, PACKAGE_NAME: PACKAGE_NAME_VTL, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVTL
           });
         }
-        else if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "GPC") {
+        else if (this.isSendGPC && this.dataPhoneTamp[i].TELCO == "GPC") {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_GPC, DATA_AMT: this.packageAmtGPC, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
-            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_GPC, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_GPC, PACKAGE_NAME: PACKAGE_NAME_GPC, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackGPC
           });
         }
-        else if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "VMS") {
+        else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
-            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_VMS, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS
           });
         }
       }
     }
+
+    // if (this.isSendVTL)
+    //   await this.dataService.postAsync('/api/DataOrderPackages', { DATA_CAMPAIGN_ID, PACKAGE_ID: PACKAGE_VTL, PACKAGE_QUANTITY: this.packCountVTL, TOTAL_PACKAGES: this.totalPackVTL });
+    // if (this.isSendGPC)
+    //   await this.dataService.postAsync('/api/DataOrderPackages', { DATA_CAMPAIGN_ID, PACKAGE_ID: PACKAGE_GPC, PACKAGE_QUANTITY: this.packCountGPC, TOTAL_PACKAGES: this.totalPackGPC });
+    // if (this.isSendVMS)
+    //   await this.dataService.postAsync('/api/DataOrderPackages', { DATA_CAMPAIGN_ID, PACKAGE_ID: PACKAGE_VMS, PACKAGE_QUANTITY: this.packCountVMS, TOTAL_PACKAGES: this.totalPackVMS });
 
     let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, listSmsSend);
     if (insertSms.err_code == 0)
@@ -1039,39 +1109,11 @@ export class SendDataComponent implements OnInit {
     }
   }
 
-  // show modal delete phone
-  showConfirmDelete(list_id, phone) {
-    this.lstId = list_id;
-    this.phone = phone;
-    this.confirmDeleteModal.show();
-  }
-
-  // delete phone
-  async confirmDelete() {
-    let response: any = await this.dataService.deleteAsync('/api/accountphonelistdetail/DeletePhone?lstId=' + this.lstId + '&phone=' + this.phone)
-    if (response.err_code == 0) {
-      this.phonePaging(response.data);
-      this.confirmDeleteModal.hide();
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("200"));
-    }
-    else if (response.err_code == 103) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("103"));
-    }
-    else {
-      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
-    }
-  }
-
-  // show modal delete phone
-  showConfirmDeleteFile(list_id, fileName) {
-    this.lstId = list_id;
-    this.fileName = fileName;
-    this.confirmDeleteFilePhoneModal.show();
-  }
-
   async getTelco(phone: any) {
-    debugger
+    let telco = ""
     let response: any = await this.dataService.getAsync('/api/Person/GetTelco?phone=' + phone);
-    this.telco = "";
+    if (response != null)
+      telco = response;
+    return telco;
   }
 }

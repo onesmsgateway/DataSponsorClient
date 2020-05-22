@@ -59,6 +59,7 @@ export class PackageTelcoComponent implements OnInit {
     this.formEditPackage = new FormGroup({
       id: new FormControl(),
       packageName: new FormControl(),
+      packageNameDisplay: new FormControl(),
       telco: new FormControl(),
       dataNum: new FormControl(),
       amt: new FormControl(),
@@ -125,6 +126,11 @@ export class PackageTelcoComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
       return;
     }
+    let PACKAGE_NAME_DISPLAY = pkCr.packageNameDisplay;
+    if (PACKAGE_NAME_DISPLAY == "" || PACKAGE_NAME_DISPLAY == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-102"));
+      return;
+    }
     if (data.telco.value == null || data.telco.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-40"));
       return;
@@ -147,7 +153,7 @@ export class PackageTelcoComponent implements OnInit {
     }
 
     let response: any = await this.dataService.postAsync('/api/PackageTelco', {
-      PACKAGE_NAME, TELCO, DATA, AMT, DATE_USE
+      PACKAGE_NAME, PACKAGE_NAME_DISPLAY, TELCO, DATA, AMT, DATE_USE
     })
     if (response.err_code == 0) {
       this.getData();
@@ -177,6 +183,7 @@ export class PackageTelcoComponent implements OnInit {
       this.formEditPackage = new FormGroup({
         id: new FormControl(id),
         packageName: new FormControl(dataSmsTemp.PACKAGE_NAME),
+        packageNameDisplay: new FormControl(dataSmsTemp.PACKAGE_NAME_DISPLAY),
         telco: new FormControl([{ "id": dataSmsTemp.TELCO, "itemName": dataSmsTemp.TELCO }]),
         dataNum: new FormControl(dataSmsTemp.DATA),
         amt: new FormControl(dataSmsTemp.AMT),
@@ -198,8 +205,13 @@ export class PackageTelcoComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
       return;
     }
+    let PACKAGE_NAME_DISPLAY = formData.packageNameDisplay.value;
+    if (PACKAGE_NAME_DISPLAY == "" || PACKAGE_NAME_DISPLAY == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-102"));
+      return;
+    }
     if (formData.telco.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-40"));
       return;
     }
     TELCO = formData.telco.value[0].id;
@@ -220,7 +232,7 @@ export class PackageTelcoComponent implements OnInit {
     }
 
     let response: any = await this.dataService.putAsync('/api/PackageTelco/' + ID, {
-      PACKAGE_NAME, TELCO, DATA, AMT, DATE_USE
+      PACKAGE_NAME, PACKAGE_NAME_DISPLAY, TELCO, DATA, AMT, DATE_USE
     })
     if (response.err_code == 0) {
       this.getData();

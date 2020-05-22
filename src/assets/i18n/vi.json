@@ -380,7 +380,12 @@
     "inCampaign": "Chọn chiến dịch",
     "phone_new": "Nhập bổ sung số ĐT nhận data",
     "total_phone": "Tổng số điện thoại",
-    "sender": "Thương hiệu"
+    "sender": "Thương hiệu",
+    "option_insert": "Chèn thêm",
+    "inPhone": "[DienThoai]",
+    "inData": "[DungLuong]",
+    "inPack": "[GoiCuoc]",
+    "inDateUse": "[NgaySuDung]"
   },
   "package": {
     "title": "Quản lý gói cước One",
@@ -423,10 +428,12 @@
     "create_date": "Ngày tạo",
     "create_user": "Người tạo",
     "create_domain": "Thêm mới gói cước",
-    "edit_domain": "Sửa gói cước"
+    "edit_domain": "Sửa gói cước",
+    "inPackage_name_display": "Nhập tên hiển thị",
+    "package_name_display": "Tên hiển thị"
   },
   "data-campaign": {
-    "title": "Quản lý hoạt động của doanh nghiệp",
+    "title": "Quản lý danh sách đơn hàng/chiến dịch",
     "account": "Tài khoản",
     "inProgram_name": "Nhập tên chương trình",
     "from_date": "Từ ngày",
@@ -443,8 +450,19 @@
     "sms": "Nội dung tin nhắn",
     "status_sms": "Trạng thái gửi tin",
     "status": "Trạng thái",
-    "program_name": "Tên đơn hàng",
-    "package": "Gói cước"
+    "program_name": "Đơn hàng",
+    "package": "Gói cước",
+    "edit_campaign": "Sửa đơn hàng/chiến dịch",
+    "content_old": "Nội dung cũ",
+    "content_new": "Nội dung mới",
+    "input_content": "Nhập nội dung tin nhắn...",
+    "data_time": "Chọn ngày giờ",
+    "sender_name": "Thương hiệu",
+    "telco": "Nhà mạng",
+    "amt_telco": "Tiền nhà mạng",
+    "total_amt": "Tổng tiền",
+    "ask_approve": "Bạn có chắc chắn muốn duyệt đơn hàng?",
+    "coefficient": "Hệ số"
   },
   "statistic-data-sms": {
     "title": "Thống kê gửi Data",
@@ -499,8 +517,14 @@
     "inScenario": "Chọn kịch bản",
     "inValue": "Nhập giá trị",
     "value": "Giá trị",
-    "package": "Gói cước",
-    "account": "Tài khoản"
+    "packageVTL": "Gói cước Viettel",
+    "packageGPC": "Gói cước Vina",
+    "packageVMS": "Gói cước Mobi",
+    "quantityVTL": "Hệ số Viettel",
+    "quantityGPC": "Hệ số Vina",
+    "quantityVMS": "Hệ số Mobi",
+    "account": "Tài khoản",
+    "delete_notify": "Bạn có chắc chắn muốn xóa kịch bản chi tiết "
   },
   "group": {
     "title": "Quản lý nhóm khách hàng",

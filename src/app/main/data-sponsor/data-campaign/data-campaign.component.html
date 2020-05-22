@@ -53,47 +53,105 @@
                                                 <th class="text-center">
                                                     {{ 'data-campaign.program_name' | translate }}</th>
                                                 <th class="text-center">
+                                                    {{ 'data-campaign.sender_name' | translate }}</th>
+                                                <th class="text-center">
+                                                    {{ 'data-campaign.sms' | translate }}</th>
+                                                <th class="text-center">
+                                                    {{ 'data-campaign.telco' | translate }}</th>
+                                                <th class="text-center">
                                                     {{ 'data-campaign.package' | translate }}</th>
                                                 <th class="text-center">
                                                     {{ 'data-campaign.total_phone' | translate }}</th>
                                                 <th class="text-center">
-                                                    {{ 'data-campaign.amt' | translate }}</th>
+                                                    {{ 'data-campaign.amt_telco' | translate }}</th>
+                                                <th class="text-center">
+                                                    {{ 'data-campaign.coefficient' | translate }}</th>
+                                                <th class="text-center">
+                                                    {{ 'data-campaign.total_amt' | translate }}</th>
                                                 <th class="text-center">
                                                     {{ 'data-campaign.time_send' | translate }}</th>
-                                                <th class="text-center">
-                                                    {{ 'data-campaign.create_user' | translate }}
-                                                <th class="text-center" style="width:8%">{{ 'global.tool' | translate }}
+                                                <th class="text-center" style="width:5%">{{ 'global.tool' | translate }}
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let item of dataCampaign; let i = index" [attr.data-index]="i">
-                                                <td class="text-center" scope="row">{{i+1}}</td>
-                                                <td>{{item.USER_NAME}}</td>
-                                                <td>{{item.PROGRAM_NAME}}</td>
-                                                <td>{{item.PACKAGE_NAME}}</td>
-                                                <td class="text-center">{{item.TOTAL_PHONE}}</td>
-                                                <td>{{item.AMT}}</td>
-                                                <td class="text-center">{{item.TIME_SEND}}</td>
-                                                <td>{{item.CREATE_USER}}</td>
-                                                <td class="text-center">
-                                                    <!-- <div class="tool">
-                                                        <button type="button" class="btn btn-success btn-sm"
-                                                            (click)="showConfirmViewDetail(item.ID)">{{'global.detail' | translate}}</button>
-                                                    </div> -->
-                                                    <div class="tool" *ngIf="isAdmin">
-                                                        <button type="button" (click)="showConfirmApproveSms(item.ID)"
-                                                            class="btn btn-primary btn-sm"
-                                                            [ngStyle]="{'display':(item.STATUS == 1) ? 'none' : 'block'}">{{ 'global.approve' | translate }}</button>
-                                                        <button type="button" (click)="showConfirmDelete(item.ID)"
-                                                            class="btn btn-danger btn-sm"
-                                                            [ngStyle]="{'display':(item.STATUS == 1) ? 'none' : 'block'}">{{'global.cancel' | translate}}</button>
-                                                        <button type="button" (click)="exportExcel(item.ID)"
-                                                            class="btn btn-success btn-sm"
-                                                            [ngStyle]="{'display':item.STATUS == 1 ? 'none' : 'block'}">Export</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            <ng-container *ngFor="let item of dataCampaign; let i = index"
+                                                [attr.data-index]="i">
+                                                <tr>
+                                                    <td class="text-center"
+                                                        [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length"
+                                                        style="vertical-align: inherit" scope="row">{{i+1}}</td>
+                                                    <td [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length"
+                                                        style="vertical-align: inherit">
+                                                        {{item.USER_NAME}}</td>
+                                                    <td [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length"
+                                                        style="vertical-align: inherit">
+                                                        {{item.PROGRAM_NAME}}</td>
+                                                    <td [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length"
+                                                        style="vertical-align: inherit">
+                                                        {{item.SENDER_NAME}}</td>
+                                                    <td [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length"
+                                                        style="vertical-align: inherit">
+                                                        <textarea rows="2" class="form-control"
+                                                            style="resize: vertical;padding: 2px 9px;"
+                                                            readonly>{{item.SMS_CONTENT}}</textarea></td>
+                                                    <td style="vertical-align: inherit">
+                                                        {{item.LIST_CAMPAIGN_MODEL[0].TELCO}}</td>
+                                                    <td style="vertical-align: inherit">
+                                                        {{item.LIST_CAMPAIGN_MODEL[0].PACKAGE_NAME}}</td>
+                                                    <td class="text-center" style="vertical-align: inherit">
+                                                        {{item.LIST_CAMPAIGN_MODEL[0].TOTAL_PHONE}}
+                                                    </td>
+                                                    <td style="vertical-align: inherit">
+                                                        {{item.LIST_CAMPAIGN_MODEL[0].DATA_AMT | number: '.0'}}</td>
+                                                    <td class="text-center" style="vertical-align: inherit">
+                                                        {{item.LIST_CAMPAIGN_MODEL[0].COUNT_SEND | number: '.0'}}</td>
+                                                    <td [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length"
+                                                        style="vertical-align: inherit">
+                                                        {{item.TOTAL_AMT | number: '.0'}}</td>
+                                                    <td [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length"
+                                                        style="vertical-align: inherit" class="text-center">
+                                                        {{item.TIME_SEND}}</td>
+                                                    <td class="text-center"
+                                                        [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length"
+                                                        style="vertical-align: inherit">
+                                                        <div class="" *ngIf="isAdmin">
+                                                            <div class="tool" style="padding-bottom: 10px;">
+                                                                <button type="button"
+                                                                    (click)="showConfirmApproveSms(item.ID)"
+                                                                    class="btn btn-primary btn-sm"
+                                                                    [ngStyle]="{'display':(item.STATUS == 1) ? 'none' : 'block'}">{{ 'global.approve' | translate }}</button>
+                                                                <button type="button"
+                                                                    (click)="showFormEditCampaign(item.ID)"
+                                                                    class="btn btn-success btn-sm"
+                                                                    [ngStyle]="{'display':(item.STATUS == 1) ? 'none' : 'block'}">{{ 'global.edit' | translate }}</button>
+                                                            </div>
+                                                            <div class="tool">
+                                                                <button type="button"
+                                                                    (click)="showConfirmDelete(item.ID)"
+                                                                    class="btn btn-danger btn-sm"
+                                                                    [ngStyle]="{'display':(item.STATUS == 1) ? 'none' : 'block'}">{{'global.cancel' | translate}}</button>
+                                                                <button type="button" (click)="exportExcel(item.ID)"
+                                                                    class="btn btn-success btn-sm"
+                                                                    [ngStyle]="{'display':item.STATUS == 1 ? 'none' : 'block'}">Export</button>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <ng-container
+                                                    *ngFor="let lstCamp of item.LIST_CAMPAIGN_MODEL; let i= index;">
+                                                    <tr *ngIf="i!=0">
+                                                        <td style="vertical-align: inherit">{{lstCamp.TELCO}}</td>
+                                                        <td style="vertical-align: inherit">{{lstCamp.PACKAGE_NAME}}
+                                                        </td>
+                                                        <td class="text-center">{{lstCamp.TOTAL_PHONE}}</td>
+                                                        <td style="vertical-align: inherit">
+                                                            {{lstCamp.DATA_AMT | number: '.0'}}</td>
+                                                        <td class="text-center" style="vertical-align: inherit">
+                                                            {{lstCamp.COUNT_SEND | number: '.0'}}</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </ng-container>
                                         </tbody>
                                     </table>
                                 </div>
@@ -222,28 +280,28 @@
 
 <!-- modal xác nhận duyệt đơn-->
 <div class="modal fade" bsModal #confirmApproveModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-  role="dialog" aria-labelledby="dialog-static-name">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 id="dialog-static-name" class="modal-title pull-left">{{'global.confirm' | translate}}</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="confirmApproveModal.hide()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div>{{'campaign.ask_approve' | translate}}</div>
-      </div>
-      <div class="modal-footer">
-        <img *ngIf="loading" class="pl-2" style="margin-right: 10px"
-          src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-        <button type="button" class="btn btn-default btn-sm"
-          (click)="confirmApproveModal.hide()">{{'global.cancel' | translate}}</button>
-        <button type="submit" class="btn btn-success btn-sm"
-          (click)="approveSms(data_campaign_id)">{{'global.confirm' | translate}}</button>
-      </div>
+    role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'global.confirm' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmApproveModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>{{'data-campaign.ask_approve' | translate}}</div>
+            </div>
+            <div class="modal-footer">
+                <img *ngIf="loading" class="pl-2" style="margin-right: 10px"
+                    src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                <button type="button" class="btn btn-default btn-sm"
+                    (click)="confirmApproveModal.hide()">{{'global.cancel' | translate}}</button>
+                <button type="submit" class="btn btn-success btn-sm"
+                    (click)="approveSms(data_campaign_id)">{{'global.confirm' | translate}}</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- modal xác nhận xóa đơn hàng -->
@@ -269,6 +327,242 @@
                     (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
                 <button type="submit" class="btn btn-success btn-sm"
                     (click)="deleteCampaign(data_campaign_id)">{{'global.confirm' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sửa chiến dịch -->
+<div class="modal fade" bsModal #editCampaignModel="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+    role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg" style="width:90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'data-campaign.edit_campaign' | translate}}
+                </h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="editCampaignModel.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="formEditCampaign" (ngSubmit)="editCampaign()">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label>{{'data-campaign.content_old' | translate}}</label>
+                            <textarea class="form-control" formControlName="contentOld" rows="3" readonly></textarea>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label>{{'data-campaign.content_new' | translate}} (<span
+                                    style="display:inline-block !important">{{numberChar}}</span>
+                                {{'data-sms.text_countmes2' | translate}}) (<span
+                                    style="display:inline-block !important">{{numberSMS}}</span>{{'data-sms.text_countmes3' | translate}})</label>
+                            <textarea class="form-control" formControlName="contentNew" rows="3"
+                                placeholder="{{'data-campaign.input_content' | translate}}"
+                                (change)="countSMS($event.target.value)" (keyup)="countSMS($event.target.value)"
+                                (keydow)="countSMS($event.target.value)"></textarea>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px">
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 15px">
+                            <label>{{'data-campaign.data_time' | translate}}</label>
+                            <input type="text" class="form-control has-feedback-left modal-popup"
+                                formControlName="timeSchedule" bsDatepicker
+                                [bsConfig]="{adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY HH:mm'}"
+                                [minDate]="minDate" placeholder="{{ 'data-campaign.date_time' | translate }}">
+                        </div>
+                    </div>
+                </div>
+                <!-- chọn gói cước -->
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>{{ 'send_data.tittle_package' | translate }}</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                        </ul>
+                    </div>
+                    <div class="x_content">
+                        <button type="button" class="btn btn-primary btn-sm" style="margin-bottom: 5px;"
+                            (click)="showModalPackage()">{{ 'send_data.inPackage' | translate }}</button>
+                        <label style="padding-left: 20px; font-weight: normal;">Viettel: <span
+                                style="font-size: 16px;font-weight: bold;">{{packViettel}}</span>, VinaPhone:
+                            <span style="font-size: 16px;font-weight: bold;">{{packGPC}}</span>, MobiPhone:
+                            <span style="font-size: 16px;font-weight: bold;">{{packVMS}}</span> --> <span
+                                style="text-transform: uppercase; font-weight: bold;">{{ 'send_data.total_amt' | translate }}:
+                                <span style="color: green; font-size: 16px;">{{totalAmt | number: '.0'}}</span></span>
+                            VNĐ</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm"
+                        (click)="editCampaignModel.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="submit" class="btn btn-success btn-sm">{{ 'global.confirm' | translate }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- chon goi cuoc -->
+<div class="modal fade" bsModal #choosePackageModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+    role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg" style="width:90%">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                <div class="x_panel portlet">
+                    <div class="x_panel portlet">
+                        <div class="x_title clearfix">
+                            <h2 style="display: inline-block;margin:0">{{ 'send_data.tittle_package' | translate }}
+                            </h2>
+                            <button type="button" class="close pull-right" aria-label="Close"
+                                (click)="choosePackageModal.hide()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{ 'send_data.telco' | translate }}</label>
+                                    <input type="text" class="form-control" value="VIETTEL" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.inPackage' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL"
+                                        [settings]="settingsFilterPackageVTL" name="slPackageVTL"
+                                        (onSelect)="changePackageVTL()" (onDeSelect)="changePackageVTL()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.effective' | translate}}</label>
+                                    <input type="text" class="form-control" name="effectiveDateVTL" readonly
+                                        [(ngModel)]="effectiveDateVTL">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtVTL" readonly
+                                        [(ngModel)]="packageAmtVTL">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.amount' | translate}}</label>
+                                    <input type="number" class="form-control " name="packCountVTL"
+                                        [(ngModel)]="packCountVTL" (change)="changeCountVTL()"
+                                        (keyup)="changeCountVTL()" (keydown)="changeCountVTL()">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12 text-center">
+
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.total_package' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalPackVTL"
+                                        [(ngModel)]="totalPackVTL" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <label>{{'send_data.amt_expected' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalAmtVTL" [(ngModel)]="totalAmtVTL"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{ 'send_data.telco' | translate }}</label>
+                                    <input type="text" class="form-control" value="VINAPHONE" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.inPackage' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC"
+                                        [settings]="settingsFilterPackageGPC" name="slPackageGPC"
+                                        (onSelect)="changePackageGPC()" (onDeSelect)="changePackageGPC()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.effective' | translate}}</label>
+                                    <input type="text" class="form-control" name="effectiveDateGPC" readonly
+                                        [(ngModel)]="effectiveDateGPC">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtGPC" readonly
+                                        [(ngModel)]="packageAmtGPC">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.amount' | translate}}</label>
+                                    <input type="number" class="form-control" name="packCountGPC"
+                                        [(ngModel)]="packCountGPC" (change)="changeCountGPC()"
+                                        (keyup)="changeCountGPC()" (keydown)="changeCountGPC()">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12 text-center">
+
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.total_package' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalPackGPC"
+                                        [(ngModel)]="totalPackGPC" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <label>{{'send_data.amt_expected' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalAmtGPC" [(ngModel)]="totalAmtGPC"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{ 'send_data.telco' | translate }}</label>
+                                    <input type="text" class="form-control" value="MOBIPHONE" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.inPackage' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS"
+                                        [settings]="settingsFilterPackageVMS" name="slPackageVMS"
+                                        (onSelect)="changePackageVMS()" (onDeSelect)="changePackageVMS()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.effective' | translate}}</label>
+                                    <input type="text" class="form-control" name="effectiveDateVMS" readonly
+                                        [(ngModel)]="effectiveDateVMS">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtVMS" readonly
+                                        [(ngModel)]="packageAmtVMS">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.amount' | translate}}</label>
+                                    <input type="number" class="form-control" name="packCountVMS"
+                                        [(ngModel)]="packCountVMS" (change)="changeCountVMS()"
+                                        (keyup)="changeCountVMS()" (keydown)="changeCountVMS()">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12 text-center">
+
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.total_package' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalPackVMS"
+                                        [(ngModel)]="totalPackVMS" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <label>{{'send_data.amt_expected' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalAmtVMS" [(ngModel)]="totalAmtVMS"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 col-sm-1 col-xs-12 col-md-offset-9 text-center"
+                                    style="padding-top: 5px;">
+                                    <label>{{'send_data.total_amt' | translate}}</label>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <input type="text" class="form-control" name="totalAmt" [(ngModel)]="totalAmt"
+                                        readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 form-group has-feedback text-right" style="padding: 0">
+                        <button type="button" class="btn btn-default"
+                            (click)="choosePackageModal.hide()">{{'global.cancel' | translate}}</button>
+                        <button type="submit" class="btn btn-primary" (click)="submitPackage()"
+                            [disabled]="loading">{{'global.confirm' | translate}}</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
