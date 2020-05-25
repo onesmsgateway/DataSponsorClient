@@ -14,7 +14,10 @@ export class DataSmsComponent implements OnInit {
 
   public dataSms = [];
   public dataAccount = [];
-  public dataPackage = [];
+  public dataCampaign = [];
+  public dataPackageVTL = [];
+  public dataPackageGPC = [];
+  public dataPackageVMS = [];
   public dataStatus = [];
 
   public pagination: Pagination = new Pagination();
@@ -37,8 +40,14 @@ export class DataSmsComponent implements OnInit {
 
   public settingsFilterAccount = {};
   public selectedAccount = [];
-  public settingsFilterPackage = {};
-  public selectedPackage = [];
+  public settingsFilterCampaign = {};
+  public selectedCampaign = [];
+  public settingsFilterPackageVTL = {};
+  public selectedPackageVTL = [];
+  public settingsFilterPackageGPC = {};
+  public selectedPackageGPC = [];
+  public settingsFilterPackageVMS = {};
+  public selectedPackageVMS = [];
   public settingsFilterStatus = {};
   public selectedStatus = [];
 
@@ -57,8 +66,38 @@ export class DataSmsComponent implements OnInit {
       showCheckbox: false
     };
 
-    this.settingsFilterPackage = {
-      text: this.utilityService.translate('global.choose_package'),
+    this.settingsFilterCampaign = {
+      text: this.utilityService.translate('send_data.inCampaign'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+
+    this.settingsFilterPackageVTL = {
+      text: this.utilityService.translate('statistic-data-sms.inPackageVTL'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+
+    this.settingsFilterPackageGPC = {
+      text: this.utilityService.translate('statistic-data-sms.inPackageGPC'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+
+    this.settingsFilterPackageVMS = {
+      text: this.utilityService.translate('statistic-data-sms.inPackageVMS'),
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -79,6 +118,10 @@ export class DataSmsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dataAccount.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
+    this.dataPackageVTL.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
+    this.dataPackageGPC.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
+    this.dataPackageVMS.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.getAccountLogin();
     this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd");
     this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd");
@@ -93,7 +136,9 @@ export class DataSmsComponent implements OnInit {
       this.isAdmin = false;
     }
     this.bindDataAccount();
-    this.bindDataPackage();
+    this.getDataPackageVTL();
+    this.getDataPackageGPC();
+    this.getDataPackageVMS();
     this.bindDataStatus();
     this.getListDataSms();
   }
@@ -120,26 +165,61 @@ export class DataSmsComponent implements OnInit {
   }
   //#endregion
 
+  ChangeDropdownListAccount() {
+    this.getCampaign();
+    this.getListDataSms();
+  }
+
   ChangeDropdownList() {
     this.getListDataSms();
   }
 
-  //#region package
-  public async bindDataPackage() {
-    this.selectedPackage = [];
-    this.dataPackage = [];
-    let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=1&pageSize=9999&package_name=')
+  async getCampaign() {
+    this.dataCampaign = [];
+    this.selectedCampaign = [];
+    let account = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : null;
+    let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignByAccount?account_id=' + account)
     for (let index in response.data) {
-      this.dataPackage.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME });
+      this.dataCampaign.push({ "id": response.data[index].ID, "itemName": response.data[index].PROGRAM_NAME });
     }
-    if (this.dataPackage.length == 1)
-      this.selectedPackage.push({ "id": this.dataPackage[0].id, "itemName": this.dataPackage[0].itemName });
+  }
+
+  //#region package
+  // viettel
+  async getDataPackageVTL() {
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL')
+    for (let index in response.data) {
+      this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+    }
+    if (this.dataPackageVTL.length == 1)
+      this.selectedPackageVTL.push({ "id": this.dataPackageVTL[0].id, "itemName": this.dataPackageVTL[0].itemName });
+  }
+
+  // vina
+  async getDataPackageGPC() {
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC')
+    for (let index in response.data) {
+      this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+    }
+    if (this.dataPackageGPC.length == 1)
+      this.selectedPackageGPC.push({ "id": this.dataPackageGPC[0].id, "itemName": this.dataPackageGPC[0].itemName });
+  }
+
+  // mobi
+  async getDataPackageVMS() {
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS')
+    for (let index in response.data) {
+      this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+    }
+    if (this.dataPackageVMS.length == 1)
+      this.selectedPackageVMS.push({ "id": this.dataPackageVMS[0].id, "itemName": this.dataPackageVMS[0].itemName });
   }
   //#endregion
 
   //#region smsType
   public async bindDataStatus() {
     this.dataStatus = [];
+    this.dataStatus.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.dataStatus.push({ "id": "1", "itemName": this.utilityService.translate('global.success') });
     this.dataStatus.push({ "id": "0", "itemName": this.utilityService.translate('global.fail') });
   }
@@ -148,14 +228,16 @@ export class DataSmsComponent implements OnInit {
   //#region load data and paging
   public async getListDataSms() {
     this.dataSms = [];
-    let account_id = this.selectedAccount.length > 0 ? this.selectedAccount[0].id : "";
-    let pack = this.selectedPackage.length > 0 ? this.selectedPackage[0].id : "";
+    let account_id = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    let campaign_id = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
+    let packVTL = this.selectedPackageVTL.length > 0 && this.selectedPackageVTL[0].id != "" ? this.selectedPackageVTL[0].itemName.substr(0, this.selectedPackageVTL[0].itemName.indexOf('-') - 1).trim() : "";
+    let packGPC = this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != "" ? this.selectedPackageGPC[0].itemName.substr(0, this.selectedPackageGPC[0].itemName.indexOf('-') - 1).trim() : "";
+    let packVMS = this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != "" ? this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim() : "";
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : "";
     let response = await this.dataService.getAsync('/api/DataSms/GetDataSmsPaging?pageIndex=' + this.pagination.pageIndex +
-      '&pageSize=' + this.pagination.pageSize + '&account_id=' + account_id +
-      '&package=' + pack + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate + 
-      '&content=' + this.smsContent + '&phone=' + this.phone + 
-      '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
+      '&pageSize=' + this.pagination.pageSize + '&account_id=' + account_id + '&campaign_id=' + campaign_id +
+      '&packageVTL=' + packVTL + '&packageGPC=' + packGPC + '&packageVMS=' + packVMS + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate + 
+      '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
     if (response.err_code == 0) {
       this.dataSms = response.data;
       if ('pagination' in response) {
@@ -163,34 +245,23 @@ export class DataSmsComponent implements OnInit {
         this.pagination.totalRow = response.pagination.TotalRows;
       }
 
-      // let sumSms = response.pagination.TotalSms;
-      // if (sumSms > 0) {
-      //   let responseCountSms = await this.dataService.getAsync('/api/sms/CountSMSFillterByTelco?account_id=' + account_id +
-      //     '&sender_id=' + (this.selectedSenderID.length > 0 ? this.selectedSenderID[0].id : "") +
-      //     '&sms_content=' + this.smsContent + '&phone=' + this.phone +
-      //     '&sms_type=' + (this.selectedSmsType.length > 0 ? this.selectedSmsType[0].id : "") +
-      //     '&viettel=' + this.stringVTL +
-      //     '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS +
-      //     '&vnMobile=' + this.stringVNM + '&gtel=' + this.stringGTEL + '&sfone=' + this.stringSFONE +
-      //     '&ddMobile=' + this.stringDD + '&tu_ngay=' + this.fromDate + '&den_ngay=' + this.toDate +
-      //     '&partner_code=' + (this.selectedPartnerID.length > 0 ? this.selectedPartnerID[0].id : "") +
-      //     '&receive_result=' + (this.selectedSmsStatus.length > 0 ? this.selectedSmsStatus[0].id : ""));
-      //   if (responseCountSms != null && responseCountSms.data != null && responseCountSms.data.length > 0) {
-      //     this.countVTL = responseCountSms.data[0].VIETTEL;
-      //     this.countGPC = responseCountSms.data[0].GPC;
-      //     this.countVMS = responseCountSms.data[0].VMS;
-      //     this.countVNM = responseCountSms.data[0].VNM;
-      //     this.countGtel = responseCountSms.data[0].GTEL;
-      //     this.countAll = this.countVTL + this.countGPC + this.countVMS + this.countVNM + this.countGtel;
-      //   }
-      // } else {
-      //   this.countVTL = 0;
-      //   this.countGPC = 0;
-      //   this.countVMS = 0;
-      //   this.countVNM = 0;
-      //   this.countGtel = 0;
-      //   this.countAll = 0;
-      // }
+      let sumSms = response.pagination.TotalRows;
+      if (sumSms > 0) {
+        let responseCountSms = await this.dataService.getAsync('/api/DataSms/CountPhoneFilterByTelco?account_id=' + account_id +
+        '&packageVTL=' + packVTL + '&packageGPC=' + packGPC + '&packageVMS=' + packVMS + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate + 
+        '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
+        if (responseCountSms != null && responseCountSms.data != null && responseCountSms.data.length > 0) {
+          this.countVTL = responseCountSms.data[0].COUNT_VIETTEL;
+          this.countGPC = responseCountSms.data[0].COUNT_VINAPHONE;
+          this.countVMS = responseCountSms.data[0].COUNT_MOBIFONE;
+          this.countAll = this.countVTL + this.countGPC + this.countVMS;
+        }
+      } else {
+        this.countVTL = 0;
+        this.countGPC = 0;
+        this.countVMS = 0;
+        this.countAll = 0;
+      }
     }
   }
 
@@ -276,11 +347,11 @@ export class DataSmsComponent implements OnInit {
   public async exportExcel() {
     let accountID = "0";
     if (this.isAdmin)
-      accountID = this.selectedAccount.length > 0 ? this.selectedAccount[0].id : "";
+      accountID = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
     else if (!this.isAdmin && this.selectedAccount.length == 0)
       accountID = "0";
     else accountID = this.selectedAccount[0].id;
-    let pack = this.selectedPackage.length > 0 ? this.selectedPackage[0].id : "";
+    let pack = this.selectedPackageVTL.length > 0 ? this.selectedPackageVTL[0].id : "";
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : "";
 
     let result: boolean = await this.dataService.getFileExtentionDataSmsStatisticAsync("/api/FileExtention/ExportExcelDataSmsStatistic",

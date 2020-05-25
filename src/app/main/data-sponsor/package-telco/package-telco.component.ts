@@ -127,10 +127,6 @@ export class PackageTelcoComponent implements OnInit {
       return;
     }
     let PACKAGE_NAME_DISPLAY = pkCr.packageNameDisplay;
-    if (PACKAGE_NAME_DISPLAY == "" || PACKAGE_NAME_DISPLAY == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-102"));
-      return;
-    }
     if (data.telco.value == null || data.telco.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-40"));
       return;
@@ -206,10 +202,6 @@ export class PackageTelcoComponent implements OnInit {
       return;
     }
     let PACKAGE_NAME_DISPLAY = formData.packageNameDisplay.value;
-    if (PACKAGE_NAME_DISPLAY == "" || PACKAGE_NAME_DISPLAY == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-102"));
-      return;
-    }
     if (formData.telco.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-40"));
       return;

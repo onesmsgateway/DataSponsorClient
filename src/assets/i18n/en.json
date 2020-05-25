@@ -379,7 +379,8 @@
     "inPhone": "[Phone]",
     "inData": "[Data]",
     "inPack": "[Package]",
-    "inDateUse": "[DateExpired]"
+    "inDateUse": "[DateExpired]",
+    "send_continue": "Send continue"
   },
   "package": {
     "title": "Package manager",
@@ -427,7 +428,7 @@
     "package_name_display": "Package name display"
   },
   "data-campaign": {
-    "title": "Manage operations of the business",
+    "title": "List orders wait approve",
     "account": "Account",
     "inProgram_name": "Input program name",
     "from_date": "From date",
@@ -465,6 +466,7 @@
     "to_date": "To date",
     "time_send": "Time send",
     "phone": "Phone",
+    "telco": "Telco",
     "content": "Content",
     "is_send": "Send Sms?",
     "status": "Status",
@@ -472,7 +474,10 @@
     "total_sms": "Total sms",
     "viettel": "Viettel",
     "gpc": "VinaPhone",
-    "vms": "Mobiphone"
+    "vms": "Mobiphone",
+    "inPackageVTL": "Choose package Viettel",
+    "inPackageGPC": "Choose package Vina",
+    "inPackageVMS": "Choose package Mobi"
   },
   "data-sms": {
     "text_countmes1": "sms content",
@@ -613,5 +618,21 @@
     "edit": "Edit member",
     "delete_notify": "Are you sure delete ",
     "group": "Group"
+  },
+  "account_history": {
+    "title": "Account history send data",
+    "inAccount": "Choose account",
+    "inCampaign": "Choose campaign",
+    "inSms_content": "Filter by content",
+    "inIp": "Filter by  IP",
+    "from_date": "From date",
+    "to_date": "To date",
+    "account": "Account",
+    "campaign": "Campaign",
+    "sms_content": "Content",
+    "ip": "IP",
+    "time_send": "Time send",
+    "type_send": "Type send",
+    "amt_used": "Amt used"
   }
 }

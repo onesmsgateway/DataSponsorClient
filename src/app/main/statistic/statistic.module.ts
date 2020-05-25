@@ -14,20 +14,23 @@ import { defineLocale, viLocale, PaginationModule, ModalModule, TabsModule, BsDa
 
 import { StatisticComponent } from './statistic.component';
 import { DataSmsComponent } from './data-sms/data-sms.component';
+import { AccountHistoryComponent } from './account-history/account-history.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
 export const smsRoutes: Routes = [{
   path: '', component: StatisticComponent, children: [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'statistic-data', component: DataSmsComponent, data: {MENU_CODE: 'STATISTIC-DATA'}, canActivate: [AuthGuard] }
+    { path: 'statistic-data', component: DataSmsComponent, data: {MENU_CODE: 'STATISTIC-DATA'}, canActivate: [AuthGuard] },
+    { path: 'account-history', component: AccountHistoryComponent, data: {MENU_CODE: 'ACCOUNT-HISTORY'}, canActivate: [AuthGuard] }
   ]
 }];
 
 @NgModule({
   declarations: [
     StatisticComponent,
-    DataSmsComponent
+    DataSmsComponent,
+    AccountHistoryComponent
   ],
   imports: [
     FormsModule,

@@ -85,7 +85,8 @@
                                             <span>{{ 'send_data.only_one' | translate }}</span> </label>
                                     </div>
                                 </div>
-                                <div  class="col-md-6 col-sm-6 col-xs-6 pull-right" style="padding: 0;" *ngIf="isOneSend">
+                                <div class="col-md-6 col-sm-6 col-xs-6 pull-right" style="padding: 0;"
+                                    *ngIf="isOneSend">
                                     <div class="col-md-6 col-sm-6 col-xs-6 form-group text-right">
                                         <label>{{ 'send_data.time_donate' | translate }}</label>
                                     </div>
@@ -99,8 +100,8 @@
                             <div class="row" *ngIf="!chkcampaign">
                                 <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
                                     <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign"
-                                        [settings]="settingsFilterCampaign" name="slCampaign" (onSelect)="selectCampaign()"
-                                        (onDeSelect)="deSelectCampaign()">
+                                        [settings]="settingsFilterCampaign" name="slCampaign"
+                                        (onSelect)="selectCampaign()" (onDeSelect)="deSelectCampaign()">
                                     </angular2-multiselect>
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-xs-3">
@@ -182,7 +183,8 @@
                         </div>
                         <div class="col-md-4 col-sm-3 col-xs-12 form-group has-feedback" style="padding: 0;">
                             <angular2-multiselect [data]="dataOptionInsert" [(ngModel)]="selectedOptionInsert"
-                                [settings]="settingsFilterOptionInsert" name="slOptionInsert" (onSelect)="changeOptionInsert()">
+                                [settings]="settingsFilterOptionInsert" name="slOptionInsert"
+                                (onSelect)="changeOptionInsert()">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0">
@@ -426,8 +428,7 @@
                                     <label>{{'send_data.amount' | translate}}</label>
                                     <input type="number" class="form-control " name="packCountVTL"
                                         [(ngModel)]="packCountVTL" (change)="changeCountVTL()"
-                                        (keyup)="changeCountVTL()"
-                                        (keydown)="changeCountVTL()">
+                                        (keyup)="changeCountVTL()" (keydown)="changeCountVTL()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -469,8 +470,7 @@
                                     <label>{{'send_data.amount' | translate}}</label>
                                     <input type="number" class="form-control" name="packCountGPC"
                                         [(ngModel)]="packCountGPC" (change)="changeCountGPC()"
-                                        (keyup)="changeCountGPC()"
-                                        (keydown)="changeCountGPC()">
+                                        (keyup)="changeCountGPC()" (keydown)="changeCountGPC()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -512,8 +512,7 @@
                                     <label>{{'send_data.amount' | translate}}</label>
                                     <input type="number" class="form-control" name="packCountVMS"
                                         [(ngModel)]="packCountVMS" (change)="changeCountVMS()"
-                                        (keyup)="changeCountVMS()"
-                                        (keydown)="changeCountVMS()">
+                                        (keyup)="changeCountVMS()" (keydown)="changeCountVMS()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -565,9 +564,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <div class="modal-body">
+                <div>
+                    <b style="color: red;">{{messageAfterSend}}</b><br />" Bạn muốn?
+                </div>
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default"
-                    (click)="confirmAfterSuccess()">{{'global.cancel' | translate}}</button>
+                <button type="button" class="btn btn-default" >{{'global.cancel' | translate}}</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="sendContinuous()">
+                    {{'send_data.send_continue' | translate}}</button>
                 <button type="submit" class="btn btn-success"><a routerLink=""
                         style="color: #fff">{{'send_data.move_data_manager' | translate}}</a></button>
             </div>

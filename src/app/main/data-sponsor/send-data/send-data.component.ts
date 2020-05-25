@@ -105,6 +105,7 @@ export class SendDataComponent implements OnInit {
   public packViettel: string = "0";
   public packGPC: string = "0";
   public packVMS: string = "0";
+  public messageAfterSend: string = "";
   public ACCOUNT_ID: any = null;
   public SENDER_ID: any = null;
   public SMS_TEMPLATE: any = null;
@@ -312,7 +313,7 @@ export class SendDataComponent implements OnInit {
   async selectCampaign() {
     let campaignId = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != null ? this.selectedCampaign[0].id : 0;
     let response: any = await this.dataService.getAsync('/api/DataCampaign/' + campaignId);
-    if (response.err_code == 0) {
+    if (response.err_code == 0 && response.data.length > 0) {
       if (response.data[0].IS_REWARD_ONE_TIME == 1)
         this.chkOnlyOneOld = true;
       else
@@ -1030,8 +1031,10 @@ export class SendDataComponent implements OnInit {
     //   await this.dataService.postAsync('/api/DataOrderPackages', { DATA_CAMPAIGN_ID, PACKAGE_ID: PACKAGE_VMS, PACKAGE_QUANTITY: this.packCountVMS, TOTAL_PACKAGES: this.totalPackVMS });
 
     let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, listSmsSend);
-    if (insertSms.err_code == 0)
-      this.notificationService.displaySuccessMessage(insertSms.err_message);
+    if (insertSms.err_code == 0){
+      this.messageAfterSend = insertSms.err_message;
+      this.confirmAfterSuccessModal.show();
+    }
     else this.notificationService.displayErrorMessage(insertSms.err_message);
 
     this.viewQuyData(this.ACCOUNT_ID);
@@ -1081,14 +1084,31 @@ export class SendDataComponent implements OnInit {
   // }
 
   //send sms continue
-  confirmAfterSuccess() {
+  sendContinuous() {
     this.confirmAfterSuccessModal.hide();
     this.selectedItemComboboxAccount = [];
     this.selectedItemComboboxSender = [];
+    this.dataSenderName = [];
     this.selectedGroup = [];
     this.selectedPackageVTL = [];
     this.selectedPackageGPC = [];
     this.selectedPackageVMS = [];
+    this.effectiveDateVTL = "";
+    this.effectiveDateGPC = "";
+    this.effectiveDateVMS = "";
+    this.packageAmtVTL = 0;
+    this.packageAmtGPC = 0;
+    this.packageAmtVMS = 0;
+    this.packCountVTL = 0;
+    this.packCountGPC = 0;
+    this.packCountVMS = 0;
+    this.totalPackVTL = 0;
+    this.totalPackGPC = 0;
+    this.totalPackVMS = 0;
+    this.totalAmtVTL = 0;
+    this.totalAmtGPC = 0;
+    this.totalAmtVMS = 0;
+    this.totalAmt = 0;
     this.lstChecked = [];
     this.smsContent = "";
     this.phoneList = "";

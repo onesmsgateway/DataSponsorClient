@@ -19,45 +19,63 @@
                     <div class="x_content">
                         <form class="row form-horizontal form-label-left input_mask" #formSearch="ngForm"
                             (ngSubmit)="searchSms(formSearch.value)">
-                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <div class="col-md-2 col-sm-3 col-xs-6 form-group">
                                 <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount"
-                                    [settings]="settingsFilterAccount" name="account" (onSelect)="ChangeDropdownList()"
+                                    [settings]="settingsFilterAccount" name="account" (onSelect)="ChangeDropdownListAccount()"
+                                    (onDeSelect)="ChangeDropdownListAccount()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-6 form-group">
+                                <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign"
+                                    [settings]="settingsFilterCampaign" name="campaign" (onSelect)="ChangeDropdownList()"
                                     (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                                <angular2-multiselect [data]="dataPackage" [(ngModel)]="selectedPackage"
-                                    [settings]="settingsFilterPackage" name="package" (onSelect)="ChangeDropdownList()"
+                            <div class="col-md-2 col-sm-3 col-xs-6 form-group">
+                                <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL"
+                                    [settings]="settingsFilterPackageVTL" name="packageVTL" (onSelect)="ChangeDropdownList()"
                                     (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <div class="col-md-2 col-sm-3 col-xs-6 form-group">
+                                <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC"
+                                    [settings]="settingsFilterPackageGPC" name="packageGPC" (onSelect)="ChangeDropdownList()"
+                                    (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-6 form-group">
+                                <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS"
+                                    [settings]="settingsFilterPackageVMS" name="packageVMS" (onSelect)="ChangeDropdownList()"
+                                    (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-6 form-group">
+                                <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus"
+                                    [settings]="settingsFilterStatus" name="status" (onSelect)="ChangeDropdownList()"
+                                    (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-6 form-group">
                                 <input type="text" class="form-control" name="fromDate" bsDatepicker
                                     [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
                                     (ngModelChange)="onChangeFromDate($event)"
                                     placeholder="{{ 'statistic-data-sms.from_date' | translate }}"
                                     [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
                             </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <div class="col-md-2 col-sm-3 col-xs-6 form-group">
                                 <input type="text" class="form-control" name="toDate" bsDatepicker
                                     [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
                                     placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo"
                                     (ngModelChange)="onChangeToDate($event)">
                             </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                                <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus"
-                                    [settings]="settingsFilterStatus" name="status" (onSelect)="ChangeDropdownList()"
-                                    (onDeSelect)="ChangeDropdownList()">
-                                </angular2-multiselect>
+                            <div class="col-md-2 col-sm-3 col-xs-6 form-group">
+                                <input type="text" class="form-control"
+                                    placeholder="{{'statistic-data-sms.phone' | translate}}" name="phone" ngModel>
                             </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                                 <input type="text" class="form-control"
                                     placeholder="{{'statistic-data-sms.content' | translate}}" name="smsContent"
                                     ngModel>
-                            </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                                <input type="text" class="form-control"
-                                    placeholder="{{'statistic-data-sms.phone' | translate}}" name="phone" ngModel>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                                 <div class="checkbox" style="display: inline-block">
@@ -127,6 +145,9 @@
                                                     style="width: 120px; vertical-align: middle; white-space: nowrap;">
                                                     {{'statistic-data-sms.phone' | translate}}</th>
                                                 <th class="text-center"
+                                                    style="width: 120px; vertical-align: middle; white-space: nowrap;">
+                                                    {{'statistic-data-sms.telco' | translate}}</th>
+                                                <th class="text-center"
                                                     style="width: 250px; vertical-align: middle; white-space: nowrap;">
                                                     {{'statistic-data-sms.content' | translate}}</th>
                                                 <th class="text-center" style="width: 150px; vertical-align: middle;">
@@ -148,11 +169,12 @@
                                                 <td class="text-center">{{item.DATA_VOL}}</td>
                                                 <td class="text-center">{{item.DATA_AMT}}</td>
                                                 <td class="text-center">{{item.PHONE}}</td>
+                                                <td class="text-center">{{item.TELCO}}</td>
                                                 <td>{{item.SMS_CONTENT}}</td>
                                                 <td class="text-center">{{item.TIME_SCHEDULE}}</td>
                                                 <td class="box-checkbox-table"><input type="checkbox"
-                                                        [checked]="item.IS_SEND_SMS == 1 ? true : false" class="checkbox"
-                                                        disabled></td>
+                                                        [checked]="item.IS_SEND_SMS == 1 ? true : false"
+                                                        class="checkbox" disabled></td>
                                                 <td class="text-center">{{item.CODE_RECEIVE}}</td>
                                             </tr>
                                         </tbody>

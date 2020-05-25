@@ -419,6 +419,22 @@ export class DataService {
     return result;
   }
 
+  public async getFileExtentionAccountHistoryAsync(uri: string, accountId: any, campaignId: string, content: string
+    , ip: string, fromDate: string, toDate: string, fileName: string): Promise<boolean> {
+    let result: boolean = false;
+    let url = AppConst.DATA_SPONSOR_API + uri + '?account_id=' + accountId + '&campaign_id=' + campaignId + '&content=' + content + '&ip=' + ip +
+      '&from_date=' + fromDate + + '&to_date=' + toDate + '&fileName=' + fileName;
+    let response = await this.http.get(url, { responseType: 'arraybuffer' }).toPromise();
+    if (response) {
+      let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, fileName);
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }
+
   public async getFileExtentionParameterAsync(uri: string, objectName: string, listParameter: string, fileName: string): Promise<boolean> {
     let result: boolean = false;
     let url = AppConst.DATA_SPONSOR_API + uri + '?objectName=' + objectName + '&listParameter=' + listParameter + '&fileName=' + fileName;

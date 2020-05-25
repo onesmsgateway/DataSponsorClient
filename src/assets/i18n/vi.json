@@ -385,7 +385,8 @@
     "inPhone": "[DienThoai]",
     "inData": "[DungLuong]",
     "inPack": "[GoiCuoc]",
-    "inDateUse": "[NgaySuDung]"
+    "inDateUse": "[NgaySuDung]",
+    "send_continue": "Gửi tiếp"
   },
   "package": {
     "title": "Quản lý gói cước One",
@@ -433,7 +434,7 @@
     "package_name_display": "Tên hiển thị"
   },
   "data-campaign": {
-    "title": "Quản lý danh sách đơn hàng/chiến dịch",
+    "title": "Danh sách đơn hàng chờ duyệt",
     "account": "Tài khoản",
     "inProgram_name": "Nhập tên chương trình",
     "from_date": "Từ ngày",
@@ -474,6 +475,7 @@
     "to_date": "Đến ngày",
     "time_send": "Thời gian gửi",
     "phone": "Số điện thoại",
+    "telco": "Nhà mạng",
     "content": "Nội dung",
     "is_send": "Gửi Sms?",
     "status": "Trạng thái",
@@ -481,7 +483,10 @@
     "total_sms": "Tổng số điện thoại",
     "viettel": "Viettel",
     "gpc": "VinaPhone",
-    "vms": "Mobiphone"
+    "vms": "Mobiphone",
+    "inPackageVTL": "Chọn gói cước Viettel",
+    "inPackageGPC": "Chọn gói cước Vina",
+    "inPackageVMS": "Chọn gói cước Mobi"
   },
   "data-sms": {
     "text_countmes1": "Nội dung tin nhắn",
@@ -618,5 +623,21 @@
     "edit": "Sửa thành viên",
     "delete_notify": "Bạn có chắc chắn muốn xóa ",
     "group": "Nhóm"
+  },
+  "account_history": {
+    "title": "Lịch sử khách hàng gửi data",
+    "inAccount": "Chọn tài khoản",
+    "inCampaign": "Chọn chiến dịch",
+    "inSms_content": "Tìm kiếm theo nội dung",
+    "inIp": "Tìm kiếm theo  IP",
+    "from_date": "Từ ngày",
+    "to_date": "Đến ngày",
+    "account": "Tài khoản",
+    "campaign": "Chiến dịch",
+    "sms_content": "Nội dung",
+    "ip": "IP",
+    "time_send": "Giờ gửi",
+    "type_send": "Loại gửi",
+    "amt_used": "Số tiền sử dụng"
   }
 }
