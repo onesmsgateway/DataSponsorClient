@@ -16,7 +16,6 @@ import { async } from '@angular/core/testing';
 })
 export class SendDataComponent implements OnInit {
   @ViewChild('contentSMS', { static: false }) public contentSMS;
-  @ViewChild('confirmDeleteModal', { static: false }) public confirmDeleteModal: ModalDirective;
   @ViewChild('confirmDeleteFilePhoneModal', { static: false }) public confirmDeleteFilePhoneModal: ModalDirective;
   @ViewChild('confirmAfterSuccessModal', { static: false }) public confirmAfterSuccessModal: ModalDirective;
   @ViewChild('confirmSendDataSMSModal', { static: false }) public confirmSendDataSMSModal: ModalDirective;

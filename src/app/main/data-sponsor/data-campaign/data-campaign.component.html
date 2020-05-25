@@ -92,7 +92,8 @@
                                                         {{item.SENDER_NAME}}</td>
                                                     <td [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length"
                                                         style="vertical-align: inherit">
-                                                        <textarea rows="item.LIST_CAMPAIGN_MODEL.length" class="form-control"
+                                                        <textarea rows="item.LIST_CAMPAIGN_MODEL.length"
+                                                            class="form-control"
                                                             style="resize: vertical;padding: 2px 9px;"
                                                             readonly>{{item.SMS_CONTENT}}</textarea></td>
                                                     <td style="vertical-align: inherit">
@@ -368,7 +369,7 @@
                             <input type="text" class="form-control has-feedback-left modal-popup"
                                 formControlName="timeSchedule" bsDatepicker
                                 [bsConfig]="{adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY HH:mm'}"
-                                [minDate]="minDate" placeholder="{{ 'data-campaign.date_time' | translate }}">
+                                placeholder="{{ 'data-campaign.date_time' | translate }}">
                         </div>
                     </div>
                 </div>

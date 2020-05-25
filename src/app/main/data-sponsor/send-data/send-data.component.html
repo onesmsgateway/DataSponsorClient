@@ -580,32 +580,6 @@
     </div>
 </div>
 
-<!-- Xóa số điện thoại -->
-<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-    role="dialog" aria-labelledby="dialog-static-name">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 id="dialog-static-name" class="modal-title pull-left">Xác nhận</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmDeleteModal.hide()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    Bạn có chắc chắn muốn xóa số điện thoại "<b class="text-success">{{phone}}</b>" không?
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default"
-                    (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
-                <button type="submit" class="btn btn-success"
-                    (click)="confirmDelete()">{{'global.confirm' | translate}}</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- confirm send sms -->
 <div class="modal fade" bsModal #confirmSendDataSMSModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
     role="dialog" aria-labelledby="dialog-static-name">

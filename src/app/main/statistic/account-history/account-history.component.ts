@@ -59,7 +59,6 @@ export class AccountHistoryComponent implements OnInit {
 
   ngOnInit() {
     this.dataAccount.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
-    this.dataCampaign.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.getAccountLogin();
     this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd");
     this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd");
@@ -110,6 +109,7 @@ export class AccountHistoryComponent implements OnInit {
 
   async getCampaign() {
     this.dataCampaign = [];
+    this.dataCampaign.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.selectedCampaign = [];
     let account = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : null;
     let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignByAccount?account_id=' + account)

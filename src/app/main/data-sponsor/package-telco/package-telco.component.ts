@@ -24,6 +24,7 @@ export class PackageTelcoComponent implements OnInit {
   public pagination: Pagination = new Pagination();
   public id;
   public packageName;
+  public packageNameDisplay;
   public inTelco: string = '';
   public inPackageName: string = '';
   public inDataNum: string = '';
