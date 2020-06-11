@@ -42,6 +42,8 @@ export class ScenariosDetailComponent implements OnInit {
   public dataPackageVMS = [];
   public settingsFilterPackageVMS = {};
   public selectedPackageVMS = [];
+  public scenario_type: string = "";
+  public isScenarioType: boolean = false;
 
   constructor(
     private dataService: DataService,
@@ -104,6 +106,7 @@ export class ScenariosDetailComponent implements OnInit {
     this.getDataPackageVTL();
     this.getDataPackageGPC();
     this.getDataPackageVMS();
+   
     //this.getData();
   }
 
@@ -143,9 +146,24 @@ export class ScenariosDetailComponent implements OnInit {
 
   //#region load data
   async getData() {
+    debugger
     let response: any = await this.dataService.getAsync('/api/ScenariosDetail/GetScenariosDetailPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&scenario_id=" + this.scenarioId)
     this.loadData(response);
+    this.getDataScenario();
+  }
+  //loaddataScenario
+  async getDataScenario() {
+    debugger
+    let response: any = await this.dataService.getAsync('/api/Scenarios/' + this.scenarioId)
+   console.log(response);
+   this.scenario_type = response.data[0].SCENARIO_TYPE;
+   if(this.scenario_type!=this.utilityService.translate('scenarios.scenariosDetailTwo')){
+     this.isScenarioType = true;
+   }
+   else{
+    this.isScenarioType = false;
+   }
   }
 
   loadData(response?: any) {
@@ -176,14 +194,17 @@ export class ScenariosDetailComponent implements OnInit {
 
   //#region create new
   async createScenariosDetail(item) {
+ 
     let scenar = item.value;
     let combobox = item.controls;
     let SCENARIO_ID = this.scenarioId;
-    let VALUE = scenar.valueScenar.toString();
-    if (VALUE == "" || VALUE == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
-      return;
-    }
+    let VALUE = scenar.valueScenar;
+    if(this.scenario_type!=this.utilityService.translate('scenarios.scenariosDetailTwo')){
+      if (VALUE == "" || VALUE == null) {
+    this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
+    return;
+  }
+ }
     if (combobox.packageVTL.value.length == 0 && combobox.packageGPC.value.length == 0 && combobox.packageVMS.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
       return;
@@ -191,18 +212,22 @@ export class ScenariosDetailComponent implements OnInit {
     let PACKAGE_ID_VIETTEL = combobox.packageVTL.value.length > 0 && combobox.packageVTL.value[0].id != "" ? combobox.packageVTL.value[0].id : null;
     let PACKAGE_ID_VINAPHONE = combobox.packageGPC.value.length > 0 && combobox.packageGPC.value[0].id != "" ? combobox.packageGPC.value[0].id : null;
     let PACKAGE_ID_MOBIFONE = combobox.packageVMS.value.length > 0 && combobox.packageVMS.value[0].id != "" ? combobox.packageVMS.value[0].id : null;
-    let PACKAGE_QUANTITY_VIETTEL = scenar.quantityVTL != "" && scenar.quantityVTL != "" ? scenar.quantityVTL : 0;
-    let PACKAGE_QUANTITY_VINAPHONE = scenar.quantityGPC != "" && scenar.quantityGPC != "" ? scenar.quantityGPC : 0;
-    let PACKAGE_QUANTITY_MOBIFONE = scenar.quantityVMS != "" && scenar.quantityVMS != "" ? scenar.quantityVMS : 0;
+    let PACKAGE_QUANTITY_VIETTEL = scenar.quantityVTL != "" && scenar.quantityVTL != "" ? scenar.quantityVTL : 1;
+    let PACKAGE_QUANTITY_VINAPHONE = scenar.quantityGPC != "" && scenar.quantityGPC != "" ? scenar.quantityGPC : 1;
+    let PACKAGE_QUANTITY_MOBIFONE = scenar.quantityVMS != "" && scenar.quantityVMS != "" ? scenar.quantityVMS : 1;
 
     let response: any = await this.dataService.postAsync('/api/ScenariosDetail', {
       SCENARIO_ID, VALUE, PACKAGE_ID_VIETTEL, PACKAGE_ID_VINAPHONE, PACKAGE_ID_MOBIFONE, PACKAGE_QUANTITY_VIETTEL, PACKAGE_QUANTITY_VINAPHONE, PACKAGE_QUANTITY_MOBIFONE
     })
+   
     if (response.err_code == 0) {
       item.reset();
       this.getData();
       this.showModalCreate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
+    }
+    else if (response.err_code == 138) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("138"));
     }
     else if (response.err_code == -19) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-19"));
@@ -216,6 +241,7 @@ export class ScenariosDetailComponent implements OnInit {
   // show update modal
   async confirmUpdateModal(id) {
     let response: any = await this.dataService.getAsync('/api/ScenariosDetail/' + id)
+    debugger
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
       this.formEditScenarios = new FormGroup({
@@ -225,7 +251,7 @@ export class ScenariosDetailComponent implements OnInit {
           : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
         packageGPC: new FormControl(dataDetail.PACKAGE_ID_VINAPHONE != "" && dataDetail.PACKAGE_ID_VINAPHONE != null ? [{ "id": dataDetail.PACKAGE_ID_VINAPHONE, "itemName": dataDetail.PACKAGE_NAME_VINAPHONE }]
           : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
-        packageVMS: new FormControl(dataDetail.PACKAGE_ID_MOBIFONE != "" && dataDetail.PACKAGE_ID_MOBIFONE != null ? [{ "id": dataDetail.PACKAGE_ID_MOBIFONE, "itemName": dataDetail.PACKAGE_NAME_MOBIPHONE }]
+        packageVMS: new FormControl(dataDetail.PACKAGE_ID_MOBIFONE != "" && dataDetail.PACKAGE_ID_MOBIFONE != null ? [{ "id": dataDetail.PACKAGE_ID_MOBIFONE, "itemName": dataDetail.PACKAGE_NAME_MOBIFONE }]
           : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
         quantityVTL: new FormControl(dataDetail.PACKAGE_QUANTITY_VIETTEL),
         quantityGPC: new FormControl(dataDetail.PACKAGE_QUANTITY_VINAPHONE),
@@ -239,14 +265,18 @@ export class ScenariosDetailComponent implements OnInit {
 
   // update chi tiet kich ban
   async editScenariosDetail() {
+    debugger
     let formData = this.formEditScenarios.controls;
     let ID = formData.id.value;
     let SCENARIO_ID = this.scenarioId;
     let VALUE = formData.valueScenar.value.toString();
-    if (VALUE == "" || VALUE == null) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
-      return;
-    }
+    if(this.scenario_type!=this.utilityService.translate('scenarios.scenariosDetailTwo')){
+      if (VALUE == "" || VALUE == null) {
+    this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
+    return;
+  }
+ }
+   
     if (formData.packageVTL.value.length == 0 && formData.packageGPC.value.length == 0 && formData.packageVMS.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
       return;
@@ -254,9 +284,9 @@ export class ScenariosDetailComponent implements OnInit {
     let PACKAGE_ID_VIETTEL = formData.packageVTL.value.length > 0 && formData.packageVTL.value[0].id != "" ? formData.packageVTL.value[0].id : null;
     let PACKAGE_ID_VINAPHONE = formData.packageGPC.value.length > 0 && formData.packageGPC.value[0].id != "" ? formData.packageGPC.value[0].id : null;
     let PACKAGE_ID_MOBIFONE = formData.packageVMS.value.length > 0 && formData.packageVMS.value[0].id != "" ? formData.packageVMS.value[0].id : null;
-    let PACKAGE_QUANTITY_VIETTEL = formData.quantityVTL.value != "" && formData.quantityVTL.value != null ? formData.quantityVTL.value : 0;
-    let PACKAGE_QUANTITY_VINAPHONE = formData.quantityGPC.value != "" && formData.quantityGPC.value != null ? formData.quantityGPC.value : 0;
-    let PACKAGE_QUANTITY_MOBIFONE = formData.quantityVMS.value != "" && formData.quantityVMS.value != null ? formData.quantityVMS.value : 0;
+    let PACKAGE_QUANTITY_VIETTEL = formData.quantityVTL.value != "" && formData.quantityVTL.value != null ? formData.quantityVTL.value : 1;
+    let PACKAGE_QUANTITY_VINAPHONE = formData.quantityGPC.value != "" && formData.quantityGPC.value != null ? formData.quantityGPC.value : 1;
+    let PACKAGE_QUANTITY_MOBIFONE = formData.quantityVMS.value != "" && formData.quantityVMS.value != null ? formData.quantityVMS.value : 1;
 
     let response: any = await this.dataService.putAsync('/api/ScenariosDetail/' + ID, {
       SCENARIO_ID, VALUE, PACKAGE_ID_VIETTEL, PACKAGE_ID_VINAPHONE, PACKAGE_ID_MOBIFONE, PACKAGE_QUANTITY_VIETTEL, PACKAGE_QUANTITY_VINAPHONE, PACKAGE_QUANTITY_MOBIFONE
@@ -272,6 +302,7 @@ export class ScenariosDetailComponent implements OnInit {
     else if (response.err_code == -19) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-19"));
     }
+    
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
     }

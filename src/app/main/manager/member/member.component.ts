@@ -107,7 +107,10 @@ export class MemberComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dataAccount.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
+    this.dataGroup.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.getAccountLogin();
+
   }
 
   async getAccountLogin() {
@@ -124,6 +127,7 @@ export class MemberComponent implements OnInit {
   }
 
   async getDataAccount() {
+    debugger
     if (this.isAdmin) {
       this.selectedItemComboboxAccount = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
       let response: any = await this.dataService.getAsync('/api/account')
@@ -147,6 +151,7 @@ export class MemberComponent implements OnInit {
 
   //#region load group sender
   async getDataGroup() {
+    debugger
     let account = "";
     if (this.isAdmin)
       account = this.selectedItemComboboxAccount.length > 0 ? this.selectedItemComboboxAccount[0].id : "";
@@ -170,14 +175,18 @@ export class MemberComponent implements OnInit {
 
   //#region load data
   async getData() {
+    debugger
     let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
     let group = this.selectedItemComboboxGroup.length > 0 && this.selectedItemComboboxGroup[0].id != "" ? this.selectedItemComboboxGroup[0].id : "";
     let response: any = await this.dataService.getAsync('/api/Person/GetPersonPaging?pageIndex=' + this.pagination.pageIndex +
-      "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone)
+      "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone);
+      // + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone
     this.loadData(response);
+    console.log(response);
   }
 
   loadData(response?: any) {
+    debugger
     if (response) {
       this.dataMember = response.data;
       if ('pagination' in response) {
@@ -204,7 +213,7 @@ export class MemberComponent implements OnInit {
   //#endregion
 
   getIdGroup(event) {
-    debugger
+
     this.ids = '';
     if (!this.lstChecked.includes(event.id)) {
       this.lstChecked.push(event.id);
@@ -252,6 +261,7 @@ export class MemberComponent implements OnInit {
     let response: any = await this.dataService.postAsync('/api/Person', {
       ACCOUNT_ID, PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, NOTES, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS
     })
+   
     if (response.err_code == 0) {
       item.reset();
       this.getData();
@@ -303,7 +313,7 @@ export class MemberComponent implements OnInit {
 
   // update member
   async editMember() {
-    debugger
+  
     let formData = this.formEditMember.controls;
     let ID = formData.personId.value;
     if (formData.account.value.length == 0) {

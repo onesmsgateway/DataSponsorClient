@@ -23,25 +23,20 @@
                     <div class="x_content">
                         <form class="row form-horizontal form-label-left input_mask">
                             <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control" name="inPackageName" [(ngModel)]="inPackageName"
-                                    placeholder="{{ 'package.inPackage_name' | translate }}">
+                                <input type="text" class="form-control" name="inPackageName" [(ngModel)]="inPackageName" placeholder="{{ 'package.inPackage_name' | translate }}">
                             </div>
                             <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
-                                <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco"
-                                    [settings]="settingsFilterTelco" name="telco">
+                                <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco" [settings]="settingsFilterTelco" name="telco">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control" name="inData"
-                                    placeholder="{{ 'package.inPackage_data' | translate }}">
+                                <input type="text" class="form-control" name="inData" placeholder="{{ 'package.inPackage_data' | translate }}">
                             </div>
                             <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control" name="inDateUse" [(ngModel)]="inDateUse"
-                                    placeholder="{{ 'package_telco.inDate_use' | translate }}">
+                                <input type="text" class="form-control" name="inDateUse" [(ngModel)]="inDateUse" placeholder="{{ 'package_telco.inDate_use' | translate }}">
                             </div>
                             <div class=" col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
-                                <button type="button" style="float: right; margin-right: 0;" (click)="getData()"
-                                    class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                                <button type="button" style="float: right; margin-right: 0;" (click)="getData()" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
                             </div>
                         </form>
                     </div>
@@ -57,8 +52,7 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm"
-                                        (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
                                 </div>
                             </div>
                         </form>
@@ -82,8 +76,8 @@
                                                 </th>
                                                 <th class="text-center">
                                                     {{ 'package.create_user' | translate }}
-                                                <th class="text-center" style="width:8%">{{ 'global.tool' | translate }}
-                                                </th>
+                                                    <th class="text-center" style="width:8%">{{ 'global.tool' | translate }}
+                                                    </th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -98,10 +92,8 @@
                                                 <td class="text-center">{{item.CREATE_USER}}</td>
                                                 <td class="text-center">
                                                     <div class="tool">
-                                                        <button type="submit" (click)="confirmUpdateModal(item.ID)"
-                                                            class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                        <button type="button" class="btn btn-danger btn-sm"
-                                                            (click)="showConfirmDelete(item.ID, item.PACKAGE_NAME)">{{ 'global.delete' | translate }}</button>
+                                                        <button type="submit" (click)="confirmUpdateModal(item.ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                        <button type="button" class="btn btn-danger btn-sm" (click)="showConfirmDelete(item.ID, item.PACKAGE_NAME)">{{ 'global.delete' | translate }}</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -110,25 +102,17 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
-                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }}
-                                        trang. Hiển thị
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)">
-                                            <option value="5" selected="">5</option>
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
+                                            <option value="20" selected="">20</option>
                                             <option value="50">50</option>
                                             <option value="100">100</option>
                                             <option value="99999999">Tất cả</option>
-                                        </select>
-                                        bản ghi.
+                                        </select> bản ghi.
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-6 minibox" style="margin-bottom:10px">
-                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize"
-                                            [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)"
-                                            (numPages)="pagination.totalPage = $event"
-                                            [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
-                                            class="pagination-sm content-end" previousText="&lsaquo;"
-                                            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
                                         </pagination>
                                     </div>
                                 </div>
@@ -142,8 +126,7 @@
 </article>
 
 <!-- Thêm gói cước -->
-<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
-    aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -158,40 +141,33 @@
                     <div class="row">
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package.package_name' | translate}}</label>
-                            <input type="text" class="form-control" name="packageName" [(ngModel)]="packageName"
-                                placeholder="{{ 'package.inPackage_name' | translate }}">
+                            <input type="text" class="form-control" name="packageName" [(ngModel)]="packageName" placeholder="{{ 'package.inPackage_name' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package_telco.package_name_display' | translate}}</label>
-                            <input type="text" class="form-control" name="packageNameDisplay" [(ngModel)]="packageNameDisplay"
-                                placeholder="{{ 'package_telco.inPackage_name_display' | translate }}">
+                            <input type="text" class="form-control" name="packageNameDisplay" [(ngModel)]="packageNameDisplay" placeholder="{{ 'package_telco.inPackage_name_display' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package_telco.telco' | translate}}</label>
-                            <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco"
-                                [settings]="settingsFilterTelco" name="telco">
+                            <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco" [settings]="settingsFilterTelco" name="telco">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package.package_data' | translate}}</label>
-                            <input type="number" class="form-control" name="dataNum" [(ngModel)]="dataNum"
-                                placeholder="{{ 'package.data_from' | translate }}">
+                            <input type="number" class="form-control" name="dataNum" [(ngModel)]="dataNum" placeholder="{{ 'package.data_from' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package.date_use' | translate}}</label>
-                            <input type="number" class="form-control" name="dateUse" [(ngModel)]="dateUse"
-                                placeholder="{{ 'package.date_use' | translate }}">
+                            <input type="number" class="form-control" name="dateUse" [(ngModel)]="dateUse" placeholder="{{ 'package.date_use' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package.amt' | translate}}</label>
-                            <input type="number" class="form-control" name="amt" [(ngModel)]="amt"
-                                placeholder="{{ 'package.amt' | translate }}">
+                            <input type="number" class="form-control" name="amt" [(ngModel)]="amt" placeholder="{{ 'package.amt' | translate }}">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                        (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -200,8 +176,7 @@
 </div>
 
 <!-- modal sửa gói cước-->
-<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
-    aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -216,40 +191,33 @@
                         <input type="hidden" formControlName="id">
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package.package_name' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="packageName"
-                                [(ngModel)]="packageName" placeholder="{{ 'package.inPackage_name' | translate }}">
+                            <input type="text" class="form-control" formControlName="packageName" [(ngModel)]="packageName" placeholder="{{ 'package.inPackage_name' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package_telco.package_name_display' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="packageNameDisplay"
-                                placeholder="{{ 'package_telco.inPackage_name_display' | translate }}">
+                            <input type="text" class="form-control" formControlName="packageNameDisplay" placeholder="{{ 'package_telco.inPackage_name_display' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package_telco.telco' | translate}}</label>
-                            <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco"
-                                [settings]="settingsFilterTelco" formControlName="telco">
+                            <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco" [settings]="settingsFilterTelco" formControlName="telco">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package.package_data' | translate}}</label>
-                            <input type="number" class="form-control" formControlName="dataNum"
-                                placeholder="{{ 'package.data_from' | translate }}">
+                            <input type="number" class="form-control" formControlName="dataNum" placeholder="{{ 'package.data_from' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package.date_use' | translate}}</label>
-                            <input type="number" class="form-control" formControlName="dateUse"
-                                placeholder="{{ 'package.date_use' | translate }}">
+                            <input type="number" class="form-control" formControlName="dateUse" placeholder="{{ 'package.date_use' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-4 col-xs-12 form-group">
                             <label>{{'package.amt' | translate}}</label>
-                            <input type="number" class="form-control" formControlName="amt"
-                                placeholder="{{ 'package.amt' | translate }}">
+                            <input type="number" class="form-control" formControlName="amt" placeholder="{{ 'package.amt' | translate }}">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                        (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -258,8 +226,7 @@
 </div>
 
 <!-- modal xác nhận xóa gói cước-->
-<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-    role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">

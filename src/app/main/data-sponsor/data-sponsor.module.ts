@@ -33,6 +33,7 @@ export const managerRoutes: Routes = [{
     { path: 'scenarios', component: ScenariosComponent, data: { MENU_CODE: 'SCENARIOS' }, canActivate: [AuthGuard] },
     { path: 'scenarios-detail', component: ScenariosDetailComponent, data: { MENU_CODE: 'SCENARIOS_DETAIL' }, canActivate: [AuthGuard] },
     { path: 'sms-birthday', component: SmsBirthdayComponent, data: { MENU_CODE: 'SMS-BIRTHDAY' }, canActivate: [AuthGuard] }
+   
   ]
 }];
 

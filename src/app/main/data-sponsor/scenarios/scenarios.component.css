@@ -1,0 +1,25 @@
+[hidden] {
+    display: none !important;
+}
+
+#linkinput {
+    width: 460px;
+    background-color: white;
+    border: 1px solid gainsboro;
+    font-size: 12px;
+    height: 35px;
+    padding: 7px;
+}
+
+.rowimage {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+
+.form-group_bt {
+    margin-top: 15px !important;
+}
+
+.labelcontent {
+    margin-bottom: 10px !important;
+}

@@ -13,22 +13,17 @@
                     <div class="x_content">
                         <form class="row form-horizontal form-label-left input_mask" (ngSubmit)="searchForm()">
                             <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
-                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount"
-                                    [settings]="settingsFilterAccount" name="slAccount"
-                                    (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
-                                <input type="text" class="form-control" name="groupCode" [(ngModel)]="groupCode"
-                                    placeholder="{{ 'group.inGroup_code' | translate }}">
+                                <input type="text" class="form-control" name="groupCode" [(ngModel)]="groupCode" placeholder="{{ 'group.inGroup_code' | translate }}">
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
-                                <input type="text" class="form-control" name="groupName" [(ngModel)]="groupName"
-                                    placeholder="{{ 'group.inGroup_name' | translate }}">
+                                <input type="text" class="form-control" name="groupName" [(ngModel)]="groupName" placeholder="{{ 'group.inGroup_name' | translate }}">
                             </div>
                             <div class="col-md-6 col-sm-4 col-xs-6">
-                                <button type="submit" style="float: right;"
-                                    class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                                <button type="submit" style="float: right;" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
                             </div>
                         </form>
                     </div>
@@ -44,8 +39,7 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
-                                        (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
                                 </div>
                             </div>
                         </form>
@@ -82,19 +76,12 @@
                                                 <td>{{item.GROUP_CODE}}</td>
                                                 <td>{{item.GROUP_NAME}}</td>
                                                 <td>{{item.NOTES}}</td>
-                                                <td class="box-checkbox-table"><input type="checkbox"
-                                                        [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox"
-                                                        disabled></td>
+                                                <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox" disabled></td>
                                                 <td class="text-center">{{item.CREATED_TIME}}</td>
                                                 <td class="text-center">
                                                     <div class="tool">
-                                                        <button type="submit"
-                                                            (click)="confirmUpdateModal(item.GROUP_ID)"
-                                                            *ngIf="role.IS_EDIT"
-                                                            class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                        <button type="button" class="btn btn-danger btn-sm"
-                                                            *ngIf="role.IS_DELETE"
-                                                            (click)="showConfirmDelete(item.GROUP_ID, item.GROUP_NAME)">{{ 'global.delete' | translate }}</button>
+                                                        <button type="submit" (click)="confirmUpdateModal(item.GROUP_ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                        <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(item.GROUP_ID, item.GROUP_NAME)">{{ 'global.delete' | translate }}</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -103,25 +90,17 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
-                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }}
-                                        trang. Hiển thị
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)">
-                                            <option value="5" selected="">5</option>
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
+                                            <option value="20" selected="">20</option>
                                             <option value="50">50</option>
                                             <option value="100">100</option>
                                             <option value="99999999">Tất cả</option>
-                                        </select>
-                                        bản ghi.
+                                        </select> bản ghi.
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-6 minibox" style="margin-bottom:10px">
-                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize"
-                                            [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)"
-                                            (numPages)="pagination.totalPage = $event"
-                                            [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
-                                            class="pagination-sm content-end" previousText="&lsaquo;"
-                                            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
                                         </pagination>
                                     </div>
                                 </div>
@@ -135,8 +114,7 @@
 </article>
 
 <!-- Thêm nhóm -->
-<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
-    aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -151,19 +129,16 @@
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'group.account' | translate}} <span style="color: red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate"
-                                [settings]="settingsFilterAccount" name="slAccount">
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate" [settings]="settingsFilterAccount" name="slAccount">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'group.group_code' | translate}} <span style="color: red;">(*)</span></label>
-                            <input type="text" class="form-control" name="groupCode" ngModel
-                                placeholder="{{ 'group.inGroup_code' | translate }}">
+                            <input type="text" class="form-control" name="groupCode" ngModel placeholder="{{ 'group.inGroup_code' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'group.group_name' | translate}} <span style="color: red;">(*)</span></label>
-                            <input type="text" class="form-control" name="groupName"
-                                placeholder="{{ 'group.inGroup_name' | translate }}" ngModel>
+                            <input type="text" class="form-control" name="groupName" placeholder="{{ 'group.inGroup_name' | translate }}" ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>&nbsp;</label>
@@ -176,14 +151,12 @@
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                             <label>{{'group.note' | translate}}</label>
-                            <textarea type="text" class="form-control" name="note" rows="3"
-                                placeholder="{{ 'group.inNote' | translate }}" ngModel></textarea>
+                            <textarea type="text" class="form-control" name="note" rows="3" placeholder="{{ 'group.inNote' | translate }}" ngModel></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                        (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -192,12 +165,11 @@
 </div>
 
 <!-- modal sửa nhóm-->
-<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
-    aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="dialog-static-name" class="modal-title pull-left">{{'sms_template.edit_sms_temp' | translate}}
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'sms_template.edit_groups' | translate}}
                 </h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="showModalUpdate.hide()">
                     <span aria-hidden="true">&times;</span>
@@ -208,20 +180,17 @@
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'group.account' | translate}} <span style="color: red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit"
-                                [settings]="settingsFilterAccount" formControlName="account">
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccount" formControlName="account">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'group.group_code' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="hidden" formControlName="groupId">
-                            <input type="text" class="form-control" formControlName="groupCode"
-                                placeholder="{{ 'group.inGroup_code' | translate }}">
+                            <input type="text" class="form-control" formControlName="groupCode" placeholder="{{ 'group.inGroup_code' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'group.group_name' | translate}} <span style="color: red;">(*)</span></label>
-                            <input type="text" class="form-control" formControlName="groupName"
-                                placeholder="{{ 'group.inGroup_name' | translate }}">
+                            <input type="text" class="form-control" formControlName="groupName" placeholder="{{ 'group.inGroup_name' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>&nbsp;</label>
@@ -234,14 +203,12 @@
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                             <label>{{'group.note' | translate}}</label>
-                            <textarea type="text" class="form-control" formControlName="note" rows="3"
-                                placeholder="{{ 'group.inNote' | translate }}"></textarea>
+                            <textarea type="text" class="form-control" formControlName="note" rows="3" placeholder="{{ 'group.inNote' | translate }}"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                        (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -250,8 +217,7 @@
 </div>
 
 <!-- modal xác nhận xóa nhóm-->
-<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-    role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -264,10 +230,8 @@
                 <div>{{'group.delete_notify' | translate}} "<b class="text-success">{{name}}</b>"?</div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default"
-                    (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
-                <button type="submit" class="btn btn-success"
-                    (click)="confirmDelete(groupId)">{{'global.confirm' | translate}}</button>
+                <button type="button" class="btn btn-default" (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
+                <button type="submit" class="btn btn-success" (click)="confirmDelete(groupId)">{{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>

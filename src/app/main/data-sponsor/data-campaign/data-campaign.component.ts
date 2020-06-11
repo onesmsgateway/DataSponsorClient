@@ -45,6 +45,8 @@ export class DataCampaignComponent implements OnInit {
   public formEditCampaign: FormGroup;
   public numberChar = 0;
   public numberSMS = 0;
+  public timeFrom: Date = new Date();
+  public timeTo: Date = new Date();
   public effectiveDateVTL;
   public effectiveDateGPC;
   public effectiveDateVMS;
@@ -134,12 +136,13 @@ export class DataCampaignComponent implements OnInit {
     };
 
     this.pageIndex = 1;
-    this.pageSize = 5;
+    this.pageSize = 20;
     this.totalRow = 0;
     this.totalPage = 0;
   }
 
   async ngOnInit() {
+    this.dataAccount.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     await this.bindDataAccount();
     await this.getData();
   }
@@ -173,11 +176,17 @@ export class DataCampaignComponent implements OnInit {
 
   // bind data to grid
   async getData() {
-    let account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    let account = "";
+    if (this.isAdmin)
+      account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    else
+      account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+   
     let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignPaging?pageIndex=' + this.pagination.pageIndex +
-      "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&from_date=" + this.fromDate + "&to_date=" + this.toDate +
-      "&isAdmin=" + this.isAdmin)
+      "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&from_date=" + this.fromDate + "&to_date=" + this.toDate
+      )
     this.loadData(response);
+
   }
 
   loadData(response?: any) {
@@ -190,32 +199,58 @@ export class DataCampaignComponent implements OnInit {
     }
   }
 
-  async getDataDetail() {
-    let account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
-    let response: any = await this.dataService.getAsync('/api/DataSms/GetDataSmsPaging?pageIndex=' + this.pageIndex +
-      "&pageSize=" + this.pageSize + "&account_id=" + account + "&data_campaign_id=" + this.data_campaign_id + "&from_date=" + this.fromDate + "&to_date=" + this.toDate
-      + "&phone=&sms_content=");
-    this.loadDataDetail(response);
-  }
+  // async getDataDetail() {
+  //   let account = "";
+  //   if (this.isAdmin)
+  //     account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+  //   else
+  //     account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+  //   let response: any = await this.dataService.getAsync('/api/DataSms/GetDataSmsPaging?pageIndex=' + this.pageIndex +
+  //     "&pageSize=" + this.pageSize + "&account_id=" + account + "&data_campaign_id=" + this.data_campaign_id + "&from_date=" + this.fromDate + "&to_date=" + this.toDate
+  //     + "&phone=&sms_content=");
+  //   this.loadDataDetail(response);
+  // }
 
-  loadDataDetail(response?: any) {
-    if (response) {
-      this.dataCampaignDetail = response.data;
-      if ('pagination' in response) {
-        this.pageSize = response.pagination.PageSize;
-        this.totalRow = response.pagination.TotalRows;
-      }
-    }
-  }
+  // loadDataDetail(response?: any) {
+  //   if (response) {
+  //     this.dataCampaignDetail = response.data;
+  //     if ('pagination' in response) {
+  //       this.pageSize = response.pagination.PageSize;
+  //       this.totalRow = response.pagination.TotalRows;
+  //     }
+  //   }
+  // }
 
   onChangeFromDate(event) {
-    this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMddHHmmss");
+  
+    this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "000000";
+    if (this.fromDate == '19700101000000') {
+      this.fromDate = '';
+    }
+    if(this.fromDate !== '' && this.toDate !== ''){
+      if(this.fromDate > this.toDate){
+        this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
+        return;
+      }
+    }
     this.getData();
+    
   }
 
   onChangeToDate(event) {
-    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMddHHmmss");
+   
+    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "230000";
+    if (this.toDate == '19700101000000') {
+      this.toDate = '';
+    }
+    if(this.fromDate !== '' && this.toDate !== ''){
+      if(this.fromDate > this.toDate){
+        this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
+        return;
+      }
+    }
     this.getData();
+   
   }
 
   setPageIndex(pageNo: number): void {
@@ -233,39 +268,39 @@ export class DataCampaignComponent implements OnInit {
     this.getData();
   }
 
-  setPageIndexDetail(pageNo: number): void {
-    this.pageIndex = pageNo;
-    this.getDataDetail();
-  }
+  // setPageIndexDetail(pageNo: number): void {
+  //   this.pageIndex = pageNo;
+  //   this.getDataDetail();
+  // }
 
-  pageChangedDetail(event: any): void {
-    this.setPageIndexDetail(event.page);
-  }
+  // pageChangedDetail(event: any): void {
+  //   this.setPageIndexDetail(event.page);
+  // }
 
-  changePageSizeDetail(size) {
-    this.pageSize = size;
-    this.pageIndex = 1;
-    this.getDataDetail();
-  }
+  // changePageSizeDetail(size) {
+  //   this.pageSize = size;
+  //   this.pageIndex = 1;
+  //   this.getDataDetail();
+  // }
 
   //#region view lich su cap tin
-  async showConfirmViewDetail(id) {
-    this.data_campaign_id = id;
-    let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignDetailPaging?pageIndex=' + this.pageIndex +
-      "&pageSize=" + this.pageSize + "&data_campaign_id=" + this.data_campaign_id);
-    if (response.err_code == 0) {
-      if (response.data != null && response.data.length > 0) {
-        this.checkShowDetail = true;
-        this.dataCampaignDetail = response.data;
-        this.loadDataDetail(response);
-      }
-      else {
-        this.notification = "Không có số điện thoại nào";
-        this.checkShowDetail = false;
-      }
-    }
-    this.viewDataCampaignDetailModal.show();
-  }
+  // async showConfirmViewDetail(id) {
+  //   this.data_campaign_id = id;
+  //   let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignDetailPaging?pageIndex=' + this.pageIndex +
+  //     "&pageSize=" + this.pageSize + "&data_campaign_id=" + this.data_campaign_id);
+  //   if (response.err_code == 0) {
+  //     if (response.data != null && response.data.length > 0) {
+  //       this.checkShowDetail = true;
+  //       this.dataCampaignDetail = response.data;
+  //       this.loadDataDetail(response);
+  //     }
+  //     else {
+  //       this.notification = "Không có số điện thoại nào";
+  //       this.checkShowDetail = false;
+  //     }
+  //   }
+  //   this.viewDataCampaignDetailModal.show();
+  // }
   //#endregion
 
   //#region duyet tin
@@ -324,7 +359,8 @@ export class DataCampaignComponent implements OnInit {
 
   //#region edit content template
   public async showFormEditCampaign(campaign_id) {
-    let response: any = await this.dataService.getAsync('/api/DataCampaign/' + campaign_id)
+  
+    let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignEditById?id=' + campaign_id)
     if (response.err_code == 0) {
       let dataCampaign = response.data[0];
       this.formEditCampaign = new FormGroup({
@@ -473,7 +509,7 @@ export class DataCampaignComponent implements OnInit {
         }
       }
     }
-    else{
+    else {
       this.effectiveDateVTL = "0";
       this.packCountVTL = 1;
       this.packageAmtVTL = 0;
@@ -519,7 +555,7 @@ export class DataCampaignComponent implements OnInit {
         }
       }
     }
-    else{
+    else {
       this.effectiveDateGPC = "0";
       this.packCountGPC = 1;
       this.packageAmtGPC = 0;
@@ -565,7 +601,7 @@ export class DataCampaignComponent implements OnInit {
         }
       }
     }
-    else{
+    else {
       this.effectiveDateVMS = "0";
       this.packCountVMS = 1;
       this.packageAmtVMS = 0;

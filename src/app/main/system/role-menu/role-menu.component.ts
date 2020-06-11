@@ -169,7 +169,7 @@ export class RoleMenuComponent implements OnInit {
   }
 
   onChangeRole(roleID) {
-    console.log(roleID);
+   
     this.role_id = roleID;
     this.getListMenuRole();
   }

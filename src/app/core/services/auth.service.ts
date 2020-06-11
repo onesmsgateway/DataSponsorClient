@@ -47,8 +47,8 @@ export class AuthService {
     });
   }
 
-  public async loginSystem(USER_NAME, PASSWORD, TIMEOUT) {
-    let user: User = new User("", USER_NAME, PASSWORD, "", "", "", "SYSTEM", TIMEOUT);
+  public async loginSystem(USER_NAME, PHONE_NUMBER, TIMEOUT) {
+    let user: User = new User("", USER_NAME, PHONE_NUMBER, "", "", "", "SYSTEM", TIMEOUT);
     let response: any = await this.dataService.postAsync("/api/auth/LoginSystem", user);
     if (response && response.err_code == 0) {
       this.setLogin(<User>response.data);

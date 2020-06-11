@@ -25,8 +25,8 @@ export class DataSmsComponent implements OnInit {
   public phone: string = "";
   public fromDate: string = "";
   public toDate: string = "";
-  public timeFrom: Date = new Date();
-  public timeTo: Date = new Date();
+  public timeFrom: string = "";
+  public timeTo: string = "";
 
   public isAdmin = false;
   public stringVTL = "VIETTEL";
@@ -145,6 +145,7 @@ export class DataSmsComponent implements OnInit {
 
   //#region account
   public async bindDataAccount() {
+ 
     if (this.isAdmin) {
       let response: any = await this.dataService.getAsync('/api/account');
       for (let index in response.data) {
@@ -168,6 +169,7 @@ export class DataSmsComponent implements OnInit {
   ChangeDropdownListAccount() {
     this.getCampaign();
     this.getListDataSms();
+    
   }
 
   ChangeDropdownList() {
@@ -177,7 +179,12 @@ export class DataSmsComponent implements OnInit {
   async getCampaign() {
     this.dataCampaign = [];
     this.selectedCampaign = [];
-    let account = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : null;
+    let account = "";
+    if (this.isAdmin)
+      account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    else
+      account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+    // let account = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
     let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignByAccount?account_id=' + account)
     for (let index in response.data) {
       this.dataCampaign.push({ "id": response.data[index].ID, "itemName": response.data[index].PROGRAM_NAME });
@@ -227,6 +234,7 @@ export class DataSmsComponent implements OnInit {
 
   //#region load data and paging
   public async getListDataSms() {
+    
     this.dataSms = [];
     let account_id = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
     let campaign_id = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
@@ -281,22 +289,35 @@ export class DataSmsComponent implements OnInit {
 
   //#region search
   onChangeFromDate(event) {
-    this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMdd");
-    if (this.fromDate > this.toDate) {
-      this.notificationService.displayWarnMessage("Ngày tin nhắn chưa thỏa mãn");
-      return;
+
+    this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "000000";
+    if (this.fromDate == '19700101000000') {
+      this.fromDate = '';
+    }
+    if(this.fromDate !== '' && this.toDate !== ''){
+      if(this.fromDate > this.toDate){
+        this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
+        return;
+      }
     }
     this.getListDataSms();
+
   }
 
   onChangeToDate(event) {
-    console.log(event);
-    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd");
-    if (this.fromDate > this.toDate) {
-      this.notificationService.displaySuccessMessage("Ngày tin nhắn chưa thỏa mãn");
-      return;
+   
+    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "230000";
+    if (this.toDate == '19700101000000') {
+      this.toDate = '';
+    }
+    if(this.fromDate !== '' && this.toDate !== ''){
+      if(this.fromDate > this.toDate){
+        this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
+        return;
+      }
     }
     this.getListDataSms();
+    
   }
 
   public async searchSms(form) {

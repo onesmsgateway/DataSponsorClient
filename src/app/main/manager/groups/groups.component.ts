@@ -73,6 +73,7 @@ export class GroupsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dataAccount.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.getAccountLogin();
   }
 
@@ -173,7 +174,7 @@ export class GroupsComponent implements OnInit {
     }
     let NOTES = group.note;
     let IS_ACTIVE = this.isActive == true ? 1 : 0;
-
+    let CREATED_TIME = group.CREATED_TIME;
     let response: any = await this.dataService.postAsync('/api/Group', {
       ACCOUNT_ID, GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
     })
@@ -214,6 +215,7 @@ export class GroupsComponent implements OnInit {
 
   // update tin mẫu
   async editGroup() {
+ 
     let formData = this.formEditGroup.controls;
     let ID = formData.groupId.value;
     if (formData.account.value.length == 0) {
@@ -250,6 +252,7 @@ export class GroupsComponent implements OnInit {
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+      alert("110");
     }
   }
 

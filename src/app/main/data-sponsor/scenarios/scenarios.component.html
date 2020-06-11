@@ -13,28 +13,21 @@
                     <div class="x_content">
                         <div class="row">
                             <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
-                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount"
-                                    [settings]="settingsFilterAccount" name="slAccount"
-                                    (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
-                                <input type="text" class="form-control" name="inCodeScenar" [(ngModel)]="inCodeScenar"
-                                    placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
+                                <input type="text" class="form-control" name="inCodeScenar" [(ngModel)]="inCodeScenar" placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
-                                <input type="text" class="form-control" name="inNameScenar" [(ngModel)]="inNameScenar"
-                                    placeholder="{{ 'scenarios.inName_scenar' | translate }}">
+                                <input type="text" class="form-control" name="inNameScenar" [(ngModel)]="inNameScenar" placeholder="{{ 'scenarios.inName_scenar' | translate }}">
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
-                                <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus"
-                                    [settings]="settingsFilterStatus" name="status" (onSelect)="ChangeDropdownList()"
-                                    (onDeSelect)="ChangeDropdownList()">
+                                <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus" [settings]="settingsFilterStatus" name="status" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-4 col-sm-4 col-xs-6">
-                                <button type="button" style="float: right;" (click)="getData()"
-                                    class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                                <button type="button" style="float: right;" (click)="getData()" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
                             </div>
                         </div>
                     </div>
@@ -50,8 +43,7 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
-                                        (click)="confirmShowModalCreate()">{{ 'global.add_new' | translate }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="confirmShowModalCreate()">{{ 'global.add_new' | translate }}</button>
                                 </div>
                             </div>
                         </form>
@@ -90,20 +82,17 @@
                                                 <td>{{item.USER_NAME}}</td>
                                                 <td>{{item.CODE}}</td>
                                                 <td>{{item.NAME}}</td>
-                                                <td>{{item.CONTENT}}</td>
+                                                <td style="vertical-align: inherit">
+                                                    <textarea class="form-control" style="resize: vertical;padding: 2px 9px;" readonly>{{item.DESC_CONTENT}}</textarea></td>
+                                                <!-- <td>{{item.DESC_CONTENT}}</td> -->
                                                 <td class="text-center">{{item.START_DATE}}</td>
                                                 <td class="text-center">{{item.END_DATE}}</td>
-                                                <td class="box-checkbox-table"><input type="checkbox"
-                                                        [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox"
-                                                        disabled></td>
+                                                <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox" disabled></td>
                                                 <td class="text-center">
                                                     <div class="tool">
-                                                        <button type="submit" (click)="confirmUpdateModal(item.ID)"
-                                                            *ngIf="role.IS_EDIT"
-                                                            class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                        <button type="button" class="btn btn-danger btn-sm"
-                                                            *ngIf="role.IS_DELETE"
-                                                            (click)="showConfirmDelete(item.ID, item.NAME)">{{ 'global.delete' | translate }}</button>
+                                                        <button type="submit" (click)="confirmUpdateModal(item.ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                        <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(item.ID, item.NAME)">{{ 'global.delete' | translate }}</button>
+                                                        <button type="button" [disabled]="!isCreatelink[item.ID]" class="btn btn-primary btn-sm" (click)="showModalCreateLinkDetail(item.ID)">Tạo link</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -112,25 +101,17 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
-                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }}
-                                        trang. Hiển thị
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)">
-                                            <option value="5" selected="">5</option>
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
+                                            <option value="20" selected="">20</option>
                                             <option value="50">50</option>
                                             <option value="100">100</option>
                                             <option value="99999999">Tất cả</option>
-                                        </select>
-                                        bản ghi.
+                                        </select> bản ghi.
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-6 minibox" style="margin-bottom:10px">
-                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize"
-                                            [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)"
-                                            (numPages)="pagination.totalPage = $event"
-                                            [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
-                                            class="pagination-sm content-end" previousText="&lsaquo;"
-                                            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
                                         </pagination>
                                     </div>
                                 </div>
@@ -144,8 +125,7 @@
 </article>
 
 <!-- Thêm kịch bản -->
-<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
-    aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -158,64 +138,125 @@
             <form #formAdd1="ngForm" (ngSubmit)="createScenarios(formAdd1)">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'scenarios.account' | translate}}</label>
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate"
-                                [settings]="settingsFilterAccount" name="slAccount">
-                            </angular2-multiselect>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.code_scenar' | translate}}</label>
-                            <input type="text" class="form-control" name="code" ngModel
-                                placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.name_scenar' | translate}}</label>
-                            <input type="text" class="form-control" name="name"
-                                placeholder="{{ 'scenarios.inName_scenar' | translate }}" ngModel>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.start_date' | translate}}</label>
-                            <input type="text" class="form-control" name="startDate" bsDatepicker
-                                [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="startDate"
-                                placeholder="{{ 'scenarios.start_date' | translate }}">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.end_date' | translate}}</label>
-                            <input type="text" class="form-control" name="endDate" bsDatepicker
-                                [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="endDate"
-                                placeholder="{{ 'scenarios.end_date' | translate }}">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <label>&nbsp;</label>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" name="checkActive" ngModel>
-                                    <span>{{'scenarios.active' | translate}}</span> </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12 ">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios.account' | translate}}</label>
+                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate" [settings]="settingsFilterAccountAdd" name="slAccount" (onSelect)="changeAccount()" (onDeSelect)="deSelectAccount()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios.code_scenar' | translate}}</label>
+                                    <input type="text" [disabled]="!isHidden" class="form-control" name="code" [(ngModel)]="codetrim" placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
+                                    <span style="color:red" *ngIf="codetrim?.length > 10">
+                                        {{'scenarios.checkcode' | translate}}
+                                    </span>
+                                    <!-- <span style="color:red" *ngIf="checkcodetrim">
+                                        {{'scenarios.checkcodetrim' | translate}}
+                                    </span> -->
+
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios.name_scenar' | translate}}</label>
+                                    <input type="text" [disabled]="!isHidden" class="form-control" name="name" placeholder="{{ 'scenarios.inName_scenar' | translate }}" ngModel>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <label>&nbsp;</label>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" name="isCheckAccumulatePoint"
-                                        ngModel>
-                                    <span>{{'scenarios.accumulate_points' | translate}}</span> </label>
+                        <div class="col-md-3 col-sm-6 col-xs-12 ">
+                            <div class="row rowimage">
+
+                                <label>{{ 'global.chooseImage' | translate }}</label>
+                                <input type="file" #uploadImage name="avatar" class="form-control" (change)="submitUploadImage()" placeholder="Click chọn ảnh kịch bản">
+
+                                <!-- <label>{{ 'global.chooseImage' | translate }}</label>
+                                <input type="text" [disabled]="!isHidden" class="form-control" name="checkSendSms" placeholder="Click chọn ảnh kịch bản" ngModel> -->
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                            <label>{{'scenarios.content' | translate}}</label>
-                            <textarea type="text" class="form-control" name="content" rows="3"
-                                placeholder="{{ 'scenarios.inContent' | translate }}" ngModel></textarea>
+                        <div class="col-md-9 col-sm-6 col-xs-12 ">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios.start_date' | translate}}</label>
+                                    <input type="text" class="form-control" [disabled]="!isHidden" name="startDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="startDate" placeholder="{{ 'scenarios.start_date' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios.end_date' | translate}}</label>
+                                    <input type="text" [disabled]="!isHidden" class="form-control" name="endDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="endDate" placeholder="{{ 'scenarios.end_date' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios.scenariosDetail' | translate}}</label>
+                                    <angular2-multiselect [data]="scenariosDetail" [(ngModel)]="selectedItemComboboxscenariosDetail" [settings]="settingsFilterScenariosAdd" name="slScenarioType">
+                                    </angular2-multiselect>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" (click)="oncheckRewardOneTime()" value="" [disabled]="!isHidden" class="checkbox" name="checkRewardOneTime" ngModel>
+                                            <span>{{'scenarios.checkRewardOneTime' | translate}}</span> </label>
+                                    </div>
+                                    <input type="number" class="form-control" [disabled]="isHiddencheckOne" name="RewardOneTimeInDay" ngModel placeholder="{{ 'send_data.time_donate' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" (click)="oncheckActive()" value="" [disabled]="!isHidden" class="checkbox" name="checkActive" ngModel>
+                                            <span>{{'scenarios.active' | translate}}</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <div class="checkbox" style="margin-top: 15px;">
+                                        <label><input type="checkbox" (click)="onisCheckAccumulatePoint()" value="" [disabled]="!isHidden" class="checkbox" name="isCheckAccumulatePoint"
+                                                ngModel>
+                                            <span>{{'scenarios.accumulate_points' | translate}}</span> </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 ">
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <img src="{{ urlImageUpload }}" style="width: 200px; height: 130px;" />
+                                    <label class="remove-node" (click)="removeImage()"><i class="fa fa-times-circle"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 form-group form-group_bt">
+                            <label class="labelcontent">{{'sms_list.Listcontent' | translate}}</label>
+                            <textarea type="text" [disabled]="!isHidden" class="form-control" name="content" rows="3" placeholder="{{ 'scenarios.scenariodetail' | translate }}" ngModel></textarea>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                            <div row>
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                                    <div class="checkbox" style="margin-bottom: 0px !important;">
+                                        <label><input type="checkbox" (click)="oncheckSendSms()" value="" [disabled]="!isHidden" class="checkbox" name="checkSendSms" ngModel>
+                                        <span>{{'scenarios.isSendSms' | translate}}</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                                    <angular2-multiselect style="margin-top:6px ;" *ngIf="!isHiddenSen" [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" name="slSenderName">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                            <textarea type="text" [disabled]="isHiddencheckSms" class="form-control" name="contentsms" rows="3" placeholder="{{ 'scenarios.inContent' | translate }}" ngModel></textarea>
+                        </div>
+                        <!-- <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox"  value="" style="display: none;" class="checkbox" name="checkSendSms" ngModel>
+                                     </label>
+                            </div>
+                          
+                        </div> -->
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                        (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
-                    <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
+                    <button type="button" *ngIf="!isHidden" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.finish' | translate }}</button>
+                    <button type="button" *ngIf="isHidden" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="submit" [disabled]="!isHidden" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
+
                 </div>
             </form>
             <!-- kịch bản chi tiết -->
@@ -230,8 +271,7 @@
                         </h4> -->
                                     <h4 class="modal-title pull-left">{{ 'scenarios-detail.title' | translate }}</h4>
                                     <div class="form-group has-feedback content-end">
-                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
-                                            (click)="showModalCreateDetail.show()">{{ 'global.add_new' | translate }}</button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="!isscenario" (click)="showModalCreateDetail.show()">{{ 'global.add_new' | translate }}</button>
                                     </div>
                                 </div>
                             </form>
@@ -261,8 +301,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr *ngFor="let item of dataScenarioDetail; let i = index"
-                                                    [attr.data-index]="i">
+                                                <tr *ngFor="let item of dataScenarioDetail; let i = index" [attr.data-index]="i">
                                                     <td class="text-center" scope="row">{{i+1}}</td>
                                                     <td class="text-center">{{item.VALUE | number: '.0'}}</td>
                                                     <td class="text-center">{{item.PACKAGE_NAME_VIETTEL}}</td>
@@ -273,13 +312,9 @@
                                                     <td class="text-center">{{item.PACKAGE_QUANTITY_MOBIFONE}}</td>
                                                     <td class="text-center">
                                                         <div class="tool">
-                                                            <button type="submit"
-                                                                (click)="confirmUpdateModalDetail(item.ID)"
-                                                                *ngIf="role.IS_EDIT"
-                                                                class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                            <button type="button" class="btn btn-danger btn-sm"
-                                                                *ngIf="role.IS_DELETE"
-                                                                (click)="showConfirmDeleteDetail(item.ID, item.NAME)">{{ 'global.delete' | translate }}</button>
+                                                            <button type="submit" (click)="confirmUpdateModalDetail(item.ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                            <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showConfirmDeleteDetail(item.ID, item.NAME)">{{ 'global.delete' | translate }}</button>
+
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -288,25 +323,17 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
-                                            Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }}
-                                            trang. Hiển thị
+                                            Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
                                             <select (change)="changePageSize($event.target.value)">
-                                                <option value="5" selected="">5</option>
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
+                                                <option value="20" selected="">20</option>
                                                 <option value="50">50</option>
                                                 <option value="100">100</option>
                                                 <option value="99999999">Tất cả</option>
-                                            </select>
-                                            bản ghi.
+                                            </select> bản ghi.
                                         </div>
                                         <div class="col-md-6 col-sm-6 col-xs-6 minibox" style="margin-bottom:10px">
-                                            <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize"
-                                                [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)"
-                                                (numPages)="pagination.totalPage = $event"
-                                                [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
-                                                class="pagination-sm content-end" previousText="&lsaquo;"
-                                                nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                            <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                                class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
                                             </pagination>
                                         </div>
                                     </div>
@@ -321,8 +348,7 @@
 </div>
 
 <!-- modal sửa kịch bản-->
-<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
-    aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -335,64 +361,106 @@
             <form [formGroup]="formEditScenarios" (ngSubmit)="editScenarios()">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'scenarios.account' | translate}}</label>
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit"
-                                [settings]="settingsFilterAccount" formControlName="account">
-                            </angular2-multiselect>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.code_scenar' | translate}}</label>
-                            <input type="hidden" formControlName="id">
-                            <input type="text" class="form-control" formControlName="code" readonly
-                                placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.name_scenar' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="name"
-                                placeholder="{{ 'scenarios.inName_scenar' | translate }}">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.start_date' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="startDate" bsDatepicker
-                                [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
-                                placeholder="{{ 'scenarios.start_date' | translate }}">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios.end_date' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="endDate" bsDatepicker
-                                [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
-                                placeholder="{{ 'scenarios.end_date' | translate }}">
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios.account' | translate}}</label>
+                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccount" formControlName="account">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios.code_scenar' | translate}}</label>
+                                    <input type="hidden" formControlName="id">
+                                    <input type="text" class="form-control" formControlName="code" readonly placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios.name_scenar' | translate}}</label>
+                                    <input type="text" class="form-control" formControlName="name" placeholder="{{ 'scenarios.inName_scenar' | translate }}">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
-                            <label>&nbsp;</label>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" formControlName="isActive">
+                            <div class="row rowimage">
+                                <label>{{ 'global.chooseImage' | translate }}</label>
+                                <input type="file" #uploadImageEdit class="form-control" (change)="submitUploadImageEdit()" placeholder="Click chọn ảnh kịch bản">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios.start_date' | translate}}</label>
+                                    <input type="text" class="form-control" formControlName="startDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'scenarios.start_date' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios.end_date' | translate}}</label>
+                                    <input type="text" class="form-control" formControlName="endDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'scenarios.end_date' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios.scenariosDetail' | translate}}</label>
+                                    <angular2-multiselect [data]="scenariosDetail" [(ngModel)]="selectedItemComboboxscenariosDetail" [settings]="settingsFilterScenariosAdd" formControlName="slScenarioType">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" (click)="oncheckRewardOneTime()" value=""  class="checkbox" formControlName="checkRewardOneTime">
+                                            <span>{{'scenarios.checkRewardOneTime' | translate}}</span> </label>
+                                    </div>
+                                    <input type="number" class="form-control" [disabled]="isHiddencheckOne" formControlName="RewardOneTimeInDay" placeholder="{{ 'send_data.time_donate' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" value="" class="checkbox" formControlName="isActive">
                                     <span>{{'scenarios.active' | translate}}</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <div class="checkbox" style="margin-top: 15px;">
+                                        <label><input type="checkbox" (click)="onisCheckAccumulatePoint()" value="" [disabled]="!isHidden" class="checkbox" formControlName="isCheckAccumulatePoint"
+                                                ngModel>
+                                            <span>{{'scenarios.accumulate_points' | translate}}</span> </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
-                            <label>&nbsp;</label>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox"
-                                        formControlName="isCheckAccumulatePoint">
-                                    <span>{{'scenarios.accumulate_points' | translate}}</span> </label>
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <img src="{{urlImageUploadEdit}}" style="width: 200px; height: 110px;" />
+                                    <label class="remove-node" (click)="removeImage()"><i class="fa fa-times-circle"></i></label>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                            <label>{{'scenarios.content' | translate}}</label>
-                            <textarea type="text" class="form-control" formControlName="content" rows="3"
-                                placeholder="{{ 'scenarios.inContent' | translate }}"></textarea>
+                        <div class="col-md-6 col-sm-6 col-xs-12 form-group form-group_bt">
+                            <label class="labelcontent">{{'sms_list.Listcontent' | translate}}</label>
+                            <textarea type="text" [disabled]="!isHidden" class="form-control" formControlName="content" rows="3" placeholder="{{ 'scenarios.scenariodetail' | translate }}"></textarea>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                            <div row>
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                                    <div class="checkbox" style="margin-bottom: 0px !important;">
+                                        <label><input type="checkbox" (click)="oncheckSendSms()" value="" [disabled]="!isHidden" class="checkbox" formControlName="checkSendSms" >
+                                        <span>{{'scenarios.isSendSms' | translate}}</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                                    <angular2-multiselect style="margin-top:6px ;" *ngIf="checkSendSmsEdit" [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" formControlName="slSenderName">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                            <textarea type="text" [disabled]="isHiddencheckSms" class="form-control" formControlName="contentsms" rows="3" placeholder="{{ 'scenarios.inContent' | translate }}"></textarea>
                         </div>
                     </div>
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                        (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -404,8 +472,7 @@
 </div>
 
 <!-- modal xác nhận xóa kịch bản-->
-<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-    role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -418,25 +485,21 @@
                 <div>{{'scenarios.delete_notify' | translate}} "<b class="text-success">{{name}}</b>"?</div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default"
-                    (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
-                <button type="submit" class="btn btn-success"
-                    (click)="confirmDelete(id)">{{'global.confirm' | translate}}</button>
+                <button type="button" class="btn btn-default" (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
+                <button type="submit" class="btn btn-success" (click)="confirmDelete(id)">{{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Thêm kịch bản chi tiết -->
-<div class="modal fade" bsModal #showModalCreateDetail="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-    role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalCreateDetail="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'scenarios.add' | translate}}
                 </h4>
-                <button type="button" class="close pull-right" aria-label="Close"
-                    (click)="showModalCreateDetail.hide()">
+                <button type="button" class="close pull-right" aria-label="Close" (click)="showModalCreateDetail.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -445,25 +508,21 @@
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios-detail.value' | translate}}</label>
-                            <input type="number" class="form-control" name="valueScenar"
-                                placeholder="{{ 'scenarios-detail.inValue' | translate }}" ngModel>
+                            <input [disabled]="!isScPopup" type="number" class="form-control" name="valueScenar" placeholder="{{ 'scenarios-detail.inValue' | translate }}" ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
                             <label>{{'scenarios-detail.packageVTL' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL"
-                                [settings]="settingsFilterPackageVTL" name="packageVTL">
+                            <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" name="packageVTL">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
                             <label>{{'scenarios-detail.packageGPC' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC"
-                                [settings]="settingsFilterPackageGPC" name="packageGPC">
+                            <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" name="packageGPC">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
                             <label>{{'scenarios-detail.packageVMS' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS"
-                                [settings]="settingsFilterPackageVMS" name="packageVMS">
+                            <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" name="packageVMS">
                             </angular2-multiselect>
                         </div>
                     </div>
@@ -471,38 +530,54 @@
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group"></div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios-detail.quantityVTL' | translate}}</label>
-                            <input type="number" class="form-control" name="quantityVTL" ngModel>
+                            <input type="number" class="form-control" name="quantityVTL" [(ngModel)]="quantityVTL">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios-detail.quantityGPC' | translate}}</label>
-                            <input type="number" class="form-control" name="quantityGPC" ngModel>
+                            <input type="number" class="form-control" name="quantityGPC" [(ngModel)]="quantityGPC">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios-detail.quantityVMS' | translate}}</label>
-                            <input type="number" class="form-control" name="quantityVMS" ngModel>
+                            <input type="number" class="form-control" name="quantityVMS" [(ngModel)]="quantityVMS">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                        (click)="showModalCreateDetail.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default" [style.display]="'none'" (click)="showModalCreateDetail.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
+<!-- Load link kịch bản -->
+<div class="modal fade" bsModal bsModal #showModalCreateLink="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-sm" style="width: 500px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'global.postlink' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="showModalCreateLink.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="linkinput" [(ngModel)]="linkinput" #userinput>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="copyInputMessage(userinput)">Copy link</button>
+                <button type="button" class="btn btn-default" (click)="showModalCreateLink.hide()">{{'global.cancel' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- modal sửa kịch bản chi tiết -->
-<div class="modal fade" bsModal #showModalUpdateDetail="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-    role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalUpdateDetail="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'sms_template.edit_sms_temp' | translate}}
                 </h4>
-                <button type="button" class="close pull-right" aria-label="Close"
-                    (click)="showModalUpdateDetail.hide()">
+                <button type="button" class="close pull-right" aria-label="Close" (click)="showModalUpdateDetail.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -512,25 +587,21 @@
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios-detail.value' | translate}}</label>
                             <input type="hidden" formControlName="id">
-                            <input type="number" class="form-control" formControlName="valueScenar"
-                                placeholder="{{ 'scenarios-detail.inValue' | translate }}">
+                            <input type="number" class="form-control" formControlName="valueScenar" placeholder="{{ 'scenarios-detail.inValue' | translate }}">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
                             <label>{{'scenarios-detail.packageVTL' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL"
-                                [settings]="settingsFilterPackageVTL" formControlName="packageVTL">
+                            <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" formControlName="packageVTL">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
                             <label>{{'scenarios-detail.packageGPC' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC"
-                                [settings]="settingsFilterPackageGPC" formControlName="packageGPC">
+                            <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" formControlName="packageGPC">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
                             <label>{{'scenarios-detail.packageVMS' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS"
-                                [settings]="settingsFilterPackageVMS" formControlName="packageVMS">
+                            <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" formControlName="packageVMS">
                             </angular2-multiselect>
                         </div>
                     </div>
@@ -551,8 +622,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                        (click)="showModalUpdateDetail.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default" (click)="showModalUpdateDetail.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -561,26 +631,23 @@
 </div>
 
 <!-- modal xác nhận xóa kịch bản chi tiết-->
-<div class="modal fade" bsModal #confirmDeleteModalDetail="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-    role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #confirmDeleteModalDetail="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'global.delete' | translate}}</h4>
-                <button type="button" class="close pull-right" aria-label="Close"
-                    (click)="confirmDeleteModalDetail.hide()">
+                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmDeleteModalDetail.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div>{{'scenarios-detail.delete_notify' | translate}} "<b class="text-success">{{nameDetail}}</b>"?</div>
+                <!-- <div>{{'scenarios-detail.delete_notify' | translate}} "<b class="text-success">{{nameDetail}}</b>"?</div> -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default"
-                    (click)="confirmDeleteModalDetail.hide()">{{'global.cancel' | translate}}</button>
-                <button type="submit" class="btn btn-success"
-                    (click)="confirmDeleteDetail(idDetail)">{{'global.confirm' | translate}}</button>
+                <button type="button" class="btn btn-default" (click)="confirmDeleteModalDetail.hide()">{{'global.cancel' | translate}}</button>
+                <button type="submit" class="btn btn-success" (click)="confirmDeleteDetail(idDetail)">{{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>
+
 </div>

@@ -797,6 +797,7 @@ export class SendDataComponent implements OnInit {
 
   // upload file
   public async submitUploadFile() {
+
     this.loading = true;
     if (this.selectedGroupUpload.length == 0 && (this.groupCode == null || this.groupCode == "")) {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-99"));
@@ -1119,6 +1120,7 @@ export class SendDataComponent implements OnInit {
 
   // export template excel
   async excelTemplate() {
+  
     let result: boolean = await this.dataService.getFileExtentionAsync("/api/FileExtention/ExportExcelTemplate", "DataSms", "template_phone.xlsx");
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));

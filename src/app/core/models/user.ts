@@ -16,7 +16,7 @@ export class User {
         this.FULL_NAME = fullname;
         this.TOKEN = token;
         this.LAST_NAME = (fullname != null) ? fullname.split(' ').reverse()[0] : "";
-        this.AVATAR = (avatar == "") ? "../../assets/img/img.jpg" : avatar;
+        this.AVATAR = (avatar == "") ? "../../assets/img/user-icon.jpg" : avatar;
         this.PROVIDER = provider;
         this.TIME_OUT = timeout;
     }

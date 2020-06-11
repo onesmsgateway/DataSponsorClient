@@ -31,6 +31,7 @@ export class MappingComponent implements OnInit {
   public settingsFilterPartner = {};
   public settingsFilterTelco = {};
 
+  public selectedItemComboboxAccount = [];
   public selectedItemComboboxSender = [];
   public selectedItemComboboxTelco = [];
   public selectedItemComboboxPartner = [];
@@ -41,9 +42,9 @@ export class MappingComponent implements OnInit {
   public selectedItemComboboxPartnerGtel = [];
 
   public partnerSenderId;
-
-  public settingsFilterAccountFilter = {}
   public settingsFilterAccount = {};
+  public settingsFilterAccountFilter = {}
+ 
   public dataAccount = [];
   public selectedAccountID = [];
   public selectedAccountFilter = []
@@ -85,14 +86,15 @@ export class MappingComponent implements OnInit {
       noDataLabel: this.utilityService.translate("global.no_data"),
       showCheckbox: false
     };
-
+   
     this.settingsFilterAccount = {
-      text: this.utilityService.translate("global.choose_account"),
-      singleSelection: false,
+      text: this.utilityService.translate('global.choose_account'),
+      singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
-      searchPlaceholderText: this.utilityService.translate("global.search"),
-      noDataLabel: this.utilityService.translate("global.no_data"),
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
     };
 
     this.settingsFilterAccountEdit = {
@@ -176,7 +178,7 @@ export class MappingComponent implements OnInit {
     this.getDataAccount()
     this.getDataSender();
     this.getDataPartner();
-    this.pagination.pageSize = 10;
+    this.pagination.pageSize = 20;
     this.getData();
   }
 
@@ -197,16 +199,18 @@ export class MappingComponent implements OnInit {
 
   //#region load data and paging
   async getData() {
-    this.dataSenderMapping = []
-    let response: any = await this.dataService.getAsync('/api/partnersender/GetPartnerSenderPaging?pageIndex=' +
-      this.pagination.pageIndex + '&pageSize=' + this.pagination.pageSize +
-      "&accountID=" + (this.selectedAccountFilter.length > 0 ? this.selectedAccountFilter[0].id : "") +
-      "&senderID=" + (this.selectedSenderFilter.length > 0 ? this.selectedSenderFilter[0].id : "") +
-      "&type=CSKH")
+    debugger
+    this.dataSenderMapping = [];
+    let accountID = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
+    let senderID = this.selectedItemComboboxSender.length>0 && this.selectedItemComboboxSender[0].id!=""? this.selectedItemComboboxSender[0].id : "";
+    let response: any = await this.dataService.getAsync('/api/accountsender/GetAccountSenderPaging?pageIndex=' +
+      this.pagination.pageIndex + '&pageSize=' + this.pagination.pageSize + "&accountId=" + accountID + "&senderId=" + senderID)
     this.loadData(response);
+    console.log(response);
   }
 
   loadData(response?: any) {
+    debugger
     if (response) {
       this.dataSenderMapping = response.data;
       if ('pagination' in response) {
@@ -243,8 +247,12 @@ export class MappingComponent implements OnInit {
       }
   }
 
-  onItemSelectSender() {
-    this.getData()
+  deSelectAccount() {
+    this.getData();
+  }
+
+  ChangeDropdownList() {
+    this.getData();
   }
   //#endregion
 
@@ -282,196 +290,47 @@ export class MappingComponent implements OnInit {
   }
 
   async createMapping(item) {
-    let detail = item.value;
+    debugger
     let combobox = item.controls;
-
-    if (this.selectedAccountID.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-63"));
+    if (combobox.accountID.value.length == 0) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
     }
-
-    if (this.selectedItemComboboxSender.length == 0 || this.selectedItemComboboxSender[0].id == "") {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-22"));
+    let ACCOUNT_ID = combobox.accountID.value[0].id;
+    if (combobox.senderID.value.length == 0) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-104"));
       return;
     }
-    let senderId = combobox.sender.value[0].id;
-    let senderName = combobox.sender.value[0].itemName;
-
-    let listPartnerSender = [];
-    let strTelco = "";
-
-    let strAccount = ""
-    for (let i = 0; i < this.selectedAccountID.length; i++) {
-      if (i == 0) strAccount = this.selectedAccountID[i].id
-      else strAccount += "," + this.selectedAccountID[i].id
-
-      //#region Phan luong VIETTEL
-      if (this.selectedItemComboboxPartnerViettel.length > 0) {
-        let response: any = await this.dataService.getAsync('/api/partnersender/GetPSBySenderTypeTelco?account_id=' +
-          this.selectedAccountID[i].id + '&sender_id=' + senderId + '&type=CSKH&telco=VIETTEL');
-
-        if (response != null && response.data.length > 0) {
-          strTelco += "Viettel(" + this.selectedAccountID[i].itemName + ")";
-        }
-        else {
-          let portViettel = combobox.partnerViettel.value[0].id;
-          let telco = "VIETTEL";
-          let maintainingFeeViettel = detail.maintainingFeeViettel != '' ? detail.maintainingFeeViettel : null;
-          let orderViettel = detail.orderViettel != '' ? detail.orderViettel : null;
-          let orderTampViettel = detail.orderTampViettel != '' ? detail.orderTampViettel : null;
-          let timeResetViettel = detail.timeResetViettel;
-          let activeViettel = detail.activeViettel == true ? 1 : 0;
-          listPartnerSender.push({
-            SENDER_ID: senderId, SMS_TYPE: 'CSKH', TEL_CODE: telco, PARTNER_ID: portViettel,
-            PARTNER_NAME: combobox.partnerViettel.value[0].itemName,
-            FEE_IN_MONTH: maintainingFeeViettel, ORDER_REAL: orderViettel, ORDER_TMP: orderTampViettel,
-            TIME_RESET: timeResetViettel, ACTIVE: activeViettel, SENDER_NAME: senderName, ACCOUNT_ID: this.selectedAccountID[i].id
-          });
-        }
-      }
-      //#endregion
-
-      //#region Phan luong GPC
-      if (this.selectedItemComboboxPartnerGPC.length > 0) {
-        let response: any = await this.dataService.getAsync('/api/partnersender/GetPSBySenderTypeTelco?account_id=' +
-          this.selectedAccountID[i].id + '&sender_id=' + senderId + '&type=CSKH&telco=GPC');
-        if (response != null && response.data.length > 0) {
-          strTelco += "Vina(" + this.selectedAccountID[i].itemName + ")";
-        }
-        else {
-          let portGPC = combobox.partnerGPC.value[0].id;
-          let telco = "GPC";
-          let maintainingFeeGPC = detail.maintainingFeeGPC != '' ? detail.maintainingFeeGPC : null;
-          let orderGPC = detail.orderGPC != '' ? detail.orderGPC : null;
-          let orderTampGPC = detail.orderTampGPC != '' ? detail.orderTampGPC : null;
-          let timeResetGPC = detail.timeResetGPC;
-          let activeGPC = detail.activeGPC == true ? 1 : 0;
-          listPartnerSender.push({
-            SENDER_ID: senderId, SMS_TYPE: 'CSKH', TEL_CODE: telco, PARTNER_ID: portGPC, FEE_IN_MONTH: maintainingFeeGPC,
-            PARTNER_NAME: combobox.partnerGPC.value[0].itemName,
-            ORDER_REAL: orderGPC, ORDER_TMP: orderTampGPC, TIME_RESET: timeResetGPC, ACTIVE: activeGPC, SENDER_NAME: senderName,
-            ACCOUNT_ID: this.selectedAccountID[i].id
-          });
-        }
-      }
-      //#endregion
-
-      //#region Phan luong VMS
-      if (this.selectedItemComboboxPartnerVMS.length > 0) {
-        let response: any = await this.dataService.getAsync('/api/partnersender/GetPSBySenderTypeTelco?account_id=' +
-        this.selectedAccountID[i].id + '&sender_id=' + senderId + '&type=CSKH&telco=VMS');
-        if (response != null && response.data.length > 0) {
-          strTelco += "Mobi (" + this.selectedAccountID[i].itemName + ")";
-        }
-        else {
-          let portVMS = combobox.partnerVMS.value[0].id;
-          let telco = "VMS";
-          let maintainingFeeVMS = detail.maintainingFeeVMS != '' ? detail.maintainingFeeVMS : null;
-          let orderVMS = detail.orderVMS != '' ? detail.orderVMS : null;
-          let orderTampVMS = detail.orderTampVMS != '' ? detail.orderTampVMS : null;
-          let timeResetVMS = detail.timeResetVMS;
-          let activeVMS = detail.activeVMS == true ? 1 : 0;
-          listPartnerSender.push({
-            SENDER_ID: senderId, SMS_TYPE: 'CSKH', TEL_CODE: telco, PARTNER_ID: portVMS, FEE_IN_MONTH: maintainingFeeVMS,
-            PARTNER_NAME: combobox.partnerVMS.value[0].itemName,
-            ORDER_REAL: orderVMS, ORDER_TMP: orderTampVMS, TIME_RESET: timeResetVMS, ACTIVE: activeVMS, SENDER_NAME: senderName,
-            ACCOUNT_ID: this.selectedAccountID[i].id
-          });
-        }
-      }
-      //#endregion
-
-      //#region Phan luong VNM
-      if (this.selectedItemComboboxPartnerVNM.length > 0) {
-        let response: any = await this.dataService.getAsync('/api/partnersender/GetPSBySenderTypeTelco?account_id=' +
-        this.selectedAccountID[i].id + '&sender_id=' + senderId + '&type=CSKH&telco=VNM');
-        if (response != null && response.data.length > 0) {
-          strTelco += "VNMobile (" + this.selectedAccountID[i].itemName + ")";
-        }
-        else {
-          let portVNM = combobox.partnerVNM.value[0].id;
-          let telco = "VNM";
-          let maintainingFeeVNM = detail.maintainingFeeVNM != '' ? detail.maintainingFeeVNM : null;
-          let orderVNM = detail.orderVNM != '' ? detail.orderVNM : null;
-          let orderTampVNM = detail.orderTampVNM != '' ? detail.orderTampVNM : null;
-          let timeResetVNM = detail.timeResetVNM;
-          let activeVNM = detail.activeVNM == true ? 1 : 0;
-          listPartnerSender.push({
-            SENDER_ID: senderId, SMS_TYPE: 'CSKH', TEL_CODE: telco, PARTNER_ID: portVNM, FEE_IN_MONTH: maintainingFeeVNM,
-            PARTNER_NAME: combobox.partnerVNM.value[0].itemName,
-            ORDER_REAL: orderVNM, ORDER_TMP: orderTampVNM, TIME_RESET: timeResetVNM, ACTIVE: activeVNM, SENDER_NAME: senderName,
-            ACCOUNT_ID: this.selectedAccountID[i].id
-          });
-        }
-      }
-      //#endregion
-
-      //#region Phan luong GTEL
-      if (this.selectedItemComboboxPartnerGtel.length > 0) {
-        let response: any = await this.dataService.getAsync('/api/partnersender/GetPSBySenderTypeTelco?account_id=' +
-        this.selectedAccountID[i].id + '&sender_id=' + senderId + '&type=CSKH&telco=GTEL');
-        if (response != null && response.data.length > 0) {
-          strTelco += "Gtel (" + this.selectedAccountID[i].itemName + ")";
-        }
-        else {
-          let portGtel = combobox.partnerGtel.value[0].id;
-          let telco = "GTEL";
-          let maintainingFeeGtel = detail.maintainingFeeGtel != '' ? detail.maintainingFeeGtel : null;
-          let orderGtel = detail.orderGtel != '' ? detail.orderGtel : null;
-          let orderTampGtel = detail.orderTampGtel != '' ? detail.orderTampGtel : null;
-          let timeResetGtel = detail.timeResetGtel;
-          let activeGtel = detail.activeGtel == true ? 1 : 0;
-          listPartnerSender.push({
-            SENDER_ID: senderId, SMS_TYPE: 'CSKH', TEL_CODE: telco, PARTNER_ID: portGtel, FEE_IN_MONTH: maintainingFeeGtel,
-            PARTNER_NAME: combobox.partnerGtel.value[0].itemName,
-            ORDER_REAL: orderGtel, ORDER_TMP: orderTampGtel, TIME_RESET: timeResetGtel, ACTIVE: activeGtel, SENDER_NAME: senderName,
-            ACCOUNT_ID: this.selectedAccountID[i].id
-          });
-        }
-      }
-      //#endregion
+    let SENDER_ID = combobox.senderID.value[0].id;
+    let response: any = await this.dataService.postAsync('/api/AccountSender', {
+      ACCOUNT_ID, SENDER_ID
+    })
+    console.log(response);
+    if (response.err_code == 0) {
+      
+      this.getData();
+      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
+    } else if (response.err_code == -19) {
+      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-19"));
     }
-
-    if (listPartnerSender.length > 0 || strAccount != "") {
-      let response: any = await this.dataService.postAsync('/api/partnersender/InsertListPartnerSender?strAccount=' + strAccount, listPartnerSender);
-
-      if (response.err_code == 0) {
-        this.getData();
-        item.reset();
-        this.showModalCreate.hide();
-        this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
-      }
-      else if (response.err_code == -19) {
-        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-19"));
-      }
-      else {
-        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
-      }
-    }
-    if (strTelco != "") {
-      this.notificationService.displayWarnMessage("Mạng " + strTelco + " đã được cấu hình. Vui lòng kiểm tra lại.");
-      return
+    else{
+      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
     }
   }
+
+     
+  
   //#endregion
 
   //#region update
   async confirmUpdateModal(id) {
-    let response: any = await this.dataService.getAsync('/api/partnersender/' + id)
+    let response: any = await this.dataService.getAsync('/api/accountsender/GetAccountSenderById?id=' + id)
     if (response.err_code == 0) {
       let dataSenderMap = response.data[0];
-
       this.formEditMapping = new FormGroup({
         id: new FormControl(id),
-        accountID: new FormControl([{ "id": dataSenderMap.ACCOUNT_ID, "itemName": dataSenderMap.ACCOUNT_NAME }]),
-        sender: new FormControl([{ "id": dataSenderMap.SENDER_ID, "itemName": dataSenderMap.SENDER_NAME }]),
-        telco: new FormControl([{ "id": dataSenderMap.TEL_CODE, "itemName": dataSenderMap.TEL_NAME }]),
-        partner: new FormControl([{ "id": dataSenderMap.PARTNER_ID, "itemName": dataSenderMap.PARTNER_NAME }]),
-        maintainingFee: new FormControl(dataSenderMap.FEE_IN_MONTH),
-        orderTamp: new FormControl(dataSenderMap.ORDER_TMP),
-        order: new FormControl(dataSenderMap.ORDER_REAL),
-        timeReset: new FormControl(dataSenderMap.TIME_RESET),
-        active: new FormControl(dataSenderMap.ACTIVE)
+        accountID: new FormControl([{ "id": dataSenderMap.ACCOUNT_ID, "itemName": dataSenderMap.USER_NAME }]),
+        senderID: new FormControl([{ "id": dataSenderMap.SENDER_ID, "itemName": dataSenderMap.NAME }]),
       });
       this.showModalUpdate.show();
     } else {

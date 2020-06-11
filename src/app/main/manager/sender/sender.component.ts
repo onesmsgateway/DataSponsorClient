@@ -152,6 +152,7 @@ export class SenderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dataSenderGroup.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.timeExpired.setFullYear(this.timeExpired.getFullYear() + 1)
     this.timeExpiredVTL.setFullYear(this.timeExpiredVTL.getFullYear() + 1)
     this.timeExpiredGPC.setFullYear(this.timeExpiredGPC.getFullYear() + 1)
@@ -221,6 +222,7 @@ export class SenderComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/sendergroup')
     if (response)
       for (let index in response.data) {
+       
         this.dataSenderGroup.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
       }
   }

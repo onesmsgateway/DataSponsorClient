@@ -55,7 +55,6 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('getAsync.:', error);
       return null;
     }
   }
@@ -66,7 +65,6 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('postAsync.:', error);
       return null;
     }
   }
@@ -77,7 +75,6 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('putAsync.:', error);
       return null;
     }
   }
@@ -88,7 +85,6 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('deleteAsync.:', error);
       return null;
     }
   }
@@ -108,7 +104,6 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('postFileAsync.:', error);
       return null;
     }
   }
@@ -128,7 +123,6 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('importExcelAsync.:', error);
       return null;
     }
   }
@@ -148,7 +142,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('importExcelBirthdaySmsAsync.:', error);
+   
       return null;
     }
   }
@@ -168,13 +162,14 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('importExcelAsync.:', error);
+     
       return null;
     }
   }
 
   public async importExcelAndSavePhoneListDataAsync(postData: any, files: File[], groupId: any, groupCode: any, groupName: any, accountID: any) {
     try {
+     
       let formData: FormData = new FormData();
       formData.append('files', files[0], files[0].name);
       if (postData !== "" && postData !== undefined && postData !== null) {
@@ -188,7 +183,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('importExcelAndSavePhoneListDataAsync.:', error);
+     
       return null;
     }
   }
@@ -209,7 +204,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('importExcelAsync.:', error);
+     
       return null;
     }
   }
@@ -229,7 +224,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('getDataFromExcelAsync.:', error);
+      
       return null;
     }
   }
@@ -391,12 +386,12 @@ export class DataService {
           result = true;
         }
         else {
-          console.log('getFileExtentionAsync.: không có dữ liệu');
+          
           result = false;
         }
       })
       .catch((err) => {
-        console.log('getFileExtentionAsync.:', err);
+       
         result = false;
       });
     return result;
@@ -455,7 +450,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('getAsync.:', error);
+     
       return null;
     }
   }
@@ -475,7 +470,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('importExcelAsync.:', error);
+     
       return null;
     }
   }
@@ -495,7 +490,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-      console.log('importExcelAsync.:', error);
+      
       return null;
     }
   }

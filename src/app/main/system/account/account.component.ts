@@ -535,6 +535,7 @@ export class AccountComponent implements OnInit {
     let EDIT_USER = this.authService.currentUserValue.USER_NAME;
     let AVATAR = (this.urlImageUploadEdit != null && this.urlImageUploadEdit != "undefined" && this.urlImageUploadEdit != "") ?
       this.urlImageUploadEdit : ""
+      
 
     let PAYMENT_TYPE = formData.paymentType.value.length > 0 ? formData.paymentType.value[0].id : "";
     if (PAYMENT_TYPE == "") {

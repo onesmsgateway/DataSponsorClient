@@ -52,7 +52,7 @@ export class AccountInfoComponent implements OnInit {
       this.phone = userDetail[0].PHONE
       this.email = userDetail[0].EMAIL
       this.user.AVATAR = (userDetail[0].AVATAR != "" && userDetail[0].AVATAR != null && userDetail[0].AVATAR != "undefined") ?
-        userDetail[0].AVATAR : "../../assets/img/img.jpg"
+        userDetail[0].AVATAR : "../../assets/img/user-icon.jpg"
     }
 
     //#endregion
@@ -109,8 +109,10 @@ export class AccountInfoComponent implements OnInit {
   }
 
   removeImage() {
-    this.urlImageUploadEdit = ""
+    this.uploadImageEdit.nativeElement.value = "";
+    this.urlImageUploadEdit = this.user.AVATAR;
   }
+ 
   //#endregion
 
   public async editInforAccount() {

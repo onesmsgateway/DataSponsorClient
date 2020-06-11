@@ -44,6 +44,7 @@
     justify-content: flex-end;
 }
 
+
 /* Fix CSS Notification */
 
 .alertify-notifier.ajs-right .ajs-message.ajs-visible {
@@ -59,6 +60,7 @@
 .alertify-notifier.ajs-right {
     right: -10px;
 }
+
 
 /* End Notification */
 
@@ -102,7 +104,8 @@
     padding-top: 6px!important;
 }
 
-.checkbox label, .radio label {
+.checkbox label,
+.radio label {
     font-weight: 700;
 }
 
@@ -152,6 +155,7 @@
     display: flex;
     position: relative;
     border: 1px solid #ccc;
+    height: 34.26px;
 }
 
 .c-btn {
@@ -173,7 +177,8 @@
     fill: #fff;
 }
 
-.selected-list .c-angle-down svg, .selected-list .c-angle-up svg {
+.selected-list .c-angle-down svg,
+.selected-list .c-angle-up svg {
     fill: #333;
 }
 
@@ -181,7 +186,8 @@
     background: #f5f5f5;
 }
 
-.arrow-up, .arrow-down {
+.arrow-up,
+.arrow-down {
     border-bottom: 15px solid #fff;
 }
 
@@ -211,7 +217,8 @@
     fill: #888;
 }
 
-.pure-checkbox input[type="checkbox"]:focus+label:before, .pure-checkbox input[type="checkbox"]:hover+label:before {
+.pure-checkbox input[type="checkbox"]:focus+label:before,
+.pure-checkbox input[type="checkbox"]:hover+label:before {
     border-color: #0079FE;
     background-color: #f2f2f2;
 }
@@ -266,7 +273,8 @@
     display: none;
 }
 
-.selected-list .c-angle-down, .selected-list .c-angle-up {
+.selected-list .c-angle-down,
+.selected-list .c-angle-up {
     width: 10px!important;
     height: 15px;
     position: absolute;
@@ -281,7 +289,9 @@
     width: 20px;
 }
 
+
 /* Custom DevExpress */
+
 .dx-link-edit {
     padding-top: 1px;
     padding-bottom: 1px;

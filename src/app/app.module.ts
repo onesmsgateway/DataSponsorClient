@@ -16,11 +16,13 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { UtilityService } from './core/services/utility.service';
 import { NotificationService } from './core/services/notification.service';
 import { AppComponent } from './app.component';
+import { PopupComponent } from './popup/popup.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'main/home/index', pathMatch: 'full' },
   { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
   { path: 'reset-pass', loadChildren: () => import('./reset-pass/reset-pass.module').then(m => m.ResetPassModule) },
+  { path: 'popup', loadChildren: () => import('./popup/popup.module').then(m => m.PopupModule) },
   { path: 'main', loadChildren: () => import('./main/main.module').then(m => m.MainModule), canActivate: [AuthGuard] }
 ];
 

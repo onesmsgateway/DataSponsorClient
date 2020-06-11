@@ -80,14 +80,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // public loginWithGoogle() {
-  //   this.authService.loginWithGoogle();
-  // }
-
-  // public loginWithFacebook() {
-  //   this.authService.loginWithFacebook();
-  // }
-
   public changeLanguage(lang) {
     this.utilityService.changeLanguageCurrent(lang);
   }

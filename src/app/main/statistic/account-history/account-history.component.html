@@ -17,45 +17,29 @@
                         </ul>
                     </div>
                     <div class="x_content">
-                        <form class="row form-horizontal form-label-left input_mask" #formSearch="ngForm"
-                            (ngSubmit)="searchSms(formSearch.value)">
+                        <form class="row form-horizontal form-label-left input_mask" #formSearch="ngForm" (ngSubmit)="searchSms(formSearch.value)">
                             <div class="col-md-3 col-sm-3 col-xs-6 form-group">
-                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount"
-                                    [settings]="settingsFilterAccount" name="account"
-                                    (onSelect)="ChangeDropdownListAccount()" (onDeSelect)="ChangeDropdownListAccount()">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount" [settings]="settingsFilterAccount" name="account" (onSelect)="ChangeDropdownListAccount()" (onDeSelect)="ChangeDropdownListAccount()">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-3 col-sm-3 col-xs-6 form-group">
-                                <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign"
-                                    [settings]="settingsFilterCampaign" name="campaign"
-                                    (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign" [settings]="settingsFilterCampaign" name="campaign" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-3 col-sm-3 col-xs-6 form-group">
-                                <input type="text" class="form-control" name="fromDate" bsDatepicker
-                                    [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
-                                    (ngModelChange)="onChangeFromDate($event)"
-                                    placeholder="{{ 'account_history.from_date' | translate }}" [(ngModel)]="timeFrom"
-                                    (ngModelChange)="onChangeFromDate($event)">
+                                <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" (ngModelChange)="onChangeFromDate($event)" placeholder="{{ 'account_history.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
                             </div>
                             <div class="col-md-3 col-sm-3 col-xs-6 form-group">
-                                <input type="text" class="form-control" name="toDate" bsDatepicker
-                                    [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
-                                    placeholder="{{ 'account_history.to_date' | translate }}" [(ngModel)]="timeTo"
-                                    (ngModelChange)="onChangeToDate($event)">
+                                <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'account_history.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
                             </div>
                             <div class="col-md-6 col-sm-3 col-xs-12 form-group">
-                                <input type="text" class="form-control"
-                                    placeholder="{{'account_history.inSms_content' | translate}}" name="smsContent"
-                                    ngModel>
+                                <input type="text" class="form-control" placeholder="{{'account_history.inSms_content' | translate}}" name="smsContent" ngModel>
                             </div>
                             <div class="col-md-3 col-sm-3 col-xs-6 form-group">
-                                <input type="text" class="form-control"
-                                    placeholder="{{'account_history.inIp' | translate}}" name="ip" ngModel>
+                                <input type="text" class="form-control" placeholder="{{'account_history.inIp' | translate}}" name="ip" ngModel>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group" style="float: right;">
-                                <button type="submit" style="float: right; margin-right: 0;"
-                                    class="btn btn-primary btn-sm">
+                                <button type="submit" style="float: right; margin-right: 0;" class="btn btn-primary btn-sm">
                                     {{ 'global.search' | translate }}</button>
                             </div>
                         </form>
@@ -68,11 +52,10 @@
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel portlet">
-                    <div class="x_title clearfix">
-                        <button type="button" style="float: right; margin-right: 0;" class="btn btn-success btn-sm"
-                            (click)="exportExcel()">
+                    <!-- <div class="x_title clearfix">
+                        <button type="button" style="float: right; margin-right: 0;" class="btn btn-success btn-sm" (click)="exportExcel()">
                             {{ 'global.export_excel' | translate }}</button>
-                    </div>
+                    </div> -->
                     <div class="x_content">
                         <div class="row">
                             <div class="col-sm-12 col-xs-12 form-group has-feedback">
@@ -82,26 +65,19 @@
                                             <tr>
                                                 <th class="text-center" style="width: 40px; vertical-align: middle;">
                                                     {{'global.order' | translate}}</th>
-                                                <th class="text-center"
-                                                    style="vertical-align: middle; white-space: nowrap;">
+                                                <th class="text-center" style="vertical-align: middle; white-space: nowrap;">
                                                     {{'account_history.account' | translate}}</th>
-                                                <th class="text-center"
-                                                    style="vertical-align: middle; white-space: nowrap;">
+                                                <th class="text-center" style="vertical-align: middle; white-space: nowrap;">
                                                     {{'account_history.campaign' | translate}}</th>
-                                                <th class="text-center"
-                                                    style="width: 30%; vertical-align: middle; white-space: nowrap;">
+                                                <th class="text-center" style="width: 30%; vertical-align: middle; white-space: nowrap;">
                                                     {{'account_history.sms_content' | translate}}</th>
-                                                <th class="text-center"
-                                                    style="width: 30%; vertical-align: middle; white-space: nowrap;">
+                                                <th class="text-center" style="width: 30%; vertical-align: middle; white-space: nowrap;">
                                                     {{'account_history.type_send' | translate}}</th>
-                                                <th class="text-center"
-                                                    style="vertical-align: middle; white-space: nowrap;">
+                                                <th class="text-center" style="vertical-align: middle; white-space: nowrap;">
                                                     {{'account_history.ip' | translate}}</th>
-                                                <th class="text-center"
-                                                    style="vertical-align: middle; white-space: nowrap;">
+                                                <th class="text-center" style="vertical-align: middle; white-space: nowrap;">
                                                     {{'account_history.time_send' | translate}}</th>
-                                                <th class="text-center"
-                                                    style="vertical-align: middle; white-space: nowrap;">
+                                                <th class="text-center" style="vertical-align: middle; white-space: nowrap;">
                                                     {{'account_history.amt_used' | translate}}</th>
                                             </tr>
                                         </thead>
@@ -111,12 +87,8 @@
                                                     {{pagination.pageSize * (pagination.pageIndex -1) + (i+1)}}</td>
                                                 <td>{{item.USER_NAME}}</td>
                                                 <td>{{item.PROGRAM_NAME}}</td>
-                                                <td><textarea rows="1" class="form-control"
-                                                        style="resize: vertical;padding: 2px 9px;"
-                                                        readonly>{{item.SMS_CONTENT}}</textarea></td>
-                                                <td><textarea rows="1" class="form-control"
-                                                        style="resize: vertical;padding: 2px 9px;"
-                                                        readonly>{{item.TYPE_SEND}}</textarea></td>
+                                                <td><textarea rows="1" class="form-control" style="resize: vertical;padding: 2px 9px;" readonly>{{item.SMS_CONTENT}}</textarea></td>
+                                                <td><textarea rows="1" class="form-control" style="resize: vertical;padding: 2px 9px;" readonly>{{item.TYPE_SEND}}</textarea></td>
                                                 <td class="text-center">{{item.IP}}</td>
                                                 <td class="text-center">{{item.TIME_SEND}}</td>
                                                 <td>{{item.AMT_USED | number: '.0'}}</td>
@@ -126,26 +98,17 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
-                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }}
-                                        trang. Hiển thị
-                                        <select (change)="changePageSize($event.target.value)"
-                                            [value]="pagination.pageSize">
-                                            <option value="5" selected="">5</option>
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
+                                        <select (change)="changePageSize($event.target.value)" [value]="pagination.pageSize">
+                                            <option value="20" selected="">20</option>
                                             <option value="50">50</option>
                                             <option value="100">100</option>
                                             <option value="99999999">{{ 'global.all' | translate }}</option>
-                                        </select>
-                                        bản ghi.
+                                        </select> bản ghi.
                                     </div>
                                     <div class="col-md-6 col-sm-6" style="margin-bottom:10px">
-                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize"
-                                            [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)"
-                                            (numPages)="pagination.totalPage = $event"
-                                            [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
-                                            class="pagination-sm content-end" previousText="&lsaquo;"
-                                            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
                                         </pagination>
                                     </div>
                                 </div>
