@@ -85,8 +85,8 @@
                                                     {{'account.account_fullname' | translate}}</th>
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'global.phone' | translate}}</th>
-                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">Email</th>
-                                                <th colspan="4" class="text-center" style="vertical-align: middle;">Quota</th>
+                                                <!-- <th rowspan="2" class="text-center" style="vertical-align: middle;">Email</th> -->
+                                                <th colspan="2" class="text-center" style="vertical-align: middle;">Quota</th>
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'account.account_type' | translate}}</th>
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
@@ -94,16 +94,16 @@
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'account.create_date' | translate}}</th>
                                                 <th rowspan="2" class="text-center" style="width: 60px; vertical-align: middle;">SMS CSKH</th>
-                                                <th rowspan="2" class="text-center" style="width: 60px; vertical-align: middle;">SMS QC</th>
+                                                <!-- <th rowspan="2" class="text-center" style="width: 60px; vertical-align: middle;">SMS QC</th> -->
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'global.operate' | translate}}</th>
                                             </tr>
                                             <tr>
-                                                <th class="text-center" style="vertical-align: middle;">Total CSKH</th>
-                                                <th class="text-center" style="vertical-align: middle;">{{'account.cskh_remain' | translate}}
+                                                <th class="text-center" style="vertical-align: middle;">Total</th>
+                                                <th class="text-center" style="vertical-align: middle;">{{'account.remain' | translate}}
                                                 </th>
-                                                <th class="text-center" style="vertical-align: middle;">Total QC</th>
-                                                <th class="text-center" style="vertical-align: middle;">{{'account.qc_remain' | translate}}</th>
+                                                <!-- <th class="text-center" style="vertical-align: middle;">Total QC</th>
+                                                <th class="text-center" style="vertical-align: middle;">{{'account.qc_remain' | translate}}</th> -->
                                             </tr>
                                         </thead>
                                         <tbody class="table-content">
@@ -113,20 +113,20 @@
                                                 <td>{{account.PASSWORD}}</td>
                                                 <td>{{account.FULL_NAME}}</td>
                                                 <td>{{account.PHONE}}</td>
-                                                <td>{{account.EMAIL}}</td>
+                                                <!-- <td>{{account.EMAIL}}</td> -->
                                                 <td class="text-center">{{account.TOTAL_VOL_CSKH}}</td>
                                                 <td class="text-center">{{account.VOL_CSKH}}</td>
-                                                <td class="text-center">{{account.TOTAL_VOL_QC}}</td>
-                                                <td class="text-center">{{account.VOL_QC}}</td>
+                                                <!-- <td class="text-center">{{account.TOTAL_VOL_QC}}</td>
+                                                <td class="text-center">{{account.VOL_QC}}</td> -->
                                                 <td>{{account.PAYMENT_TYPE == 1? 'Trả trước': account.PAYMENT_TYPE == 2?'Trả sau':''}}</td>
                                                 <td>{{account.IS_ACTIVE == 1? 'Hoạt động': 'Dừng hoạt động'}}</td>
                                                 <td>{{convertStringDate(account.CREATE_DATE)}}</td>
                                                 <td class="box-checkbox-table">
                                                     <input type="checkbox" [checked]="account.ENABLE_SMS_CSKH == 1? true:false" class="checkbox" disabled>
                                                 </td>
-                                                <td class="box-checkbox-table">
+                                                <!-- <td class="box-checkbox-table">
                                                     <input type="checkbox" [checked]="account.ENABLE_SMS_QC == 1? true:false" class="checkbox" disabled>
-                                                </td>
+                                                </td> -->
                                                 <td class="text-center">
                                                     <div class="tool" style="display: block; width:150px">
                                                         <button type="submit" class="btn btn-success btn-sm" *ngIf="role.IS_ADD" (click)="showConfirmEditAccount(account.ACCOUNT_ID)" style="margin: 2px">{{ 'global.edit' | translate }}</button>
@@ -166,7 +166,7 @@
 
 <!-- modal thêm tài khoản-->
 <div class="modal fade" bsModal #createAccountModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
-    <div class="modal-dialog modal-lg" style="width:90%">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'account.create_account' | translate}}</h4>
@@ -177,7 +177,7 @@
             <form name="form" (ngSubmit)="f.form.valid && createAccount()" #f="ngForm" novalidate>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.account_name'|translate}} <span style="color:red;">(*)</span></label>
@@ -215,19 +215,20 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" class="checkbox" name="limitQuota" [(ngModel)]="model.limitQuota"
-                        #limitQuota="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
-                      <span>{{'account.limit_quota' | translate}}</span> </label>
-                                    </div>
-                                </div>
+
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <div class="checkbox">
                                         <label><input type="checkbox" class="checkbox" name="checkSendSmsLoop"
                         [(ngModel)]="model.checkSendSmsLoop" #checkLoop="ngModel"
                         [ngClass]="{ 'is-invalid': f.submitted}" />
                       <span>{{'account.sms_loop' | translate}}</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" class="checkbox" name="dlvr" [(ngModel)]="model.dlvr" #dlvr="ngModel"
+                        [ngClass]="{ 'is-invalid': f.submitted}" />
+                      <span>{{'account.receive_report_sms' | translate}}</span> </label>
                                     </div>
                                 </div>
                             </div>
@@ -248,38 +249,9 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" class="checkbox" name="enableOTT" [(ngModel)]="model.enableOTT"
-                        #enableOTT="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
-                      <span>{{'account.send_ott' | translate}}</span> </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" class="checkbox" name="enableOTP" [(ngModel)]="model.enableOTP"
-                        #enableOTP="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
-                      <span>{{'account.send_otp' | translate}}</span> </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" class="checkbox" name="enableDauSoNgan"
-                        [(ngModel)]="model.enableDauSoNgan" #enableDauSoNgan="ngModel"
-                        [ngClass]="{ 'is-invalid': f.submitted}" />
-                      <span>{{'account.send_short_number' | translate}}</span> </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" class="checkbox" name="dlvr" [(ngModel)]="model.dlvr" #dlvr="ngModel"
-                        [ngClass]="{ 'is-invalid': f.submitted}" />
-                      <span>{{'account.receive_report_sms' | translate}}</span> </label>
-                                    </div>
-                                </div>
+
                             </div>
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -293,7 +265,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="row">
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <label>{{'account.account_pass' | translate}} <span style="color:red;">(*)</span></label>
@@ -334,37 +306,11 @@
                                     <input type="text" class="form-control" name="bankAccount" [(ngModel)]="model.bankAccount" #bankAccount="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
                                 </div>
                             </div>
+
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.bank_account_name' | translate}}</label>
                                     <input type="text" class="form-control" name="bankAccountName" [(ngModel)]="model.bankAccountName" #bankAccountName="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.url_result' | translate}}</label>
-                                    <input type="text" class="form-control" name="dlvrURL" [(ngModel)]="model.dlvrURL" #dlvrURL="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.url_report' | translate}}</label>
-                                    <input type="text" class="form-control" name="emailReport" [(ngModel)]="model.emailReport" #emailReport="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.account_type' | translate}} <span style="color:red;">(*)</span></label>
-                                    <angular2-multiselect [data]="listAccountType" [(ngModel)]="selectedAccountType" [settings]="settingsFilterAccountType" name="accountType" [ngClass]="{ 'is-invalid': f.submitted}">
-                                    </angular2-multiselect>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>Skype</label>
-                                    <input type="text" class="form-control" name="skype" [(ngModel)]="model.skype" #skype="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
@@ -375,35 +321,37 @@
                             </div>
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label>Skype</label>
+                                    <input type="text" class="form-control" name="skype" [(ngModel)]="model.skype" #skype="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label>{{'account.account_type' | translate}} <span style="color:red;">(*)</span></label>
+                                    <angular2-multiselect [data]="listAccountType" [(ngModel)]="selectedAccountType" [settings]="settingsFilterAccountType" name="accountType" [ngClass]="{ 'is-invalid': f.submitted}">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label>{{'account.role' | translate}} <span style="color:red;">(*)</span></label>
+                                    <angular2-multiselect [data]="listRole" [(ngModel)]="selectedRole" [settings]="settingsFilterRole" name="accountRole" [ngClass]="{ 'is-invalid': f.submitted}">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.limit_month_cskh' | translate}}</label>
                                     <input type="number" class="form-control" name="hanMucThangCSKH" [(ngModel)]="model.hanMucThangCSKH" #hanMucThangCSKH="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" min="0" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.limit_day_cskh' | translate}}</label>
-                                    <input type="number" class="form-control" name="hanMucNgayCSKH" [(ngModel)]="model.hanMucNgayCSKH" #hanMucNgayCSKH="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" min="0" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.quota_cskh' | translate}}</label>
-                                    <input type="number" class="form-control" name="quotaCSKH" [(ngModel)]="model.quotaCSKH" #quotaCSKH="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" min="0" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.quota_remain_cskh' | translate}}</label>
-                                    <input type="number" class="form-control" name="quotaConCSKH" [(ngModel)]="model.quotaConCSKH" #quotaConCSKH="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" min="0" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.role' | translate}} <span style="color:red;">(*)</span></label>
-                                    <angular2-multiselect [data]="listRole" [(ngModel)]="selectedRole" [settings]="settingsFilterRole" name="accountRole" [ngClass]="{ 'is-invalid': f.submitted}">
-                                    </angular2-multiselect>
+                                    <label>{{'account.limit_day_qc' | translate}}</label>
+                                    <input type="number" class="form-control" name="hanMucNgayQC" [(ngModel)]="model.hanMucNgayQC" #hanMucNgayQC="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" min="0" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
@@ -419,31 +367,8 @@
                                     <input type="text" class="form-control" name="companyName" [(ngModel)]="model.companyName" #companyName="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
                                 </div>
                             </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.limit_month_qc' | translate}}</label>
-                                    <input type="number" class="form-control" name="hanMucThangQC" [(ngModel)]="model.hanMucThangQC" #hanMucThangQC="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" min="0" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.limit_day_qc' | translate}}</label>
-                                    <input type="number" class="form-control" name="hanMucNgayQC" [(ngModel)]="model.hanMucNgayQC" #hanMucNgayQC="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" min="0" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.quota_qc' | translate}}</label>
-                                    <input type="number" class="form-control" name="quotaQC" [(ngModel)]="model.quotaQC" #quotaQC="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" min="0" />
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.quota_remain_qc' | translate}}</label>
-                                    <input type="number" class="form-control" name="quotaConQC" [(ngModel)]="model.quotaConQC" #quotaConQC="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" min="0" />
-                                </div>
-                            </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -634,12 +559,7 @@
                                     <input type="number" min=0 class="form-control" formControlName="hanMucThangCSKH" required="">
                                 </div>
                             </div>
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.limit_day_cskh' | translate}}</label>
-                                    <input type="number" min=0 class="form-control" formControlName="hanMucNgayCSKH" required="">
-                                </div>
-                            </div>
+
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.quota_cskh' | translate}}</label>

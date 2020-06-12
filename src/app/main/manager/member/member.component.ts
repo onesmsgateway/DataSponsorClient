@@ -176,7 +176,12 @@ export class MemberComponent implements OnInit {
   //#region load data
   async getData() {
     debugger
-    let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
+    let account = "";
+    if (this.isAdmin)
+      account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
+    else
+      account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+      // this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
     let group = this.selectedItemComboboxGroup.length > 0 && this.selectedItemComboboxGroup[0].id != "" ? this.selectedItemComboboxGroup[0].id : "";
     let response: any = await this.dataService.getAsync('/api/Person/GetPersonPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone);
@@ -313,7 +318,9 @@ export class MemberComponent implements OnInit {
 
   // update member
   async editMember() {
-  
+    let EMAIL;
+    let ADDRESS;
+    let NOTES;
     let formData = this.formEditMember.controls;
     let ID = formData.personId.value;
     if (formData.account.value.length == 0) {
@@ -345,13 +352,27 @@ export class MemberComponent implements OnInit {
           GROUP_IDS += "," + this.selectedItemComboboxGroupEdit[i].id;
       }
     }
-
-    let EMAIL = formData.mail.value;
-    let ADDRESS = formData.address.value;
-    let NOTES = formData.notes.value;
+    debugger
+if(formData.mail.value == null || formData.mail.value==""){
+  this.notificationService.displayWarnMessage(this.utilityService.translate('global.inputEmail'));
+  return;
+}else{
+  EMAIL = formData.mail.value;
+}
+if(formData.address.value == null || formData.address.value==""){
+  this.notificationService.displayWarnMessage( this.utilityService.translate('global.inputAddre'));
+  return;
+}else{
+  ADDRESS = formData.address.value;
+}
+if(formData.notes.value == null || formData.notes.value==""){
+  this.notificationService.displayWarnMessage(this.utilityService.translate('global.inputNote'));
+  return;
+}else{
+  NOTES = formData.notes.value;
+}
     let ACCUMULATED_POINTS = formData.accumulatedPoint.value == true ? 1 : 0;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
-
     let response: any = await this.dataService.putAsync('/api/Person/' + ID, {
       ACCOUNT_ID, PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, NOTES, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS
     })

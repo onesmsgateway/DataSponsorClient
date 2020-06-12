@@ -28,11 +28,14 @@ export class MappingComponent implements OnInit {
   public dataPartner = [];
   public dataSenderGroup = [];
   public settingsFilterSender = {};
+  public settingsFilterSenderCreate={};
   public settingsFilterPartner = {};
   public settingsFilterTelco = {};
 
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxSender = [];
+  public selectedItemComboboxSenderEdit = [];
+  public selectedItemComboboxSenderCreate = [];
   public selectedItemComboboxTelco = [];
   public selectedItemComboboxPartner = [];
   public selectedItemComboboxPartnerViettel = [];
@@ -146,7 +149,15 @@ export class MappingComponent implements OnInit {
       searchPlaceholderText: this.utilityService.translate("global.search"),
       noDataLabel: this.utilityService.translate("global.no_data"),
       showCheckbox: false,
-      disabled: true
+    };
+    this.settingsFilterSenderCreate = {
+      text: this.utilityService.translate("global.choose_sender"),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate("global.search"),
+      noDataLabel: this.utilityService.translate("global.no_data"),
+      showCheckbox: false,
     };
 
     this.settingsFilterTelcoEdit = {
@@ -162,15 +173,9 @@ export class MappingComponent implements OnInit {
 
     this.formEditMapping = new FormGroup({
       id: new FormControl(),
-      accountID: new FormControl(),
-      partner: new FormControl(),
-      sender: new FormControl(),
-      telco: new FormControl(),
-      active: new FormControl(),
-      maintainingFee: new FormControl(),
-      orderTamp: new FormControl(),
-      order: new FormControl(),
-      timeReset: new FormControl()
+      accountIDEdit: new FormControl(),
+      senderIDEdit: new FormControl(),
+     
     });
   }
 
@@ -307,9 +312,9 @@ export class MappingComponent implements OnInit {
     })
     console.log(response);
     if (response.err_code == 0) {
-      
       this.getData();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
+      this.showModalCreate.hide();
     } else if (response.err_code == -19) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-19"));
     }
@@ -317,20 +322,18 @@ export class MappingComponent implements OnInit {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
     }
   }
-
-     
-  
   //#endregion
 
   //#region update
   async confirmUpdateModal(id) {
     let response: any = await this.dataService.getAsync('/api/accountsender/GetAccountSenderById?id=' + id)
+    debugger
     if (response.err_code == 0) {
       let dataSenderMap = response.data[0];
       this.formEditMapping = new FormGroup({
         id: new FormControl(id),
-        accountID: new FormControl([{ "id": dataSenderMap.ACCOUNT_ID, "itemName": dataSenderMap.USER_NAME }]),
-        senderID: new FormControl([{ "id": dataSenderMap.SENDER_ID, "itemName": dataSenderMap.NAME }]),
+        accountIDEdit: new FormControl([{ "id": dataSenderMap.ACCOUNT_ID, "itemName": dataSenderMap.USER_NAME }]),
+        senderIDEdit: new FormControl([{ "id": dataSenderMap.SENDER_ID, "itemName": dataSenderMap.NAME }]),
       });
       this.showModalUpdate.show();
     } else {
@@ -339,67 +342,35 @@ export class MappingComponent implements OnInit {
   }
 
   async editMapping() {
+    debugger
     let formData = this.formEditMapping.controls;
     let ID = formData.id.value;
-
-    if (formData.accountID.value.length == 0) {
+    if (formData.accountIDEdit.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-63"));
       return;
     }
-    let strAccount = "";
-    for (let i = 0; i < formData.accountID.value.length; i++) {
-      if (i == 0) strAccount = formData.accountID.value[i].id
-      else strAccount += "," + formData.accountID.value[i].id
-    }
-
-    if (formData.sender.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-22"));
-      return;
-    }
-    let SENDER_ID = formData.sender.value[0].id;
-    let SENDER_NAME = formData.sender.value[0].itemName
-
-    let TEL_CODE = formData.telco.value[0].id;
-    if (TEL_CODE == null || TEL_CODE == "") {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-40"));
-      return;
-    }
-
-    let PARTNER_ID = formData.partner.value[0].id;
-    if (PARTNER_ID == null || PARTNER_ID == "") {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-33"));
-      return;
-    }
-
-    let FEE_IN_MONTH = formData.maintainingFee.value != '' ? formData.maintainingFee.value : null;
-    let ORDER_REAL = formData.order.value != '' ? formData.order.value : null;;
-    let ORDER_TMP = formData.orderTamp.value != '' ? formData.orderTamp.value : null;;
-    let TIME_RESET = formData.timeReset.value;
-    let SMS_TYPE = 'CSKH';
-    let ACTIVE = formData.active.value == true ? "1" : "0";
-
-    let response: any = await this.dataService.putAsync('/api/PartnerSender/UpdatePartnerSender?id=' + ID +
-      '&strAccount=' + strAccount, {
-      SENDER_ID, SENDER_NAME, SMS_TYPE, TEL_CODE, PARTNER_ID, FEE_IN_MONTH, ORDER_REAL, ORDER_TMP, TIME_RESET, ACTIVE
-    })
+   
+    let SENDER_ID = formData.senderIDEdit.value[0].id;
+    let ACCOUNT_ID = formData.accountIDEdit.value[0].id;
+    let response: any = await this.dataService.putAsync('/api/accountsender/EditAccountSender?id=' + ID, {ACCOUNT_ID,SENDER_ID})
     if (response.err_code == 0) {
-      this.getData();
       this.showModalUpdate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
+      this.getData();
     } else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
     }
   }
   //#endregion
-
   //#region delete
-  showConfirmDelete(id, sender) {
+  showConfirmDelete(id) {
     this.partnerSenderId = id;
     this.confirmDeleteModal.show();
   }
 
   async confirmDelete(id) {
-    let response: any = await this.dataService.deleteAsync('/api/partnersender/' + id + "?pageIndex=" + this.pagination.pageIndex + '&pageSize=' + this.pagination.pageSize)
+    debugger
+    let response: any = await this.dataService.deleteAsync('/api/accountsender/EditAccountSender?id=' + id)
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();
@@ -409,19 +380,5 @@ export class MappingComponent implements OnInit {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
     }
   }
-  //#endregion
 
-  async exportExcel() {
-    let listParameter = "accountID=" + (this.selectedAccountFilter.length > 0 ? this.selectedAccountFilter[0].id : "") +
-      ",senderID=" + (this.selectedSenderFilter.length > 0 ? this.selectedSenderFilter[0].id : "") +
-      ",type=CSKH"
-    let result: boolean = await this.dataService.getFileExtentionParameterAsync("/api/FileExtention/ExportExcelParameter",
-      "PartnerSender", listParameter, "PartnerSender")
-    if (result) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
-    }
-    else {
-      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("125"));
-    }
-  }
 }

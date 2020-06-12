@@ -60,7 +60,11 @@
         "quota": "Quỹ tin",
         "money_remain": "Tổng tiền còn lại",
         "success": "Thành công",
-        "fail": "Thất bại"
+        "fail": "Thất bại",
+        "ok": "Ok",
+        "inputEmail": "Bạn hãy nhập Email",
+        "inputAddre": "Bạn hãy nhập địa chỉ",
+        "inputNote": "Bạn hãy nhập ghi chú"
     },
     "home": {
         "sms_error": "Tin lỗi",
@@ -115,8 +119,12 @@
         "quota_remain": "Số tin còn",
         "money_debit": "Số tiền nợ (VNĐ)",
         "quota_sum": "Tổng tin đã cấp",
-        "detail": "Chi tiết",
-        "create_user": "Người tạo"
+        "smsquota": "Cấp tin quota",
+        "inputQuota": "Nhập số quota",
+        "detail": "Ghi chú",
+        "create_user": "Người tạo",
+        "input_description": "Nhập ghi chú"
+
     },
     "role_menu": {
         "form_title": "Nhóm quyền menu",
@@ -151,7 +159,7 @@
         "limit_month_cskh": "Hạn mức tin/tháng CSKH",
         "limit_month_qc": "Hạn mức tin/tháng QC",
         "limit_day_cskh": "Hạn mức tin/ngày CSKH",
-        "limit_day_qc": "Hạn mức tin/ngày CSKH",
+        "limit_day_qc": "Hạn mức tin/ngày QC",
         "quota_cskh": "Số tin CSKH đã cấp",
         "quota_qc": "Số tin QC đã cấp",
         "quota_remain_cskh": "Số tin CSKH còn lại",
@@ -167,6 +175,7 @@
         "create_date": "Ngày tạo",
         "total_quota": "Tổng được cấp",
         "cskh_remain": "CSKH còn lại",
+        "remain": "Còn lại",
         "qc_remain": "QC còn lại",
         "quota_provide": "Cấp tin",
         "sms_loop": "Gửi tin trùng sau 5p"
@@ -270,6 +279,7 @@
         "sms_type": "Loại tin",
         "add_sms_temp": "Thêm tin mẫu",
         "edit_sms_temp": "Sửa tin mẫu",
+        "edit_person": "Sửa thành viên",
         "edit_groups": "Sửa thông tin nhóm",
         "filter_name": "Nhập tên hoặc nội dung"
     },

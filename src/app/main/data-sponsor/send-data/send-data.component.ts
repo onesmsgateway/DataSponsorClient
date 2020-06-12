@@ -517,7 +517,7 @@ export class SendDataComponent implements OnInit {
   //#region load data account
   async getDataAccount() {
     if (this.isAdmin) {
-      this.selectedItemComboboxAccount = [{ "id": 0, "itemName": "Chọn tài khoản" }];
+      this.selectedItemComboboxAccount = [{ "id": 0, "itemName": this.utilityService.translate('global.choose_account') }];
       let response: any = await this.dataService.getAsync('/api/account')
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
@@ -536,7 +536,7 @@ export class SendDataComponent implements OnInit {
         this.viewQuyData(this.selectedItemComboboxAccount[0].id);
       }
       else
-        this.selectedItemComboboxAccount.push({ "id": 0, "itemName": "Chọn tài khoản" });
+        this.selectedItemComboboxAccount.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_account') });
     }
   }
 
@@ -565,19 +565,17 @@ export class SendDataComponent implements OnInit {
     this.contentSMS.nativeElement.focus();
   }
 
-  // get data sender
-  async getDataSenderName(accountID) {
-    this.selectedItemComboboxSender = [];
-    this.dataSenderName = [];
-    let response: any = await this.dataService.getAsync('/api/SenderName/GetSenderByAccountAndType?accountID=' +
-      accountID + "&smsType=CSKH")
-    for (let index in response.data) {
-      this.dataSenderName.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
-    }
-    if (this.dataSenderName.length == 1)
-      this.selectedItemComboboxSender.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
+ async getDataSenderName(accountID) {
+  this.selectedItemComboboxSender = [];
+  this.dataSenderName = [];
+  let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
+    accountID)
+  for (let index in response.data) {
+    this.dataSenderName.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
   }
-
+  if (this.dataSenderName.length == 1)
+    this.selectedItemComboboxSender.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
+}
   // get data package viettel
   async getDataPackageVTL() {
     this.dataPackageVTL = [];
@@ -861,6 +859,7 @@ export class SendDataComponent implements OnInit {
 
   //show confirm send data sms
   async sendDataSMS() {
+    debugger
     this.ACCOUNT_ID = this.selectedItemComboboxAccount.length > 0 ? this.selectedItemComboboxAccount[0].id : 0;
     if (this.ACCOUNT_ID == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-21"));
@@ -1031,6 +1030,7 @@ export class SendDataComponent implements OnInit {
     //   await this.dataService.postAsync('/api/DataOrderPackages', { DATA_CAMPAIGN_ID, PACKAGE_ID: PACKAGE_VMS, PACKAGE_QUANTITY: this.packCountVMS, TOTAL_PACKAGES: this.totalPackVMS });
 
     let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, listSmsSend);
+    
     if (insertSms.err_code == 0){
       this.messageAfterSend = insertSms.err_message;
       this.confirmAfterSuccessModal.show();
@@ -1087,6 +1087,7 @@ export class SendDataComponent implements OnInit {
   sendContinuous() {
     this.confirmAfterSuccessModal.hide();
     this.selectedItemComboboxAccount = [];
+    this.selectedItemComboboxAccount = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
     this.selectedItemComboboxSender = [];
     this.dataSenderName = [];
     this.selectedGroup = [];

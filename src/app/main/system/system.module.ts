@@ -58,7 +58,7 @@ export const systemRoutes: Routes = [{
     SenderComponent,
     SmsTemplateComponent,
     MappingComponent,
-    PartnersComponent
+    PartnersComponent,
   ],
   imports: [
     FormsModule,

@@ -243,13 +243,7 @@
                             </div>
                             <textarea type="text" [disabled]="isHiddencheckSms" class="form-control" name="contentsms" rows="3" placeholder="{{ 'scenarios.inContent' | translate }}" ngModel></textarea>
                         </div>
-                        <!-- <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <div class="checkbox">
-                                <label><input type="checkbox"  value="" style="display: none;" class="checkbox" name="checkSendSms" ngModel>
-                                     </label>
-                            </div>
-                          
-                        </div> -->
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -365,7 +359,7 @@
                             <div class="row">
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label>{{'scenarios.account' | translate}}</label>
-                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccount" formControlName="account">
+                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" (onSelect)="changeAccountEdit()" [settings]="settingsFilterAccount" formControlName="account">
                                     </angular2-multiselect>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
@@ -450,7 +444,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group">
-                                    <angular2-multiselect style="margin-top:6px ;" *ngIf="checkSendSmsEdit" [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" formControlName="slSenderName">
+                                    <angular2-multiselect style="margin-top:6px ;" *ngIf="checkSendSmsEdit" [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSenderEdit" [settings]="settingsFilterSender" formControlName="slSenderName">
                                     </angular2-multiselect>
                                 </div>
                             </div>

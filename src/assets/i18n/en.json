@@ -55,7 +55,11 @@
         "quota": "Quota",
         "money_remain": "Money remain",
         "success": "Success",
-        "fail": "Fail"
+        "fail": "Fail",
+        "ok": "Ok",
+        "inputEmail": "Please input email",
+        "inputAddre": "Please input address",
+        "inputNote": "Please input note"
     },
     "home": {
         "sms_error": "Sms error",
@@ -276,7 +280,9 @@
         "quota_remain": "Quota remain",
         "money_debit": "Money debit (VND)",
         "quota_sum": "Quota sum",
+        "inputQuota": "Input quota",
         "detail": "Detail",
+        "smsquota": "Add quota",
         "create_user": "Create user"
     },
     "sms_brandname": {

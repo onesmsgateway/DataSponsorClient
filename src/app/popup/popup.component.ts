@@ -38,6 +38,7 @@ export class PopupComponent implements OnInit {
   
 
   ngOnInit() {
+    debugger
     this.subaccountID();
      this.loadAcount();
      this.loadscenario();
@@ -58,6 +59,7 @@ export class PopupComponent implements OnInit {
    debugger
    var scenario_code = this.scenarioCode;
    let response: any = await this.dataService.getAsync('/api/Popup/GetScenariosByCode?code='+ scenario_code);
+   console.log(response);
     if(response != null){
       if (response.data[0] == null) {
         alert('Kịch bản không tồn tại!');
@@ -77,8 +79,10 @@ export class PopupComponent implements OnInit {
  }
   //#region create new
   async loadAcount() {
+    debugger
     var accountid = this.account_Id;
     let response: any = await this.dataService.getAsync('/api/Popup/' + accountid);
+    console.log(response);
     if(response != null){
       if (response.data[0] == null) {
         alert('Tài khoàn chưa tạo kịch bản');
@@ -90,7 +94,6 @@ export class PopupComponent implements OnInit {
         if (this.avartaName == null || this.avartaName == '') {
           this.avartaName = '../../assets/img/logo-login.png';
         }
-  
       }  
     }
     

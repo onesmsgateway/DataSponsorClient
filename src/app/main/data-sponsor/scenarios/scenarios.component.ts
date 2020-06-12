@@ -96,6 +96,7 @@ export class ScenariosComponent implements OnInit {
 
 
   public selectedItemComboboxSender = [];
+  public selectedItemComboboxSenderEdit = [];
   public dataSenderName = [];
   public settingsFilterSender = {};
   public scenario_type: string = '';
@@ -288,6 +289,7 @@ export class ScenariosComponent implements OnInit {
       if (this.dataAccount.length == 1) {
         this.selectedAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
         this.getDataSenderName(this.dataAccount[0].id);
+        this.getDataSenderNameEdit(this.dataAccount[0].id);
       }
       else
         this.selectedAccount.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
@@ -295,6 +297,10 @@ export class ScenariosComponent implements OnInit {
   }
   changeAccount() {
     this.getDataSenderName(this.selectedItemComboboxAccountCreate[0].id);
+    
+  }
+  changeAccountEdit(){
+    this.getDataSenderNameEdit(this.selectedItemComboboxAccountCreate[0].id);
   }
   deSelectAccount() {
     this.getData();
@@ -420,6 +426,7 @@ export class ScenariosComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
     }
+    
     let ACCOUNT_ID = combobox.slAccount.value[0].id;
     let CODE = scenar.code;
     this.codetrim = CODE;
@@ -470,6 +477,10 @@ export class ScenariosComponent implements OnInit {
     let IS_SEND_SMS = this.checkSendSms == true ? 1 : 0;
     let IS_ACCUMULATE_POINT = this.isCheckAccumulatePoint == true ? 1 : 0;
     let IS_REWARD_ONE_TIME = this.checkRewardOneTime == true ? 1 : 0;
+    if((scenar.RewardOneTimeInDay==null && this.checkSendSms == true)|| (scenar.RewardOneTimeInDay=='' && this.checkSendSms == true)){
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("105"));
+      return;
+    }
     let REWARD_ONE_TIME_IN_DAYS = scenar.RewardOneTimeInDay;
     if (combobox.slSenderName.value.length == 0) {
       SENDER_NAME = "";
@@ -648,6 +659,10 @@ export class ScenariosComponent implements OnInit {
     let IS_ACCUMULATE_POINT = formData.isCheckAccumulatePoint.value == true ? 1 : 0;
     let IS_SEND_SMS = formData.checkSendSms.value == true ? 1 : 0;
     let IS_REWARD_ONE_TIME = formData.checkRewardOneTime.value == true ? 1 : 0;
+    if((formData.RewardOneTimeInDay.value==null && formData.checkSendSms.value == true)|| (formData.RewardOneTimeInDay.value=="" && formData.checkSendSms.value == true)){
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("105"));
+      return;
+    }
     let REWARD_ONE_TIME_IN_DAYS = formData.RewardOneTimeInDay.value;
     let response: any = await this.dataService.putAsync('/api/Scenarios/' + ID, {
       ACCOUNT_ID, NAME, DESC_CONTENT, START_DATE, END_DATE, IS_ACTIVE, IS_ACCUMULATE_POINT,
@@ -966,6 +981,19 @@ export class ScenariosComponent implements OnInit {
     if (this.dataSenderName.length == 1)
       this.selectedItemComboboxSender.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
   }
+   //get data sender
+   async getDataSenderNameEdit(accountID) {
+    this.selectedItemComboboxSenderEdit = [];
+    this.dataSenderName = [];
+    let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
+      accountID)
+    for (let index in response.data) {
+      this.dataSenderName.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
+    }
+    if (this.dataSenderName.length == 1)
+      this.selectedItemComboboxSender.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
+  }
+
 
   public async submitUploadImageEdit() {
     let file = this.uploadImageEdit.nativeElement;

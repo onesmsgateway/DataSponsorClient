@@ -29,8 +29,6 @@
                                 <div *ngIf="isAdmin">
                                     <label style="color: red;">{{ 'send_data.label_total' | translate }}
                                         {{ total_amt | number: '.0' }} VNĐ</label> &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <label style="color: red;" *ngIf="isSendSMS">{{ 'send_data.quota' | translate }}
-                                        {{ quota }}</label>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
@@ -490,14 +488,13 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <b style="color: red;">{{messageAfterSend}}</b><br />" Bạn muốn?
+                    <b style="color: red;">{{messageAfterSend}}</b><br />
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default">{{'global.cancel' | translate}}</button>
                 <button type="button" class="btn btn-success btn-sm" (click)="sendContinuous()">
-                    {{'send_data.send_continue' | translate}}</button>
-                <button type="submit" class="btn btn-success"><a routerLink=""
+                    {{'global.ok' | translate}}</button>
+                <button type="submit" class="btn btn-success" *ngIf="isAdmin"><a routerLink=""
                         style="color: #fff">{{'send_data.move_data_manager' | translate}}</a></button>
             </div>
         </div>

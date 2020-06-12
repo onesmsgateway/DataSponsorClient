@@ -148,6 +148,7 @@
                 </button>
             </div>
             <form #formAdd="ngForm" (ngSubmit)="createMember(formAdd)">
+
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
@@ -210,7 +211,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="dialog-static-name" class="modal-title pull-left">{{'sms_template.edit_sms_temp' | translate}}
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'sms_template.edit_person' | translate}}
                 </h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="showModalUpdate.hide()">
                     <span aria-hidden="true">&times;</span>

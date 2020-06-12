@@ -121,7 +121,11 @@ export class GroupsComponent implements OnInit {
 
   //#region load data
   async getData() {
-    let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
+    let account = "";
+    if (this.isAdmin)
+      account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
+    else
+      account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     let response: any = await this.dataService.getAsync('/api/Group/GetGroupPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_code=" + this.groupCode + "&group_name=" + this.groupName)
     this.loadData(response);
@@ -155,6 +159,7 @@ export class GroupsComponent implements OnInit {
 
   //#region create new
   async createGroup(item) {
+    debugger
     let group = item.value;
     let combobox = item.controls;
     if (combobox.slAccount.value.length == 0) {
@@ -174,7 +179,6 @@ export class GroupsComponent implements OnInit {
     }
     let NOTES = group.note;
     let IS_ACTIVE = this.isActive == true ? 1 : 0;
-    let CREATED_TIME = group.CREATED_TIME;
     let response: any = await this.dataService.postAsync('/api/Group', {
       ACCOUNT_ID, GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
     })
@@ -235,10 +239,11 @@ export class GroupsComponent implements OnInit {
     }
     let NOTES = formData.note.value;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
-
+debugger
     let response: any = await this.dataService.putAsync('/api/Group/' + ID, {
       ACCOUNT_ID, GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
     })
+    debugger
     if (response.err_code == 0) {
       this.showModalUpdate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
@@ -252,7 +257,6 @@ export class GroupsComponent implements OnInit {
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
-      alert("110");
     }
   }
 
