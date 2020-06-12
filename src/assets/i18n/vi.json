@@ -576,7 +576,9 @@
         "inNote": "Nhập ghi chú",
         "create_date": "Ngày tạo",
         "add": "Thêm nhóm",
-        "edit": "Sửa nhóm"
+        "edit": "Sửa nhóm",
+        "delete_notify": "Bạn có muốn xóa group: "
+
     },
     "partner": {
         "partner_management": "Quản lý đối tác",

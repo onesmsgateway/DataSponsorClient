@@ -121,6 +121,7 @@ export class GroupsComponent implements OnInit {
 
   //#region load data
   async getData() {
+    debugger
     let account = "";
     if (this.isAdmin)
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
@@ -129,6 +130,7 @@ export class GroupsComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/Group/GetGroupPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_code=" + this.groupCode + "&group_name=" + this.groupName)
     this.loadData(response);
+    console.log(response);
   }
 
   loadData(response?: any) {
