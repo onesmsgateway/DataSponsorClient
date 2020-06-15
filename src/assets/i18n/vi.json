@@ -64,7 +64,10 @@
         "ok": "Ok",
         "inputEmail": "Bạn hãy nhập Email",
         "inputAddre": "Bạn hãy nhập địa chỉ",
-        "inputNote": "Bạn hãy nhập ghi chú"
+        "inputNote": "Bạn hãy nhập ghi chú",
+        "balanceViettel": "Số dư Viettel",
+        "balanceVina": "Số dư Vina",
+        "balanceMobi": "Số dư Mobi"
     },
     "home": {
         "sms_error": "Tin lỗi",

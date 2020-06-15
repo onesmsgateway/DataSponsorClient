@@ -59,7 +59,10 @@
         "ok": "Ok",
         "inputEmail": "Please input email",
         "inputAddre": "Please input address",
-        "inputNote": "Please input note"
+        "inputNote": "Please input note",
+        "balanceViettel": "Balance Viettel",
+        "balanceVina": "Balance Vina",
+        "balanceMobi": "Balance Mobi"
     },
     "home": {
         "sms_error": "Sms error",

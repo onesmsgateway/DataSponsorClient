@@ -21,6 +21,9 @@ export class MainComponent {
   public dataMenu: any = [];
   public viewQuyTinCSKH = 0;
   public viewQuyTien = 0;
+  public viewQuyViettel = 0;
+  public viewQuyVina = 0;
+  public viewQuyMobi = 0;
   public isAdmin: boolean = false;
 
   constructor(private authService: AuthService, private utilityService: UtilityService, private dataService: DataService) {
@@ -77,6 +80,7 @@ export class MainComponent {
       this.isAdmin = false;
     }
     this.viewQuyTin(false);
+    this.getBalance();
   }
 
   //#region view quy tin
@@ -116,4 +120,25 @@ export class MainComponent {
     }
   }
   //#endregion
+  
+  // get total data
+  async getBalance() {
+    // viettel
+    let resultVTL: any = await this.dataService.getAsync('/api/DataSponsor/GetDataSponsorBalanceViettel');
+    if (resultVTL != null && resultVTL.data.length > 0) {
+      this.viewQuyViettel = Math.round(resultVTL.data[0].TOTAL_REMAIN);
+    }
+
+    // vina
+    let resultVina: any = await this.dataService.getAsync('/api/DataSponsor/GetDataSponsorBalanceVina');
+    if (resultVina != null && resultVina.data.length > 0) {
+      this.viewQuyVina = Math.round(resultVina.data[0].TOTAL_REMAIN);
+    }
+
+    // mobi
+    let resultMobi: any = await this.dataService.getAsync('/api/DataSponsor/GetDataSponsorBalanceMobi');
+    if (resultMobi != null && resultMobi.data.length > 0) {
+      this.viewQuyMobi = Math.round(resultMobi.data[0].TOTAL_REMAIN);
+    }
+  }
 }
