@@ -40,6 +40,7 @@ export class AccountInfoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadDataLog();
   }
 
   async loadDataLog() {
@@ -52,7 +53,7 @@ export class AccountInfoComponent implements OnInit {
       this.phone = userDetail[0].PHONE
       this.email = userDetail[0].EMAIL
       this.user.AVATAR = (userDetail[0].AVATAR != "" && userDetail[0].AVATAR != null && userDetail[0].AVATAR != "undefined") ?
-        userDetail[0].AVATAR : "../../assets/img/user-icon.jpg"
+        userDetail[0].AVATAR : "../../assets/img/user_icon.jpg"
     }
 
     //#endregion
@@ -121,7 +122,7 @@ export class AccountInfoComponent implements OnInit {
     let EMAIL = formData.email.value;
     let COMPANY_NAME = formData.company.value;
     let AVATAR = (this.urlImageUploadEdit != null && this.urlImageUploadEdit != "undefined" && this.urlImageUploadEdit != "") ?
-      this.urlImageUploadEdit : ""
+      this.urlImageUploadEdit : "../../assets/img/user_icon.jpg"
 
     let dataEdit = await this.dataService.putAsync('/api/account/UpdateAccountInfo?accountid=' + this.user.ACCOUNT_ID, {
       PHONE, COMPANY_NAME, EMAIL, AVATAR

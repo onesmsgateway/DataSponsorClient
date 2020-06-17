@@ -181,7 +181,6 @@ export class DataCampaignComponent implements OnInit {
       account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
     else
       account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
-   
     let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&from_date=" + this.fromDate + "&to_date=" + this.toDate
       )

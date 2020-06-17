@@ -10,6 +10,7 @@
         "multi_delete": "Xóa mục đã chọn",
         "search": "Tìm kiếm",
         "confirm": "Xác nhận",
+        "infor": "Thông tin",
         "cancel": "Hủy",
         "finish": "Hoàn Thành",
         "chooseImage": "Chọn ảnh",
@@ -64,7 +65,9 @@
         "ok": "Ok",
         "inputEmail": "Bạn hãy nhập Email",
         "inputAddre": "Bạn hãy nhập địa chỉ",
-        "inputNote": "Bạn hãy nhập ghi chú"
+        "inputNote": "Bạn hãy nhập ghi chú",
+        "deletesc": "Xóa dữ liệu thành công"
+
     },
     "home": {
         "sms_error": "Tin lỗi",
@@ -141,6 +144,7 @@
         "account_randomPass": "Tạo mật khẩu tự động",
         "account_fullname": "Họ tên",
         "account_parent": "Tài khoản cha",
+        "choose_account_parent": "Chọn tài khoản cha",
         "choose_parent_account": "Chọn tài khoản cha",
         "account_type": "Loại TK",
         "choose_account_type": "Chọn loại tài khoản",
@@ -165,6 +169,7 @@
         "quota_remain_cskh": "Số tin CSKH còn lại",
         "quota_remain_qc": "Số tin QC còn lại",
         "send_cskh": "Gửi tin CSKH",
+        "send_sms": "Gửi sms",
         "send_qc": "Gửi tin QC",
         "send_otp": "Gửi tin OTP",
         "send_ott": "Gửi tin OTT",
@@ -178,7 +183,25 @@
         "remain": "Còn lại",
         "qc_remain": "QC còn lại",
         "quota_provide": "Cấp tin",
-        "sms_loop": "Gửi tin trùng sau 5p"
+        "sms_loop": "Gửi tin trùng sau 5p",
+        "plChoose_type_account": "Bạn phải chọn loại tài khoản",
+        "choose_permission": "Bạn phải chọn nhóm quyền",
+        "delete_account": "Xóa tài khoản thành công",
+        "delete_account_failed": "Xóa tài khoản thất bại",
+        "Export_successfully": " Export thành công",
+        "Export_failed": " Export file lỗi",
+        "Account_type": "Loại tài khoản không được để trống",
+        "Account_permission": "Quyền không được để trống",
+        "Account_Edit_sc": "Sửa tài khoản thành công",
+        "Account_Edit_F": "Sửa tài khoản thất bại",
+        "yes": "Có ",
+        "record_deleted": " bản ghi xóa thành công!",
+        "record_deleted_f": " bản ghi không được xóa!",
+        "update_pass": "Cập nhật mật khẩu thành công",
+        "pass_empty": "Mật khẩu không được để trống.",
+        "update_image": "Upload ảnh không thành công"
+
+
     },
     "sms_list": {
         "sms_list_title": "Danh sách tin nhắn",
@@ -366,7 +389,7 @@
         "telco": "Nhà mạng",
         "up_load": "Upload file excel",
         "text_num": " số",
-        "iText_add_phone_number": "Nhập số điện thoại dạng 01xxxxx hoặc 09xxxxx cách nhau bởi dấu ; ...",
+        "iText_add_phone_number": "Nhập số điện thoại dạng 03xx..., 08xx..., 07xx... hoặc 09xx... cách nhau bởi dấu ; ...",
         "total_num": "Tổng",
         "phone_list_manage": "Quản lý danh sách file số điện thoại",
         "list_group": "Danh sách nhóm",
@@ -408,7 +431,8 @@
         "inData": "[DungLuong]",
         "inPack": "[GoiCuoc]",
         "inDateUse": "[NgaySuDung]",
-        "send_continue": "Gửi tiếp"
+        "send_continue": "Gửi tiếp",
+        "choose_data": "Gói data đã chọn"
     },
     "package": {
         "title": "Quản lý gói cước One",
@@ -479,13 +503,15 @@
         "content_old": "Nội dung cũ",
         "content_new": "Nội dung mới",
         "input_content": "Nhập nội dung tin nhắn...",
+        "input_reason": "Nhập lý do hủy...",
         "data_time": "Chọn ngày giờ",
         "sender_name": "Thương hiệu",
         "telco": "Nhà mạng",
         "amt_telco": "Tiền nhà mạng",
         "total_amt": "Tổng tiền",
         "ask_approve": "Bạn có chắc chắn muốn duyệt đơn hàng?",
-        "coefficient": "Hệ số"
+        "coefficient": "Hệ số",
+        "data_campaign_confirm": "Xác nhận hủy đơn hàng"
     },
     "statistic-data-sms": {
         "title": "Thống kê gửi Data",
@@ -507,6 +533,7 @@
         "gpc": "VinaPhone",
         "vms": "Mobiphone",
         "inPackageVTL": "Chọn gói cước Viettel",
+        "inTelco": "Chọn nhà mạng",
         "inPackageGPC": "Chọn gói cước Vina",
         "inPackageVMS": "Chọn gói cước Mobi"
     },
@@ -668,6 +695,8 @@
         "from_date": "Từ ngày",
         "to_date": "Đến ngày",
         "account": "Tài khoản",
+        "email": "Tài khoản email",
+        "Company": "Tên công ty",
         "campaign": "Chiến dịch",
         "sms_content": "Nội dung",
         "ip": "IP",
@@ -675,4 +704,5 @@
         "type_send": "Loại gửi",
         "amt_used": "Số tiền sử dụng"
     }
+
 }

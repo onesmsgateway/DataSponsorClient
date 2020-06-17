@@ -9,6 +9,7 @@
         "multi_delete": "Delete selected item",
         "search": "Search",
         "confirm": "Confirm",
+        "infor": "Information",
         "cancel": "Cancel",
         "block": "Block",
         "activate": "Activate",
@@ -59,7 +60,8 @@
         "ok": "Ok",
         "inputEmail": "Please input email",
         "inputAddre": "Please input address",
-        "inputNote": "Please input note"
+        "inputNote": "Please input note",
+        "deletesc": "Data deleted successfully"
     },
     "home": {
         "sms_error": "Sms error",
@@ -111,7 +113,7 @@
         "account_randomPass": "Random pass",
         "account_fullname": "Full name",
         "account_parent": "Parent account",
-        "choose_parent_account": "Choose parent account",
+        "choose_account_parent": "Choose Parent account",
         "account_type": "Account type",
         "choose_account_type": "Choose account type",
         "role": "Role",
@@ -147,7 +149,24 @@
         "cskh_remain": "CSKH remain",
         "qc_remain": "QC remain",
         "quota_provide": "Quota",
-        "sms_loop": "Send SMS loop after 5m"
+        "sms_loop": "Send SMS loop after 5m",
+        "plChoose_type_account": "Please choose account type",
+        "choose_permission": "Please choose permission",
+        "delete_account": "Deleted account successfully",
+        "delete_account_failed": "Deleted account failed",
+        "Export_successfully": " Export file successfully",
+        "Export_failed": " Export file failed",
+        "Account_type": "Type account not null",
+        "Account_permission": "Permission not null",
+        "Account_Edit_sc": "Account edit successfully",
+        "Account_Edit_F": "Account edit failed",
+        "yes": "The",
+        "record_deleted": " delete records successfully!",
+        "record_deleted_f": " record is not deleted!",
+        "update_pass": "Updated password successfully",
+        "pass_empty": "Password can not be blank",
+        "update_image": "Upload photo failed",
+        "send_sms": "Send sms"
     },
     "sms_list": {
         "sms_list_title": "Sms list",

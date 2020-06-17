@@ -19,15 +19,16 @@ export class DataSmsComponent implements OnInit {
   public dataPackageGPC = [];
   public dataPackageVMS = [];
   public dataStatus = [];
+  public dataTelco =[];
 
   public pagination: Pagination = new Pagination();
   public smsContent: string = "";
   public phone: string = "";
-  public fromDate: string = "";
-  public toDate: string = "";
-  public timeFrom: string = "";
-  public timeTo: string = "";
-
+  public fromDate : string = "" ;
+  public toDate : string = "" ;
+  public timeFrom: Date = new Date();
+  public timeTo: Date = new Date();
+  
   public isAdmin = false;
   public stringVTL = "VIETTEL";
   public stringGPC = "GPC";
@@ -43,6 +44,7 @@ export class DataSmsComponent implements OnInit {
   public settingsFilterCampaign = {};
   public selectedCampaign = [];
   public settingsFilterPackageVTL = {};
+  public settingsFilterTelco = {};
   public selectedPackageVTL = [];
   public settingsFilterPackageGPC = {};
   public selectedPackageGPC = [];
@@ -85,6 +87,16 @@ export class DataSmsComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
+    this.settingsFilterTelco = {
+      text: this.utilityService.translate('statistic-data-sms.inTelco'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+    
 
     this.settingsFilterPackageGPC = {
       text: this.utilityService.translate('statistic-data-sms.inPackageGPC'),
@@ -122,6 +134,7 @@ export class DataSmsComponent implements OnInit {
     this.dataPackageVTL.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.dataPackageGPC.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.dataPackageVMS.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
+    this.dataTelco.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.getAccountLogin();
     this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd");
     this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd");
@@ -236,7 +249,11 @@ export class DataSmsComponent implements OnInit {
   public async getListDataSms() {
     
     this.dataSms = [];
-    let account_id = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    let account_id = "";
+    if (this.isAdmin)
+    account_id = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    else
+    account_id = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     let campaign_id = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     let packVTL = this.selectedPackageVTL.length > 0 && this.selectedPackageVTL[0].id != "" ? this.selectedPackageVTL[0].itemName.substr(0, this.selectedPackageVTL[0].itemName.indexOf('-') - 1).trim() : "";
     let packGPC = this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != "" ? this.selectedPackageGPC[0].itemName.substr(0, this.selectedPackageGPC[0].itemName.indexOf('-') - 1).trim() : "";

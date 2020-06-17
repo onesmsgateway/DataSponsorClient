@@ -95,7 +95,8 @@
                                                     <td [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length" style="vertical-align: inherit" class="text-center">
                                                         {{item.TIME_SEND}}</td>
                                                     <td class="text-center" [attr.rowspan]="item.LIST_CAMPAIGN_MODEL.length" style="vertical-align: inherit">
-                                                        <div class="" *ngIf="isAdmin">
+                                                        <!-- *ngIf="isAdmin" -->
+                                                        <div class="">
                                                             <div class="tool" style="padding-bottom: 10px;">
                                                                 <button type="button" (click)="showConfirmApproveSms(item.ID)" class="btn btn-primary btn-sm" [ngStyle]="{'display':(item.STATUS == 1) ? 'none' : 'block'}">{{ 'global.approve' | translate }}</button>
                                                                 <button type="button" (click)="showFormEditCampaign(item.ID)" class="btn btn-success btn-sm" [ngStyle]="{'display':(item.STATUS == 1) ? 'none' : 'block'}">{{ 'global.edit' | translate }}</button>
@@ -256,7 +257,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="dialog-static-name" class="modal-title pull-left">{{'campaign.confirm' | translate}}</h4>
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'data-campaign.data_campaign_confirm' | translate}}</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="confirmDeleteModal.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -264,7 +265,7 @@
             <div class="modal-body">
                 <!-- <div>Bạn có chắc chắn muốn xóa?</div> -->
                 <div>
-                    <textarea type="text" class="form-control" placeholder="{{'campaign.input_reason' | translate}}" name="contentSMS" rows="3" [(ngModel)]="reasonContent"></textarea>
+                    <textarea type="text" class="form-control" placeholder="{{'data-campaign.input_reason' | translate}}" name="contentSMS" rows="3" [(ngModel)]="reasonContent"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -370,7 +371,7 @@
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
-                                    <input type="number" class="form-control " name="packCountVTL" [(ngModel)]="packCountVTL" (change)="changeCountVTL()" (keyup)="changeCountVTL()" (keydown)="changeCountVTL()">
+                                    <input type="number" class="form-control " name="packCountVTL" [(ngModel)]="packCountVTL" (keyup)="changeCountVTL()" (keydown)="changeCountVTL()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 

@@ -44,6 +44,8 @@ export class ScenariosDetailComponent implements OnInit {
   public selectedPackageVMS = [];
   public scenario_type: string = "";
   public isScenarioType: boolean = false;
+  public isScPopup: boolean = false;
+  
 
   constructor(
     private dataService: DataService,
@@ -146,23 +148,23 @@ export class ScenariosDetailComponent implements OnInit {
 
   //#region load data
   async getData() {
-    debugger
     let response: any = await this.dataService.getAsync('/api/ScenariosDetail/GetScenariosDetailPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&scenario_id=" + this.scenarioId)
     this.loadData(response);
     this.getDataScenario();
+   
   }
   //loaddataScenario
   async getDataScenario() {
-    debugger
     let response: any = await this.dataService.getAsync('/api/Scenarios/' + this.scenarioId)
-   console.log(response);
    this.scenario_type = response.data[0].SCENARIO_TYPE;
    if(this.scenario_type!=this.utilityService.translate('scenarios.scenariosDetailTwo')){
      this.isScenarioType = true;
+     this.isScPopup = false;
    }
    else{
     this.isScenarioType = false;
+    this.isScPopup = true;
    }
   }
 
@@ -241,7 +243,6 @@ export class ScenariosDetailComponent implements OnInit {
   // show update modal
   async confirmUpdateModal(id) {
     let response: any = await this.dataService.getAsync('/api/ScenariosDetail/' + id)
-    debugger
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
       this.formEditScenarios = new FormGroup({
@@ -257,15 +258,17 @@ export class ScenariosDetailComponent implements OnInit {
         quantityGPC: new FormControl(dataDetail.PACKAGE_QUANTITY_VINAPHONE),
         quantityVMS: new FormControl(dataDetail.PACKAGE_QUANTITY_MOBIFONE)
       });
+     
       this.showModalUpdate.show();
     } else {
       this.notificationService.displayErrorMessage(response.err_message);
     }
+    
+    
   }
 
   // update chi tiet kich ban
   async editScenariosDetail() {
-    debugger
     let formData = this.formEditScenarios.controls;
     let ID = formData.id.value;
     let SCENARIO_ID = this.scenarioId;

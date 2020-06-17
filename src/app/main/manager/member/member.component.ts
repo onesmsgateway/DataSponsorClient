@@ -88,7 +88,8 @@ export class MemberComponent implements OnInit {
       enableSearchFilter: true,
       enableFilterSelectAll: true,
       searchPlaceholderText: this.utilityService.translate('global.search'),
-      noDataLabel: this.utilityService.translate('global.no_data')
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
     };
 
     this.formEditMember = new FormGroup({
@@ -127,7 +128,6 @@ export class MemberComponent implements OnInit {
   }
 
   async getDataAccount() {
-    debugger
     if (this.isAdmin) {
       this.selectedItemComboboxAccount = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
       let response: any = await this.dataService.getAsync('/api/account')
@@ -151,7 +151,6 @@ export class MemberComponent implements OnInit {
 
   //#region load group sender
   async getDataGroup() {
-    debugger
     let account = "";
     if (this.isAdmin)
       account = this.selectedItemComboboxAccount.length > 0 ? this.selectedItemComboboxAccount[0].id : "";
@@ -175,7 +174,6 @@ export class MemberComponent implements OnInit {
 
   //#region load data
   async getData() {
-    debugger
     let account = "";
     if (this.isAdmin)
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
@@ -187,11 +185,9 @@ export class MemberComponent implements OnInit {
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone);
       // + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone
     this.loadData(response);
-    console.log(response);
   }
 
   loadData(response?: any) {
-    debugger
     if (response) {
       this.dataMember = response.data;
       if ('pagination' in response) {
@@ -266,7 +262,6 @@ export class MemberComponent implements OnInit {
     let response: any = await this.dataService.postAsync('/api/Person', {
       ACCOUNT_ID, PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, NOTES, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS
     })
-   
     if (response.err_code == 0) {
       item.reset();
       this.getData();
@@ -347,12 +342,11 @@ export class MemberComponent implements OnInit {
     if (this.selectedItemComboboxGroupEdit.length > 0) {
       for (let i = 0; i < this.selectedItemComboboxGroupEdit.length; i++) {
         if (i == 0)
-          GROUP_IDS = this.selectedItemComboboxGroupEdit[i].id;
+          GROUP_IDS = this.selectedItemComboboxGroupEdit[i].id.toString();
         else
-          GROUP_IDS += "," + this.selectedItemComboboxGroupEdit[i].id;
+          GROUP_IDS += "," + this.selectedItemComboboxGroupEdit[i].id.toString();
       }
     }
-    debugger
 if(formData.mail.value == null || formData.mail.value==""){
   this.notificationService.displayWarnMessage(this.utilityService.translate('global.inputEmail'));
   return;
@@ -365,16 +359,11 @@ if(formData.address.value == null || formData.address.value==""){
 }else{
   ADDRESS = formData.address.value;
 }
-if(formData.notes.value == null || formData.notes.value==""){
-  this.notificationService.displayWarnMessage(this.utilityService.translate('global.inputNote'));
-  return;
-}else{
-  NOTES = formData.notes.value;
-}
+
     let ACCUMULATED_POINTS = formData.accumulatedPoint.value == true ? 1 : 0;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
     let response: any = await this.dataService.putAsync('/api/Person/' + ID, {
-      ACCOUNT_ID, PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, NOTES, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS
+      ACCOUNT_ID,PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, NOTES, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS
     })
     if (response.err_code == 0) {
       this.showModalUpdate.hide();
@@ -404,7 +393,7 @@ if(formData.notes.value == null || formData.notes.value==""){
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();
-      this.notificationService.displaySuccessMessage(response.err_message);
+      this.notificationService.displaySuccessMessage(this.utilityService.translate('global.deletesc'));
     }
     else {
       this.notificationService.displayErrorMessage(response.err_message);

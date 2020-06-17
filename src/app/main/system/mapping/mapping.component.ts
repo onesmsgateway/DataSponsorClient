@@ -204,18 +204,15 @@ export class MappingComponent implements OnInit {
 
   //#region load data and paging
   async getData() {
-    debugger
     this.dataSenderMapping = [];
     let accountID = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
     let senderID = this.selectedItemComboboxSender.length>0 && this.selectedItemComboboxSender[0].id!=""? this.selectedItemComboboxSender[0].id : "";
     let response: any = await this.dataService.getAsync('/api/accountsender/GetAccountSenderPaging?pageIndex=' +
       this.pagination.pageIndex + '&pageSize=' + this.pagination.pageSize + "&accountId=" + accountID + "&senderId=" + senderID)
     this.loadData(response);
-    console.log(response);
   }
 
   loadData(response?: any) {
-    debugger
     if (response) {
       this.dataSenderMapping = response.data;
       if ('pagination' in response) {
@@ -295,7 +292,6 @@ export class MappingComponent implements OnInit {
   }
 
   async createMapping(item) {
-    debugger
     let combobox = item.controls;
     if (combobox.accountID.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
@@ -310,7 +306,6 @@ export class MappingComponent implements OnInit {
     let response: any = await this.dataService.postAsync('/api/AccountSender', {
       ACCOUNT_ID, SENDER_ID
     })
-    console.log(response);
     if (response.err_code == 0) {
       this.getData();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
@@ -327,7 +322,6 @@ export class MappingComponent implements OnInit {
   //#region update
   async confirmUpdateModal(id) {
     let response: any = await this.dataService.getAsync('/api/accountsender/GetAccountSenderById?id=' + id)
-    debugger
     if (response.err_code == 0) {
       let dataSenderMap = response.data[0];
       this.formEditMapping = new FormGroup({
@@ -342,7 +336,6 @@ export class MappingComponent implements OnInit {
   }
 
   async editMapping() {
-    debugger
     let formData = this.formEditMapping.controls;
     let ID = formData.id.value;
     if (formData.accountIDEdit.value.length == 0) {
@@ -369,7 +362,6 @@ export class MappingComponent implements OnInit {
   }
 
   async confirmDelete(id) {
-    debugger
     let response: any = await this.dataService.deleteAsync('/api/accountsender/EditAccountSender?id=' + id)
     if (response.err_code == 0) {
       this.getData();

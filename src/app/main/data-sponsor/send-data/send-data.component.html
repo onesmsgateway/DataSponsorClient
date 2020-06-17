@@ -128,7 +128,7 @@
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                             <label>{{'send_data.phone_new' | translate}}: ({{numberPhone}}
                                 {{ 'data-sms.text_num' | translate }})</label>
-                            <input type="text" class="form-control" name="phoneList" (change)="countPhone($event.target.value)" (keyup)="countPhone($event.target.value)" (keydow)="countPhone($event.target.value)" placeholder="{{'send_data.iText_add_phone_number' | translate}}" [(ngModel)]="phoneList">
+                            <input type="text" class="form-control" name="phoneList" (keyup)="countPhone($event.target.value)" (keydow)="countPhone($event.target.value)" placeholder="{{'send_data.iText_add_phone_number' | translate}}" [(ngModel)]="phoneList">
                         </div>
                     </div>
                 </div>
@@ -187,8 +187,9 @@
                         <label style="padding-left: 20px; font-weight: normal;">Viettel: <span
                                 style="font-size: 16px;font-weight: bold;">{{packViettel}}</span>, VinaPhone:
                             <span style="font-size: 16px;font-weight: bold;">{{packGPC}}</span>, MobiPhone:
-                            <span style="font-size: 16px;font-weight: bold;">{{packVMS}}</span> --> <span
-                                style="text-transform: uppercase; font-weight: bold;">{{ 'send_data.total_amt' | translate }}:
+                            <span style="font-size: 16px;font-weight: bold;">{{packVMS}}</span> 
+                             <span
+                                style="text-transform: uppercase; font-weight: bold;">, {{ 'send_data.total_amt' | translate }}:
                                 <span style="color: green; font-size: 16px;">{{totalAmt | number: '.0'}}</span></span>
                             VNĐ</label>
                     </div>
@@ -481,7 +482,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="dialog-static-name" class="modal-title pull-left">{{'global.confirm' | translate}}</h4>
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'global.infor' | translate}}</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="confirmAfterSuccessModal.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -564,10 +565,32 @@
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
-                            <label>{{'send_data.data_phone_list' | translate}}</label>
+                            <label>{{'send_data.choose_data' | translate}}</label>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
-                            <label style="font-weight:unset">{{fileList}}</label>
+                            <!-- <label style="font-weight:unset">{{fileList}}</label> -->
+                            <label style="font-weight: normal;">Viettel:
+                                <span
+                                style="font-size: 14px;font-weight: bold;">{{packViettel}}</span>
+                            </label>
+                            <br>
+                            <label style="font-weight: normal;">VinaPhone:
+                                <span
+                                style="font-size: 14px;font-weight: bold;">{{packGPC}}</span>
+                            </label>
+                            <br>
+                            <label style="font-weight: normal;">MobiPhone:
+                                <span
+                                style="font-size: 14px;font-weight: bold;">{{packVMS}}</span>
+                            </label>
+                            <br>
+                            <label>
+                                <span
+                                style="text-transform: uppercase; font-weight: bold;">{{ 'send_data.total_amt' | translate }}:
+                                <span style="color: green; font-size: 16px;">{{totalAmt | number: '.0'}}</span></span>
+                            VNĐ
+                            </label>
+
                         </div>
                     </div>
                 </div>

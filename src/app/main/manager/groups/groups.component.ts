@@ -121,7 +121,6 @@ export class GroupsComponent implements OnInit {
 
   //#region load data
   async getData() {
-    debugger
     let account = "";
     if (this.isAdmin)
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
@@ -130,7 +129,6 @@ export class GroupsComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/Group/GetGroupPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_code=" + this.groupCode + "&group_name=" + this.groupName)
     this.loadData(response);
-    console.log(response);
   }
 
   loadData(response?: any) {
@@ -161,7 +159,6 @@ export class GroupsComponent implements OnInit {
 
   //#region create new
   async createGroup(item) {
-    debugger
     let group = item.value;
     let combobox = item.controls;
     if (combobox.slAccount.value.length == 0) {
@@ -241,11 +238,9 @@ export class GroupsComponent implements OnInit {
     }
     let NOTES = formData.note.value;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
-debugger
     let response: any = await this.dataService.putAsync('/api/Group/' + ID, {
       ACCOUNT_ID, GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
     })
-    debugger
     if (response.err_code == 0) {
       this.showModalUpdate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
@@ -274,7 +269,7 @@ debugger
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();
-      this.notificationService.displaySuccessMessage(response.err_message);
+      this.notificationService.displaySuccessMessage(this.utilityService.translate('global.deletesc'));
     }
     else {
       this.notificationService.displayErrorMessage(response.err_message);

@@ -100,7 +100,7 @@
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.ACCUMULATED_POINTS == 1 ? true : false" class="checkbox" disabled></td>
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox" disabled></td>
                                                 <td>{{item.CREATED_TIME}}</td>
-                                                <td>{{item.GROUP_NAME}}</td>
+                                                <td>{{item.GROUP_NAMES}}</td>
                                                 <td class="text-center">
                                                     <div class="tool">
                                                         <button type="submit" (click)="confirmUpdateModal(item.PERSON_ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
@@ -170,7 +170,7 @@
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.group' | translate}}</label>
-                            <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedItemComboboxGroupCreate" [settings]="settingsFilterGroupEdit" name="group" (onSelect)="getIdGroup($event)" (onDeSelect)="getIdGroup($event)">
+                            <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedItemComboboxGroupCreate" [settings]="settingsFilterGroup" name="group" (onSelect)="getIdGroup($event)" (onDeSelect)="getIdGroup($event)">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
