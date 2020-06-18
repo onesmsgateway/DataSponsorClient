@@ -420,16 +420,16 @@
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.account_pass' | translate}} <span style="color:red;">(*)</span></label>
-                                    <input type="text" class="form-control" formControlName="password" [(ngModel)]="codepassword" />
-                                    <!-- <span style="color:red" *ngIf="!codepassword?.length > 10">
+                                    <input type="text" class="form-control" formControlName="password" ngModel="password" />
+                                     <span style="color: red;" *ngIf="password?.length > 1">
                                         Password must be at least 6 characters
-                                    </span> -->
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px;">
+                            </div> -->
+                            <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'global.email'|translate}}</label>
                                     <input type="email" class="form-control" formControlName="email" required="">
@@ -470,7 +470,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px;">
-                                    <label>{{'account.role' | translate}}</label>
+                                    <label>{{'account.role' | translate}} <span style="color:red;">(*)</span></label>
                                     <angular2-multiselect [data]="listRole" [settings]="settingsFilterRole" formControlName="roleID">
                                     </angular2-multiselect>
                                 </div>
@@ -486,7 +486,7 @@
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px;">
                                     <label>{{'global.avatar' | translate}}</label>
-                                    <input type="file" #uploadImageEdit class="form-control" (change)="submitUploadImageEdit()">
+                                    <input type="file" #uploadImageEdit class="form-control" (change)="submitUploadImageEdit()" formControlName="avataredit">
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 10px;">

@@ -935,10 +935,6 @@ export class SendDataComponent implements OnInit {
     this.timeSend = this.utilityService.formatDateToString(time, "yyyy/MM/dd HH:mm:ss");
     this.IS_SEND_SMS = this.isSendSMS ? 1 : 0;
     this.confirmSendDataSMSModal.show();
-    this.totalPackVTL = 0;
-    this.totalPackGPC = 0;
-    this.totalPackVMS = 0;
-
   }
 
   // send data sms

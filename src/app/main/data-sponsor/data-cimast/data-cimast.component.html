@@ -12,15 +12,11 @@
                 <div class="x_panel portlet">
                     <div class="x_content">
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountID"
-                                [settings]="settingsFilterAccount" (onSelect)="onItemSelect()"
-                                (onDeSelect)="OnItemDeSelect()" name="accountID">
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountID" [settings]="settingsFilterAccount" (onSelect)="onItemSelect()" (onDeSelect)="OnItemDeSelect()" name="accountID">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <angular2-multiselect [data]="dataType" [(ngModel)]="selectedType"
-                                [settings]="settingsFilterType" (onSelect)="onItemSelect()"
-                                (onDeSelect)="OnItemDeSelect()" name="type">
+                            <angular2-multiselect [data]="dataType" [(ngModel)]="selectedType" [settings]="settingsFilterType" (onSelect)="onItemSelect()" (onDeSelect)="OnItemDeSelect()" name="type">
                             </angular2-multiselect>
                         </div>
                         <div class="form-group has-feedback content-end">
@@ -28,8 +24,7 @@
                                 {{'data_cimast.label_telco' | translate}}{{total_amt_telco | number: '.0'}}</p>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <p style="font-weight:bold;color:blue">
-                                {{'data_cimast.label_system' | translate}}{{total_amt_system_remain | number: '.0'}} /
-                                {{total_amt_system | number: '.0'}}
+                                {{'data_cimast.label_system' | translate}}{{total_amt_system_remain | number: '.0'}} / {{total_amt_system | number: '.0'}}
                             </p>
                         </div>
                     </div>
@@ -45,8 +40,7 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
-                                        (click)="openFormData()">{{'data_cimast.provide_amt' | translate}}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="openFormData()">{{'data_cimast.provide_amt' | translate}}</button>
                                 </div>
                             </div>
                         </form>
@@ -70,8 +64,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="table-content">
-                                            <tr *ngFor="let item of dataAccountCimast; let i = index"
-                                                [attr.data-index]="i">
+                                            <tr *ngFor="let item of dataAccountCimast; let i = index" [attr.data-index]="i">
                                                 <td class="text-center">{{i + 1}}</td>
                                                 <td>{{item.USER_NAME}}</td>
                                                 <td>{{item.TOTAL_AMT | number:'.0'}}</td>
@@ -80,8 +73,7 @@
                                                 <td>{{item.CREATE_USER}}</td>
                                                 <td class="text-center">
                                                     <div class="tool">
-                                                        <button type="submit" class="btn btn-success btn-sm"
-                                                            (click)="showConfirmViewHis(item.ACCOUNT_ID)">{{'global.view' | translate}}</button>
+                                                        <button type="submit" class="btn btn-success btn-sm" (click)="showConfirmViewHis(item.ACCOUNT_ID)">{{'global.view' | translate}}</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -98,15 +90,13 @@
 </article>
 
 <!-- modal cấp data-->
-<div class="modal fade" bsModal #createDataCimastModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-    role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #createDataCimastModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">
                     {{'data_cimast.add_data' | translate}}</h4>
-                <button type="button" class="close pull-right" aria-label="Close"
-                    (click)="createDataCimastModal.hide()">
+                <button type="button" class="close pull-right" aria-label="Close" (click)="createDataCimastModal.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -116,15 +106,12 @@
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <label>{{'data_cimast.account' | translate}}<span style="color:red;">
                                     (*)</span></label>
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountCreate"
-                                [settings]="settingsFilterAccount" name="accountID" (onSelect)="onItemSelectCreate()"
-                                (onDeSelect)="onItemSelectCreate()">
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountCreate" [settings]="settingsFilterAccount" name="accountID" (onSelect)="onItemSelectCreate()" (onDeSelect)="onItemSelectCreate()">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <label>{{'data_cimast.type' | translate}} <span style="color:red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataType" [(ngModel)]="selectedTypeCreate"
-                                [settings]="settingsFilterType" name="type">
+                            <angular2-multiselect [data]="dataType" [(ngModel)]="selectedTypeCreate" [settings]="settingsFilterType" name="type">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
@@ -135,17 +122,13 @@
                     <div class="row" style="margin-top: 10px;">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <label>{{'data_cimast.description' | translate}}</label>
-                            <input type="text" class="form-control"
-                                placeholder="{{'data_cimast.description' | translate}}" name="description"
-                                [(ngModel)]="description" />
+                            <input type="text" class="form-control" placeholder="{{'data_cimast.description' | translate}}" name="description" [(ngModel)]="description" />
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm"
-                        (click)="createDataCimastModal.hide()">{{ 'global.cancel' | translate }}</button>
-                    <button type="submit" class="btn btn-success btn-sm"
-                        *ngIf="isAdmin">{{ 'global.confirm' | translate }}</button>
+                    <button type="button" class="btn btn-default btn-sm" (click)="createDataCimastModal.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="submit" class="btn btn-success btn-sm" *ngIf="isAdmin">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
         </div>
@@ -153,16 +136,14 @@
 </div>
 
 <!-- modal Xem lich su cap data-->
-<div class="modal fade" bsModal #viewDataAccountCimastTransModal="bs-modal" [config]="{backdrop: 'static'}"
-    tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #viewDataAccountCimastTransModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">
                     {{'data_cimast.data_history' | translate}}
                 </h4>
-                <button type="button" class="close pull-right" aria-label="Close"
-                    (click)="viewDataAccountCimastTransModal.hide()">
+                <button type="button" class="close pull-right" aria-label="Close" (click)="viewDataAccountCimastTransModal.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -195,8 +176,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default"
-                            (click)="viewDataAccountCimastTransModal.hide()">{{ 'global.back' | translate }}</button>
+                        <button type="button" class="btn btn-default" (click)="viewDataAccountCimastTransModal.hide()">{{ 'global.back' | translate }}</button>
                     </div>
                 </div>
             </div>

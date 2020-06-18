@@ -102,8 +102,8 @@ export class AccountComponent implements OnInit {
     this.formEditAccount = new FormGroup({
       accountId: new FormControl(),
       userName: new FormControl(),
-      password: new FormControl(),
       fullName: new FormControl(),
+      avataredit: new FormControl(),
       phone: new FormControl(),
       email: new FormControl(),
       skype: new FormControl(),
@@ -324,7 +324,7 @@ export class AccountComponent implements OnInit {
   mobNumberPattern = "^(84|0)?[0-9]{9}$"
 
   async createAccount() {
-    debugger
+
     let USER_NAME = this.model.userName;
     let PHONE = this.model.phone;
     let IS_ACTIVE = this.checkActive == true ? 1 : 0;
@@ -341,7 +341,7 @@ export class AccountComponent implements OnInit {
     let BANK_NAME = this.model.bankName;
     let BANK_ACCOUNT = this.model.bankAccount;
     let BANK_ACCOUNT_NAME = this.model.bankAccountName;
-    
+    debugger
     let PAYMENT_TYPE = this.selectedAccountType.length > 0 ? this.selectedAccountType[0].id : "";
     if (PAYMENT_TYPE == "") {
       this.notificationService.displayErrorMessage(this.utilityService.translate('account.plChoose_type_account'));
@@ -417,14 +417,14 @@ export class AccountComponent implements OnInit {
   //#region edit account
   async showConfirmEditAccount(accountId) {
     let response = await this.dataService.getAsync('/api/account/' + accountId);
-    debugger
+
     if (response.err_code == 0) {
       let dataAccount = response.data[0];
       this.formEditAccount = new FormGroup({
         accountId: new FormControl(accountId),
-        password: new FormControl(dataAccount.PASSWORD),
         userName: new FormControl(dataAccount.USER_NAME),
         fullName: new FormControl(dataAccount.FULL_NAME),
+        avataredit: new FormControl(dataAccount.AVATAR),
         phone: new FormControl(dataAccount.PHONE),
         email: new FormControl(dataAccount.EMAIL),
         skype: new FormControl(dataAccount.SKYPE),
@@ -444,7 +444,7 @@ export class AccountComponent implements OnInit {
 
         dlvr: new FormControl(dataAccount.DLVR),
         dlvrURL: new FormControl(dataAccount.DLVR_URL),
-        emailReport: new FormControl(dataAccount.EMAIL_REPORT),
+       
 
         parentID: new FormControl(dataAccount.PARENT_ID != undefined && dataAccount.PARENT_ID != null && dataAccount.PARENT_ID != "" ?
           [{ "id": dataAccount.PARENT_ID, "itemName": dataAccount.PARENT_NAME }] :
@@ -463,12 +463,9 @@ export class AccountComponent implements OnInit {
   }
 
   async editAccount() {
+    debugger
     let formData = this.formEditAccount.controls;
-
     let ACCOUNT_ID = formData.accountId.value;
-    let USER_NAME = formData.userName.value;
-    let PASSWORD = formData.password.value;
-    this.codepassword = PASSWORD;
     let FULL_NAME = formData.fullName.value;
     let PHONE = formData.phone.value;
     let EMAIL = formData.email.value;
@@ -485,7 +482,7 @@ export class AccountComponent implements OnInit {
 
     let DLVR = formData.dlvr.value == true ? 1 : 0;
     let DLVR_URL = formData.dlvrURL.value;
-    let EMAIL_REPORT = formData.emailReport.value;
+   
 
     let PARENT_ID = formData.parentID.value.length > 0 ? formData.parentID.value[0].id : "";
     let EDIT_USER = this.authService.currentUserValue.USER_NAME;
@@ -508,7 +505,7 @@ export class AccountComponent implements OnInit {
     let dataEdit = await this.dataService.putAsync('/api/account/' + ACCOUNT_ID, {
       FULL_NAME, PHONE, SKYPE, EMAIL,
       COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME,
-      DLVR, DLVR_URL, EMAIL_REPORT,
+      DLVR, DLVR_URL,
       IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH,
       PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR
     })

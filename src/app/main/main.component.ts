@@ -72,7 +72,9 @@ export class MainComponent {
   }
 
   async getAccountLogin() {
+   
     let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
+    debugger
     let roleAccess = result.data[0].ROLE_ACCESS;
     if (roleAccess != null && roleAccess == 50) {
       this.isAdmin = true;
@@ -88,18 +90,7 @@ export class MainComponent {
     if (!isSend) {
       let accountID = this.authService.currentUserValue.ACCOUNT_ID;
       if (accountID != undefined && accountID != "") {
-        let quota_con_cskh = 0;
-        let quota_con_qc = 0;
 
-        let getQuotaCSKH: any = await this.dataService.getAsync('/api/AccountCimast/GetAccountCimastByAccountService?accountID=' +
-          accountID + '&serviceName=CSKH');
-        if (getQuotaCSKH.data.length > 0) {
-          quota_con_cskh = getQuotaCSKH.data[0].VOL;
-          this.viewQuyTinCSKH = this.authService.viewQuyTinCSKH = (quota_con_cskh != null && quota_con_cskh > 0) ? quota_con_cskh : 0;
-        }
-        else this.viewQuyTinCSKH = this.authService.viewQuyTinCSKH = 0;
-
-        // get money by account
         let getDataAccount: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' +
           accountID);
         if (getDataAccount != null && getDataAccount.data.length > 0) {
