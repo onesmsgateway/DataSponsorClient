@@ -831,6 +831,11 @@ export class SendDataComponent implements OnInit {
           this.loading = false;
           return;
         }
+        if (response.err_code == -108) {
+          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-108"));
+          this.loading = false;
+          return;
+        }
         this.getDataGroup();
         this.selectedGroup.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME });
         this.getPhoneNumber(this.selectedGroup[0]);
@@ -1039,13 +1044,7 @@ export class SendDataComponent implements OnInit {
       }
     }
 
-    // if (this.isSendVTL)
-    //   await this.dataService.postAsync('/api/DataOrderPackages', { DATA_CAMPAIGN_ID, PACKAGE_ID: PACKAGE_VTL, PACKAGE_QUANTITY: this.packCountVTL, TOTAL_PACKAGES: this.totalPackVTL });
-    // if (this.isSendGPC)
-    //   await this.dataService.postAsync('/api/DataOrderPackages', { DATA_CAMPAIGN_ID, PACKAGE_ID: PACKAGE_GPC, PACKAGE_QUANTITY: this.packCountGPC, TOTAL_PACKAGES: this.totalPackGPC });
-    // if (this.isSendVMS)
-    //   await this.dataService.postAsync('/api/DataOrderPackages', { DATA_CAMPAIGN_ID, PACKAGE_ID: PACKAGE_VMS, PACKAGE_QUANTITY: this.packCountVMS, TOTAL_PACKAGES: this.totalPackVMS });
-
+    
     let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, listSmsSend);
 
     if (insertSms.err_code == 0) {

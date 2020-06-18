@@ -319,6 +319,7 @@ export class AccountComponent implements OnInit {
     this.createAccountModal.show();
   }
 
+  
   model: any = {};
   mobNumberPattern = "^(84|0)?[0-9]{9}$"
 

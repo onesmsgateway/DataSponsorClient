@@ -20,9 +20,10 @@
                     <div class="profile_info">
                         <div>
                             <span style="font-size: 13px">{{ 'global.welcome' | translate }}, </span>
-                            <label (click)="showModalAccountInfo()" style="color: #92c32d; font-size: 13px; font-weight: bold; cursor: pointer;">{{ user.FULL_NAME }}
-                <i class="fa fa-circle" style="color: #42b72a; margin-left: 10px; font-size: 10px"></i>
-              </label>
+                            <label (click)="showModalAccountInfo()"
+                                style="color: #92c32d; font-size: 13px; font-weight: bold; cursor: pointer;">{{ user.FULL_NAME }}
+                                <i class="fa fa-circle" style="color: #42b72a; margin-left: 10px; font-size: 10px"></i>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -36,7 +37,7 @@
                             <li *ngFor="let menuP of dataMenu">
                                 <a onclick="clickParentMenu(this)">
                                     <i class="fa {{ menuP.MENU_ICON }}">
-                  </i>{{ menuP.MENU_NAME }}<span class="fa fa-chevron-down"></span>
+                                    </i>{{ menuP.MENU_NAME }}<span class="fa fa-chevron-down"></span>
                                 </a>
                                 <ul class="nav child_menu">
                                     <li onclick="clickItemMenu(this)" *ngFor="let menuC of menuP.menuChild">
@@ -56,10 +57,12 @@
                     <a data-toggle="tooltip" data-placement="top" title="Toàn màn hình" onclick="setFullScreen()">
                         <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                     </a>
-                    <a data-toggle="tooltip" data-placement="top" title="Reset giao diện" onclick="javascript:location.reload()">
+                    <a data-toggle="tooltip" data-placement="top" title="Reset giao diện"
+                        onclick="javascript:location.reload()">
                         <i style="font-size: 20px" class="fa fa-refresh" aria-hidden="true"></i>
                     </a>
-                    <a (click)="logout()" data-toggle="tooltip" data-placement="top" title="{{ 'login.submit_logout' | translate }}">
+                    <a (click)="logout()" data-toggle="tooltip" data-placement="top"
+                        title="{{ 'login.submit_logout' | translate }}">
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                     </a>
                 </div>
@@ -75,7 +78,8 @@
                     </div>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="">
-                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
+                                aria-expanded="false">
                                 <img src="{{ user.AVATAR }}" alt="">{{ user.USER_NAME }}
                                 <span class=" fa fa-angle-down"></span>
                             </a>
@@ -91,7 +95,7 @@
                                     </div>
                                 </li>
                                 <li><a (click)="logout()"><i
-                      class="fa fa-sign-out pull-right"></i>{{ 'login.submit_logout' | translate }}</a>
+                                            class="fa fa-sign-out pull-right"></i>{{ 'login.submit_logout' | translate }}</a>
                                 </li>
                             </ul>
                         </li>
@@ -103,12 +107,20 @@
                                     <img src="../../assets/img/en.png"></a>
                             </div>
                         </li>
+                        <li class="" *ngIf="isAdmin">
+                            <div style="padding: 17px 15px 12px;">
+                                <label style="color: red;" name="balanceVTL">{{'global.balanceViettel' | translate}}:
+                                    {{ viewQuyViettel | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label style="color: red;" name="balanceGPC">{{'global.balanceVina' | translate}}:
+                                    {{ viewQuyVina | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label style="color: red;" name="balanceVMS">{{'global.balanceMobi' | translate}}:
+                                    {{ viewQuyMobi | number : '0.' }} VNĐ</label>
+                            </div>
+                        </li>
                         <li class="" *ngIf="!isAdmin">
                             <div style="padding: 17px 15px 12px;">
-                                <!-- <label style="color: red;" name="lbQuyTin">{{'global.quota' | translate}}:
-                  {{ viewQuyTinCSKH }}</label>&nbsp;&nbsp;&nbsp; -->
                                 <label style="color: red;" name="lbQuyTien">{{'global.money_remain' | translate}}:
-                  {{ viewQuyTien }} VNĐ</label>
+                                    {{ viewQuyTien | number : '0.' }} VNĐ</label>
                             </div>
                         </li>
                     </ul>
@@ -126,8 +138,9 @@
                 <span>© 2019 Conek, focus on solution and technologies related SMS services. </span>
                 <a target="_blank" href="http://conektelecom.com/"> Go to Home</a>
                 <span style="margin-left: 50px">Hotline: 02462 912 952</span>
-                <span style="margin-left: 50px">Contact: Ms.Đỗ Cẩm (skype: camdt.onesms, hotline: 0973 796 903), Ms.Minh Tâm
-          (skype: live:b878f19ad2d737a3, hotline: 0949 350 996)</span>
+                <span style="margin-left: 50px">Contact: Ms.Đỗ Cẩm (skype: camdt.onesms, hotline: 0973 796 903), Ms.Minh
+                    Tâm
+                    (skype: live:b878f19ad2d737a3, hotline: 0949 350 996)</span>
             </marquee>
         </footer>
     </div>

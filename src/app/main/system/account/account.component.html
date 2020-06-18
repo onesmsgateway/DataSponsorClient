@@ -158,6 +158,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
             </div>
+
             <form name="form" (ngSubmit)="f.form.valid && createAccount()" #f="ngForm" novalidate>
                 <div class="modal-body">
                     <div class="row">
@@ -423,9 +424,9 @@
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.account_pass' | translate}} <span style="color:red;">(*)</span></label>
                                     <input type="text" class="form-control" formControlName="password" [(ngModel)]="codepassword" />
-                                    <span style="color:red" *ngIf="!codepassword?.length > 10">
+                                    <!-- <span style="color:red" *ngIf="!codepassword?.length > 10">
                                         Password must be at least 6 characters
-                                    </span>
+                                    </span> -->
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
@@ -463,7 +464,7 @@
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.account_type' | translate}} <span style="color:red;">(*)</span></label>
-                                    <angular2-multiselect [data]="listAccountType" [settings]="settingsFilterAccountType" formControlName="paymentType" [(ngModel)]="selectEditAccount">
+                                    <angular2-multiselect [data]="listAccountType" [settings]="settingsFilterAccountType" formControlName="paymentType">
                                     </angular2-multiselect>
                                 </div>
                             </div>

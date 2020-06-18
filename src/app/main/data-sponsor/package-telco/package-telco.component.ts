@@ -67,9 +67,9 @@ export class PackageTelcoComponent implements OnInit {
       dateUse: new FormControl()
     });
 
-    this.dataTelco.push({ "id": "VIETTEL", "itemName": "VIETTEL" });
-    this.dataTelco.push({ "id": "GPC", "itemName": "GPC" });
-    this.dataTelco.push({ "id": "VMS", "itemName": "VMS" });
+    this.dataTelco.push({ "id": "VIETTEL", "itemName": "Viettel" });
+    this.dataTelco.push({ "id": "GPC", "itemName": "VinaPhone" });
+    this.dataTelco.push({ "id": "VMS", "itemName": "MobiFone" });
   }
 
   async ngOnInit() {
@@ -78,7 +78,7 @@ export class PackageTelcoComponent implements OnInit {
 
   // bind data to grid
   async getData() {
-    let telco = this.selectedTelco != null && this.selectedTelco.length > 0 ? this.selectedTelco[0].itemName : "";
+    let telco = this.selectedTelco != null && this.selectedTelco.length > 0 ? this.selectedTelco[0].id : "";
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&package_name=" + this.inPackageName.trim() + "&telco=" + telco + "&data=" + this.inDataNum + "&date_use=" + this.inDateUse)
     this.loadData(response);
