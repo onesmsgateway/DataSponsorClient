@@ -61,7 +61,9 @@
         "inputEmail": "Please input email",
         "inputAddre": "Please input address",
         "inputNote": "Please input note",
-        "deletesc": "Data deleted successfully"
+        "balanceViettel": "Balance Viettel",
+        "balanceVina": "Balance Vina",
+        "balanceMobi": "Balance Mobi"
     },
     "home": {
         "sms_error": "Sms error",

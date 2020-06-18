@@ -66,7 +66,9 @@
         "inputEmail": "Bạn hãy nhập Email",
         "inputAddre": "Bạn hãy nhập địa chỉ",
         "inputNote": "Bạn hãy nhập ghi chú",
-        "deletesc": "Xóa dữ liệu thành công"
+        "balanceViettel": "Số dư Viettel",
+        "balanceVina": "Số dư Vina",
+        "balanceMobi": "Số dư Mobi"
 
     },
     "home": {

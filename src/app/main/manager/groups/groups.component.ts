@@ -269,10 +269,10 @@ export class GroupsComponent implements OnInit {
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();
-      this.notificationService.displaySuccessMessage(this.utilityService.translate('global.deletesc'));
+      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("200"));
     }
     else {
-      this.notificationService.displayErrorMessage(response.err_message);
+      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
     }
   }
 }
