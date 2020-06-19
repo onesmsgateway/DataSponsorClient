@@ -187,6 +187,25 @@ export class DataService {
       return null;
     }
   }
+  public async importExcelAndSaveMemberListDataAsync(postData: any, files: File[],accountId: any, groupId: any, groupCode: any, groupName: any) {
+    try {
+      let formData: FormData = new FormData();
+      formData.append('files', files[0], files[0].name);
+      if (postData !== "" && postData !== undefined && postData !== null) {
+        for (var property in postData) {
+          if (postData.hasOwnProperty(property)) {
+            formData.append(property, postData[property]);
+          }
+        }
+      }
+      const response = await this.postAsync("/api/FileExtention/ImportExcelAndSaveMemberList?accountId="+ accountId+ "&groupId=" + groupId + "&groupCode=" + groupCode + "&groupName=" + groupName, formData);
+      return response;
+    }
+    catch (error) {
+     
+      return null;
+    }
+  }
 
   public async importExcelAndSaveAsync(postData: any, files: File[], listType: any, lstName: any, accountID: any, accountName: any) {
     try {

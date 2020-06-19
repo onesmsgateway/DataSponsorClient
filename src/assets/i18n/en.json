@@ -68,7 +68,9 @@
         "sms_block": "Sms block",
         "new_customer": "Account new",
         "find_phone": "Find phone",
-        "sender_expired": "Brand name expired"
+        "sender_expired": "Brand name expired",
+        "sender_expired_account": "Account expired"
+
     },
     "login": {
         "username": "Username",
@@ -621,7 +623,8 @@
         "add": "Add member",
         "edit": "Edit member",
         "delete_notify": "Are you sure delete ",
-        "group": "Group"
+        "group": "Group",
+        "manager_member": "Member manager file"
     },
     "account_history": {
         "title": "Account history send data",

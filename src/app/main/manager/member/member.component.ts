@@ -19,6 +19,8 @@ export class MemberComponent implements OnInit {
   @ViewChild('showModalCreate', { static: false }) public showModalCreate: ModalDirective;
   @ViewChild('showModalUpdate', { static: false }) public showModalUpdate: ModalDirective;
   @ViewChild('confirmDeleteModal', { static: false }) public confirmDeleteModal: ModalDirective;
+  @ViewChild('uploadFile', { static: false }) public uploadFile;
+  @ViewChild('uploadExcelModal', { static: false }) public uploadExcelModal;
 
   public dataMember = [];
   public dataAccount = [];
@@ -35,6 +37,7 @@ export class MemberComponent implements OnInit {
   public formEditMember: FormGroup;
   public role: Role = new Role();
   public isAdmin: boolean = false;
+  public loading: boolean = false;
   public isActive = true;
 
   public settingsFilterAccount = {};
@@ -46,6 +49,10 @@ export class MemberComponent implements OnInit {
   public selectedItemComboboxGroup = [];
   public selectedItemComboboxGroupEdit = [];
   public selectedItemComboboxGroupCreate = [];
+  public settingsFilterGroupUpload = {};
+  public selectedGroupUpload = [];
+  public groupCode = "";
+  public groupName = "";
 
   constructor(
     private dataService: DataService,
@@ -64,6 +71,15 @@ export class MemberComponent implements OnInit {
 
     this.settingsFilterAccount = {
       text: this.utilityService.translate('global.choose_account'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+    this.settingsFilterGroupUpload = {
+      text: this.utilityService.translate('send_data.inGroup'),
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -386,7 +402,61 @@ if(formData.address.value == null || formData.address.value==""){
     this.fullName = name;
     this.confirmDeleteModal.show();
   }
-
+// export template excel
+async excelTemplateMember() {
+  let result: boolean = await this.dataService.getFileExtentionAsync("/api/FileExtention/ExportExcelTemplateMember", "DataSms", "template_member.xlsx");
+ debugger
+  if (result) {
+    this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
+  }
+  else {
+    this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("125"));
+  }
+}
+clearData() {
+  this.uploadFile.nativeElement.value = "";
+}
+// upload file
+public async submitUploadFile() {
+  debugger
+  if (this.selectedGroupUpload.length == 0 && (this.groupCode == null || this.groupCode == "")) {
+    this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-99"));
+    this.loading = false;
+    return;
+  }
+  this.loading = true;
+  let file = this.uploadFile.nativeElement;
+  if (file.files.length > 0) {
+    let groupId = this.selectedGroupUpload.length > 0 && this.selectedGroupUpload[0].id != "" ? this.selectedGroupUpload[0].id : "";
+    let accountId = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
+    let response: any = await this.dataService.importExcelAndSaveMemberListDataAsync(null, file.files, accountId, groupId, this.groupCode, this.groupName) ;
+    if (response) {
+      if (response.err_code == -19) {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-100"));
+        this.loading = false;
+        return;
+      }
+      if (response.err_code == -108) {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-108"));
+        this.loading = false;
+        return;
+      }
+      this.getDataGroup();
+      this.selectedGroupUpload.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME });
+      this.selectedItemComboboxAccount.push({ "id": response.data[0].ACCOUNT_ID, "itemName": response.data[0].USER_NAME });
+      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("130"));
+      this.groupCode = "";
+      this.groupName = "";
+      this.uploadExcelModal.hide();
+    }
+    else {
+      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+      this.loading = false;
+    }
+   }
+   this.loading = false;
+}
+//#endregion
   // delete
   async confirmDelete(id) {
     let response: any = await this.dataService.deleteAsync('/api/Person/' + id)

@@ -136,8 +136,8 @@ export class DataSmsComponent implements OnInit {
     this.dataPackageVMS.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.dataTelco.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.getAccountLogin();
-    this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd");
-    this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd");
+    this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd") + "000000";
+    this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd") + "235959";
   }
 
   async getAccountLogin() {
@@ -247,7 +247,7 @@ export class DataSmsComponent implements OnInit {
 
   //#region load data and paging
   public async getListDataSms() {
-    
+    debugger
     this.dataSms = [];
     let account_id = "";
     if (this.isAdmin)
@@ -323,7 +323,7 @@ export class DataSmsComponent implements OnInit {
 
   onChangeToDate(event) {
    
-    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "230000";
+    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "235959";
     if (this.toDate == '19700101000000') {
       this.toDate = '';
     }
@@ -339,8 +339,8 @@ export class DataSmsComponent implements OnInit {
 
   public async searchSms(form) {
     this.smsContent = form.smsContent.trim();
-    this.fromDate = this.utilityService.formatDateToString(form.fromDate, "yyyyMMdd");
-    this.toDate = this.utilityService.formatDateToString(form.toDate, "yyyyMMdd");
+    this.fromDate = this.utilityService.formatDateToString(form.fromDate, "yyyyMMdd") + "000000";
+    this.toDate = this.utilityService.formatDateToString(form.toDate, "yyyyMMdd") + "235959";
     this.phone = form.phone.trim();
     if (this.fromDate > this.toDate) {
       this.notificationService.displayWarnMessage("Ngày tin nhắn chưa thỏa mãn");

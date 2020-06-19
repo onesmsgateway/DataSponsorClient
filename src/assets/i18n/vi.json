@@ -75,7 +75,9 @@
         "sms_block": "Tin bị chặn",
         "new_customer": "Khách hàng mới",
         "find_phone": "Tìm số điện thoại",
-        "sender_expired": "TH sắp hết hạn"
+        "sender_expired": "TH sắp hết hạn",
+        "sender_expired_account": "TK sắp hết hạn"
+
     },
     "login": {
         "username": "Tài khoản",
@@ -671,7 +673,8 @@
         "add": "Thêm thành viên",
         "edit": "Sửa thành viên",
         "delete_notify": "Bạn có chắc chắn muốn xóa ",
-        "group": "Nhóm"
+        "group": "Nhóm",
+        "manager_member": "Qản lý danh dách file thành viên"
     },
     "account_history": {
         "title": "Lịch sử khách hàng gửi data",

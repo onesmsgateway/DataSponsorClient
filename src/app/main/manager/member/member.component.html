@@ -46,6 +46,7 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="uploadExcelModal.show()">{{ 'send_data.up_load' | translate }}</button>
                                     <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
                                 </div>
                             </div>
@@ -168,6 +169,8 @@
                             <label>{{'member.phone' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="text" class="form-control" name="phone" placeholder="{{ 'member.inPhone' | translate }}" ngModel>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.group' | translate}}</label>
                             <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedItemComboboxGroupCreate" [settings]="settingsFilterGroup" name="group" (onSelect)="getIdGroup($event)" (onDeSelect)="getIdGroup($event)">
@@ -292,6 +295,72 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
                 <button type="submit" class="btn btn-success" (click)="confirmDelete(personId)">{{'global.confirm' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- upload excel member -->
+<div class="modal fade" bsModal #uploadExcelModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2 style="display: inline-block;margin:0">{{ 'member.manager_member' | translate }}
+                        </h2>
+                        <button type="button" class="close pull-right" aria-label="Close" (click)="uploadExcelModal.hide()" style="opacity: 0.6 !important;"> 
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="x_content">
+                        <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <label>{{'send_data.lb_upload' | translate}}</label>
+                                <div class="input-group">
+                                    <input type="file" #uploadFile name="uploadFile" class="form-control">
+                                    <div class="input-group-btn" style="padding:0">
+                                        <button type="button" title="Loại bỏ các tệp đã chọn" (click)="clearData()" class="btn btn-default fileinput-remove fileinput-remove-button" style="background-color:rgba(128, 128, 128, 0.10);">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-link" (click)="excelTemplateMember()">{{'send_data.export_template' | translate}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <label>{{'member.account' | translate}}</label>
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" name="slAccount">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <label>{{'send_data.group' | translate}}</label>
+                                <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedGroupUpload" [settings]="settingsFilterGroupUpload" name="slGroupUpload">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-12 form-group">
+                                <label style="padding-top: 30px;">Hoặc</label>
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group">
+                                <label>{{'send_data.group_code' | translate}}</label>
+                                <input style="padding-right:0px !important ;" type="text" class="form-control" name="groupCode" placeholder="{{'send_data.inGroup_code' | translate}}" [(ngModel)]="groupCode">
+                            </div>
+                            <div class="col-md-3 col-sm-5 col-xs-12 form-group">
+                                <label>{{'send_data.group_name' | translate}}</label>
+                                <input type="text" class="form-control" name="groupName" placeholder="{{'send_data.inGroup_name' | translate}}" [(ngModel)]="groupName">
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group text-right" style="padding:0">
+                                <img *ngIf="loading" class="pl-2" style="margin-right: 10px" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                                />
+                                <button type="button" class="btn btn-default" (click)="uploadExcelModal.hide()">{{'global.cancel' | translate}}</button>
+                                <button type="submit" class="btn btn-success" (click)="submitUploadFile()" [disabled]="loading">{{'global.confirm' | translate}}</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
