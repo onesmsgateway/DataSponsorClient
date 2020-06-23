@@ -113,6 +113,7 @@ export class SendDataComponent implements OnInit {
   public TIMESCHEDULE: any = null;
   public IS_SEND_SMS: any = null;
   public PACKAGE_ID: any = null;
+  public totalNumberSendSms = 0;
 
   public amt_expected = null;
   public numberPhone = 0;
@@ -160,12 +161,11 @@ export class SendDataComponent implements OnInit {
 
     this.settingsFilterGroup = {
       text: this.utilityService.translate('send_data.phone_list'),
-      singleSelection: true,
+      singleSelection: false,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
       searchPlaceholderText: this.utilityService.translate('global.search'),
-      noDataLabel: this.utilityService.translate('global.no_data'),
-      showCheckbox: false
+      noDataLabel: this.utilityService.translate('global.no_data')
     };
 
     this.settingsFilterPackageVTL = {
@@ -337,6 +337,8 @@ export class SendDataComponent implements OnInit {
 
   // get phone by file list 
   async getPhoneNumber(event) {
+
+    this.countPhone(this.phoneList);
     this.dataPhoneTamp = [];
     this.dataPhone = [];
     if (!this.lstChecked.includes(event.id)) {
@@ -352,6 +354,23 @@ export class SendDataComponent implements OnInit {
     }
     let ids = this.lstChecked.join(",");
     this.fileList = this.lstCheckedName.join(",");
+    if (ids == null || ids == "" && this.numberPhone == 0) {
+      this.totalAmtVTL = 0;
+      this.totalAmtGPC = 0;
+      this.totalAmtVMS = 0;
+      this.totalAmt = 0;
+      this.packViettel ="0";
+      this.packGPC="0";
+      this.packVMS="0";
+      this.countVTL = 0;
+      this.countGPC = 0;
+      this.countVMS = 0;
+      this.totalNumber = 0;
+      this.totalPackVTL = 0;
+      this.totalPackGPC= 0;
+      this.totalPackVMS = 0;
+      return;
+    }
     let response: any = await this.dataService.getAsync('/api/Person/GetPersonByGroupIds?groupIds=' + ids)
     if (response) {
       this.dataPhone = response.data.listPhoneTelco;
@@ -364,8 +383,10 @@ export class SendDataComponent implements OnInit {
       this.countGPC = data.countVINAPHONE;
       this.countVMS = data.countMOBIFONE;
       this.totalNumber = this.dataPhoneTamp.length;
-
-
+      this.totalNumberSendSms = this.dataPhoneTamp.length + this.numberPhone;
+      if(this.dataPhoneTamp.length == 0){
+        this.totalNumberSendSms = this.numberPhone;
+      }
 
       // total amt by telco
       if (this.packCountVTL != null && this.packCountVTL > 0 && this.packageAmtVTL > 0) {
@@ -392,6 +413,7 @@ export class SendDataComponent implements OnInit {
       this.totalAmt = 0;
     }
     //this.GetPackage();
+   
   }
 
   async countPhone(phone) {
@@ -445,9 +467,10 @@ export class SendDataComponent implements OnInit {
       this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
     }
     this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
-    if (this.totalNumber == 0) {
-      this.totalNumber = this.numberPhone;
-    }
+     
+        this.totalNumberSendSms = this.numberPhone + this.totalNumber;
+     
+    
   }
 
   // count phone
@@ -588,6 +611,7 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageVTL() {
+
     this.packViettel = "0";
     if (this.selectedPackageVTL.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
@@ -636,6 +660,7 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageGPC() {
+
     this.packGPC = "0";
     if (this.selectedPackageGPC.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageGPC[0].id);
@@ -734,16 +759,18 @@ export class SendDataComponent implements OnInit {
       }
       this.dataPhone = dataPaging;
       this.totalNumber = this.pagination.totalRow;
-      if (this.totalNumber == 0) {
-        this.totalNumber = this.numberPhone;
+      this.totalNumberSendSms = this.pagination.totalRow + this.numberPhone;
+       if (this.totalNumberSendSms == 0) {
+         this.totalNumberSendSms = this.numberPhone;
       }
     }
     else {
       this.dataPhone = this.dataPhonePaging;
       this.totalNumber = this.dataPhoneTamp.length;
-      if (this.totalNumber == 0) {
-        this.totalNumber = this.numberPhone;
-      }
+      this.totalNumberSendSms = this.dataPhoneTamp.length + this.numberPhone;
+       if (this.totalNumberSendSms == 0) {
+        this.totalNumberSendSms = this.numberPhone;
+       }
     }
   }
 
@@ -800,6 +827,7 @@ export class SendDataComponent implements OnInit {
   }
 
   async getDataGroup() {
+ 
     this.selectedGroup = [];
     this.dataGroup = [];
     let account = "";
@@ -807,7 +835,7 @@ export class SendDataComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/Group/GetGroupByAccount?account_id=' + account)
     for (let index in response.data) {
       this.dataGroup.push({ "id": response.data[index].GROUP_ID, "itemName": response.data[index].GROUP_NAME });
-      this.getPhoneNumber(response.data[index].GROUP_ID);
+      // this.getPhoneNumber(response.data[index].GROUP_ID);
     }
 
   }
@@ -815,34 +843,48 @@ export class SendDataComponent implements OnInit {
   // upload file
   public async submitUploadFile() {
     this.loading = true;
+   
     if (this.selectedGroupUpload.length == 0 && (this.groupCode == null || this.groupCode == "")) {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-99"));
       this.loading = false;
       return;
+    }else if(this.selectedGroupUpload.length == 0 && (this.groupCode != null || this.groupCode != "")){
+      if(this.groupName == null || this.groupName == ""){
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-96"));
+        this.loading = false;
+        return;
+      }
+     
     }
     let file = this.uploadFile.nativeElement;
     if (file.files.length > 0) {
       let groupId = this.selectedGroupUpload.length > 0 && this.selectedGroupUpload[0].id != "" ? this.selectedGroupUpload[0].id : "";
-
+      let groupName = this.selectedGroupUpload.length > 0 && this.selectedGroupUpload[0].itemName != "" ? this.selectedGroupUpload[0].itemName : "";
       let response: any = await this.dataService.importExcelAndSavePhoneListDataAsync(null, file.files, groupId, this.groupCode, this.groupName, this.accountId);
       if (response) {
-        if (response.err_code == -19) {
+        if (response.err_code == -100) {
           this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-100"));
           this.loading = false;
           return;
-        }
-        if (response.err_code == -108) {
-          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-108"));
+        }else if(response.err_code == -109){
+          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-109"));
           this.loading = false;
           return;
+        }else{
+          this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("130"));
+          this.groupCode = "";
+          this.groupName = "";
+          this.uploadExcelModal.hide();
+          this.getDataGroup();
+          if (groupId != null && groupId != "") {
+            this.selectedGroup.push({ "id": groupId, "itemName": groupName });
+          } else {
+            this.selectedGroup.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME })
+          }
+  
+          this.getPhoneNumber(this.selectedGroup[0]);
         }
-        this.getDataGroup();
-        this.selectedGroup.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME });
-        this.getPhoneNumber(this.selectedGroup[0]);
-        this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("130"));
-        this.groupCode = "";
-        this.groupName = "";
-        this.uploadExcelModal.hide();
+        
       }
       else {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
@@ -1040,7 +1082,7 @@ export class SendDataComponent implements OnInit {
       }
     }
 
-    
+
     let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, listSmsSend);
 
     if (insertSms.err_code == 0) {
@@ -1065,7 +1107,7 @@ export class SendDataComponent implements OnInit {
     }
   }
 
- 
+
   //send sms continue
   sendContinuous() {
     this.confirmAfterSuccessModal.hide();
@@ -1112,6 +1154,7 @@ export class SendDataComponent implements OnInit {
     this.packGPC = "0";
     this.packVMS = "0";
     this.totalNumber = 0;
+    this.totalNumberSendSms = 0;
   }
 
   // export template excel

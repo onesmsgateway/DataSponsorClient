@@ -480,7 +480,8 @@
         "vms": "Mobiphone",
         "inPackageVTL": "Choose package Viettel",
         "inPackageGPC": "Choose package Vina",
-        "inPackageVMS": "Choose package Mobi"
+        "inPackageVMS": "Choose package Mobi",
+        "choose_data": "Choose data"
     },
     "data-sms": {
         "text_countmes1": "sms content",

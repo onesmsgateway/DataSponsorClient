@@ -409,7 +409,7 @@
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
-                                    <input type="number" class="form-control" name="packCountGPC" [(ngModel)]="packCountGPC" (change)="changeCountGPC()" (keyup)="changeCountGPC()" (keydown)="changeCountGPC()">
+                                    <input type="number" class="form-control" name="packCountGPC" [(ngModel)]="packCountGPC" (keyup)="changeCountGPC()" (keydown)="changeCountGPC()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -542,7 +542,7 @@
                             <label>{{'send_data.total_phone' | translate}}</label>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
-                            <label style="font-weight:unset">{{totalNumber}}</label>
+                            <label style="font-weight:unset">{{totalNumberSendSms}}</label>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">

@@ -305,7 +305,7 @@
                     <div class="row" style="margin-top: 15px">
                         <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 15px">
                             <label>{{'data-campaign.data_time' | translate}}</label>
-                            <input type="text" class="form-control has-feedback-left modal-popup" formControlName="timeSchedule" bsDatepicker [bsConfig]="{adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY HH:mm'}" placeholder="{{ 'data-campaign.date_time' | translate }}">
+                            <input type="text" class="form-control has-feedback-left modal-popup" formControlName="timeSchedule" bsDatepicker [bsConfig]="{adaptivePosition: true, dateInputFormat: 'DD/MM/YYYY HH:mm:ss'}" placeholder="{{ 'data-campaign.date_time' | translate }}">
                         </div>
                     </div>
                 </div>
@@ -405,7 +405,7 @@
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
-                                    <input type="number" class="form-control" name="packCountGPC" [(ngModel)]="packCountGPC" (change)="changeCountGPC()" (keyup)="changeCountGPC()" (keydown)="changeCountGPC()">
+                                    <input type="number" class="form-control" name="packCountGPC" [(ngModel)]="packCountGPC" (keyup)="changeCountGPC()" (keydown)="changeCountGPC()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -439,7 +439,7 @@
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
-                                    <input type="number" class="form-control" name="packCountVMS" [(ngModel)]="packCountVMS" (change)="changeCountVMS()" (keyup)="changeCountVMS()" (keydown)="changeCountVMS()">
+                                    <input type="number" class="form-control" name="packCountVMS" [(ngModel)]="packCountVMS" (keyup)="changeCountVMS()" (keydown)="changeCountVMS()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 

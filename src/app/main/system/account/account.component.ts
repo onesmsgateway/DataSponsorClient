@@ -341,7 +341,7 @@ export class AccountComponent implements OnInit {
     let BANK_NAME = this.model.bankName;
     let BANK_ACCOUNT = this.model.bankAccount;
     let BANK_ACCOUNT_NAME = this.model.bankAccountName;
-    debugger
+
     let PAYMENT_TYPE = this.selectedAccountType.length > 0 ? this.selectedAccountType[0].id : "";
     if (PAYMENT_TYPE == "") {
       this.notificationService.displayErrorMessage(this.utilityService.translate('account.plChoose_type_account'));
@@ -366,7 +366,7 @@ export class AccountComponent implements OnInit {
       IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH,
       PARENT_ID, ROLE_ACCESS, CREATE_USER, ENABLE_SMS_LOOP, AVATAR
     });
-    debugger
+
     if (dataInsert.err_code == 0) {
       this.createAccountModal.hide();
       this.getDataAccount();
@@ -463,7 +463,7 @@ export class AccountComponent implements OnInit {
   }
 
   async editAccount() {
-    debugger
+
     let formData = this.formEditAccount.controls;
     let ACCOUNT_ID = formData.accountId.value;
     let FULL_NAME = formData.fullName.value;

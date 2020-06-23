@@ -17,10 +17,10 @@
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
-                                <input type="text" class="form-control" name="inCodeScenar" [(ngModel)]="inCodeScenar" placeholder="{{ 'scenarios.inCode_scenar' | translate }}">
+                                <input type="text" class="form-control" name="inCodeScenar" [(ngModel)]="inCodeScenar" placeholder="{{ 'scenarios.inCode_scenar' | translate }}" (onchage)="ChangeDropdownList()" (keyup)="ChangeDropdownList()" (keydown)="ChangeDropdownList()">
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
-                                <input type="text" class="form-control" name="inNameScenar" [(ngModel)]="inNameScenar" placeholder="{{ 'scenarios.inName_scenar' | translate }}">
+                                <input type="text" class="form-control" name="inNameScenar" [(ngModel)]="inNameScenar" placeholder="{{ 'scenarios.inName_scenar' | translate }}" (onchage)="ChangeDropdownList()" (keyup)="ChangeDropdownList()" (keydown)="ChangeDropdownList()">
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-6">
                                 <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus" [settings]="settingsFilterStatus" name="status" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">

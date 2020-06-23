@@ -85,7 +85,7 @@ export class DataCimastComponent implements OnInit {
 
   // get total data
   async getDataTotal() {
-    debugger
+
     let result: any = await this.dataService.getAsync('/api/DataSponsor/GetDataSponsorBalance');
     if (result != null && result.data.length > 0) {
       this.total_amt_telco = Math.round(result.data[0].TOTAL_REMAIN);

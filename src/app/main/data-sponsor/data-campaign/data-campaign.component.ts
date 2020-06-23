@@ -67,6 +67,8 @@ export class DataCampaignComponent implements OnInit {
   public totalAmtVMS = 0;
   public totalAmt = 0;
   public dataViettel = 0;
+  public dataGPC = 0;
+  public dataVMS = 0;
   public packViettel: string = "0";
   public packGPC: string = "0";
   public packVMS: string = "0";
@@ -360,6 +362,7 @@ export class DataCampaignComponent implements OnInit {
   public async showFormEditCampaign(campaign_id) {
   
     let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignEditById?id=' + campaign_id)
+  
     if (response.err_code == 0) {
       let dataCampaign = response.data[0];
       this.formEditCampaign = new FormGroup({
@@ -389,6 +392,7 @@ export class DataCampaignComponent implements OnInit {
       this.packCountVMS = 1;
       //get pakacge
       let resPack: any = await this.dataService.getAsync('/api/PackageTelco/GetPackageByDataCampaignId?data_campaign_id=' + campaign_id)
+  
       if (resPack.err_code == 0) {
         for (let i in resPack.data) {
           this.totalPhoneVTL = resPack.data[0].COUNT_VTL;
@@ -399,7 +403,8 @@ export class DataCampaignComponent implements OnInit {
             this.effectiveDateVTL = resPack.data[i].DATE_USE + " ngày";
             this.packageAmtVTL = resPack.data[i].AMT;
             this.packCountVTL = resPack.data[i].PACKAGE_QUANTITY;
-            this.totalPackVTL = resPack.data[i].TOTAL_PACKAGES;
+            // this.totalPackVTL = resPack.data[i].TOTAL_PACKAGES;
+            this.totalPackVTL = this.packCountVTL * this.totalPhoneVTL;
             this.packViettel = resPack.data[i].PACKAGE_NAME_DISPLAY + " x " + this.totalPackVTL;
             this.totalAmtVTL = this.totalPackVTL * resPack.data[i].AMT;
           }
@@ -408,7 +413,8 @@ export class DataCampaignComponent implements OnInit {
             this.effectiveDateGPC = resPack.data[i].DATE_USE + " ngày";
             this.packageAmtGPC = resPack.data[i].AMT;
             this.packCountGPC = resPack.data[i].PACKAGE_QUANTITY;
-            this.totalPackGPC = resPack.data[i].TOTAL_PACKAGES;
+            // this.totalPackGPC = resPack.data[i].TOTAL_PACKAGES;
+            this.totalPackGPC = this.packCountGPC * this.totalPackGPC;
             this.packGPC = resPack.data[i].PACKAGE_NAME_DISPLAY + " x " + this.totalPackGPC;
             this.totalAmtGPC = this.totalPackGPC * resPack.data[i].AMT;
           }
@@ -417,7 +423,8 @@ export class DataCampaignComponent implements OnInit {
             this.effectiveDateVMS = resPack.data[i].DATE_USE + " ngày";
             this.packageAmtVMS = resPack.data[i].AMT;
             this.packCountVMS = resPack.data[i].PACKAGE_QUANTITY;
-            this.totalPackVMS = resPack.data[i].TOTAL_PACKAGES;
+            // this.totalPackVMS = resPack.data[i].TOTAL_PACKAGES;
+            this.totalPackVMS = this.packCountVMS * this.totalPhoneVMS;
             this.packVMS = resPack.data[i].PACKAGE_NAME_DISPLAY + " x " + this.totalPackVMS;
             this.totalAmtVMS = this.totalPackVMS * resPack.data[i].AMT;
           }
@@ -493,9 +500,11 @@ export class DataCampaignComponent implements OnInit {
   }
 
   async changePackageVTL() {
+    
     this.packViettel = "0";
     if (this.selectedPackageVTL.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
+    
       if (response != null && response.err_code == 0) {
         this.effectiveDateVTL = response.data[0].DATE_USE + " ngày";
         this.packageAmtVTL = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
@@ -529,6 +538,7 @@ export class DataCampaignComponent implements OnInit {
   }
 
   // get data package vina
+  
   async getDataPackageGPC() {
     this.dataPackageGPC = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC')
@@ -543,6 +553,7 @@ export class DataCampaignComponent implements OnInit {
     this.packGPC = "0";
     if (this.selectedPackageGPC.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageGPC[0].id);
+  
       if (response != null && response.err_code == 0) {
         this.effectiveDateGPC = response.data[0].DATE_USE + " ngày";
         this.packageAmtGPC = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
@@ -551,6 +562,7 @@ export class DataCampaignComponent implements OnInit {
           this.totalAmtGPC = this.packageAmtGPC * this.totalPackGPC;
           this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
           this.packGPC = this.selectedPackageGPC[0].itemName + " x " + this.totalPackGPC;
+          this.dataGPC = response.data[0].DATA;
         }
       }
     }
@@ -597,6 +609,7 @@ export class DataCampaignComponent implements OnInit {
           this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
           this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
           this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+          this.dataVMS = response.data[0].DATA;
         }
       }
     }
@@ -656,16 +669,6 @@ export class DataCampaignComponent implements OnInit {
     listSmsSend.push({ ID, SMS_CONTENT: SMS_TEMPLATE, TIME_SCHEDULE, TELCO: "VIETTEL", DATA_AMT: this.totalAmt, PACKAGE_ID: packageIdVTL, PACKAGE_QUANTITY: this.packCountVTL, TOTAL_PACKAGES: this.totalPackVTL });
     listSmsSend.push({ ID, SMS_CONTENT: SMS_TEMPLATE, TIME_SCHEDULE, TELCO: "GPC", DATA_AMT: this.totalAmt, PACKAGE_ID: packageIdGPC, PACKAGE_QUANTITY: this.packCountGPC, TOTAL_PACKAGES: this.totalPackGPC });
     listSmsSend.push({ ID, SMS_CONTENT: SMS_TEMPLATE, TIME_SCHEDULE, TELCO: "VMS", DATA_AMT: this.totalAmt, PACKAGE_ID: packageIdVMS, PACKAGE_QUANTITY: this.packCountVMS, TOTAL_PACKAGES: this.totalPackVMS });
-
-    // if(this.selectedPackageVTL.length > 0 && this.selectedPackageVTL[0].id != ""){
-    //   listSmsSend.push({ ID, SMS_CONTENT: SMS_TEMPLATE, TIME_SCHEDULE, TELCO: "VIETTEL", DATA_AMT: this.totalAmt, PACKAGE_ID: this.selectedPackageVTL[0].id, PACKAGE_QUANTITY: this.packCountVTL, TOTAL_PACKAGES: this.totalPackVTL });
-    // }
-    // if(this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != ""){
-    //   listSmsSend.push({ ID, SMS_CONTENT: SMS_TEMPLATE, TIME_SCHEDULE, TELCO: "GPC", DATA_AMT: this.totalAmt, PACKAGE_ID: this.selectedPackageGPC[0].id, PACKAGE_QUANTITY: this.packCountGPC, TOTAL_PACKAGES: this.totalPackGPC });
-    // }
-    // if(this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != ""){
-    //   listSmsSend.push({ ID, SMS_CONTENT: SMS_TEMPLATE, TIME_SCHEDULE, TELCO: "VMS", DATA_AMT: this.totalAmt, PACKAGE_ID: this.selectedPackageVMS[0].id, PACKAGE_QUANTITY: this.packCountVMS, TOTAL_PACKAGES: this.totalPackVMS });
-    // }
 
     let editCampaign = await this.dataService.putAsync('/api/DataCampaign/UpdateDataCampaign', listSmsSend);
     if (editCampaign.err_code == 0) {

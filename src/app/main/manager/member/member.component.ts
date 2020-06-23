@@ -44,6 +44,7 @@ export class MemberComponent implements OnInit {
   public settingsFilterGroup = {};
   public settingsFilterGroupEdit = {};
   public selectedItemComboboxAccount = [];
+  public selectedItemComboboxAccountMember = [];
   public selectedItemComboboxAccountEdit = [];
   public selectedItemComboboxAccountCreate = [];
   public selectedItemComboboxGroup = [];
@@ -146,6 +147,7 @@ export class MemberComponent implements OnInit {
   async getDataAccount() {
     if (this.isAdmin) {
       this.selectedItemComboboxAccount = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
+      this.selectedItemComboboxAccountMember = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
       let response: any = await this.dataService.getAsync('/api/account')
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
@@ -159,9 +161,11 @@ export class MemberComponent implements OnInit {
       }
       if (this.dataAccount.length == 1) {
         this.selectedItemComboboxAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
+        this.selectedItemComboboxAccountMember.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
       }
       else
         this.selectedItemComboboxAccount.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
+        this.selectedItemComboboxAccountMember.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
     }
   }
 
@@ -428,16 +432,11 @@ public async submitUploadFile() {
   let file = this.uploadFile.nativeElement;
   if (file.files.length > 0) {
     let groupId = this.selectedGroupUpload.length > 0 && this.selectedGroupUpload[0].id != "" ? this.selectedGroupUpload[0].id : "";
-    let accountId = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
+    let accountId = this.selectedItemComboboxAccountMember.length > 0 && this.selectedItemComboboxAccountMember[0].id != "" ? this.selectedItemComboboxAccountMember[0].id : "";
     let response: any = await this.dataService.importExcelAndSaveMemberListDataAsync(null, file.files, accountId, groupId, this.groupCode, this.groupName) ;
     if (response) {
       if (response.err_code == -19) {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-100"));
-        this.loading = false;
-        return;
-      }
-      if (response.err_code == -108) {
-        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-108"));
         this.loading = false;
         return;
       }
@@ -448,6 +447,7 @@ public async submitUploadFile() {
       this.groupCode = "";
       this.groupName = "";
       this.uploadExcelModal.hide();
+      this.getData();
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));

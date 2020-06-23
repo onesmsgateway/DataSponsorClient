@@ -15,6 +15,7 @@ export class DataSmsComponent implements OnInit {
   public dataSms = [];
   public dataAccount = [];
   public dataCampaign = [];
+  public dataPkNameDisplay = [];
   public dataPackageVTL = [];
   public dataPackageGPC = [];
   public dataPackageVMS = [];
@@ -43,6 +44,7 @@ export class DataSmsComponent implements OnInit {
   public selectedAccount = [];
   public settingsFilterCampaign = {};
   public selectedCampaign = [];
+  public settingsFilterPkNameDisplay ={};
   public settingsFilterPackageVTL = {};
   public settingsFilterTelco = {};
   public selectedPackageVTL = [];
@@ -52,6 +54,7 @@ export class DataSmsComponent implements OnInit {
   public selectedPackageVMS = [];
   public settingsFilterStatus = {};
   public selectedStatus = [];
+  public selectedPkNameDisplay =[];
 
   constructor(private authService: AuthService,
     private dataService: DataService,
@@ -77,7 +80,16 @@ export class DataSmsComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
-
+    this.settingsFilterPkNameDisplay = {
+      text: this.utilityService.translate('statistic-data-sms.choose_data'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+    
     this.settingsFilterPackageVTL = {
       text: this.utilityService.translate('statistic-data-sms.inPackageVTL'),
       singleSelection: true,
@@ -154,6 +166,7 @@ export class DataSmsComponent implements OnInit {
     this.getDataPackageVMS();
     this.bindDataStatus();
     this.getListDataSms();
+    this.getPackageNameDisplay();
   }
 
   //#region account
@@ -204,6 +217,20 @@ export class DataSmsComponent implements OnInit {
     }
   }
 
+  // get package name display
+  
+  async getPackageNameDisplay() {
+    debugger
+    this.dataPkNameDisplay = [];
+    this.selectedPkNameDisplay = [];
+    let response: any = await this.dataService.getAsync('/api/PackageTelco/GetPackageNameDisplay')
+    debugger
+    let ID = 1;
+    for (let index in response.data) {
+      this.dataPkNameDisplay.push({ "id":ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
+      ID++;
+    }
+  }
   //#region package
   // viettel
   async getDataPackageVTL() {
@@ -247,7 +274,7 @@ export class DataSmsComponent implements OnInit {
 
   //#region load data and paging
   public async getListDataSms() {
-    debugger
+debugger
     this.dataSms = [];
     let account_id = "";
     if (this.isAdmin)
@@ -258,10 +285,11 @@ export class DataSmsComponent implements OnInit {
     let packVTL = this.selectedPackageVTL.length > 0 && this.selectedPackageVTL[0].id != "" ? this.selectedPackageVTL[0].itemName.substr(0, this.selectedPackageVTL[0].itemName.indexOf('-') - 1).trim() : "";
     let packGPC = this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != "" ? this.selectedPackageGPC[0].itemName.substr(0, this.selectedPackageGPC[0].itemName.indexOf('-') - 1).trim() : "";
     let packVMS = this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != "" ? this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim() : "";
+    let package_name_display = this.selectedPkNameDisplay.length > 0 && this.selectedPkNameDisplay[0].itemName != "" ? this.selectedPkNameDisplay[0].itemName: "";
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : "";
     let response = await this.dataService.getAsync('/api/DataSms/GetDataSmsPaging?pageIndex=' + this.pagination.pageIndex +
       '&pageSize=' + this.pagination.pageSize + '&account_id=' + account_id + '&campaign_id=' + campaign_id +
-      '&packageVTL=' + packVTL + '&packageGPC=' + packGPC + '&packageVMS=' + packVMS + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate + 
+      '&package_name_display=' + package_name_display  + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate + 
       '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
     if (response.err_code == 0) {
       this.dataSms = response.data;

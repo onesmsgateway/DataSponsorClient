@@ -524,7 +524,8 @@
         "inPackageVTL": "Chọn gói cước Viettel",
         "inTelco": "Chọn nhà mạng",
         "inPackageGPC": "Chọn gói cước Vina",
-        "inPackageVMS": "Chọn gói cước Mobi"
+        "inPackageVMS": "Chọn gói cước Mobi",
+        "choose_data": "Chọn dung lượng"
     },
     "data-sms": {
         "text_countmes1": "Nội dung tin nhắn",
@@ -564,6 +565,48 @@
         "scenariosDetailThree": "Kịch bản khác",
         "checkcode": "Mã kịch bản nhỏ hơn hoặc bằng 10 ký tự",
         "checkcodetrim": "Mã kịch bản không chứa cách trống"
+    },
+    "scenarios-birthday": {
+        "title-birthday": "Quản lý kịch bản sinh nhật",
+        "name_scenar_birthday": "Tên kịch bản sinh nhật",
+        "inCode_scenar_birthday": "Nhập mã kịch bản sinh nhật",
+        "inName_scenar_birthday": "Nhập tên kịch bản sinh nhật",
+        "create_date": "Ngày tạo",
+        "active": "Hiệu lực",
+        "inActive": "Không hiệu lực",
+        "isSendSms": "Gửi SMS",
+        "accumulate_points": "Tích điểm",
+        "IsMultiple": "Tạo 1 chiến dịch con",
+        "checkRewardOneTime": "Tặng 1 lần",
+        "phone": "Số điện thoại",
+        "editDetail": "Sửa kịch bản chi tiết",
+        "delete": "Xóa kịch bản sinh nhật",
+        "delete_notify": "Bạn có chắc chắn muốn xóa kịch bản ",
+        "inContent": "Nhập nội dung tin nhắn",
+        "scenariodetail": "Nội dung mô tả kịch bản",
+        "content": "Nội dung",
+        "account": "Tài khoản",
+        "scenariosDetail": "Loại kịch bản",
+        "scenariosDetailOne": "Kịch bản API",
+        "scenariosDetailTwo": "Kịch bản Popup",
+        "scenariosDetailThree": "Kịch bản khác",
+        "checkcode": "Mã kịch bản nhỏ hơn hoặc bằng 10 ký tự",
+        "checkcodetrim": "Mã kịch bản không chứa cách trống",
+        "packageVTL": "Gói cước Viettel",
+        "packageGPC": "Gói cước Vina",
+        "packageVMS": "Gói cước Mobi",
+        "group": "Nhóm",
+        "sender_name": "Thương hiệu",
+        "SendAtTime": "Thời gian gửi",
+        "InPutSendAtTime": "Nhập thời gian gửi",
+        "sendbeforedays": "Gửi trước ngày",
+        "insendbeforedays": "Nhập giới hạn ngày gửi",
+        "tittle_sms": "Nội dung tin nhắn",
+        "add": "Thêm kịch bản sinh nhật",
+        "edit": "Sửa kịch bản sinh nhật"
+
+
+
     },
     "scenarios-detail": {
         "title": "Quản lý kịch bản chi tiết",

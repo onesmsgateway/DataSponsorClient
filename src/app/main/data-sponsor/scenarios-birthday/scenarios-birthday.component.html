@@ -1,0 +1,371 @@
+<article>
+    <section>
+        <div class="page-title clearfix">
+            <div class="title_left">
+                <h3>{{ 'scenarios-birthday.title-birthday' | translate }}</h3>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedComboboxGroup" [settings]="settingsFilterGroup" name="slGroup" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-6">
+                                <input type="text" class="form-control" name="inNameScenar" [(ngModel)]="inNameScenar" placeholder="{{ 'scenarios.inName_scenar' | translate }}" (onchage)="ChangeDropdownList()" (keyup)="ChangeDropdownList()" (keydown)="ChangeDropdownList()">
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-6">
+                                <button type="button" style="float: right;" (click)="searchForm()" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <form class="form-horizontal form-label-left input_mask">
+                            <div class="form-group">
+                                <div class="form-group has-feedback content-end">
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="confirmShowModalCreate()">{{ 'global.add_new' | translate }}</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 form-group has-feedback">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered clear-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width:5%">STT</th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'scenarios-birthday.account' | translate }}</th>
+                                                <th class="text-center" style="width:15%">
+                                                    {{ 'scenarios-birthday.name_scenar_birthday' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'scenarios-birthday.content' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'scenarios-birthday.packageVTL' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'scenarios-birthday.packageGPC' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'scenarios-birthday.packageVMS' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'scenarios-birthday.create_date' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'scenarios.active' | translate }}
+                                                </th>
+                                                <th class="text-center" style="width:8%">{{ 'global.tool' | translate }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of dataScenariosbirthday; let i = index" [attr.data-index]="i">
+                                                <td class="text-center" scope="row">{{i+1}}</td>
+                                                <td>{{item.USER_NAME}}</td>
+                                                <td>{{item.SCENARIO_NAME}}</td>
+                                                <td style="vertical-align: inherit">
+                                                    <textarea class="form-control" style="resize: vertical;padding: 2px 9px;" readonly>{{item.SMS_CONTENT}}</textarea></td>
+                                                <td>{{item.PACKAGE_NAME_VTL}}</td>
+                                                <td>{{item.PACKAGE_NAME_GPC}}</td>
+                                                <td>{{item.PACKAGE_NAME_VMS}}</td>
+                                                <td class="text-center">{{item.CREATE_DATE}}</td>
+
+                                                <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox" disabled></td>
+                                                <td class="text-center">
+                                                    <div class="tool">
+                                                        <button type="submit" (click)="confirmUpdateModal(item.SCENARIO_ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                        <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(item.SCENARIO_ID, item.SCENARIO_NAME)">{{ 'global.delete' | translate }}</button>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
+                                        <select (change)="changePageSize($event.target.value)">
+                                                <option value="20" selected="">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="99999999">Tất cả</option>
+                                            </select> bản ghi.
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 minibox" style="margin-bottom:10px">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        </pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
+
+<!-- Thêm kịch bản -->
+<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'scenarios-birthday.add' | translate}}
+                </h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="showModalCreate.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <form #formAdd1="ngForm" (ngSubmit)="createScenariosBirthday(formAdd1)">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-9 col-sm-6 col-xs-12 ">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios.account' | translate}}</label>
+                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate" [settings]="settingsFilterAccountAdd" name="slAccount" (onSelect)="changeAccount()" (onDeSelect)="deSelectAccount()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                                    <label>{{ 'scenarios-birthday.group' | translate }}</label>
+                                    <angular2-multiselect [data]="dataGroupCreate" [(ngModel)]="selectedComboboxGroupCreate" [settings]="settingsFilterGroupCreate" name="slGroupcreate">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-birthday.name_scenar_birthday' | translate}}</label>
+                                    <input type="text" [disabled]="!isHidden" class="form-control" name="name" placeholder="{{ 'scenarios.inName_scenar' | translate }}" ngModel>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 ">
+                            <div class="row rowimage">
+                                <label>{{ 'global.chooseImage' | translate }}</label>
+                                <input type="file" #uploadImage name="avatar" class="form-control" (change)="submitUploadImage()" placeholder="Click chọn ảnh kịch bản">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9 col-sm-6 col-xs-12 ">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-birthday.sender_name' | translate}}</label>
+                                    <angular2-multiselect style="margin-top:6px ;" [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" name="slSenderName">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-birthday.SendAtTime' | translate}}</label>
+                                    <input type="number" class="form-control" name="SendAtTime" ngModel placeholder="{{ 'scenarios-birthday.InPutSendAtTime' | translate }}">
+
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-birthday.sendbeforedays' | translate}}</label>
+                                    <input type="number" class="form-control" name="SendBeforeDays" ngModel placeholder="{{ 'scenarios-birthday.insendbeforedays' | translate }}">
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageVTL' | translate}}</label>
+                                    <angular2-multiselect style="margin-top:6px ;" [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" name="packageVTL">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageGPC' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" name="packageGPC">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageVMS' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" name="packageVMS">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 ">
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <img src="{{urlImageUpload}}" style="width: 200px; height: 130px;" />
+                                    <label class="remove-node" (click)="removeImage()"><i class="fa fa-times-circle"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios-birthday.tittle_sms' | translate}}</label>
+                            <textarea type="text" class="form-control" name="content" rows="3" placeholder="{{ 'scenarios.inContent' | translate }}" ngModel></textarea>
+
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" class="checkbox" name="isActive" (click)="oncheckActive()"/>
+                                    <span>{{'scenarios.active' | translate}}</span> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" *ngIf="!isHidden" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.finish' | translate }}</button>
+                    <button type="button" *ngIf="isHidden" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="submit" [disabled]="!isHidden" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
+
+                </div>
+            </form>
+            <!-- kịch bản chi tiết -->
+
+        </div>
+    </div>
+</div>
+<!-- modal sửa kịch bản sinh nhat-->
+<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'scenarios-birthday.edit' | translate}}
+                </h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="showModalUpdate.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="formEditScenariosBirthday" (ngSubmit)="editScenariosBirthday()">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios.account' | translate}}</label>
+                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccountEdit" formControlName="accountEdit">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                                    <label>{{ 'scenarios-birthday.group' | translate }}</label>
+                                    <angular2-multiselect [data]="dataGroupEdit" [(ngModel)]="selectedComboboxGroupEdit" [settings]="settingsFilterGroupEdit" formControlName="slGroupEdit">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios.name_scenar' | translate}}</label>
+                                    <input type="text" class="form-control" formControlName="nameEdit" placeholder="{{ 'scenarios.inName_scenar' | translate }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="row rowimage">
+                                <label>{{ 'global.chooseImage' | translate }}</label>
+                                <input type="file" #uploadImageEdit class="form-control" (change)="submitUploadImageEdit()" placeholder="Click chọn ảnh kịch bản" formControlName="url_poster">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-birthday.sender_name' | translate}}</label>
+                                    <angular2-multiselect style="margin-top:6px ;" [data]="dataSenderNameEdit" [(ngModel)]="selectedItemComboboxSenderEdit" [settings]="settingsFilterSender" formControlName="slSenderNameEdit">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-birthday.SendAtTime' | translate}}</label>
+                                    <input type="number" class="form-control" formControlName="SendAtTimeEdit" ngModel placeholder="{{ 'scenarios-birthday.InPutSendAtTime' | translate }}">
+
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-birthday.sendbeforedays' | translate}}</label>
+                                    <input type="number" class="form-control" formControlName="SendBeforeDaysEdit" ngModel placeholder="{{ 'scenarios-birthday.insendbeforedays' | translate }}">
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageVTL' | translate}}</label>
+                                    <angular2-multiselect style="margin-top:6px ;" [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" formControlName="packageVTLEdit">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageGPC' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" formControlName="packageGPCEdit">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageVMS' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" formControlName="packageVMSEdit">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 ">
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <img src="{{urlImageUploadEdit}}" style="width: 200px; height: 130px;" />
+                                    <label class="remove-node" (click)="removeImage()"><i class="fa fa-times-circle"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios-birthday.tittle_sms' | translate}}</label>
+                            <textarea type="text" class="form-control" formControlName="contentEdit" rows="3" placeholder="{{ 'scenarios.inContent' | translate }}" ngModel></textarea>
+
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" class="checkbox" formControlName="isActiveEdit" (click)="oncheckActive()"/>
+                                    <span>{{'scenarios.active' | translate}}</span> </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- modal xác nhận xóa kịch bản-->
+<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'scenarios-birthday.delete' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmDeleteModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>{{'scenarios.delete_notify' | translate}} "<b class="text-success">{{name}}</b>"?</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
+                <button type="submit" class="btn btn-success" (click)="confirmDelete(id)">{{'global.confirm' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>

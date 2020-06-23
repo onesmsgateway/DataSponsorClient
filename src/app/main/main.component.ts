@@ -74,7 +74,7 @@ export class MainComponent {
   async getAccountLogin() {
    
     let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
-    debugger
+   
     let roleAccess = result.data[0].ROLE_ACCESS;
     if (roleAccess != null && roleAccess == 50) {
       this.isAdmin = true;

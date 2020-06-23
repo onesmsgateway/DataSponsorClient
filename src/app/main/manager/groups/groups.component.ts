@@ -187,8 +187,13 @@ export class GroupsComponent implements OnInit {
       this.showModalCreate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
     }
-    else if (response.err_code == -19) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-19"));
+    else if (response.err_code == -100) {
+      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-100"));
+      return;
+    }
+    else if(response.err_code == -109){
+      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-109"));
+      return;
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
@@ -198,6 +203,7 @@ export class GroupsComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
+
     let response: any = await this.dataService.getAsync('/api/Group/' + id)
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
@@ -218,7 +224,7 @@ export class GroupsComponent implements OnInit {
 
   // update tin mẫu
   async editGroup() {
-
+debugger
     let formData = this.formEditGroup.controls;
     let ID = formData.groupId.value;
     if (formData.account.value.length == 0) {
@@ -238,22 +244,22 @@ export class GroupsComponent implements OnInit {
     }
     let NOTES = formData.note.value;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
-    let response: any = await this.dataService.putAsync('/api/Group/' + ID, {
-      ACCOUNT_ID, GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
+    let response: any = await this.dataService.putAsync('/api/Group/'+ ID, {
+      ACCOUNT_ID,GROUP_CODE, GROUP_NAME, NOTES, IS_ACTIVE
     })
+
     if (response.err_code == 0) {
       this.showModalUpdate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
       this.getData();
     }
     else if (response.err_code == 103) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-103"));
-    }
-    else if (response.err_code == -19) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-19"));
+      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("103"));
+      return;
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+      return;
     }
   }
 
