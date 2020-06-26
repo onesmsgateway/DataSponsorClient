@@ -140,86 +140,66 @@
             <form #formAdd1="ngForm" (ngSubmit)="createScenariosBirthday(formAdd1)">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-9 col-sm-6 col-xs-12 ">
-                            <div class="row">
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>{{'scenarios.account' | translate}}</label>
-                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate" [settings]="settingsFilterAccountAdd" name="slAccount" (onSelect)="changeAccount()" (onDeSelect)="deSelectAccount()">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-4 col-xs-12 form-group">
-                                    <label>{{ 'scenarios-birthday.group' | translate }}</label>
-                                    <angular2-multiselect [data]="dataGroupCreate" [(ngModel)]="selectedComboboxGroupCreate" [settings]="settingsFilterGroupCreate" name="slGroupcreate">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <label>{{'scenarios-birthday.name_scenar_birthday' | translate}}</label>
-                                    <input type="text" [disabled]="!isHidden" class="form-control" name="name" placeholder="{{ 'scenarios.inName_scenar' | translate }}" ngModel>
-                                </div>
-                            </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios.account' | translate}}</label>
+                            <angular2-multiselect [data]="dataAccountAdd" [(ngModel)]="selectedItemComboboxAccountAdd" [settings]="settingsFilterAccountAdd" name="slAccountAdd" (onSelect)="changeAccountAdd()" (onDeSelect)="deSelectAccount()">
+                            </angular2-multiselect>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 ">
-                            <div class="row rowimage">
-                                <label>{{ 'global.chooseImage' | translate }}</label>
-                                <input type="file" #uploadImage name="avatar" class="form-control" (change)="submitUploadImage()" placeholder="Click chọn ảnh kịch bản">
-                            </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                            <label>{{ 'scenarios-birthday.group' | translate }}</label>
+                            <angular2-multiselect [data]="dataGroupCreate" [(ngModel)]="selectedComboboxGroupCreate" [settings]="settingsFilterGroupCreate" name="slGroupcreate">
+                            </angular2-multiselect>
                         </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios-birthday.name_scenar_birthday' | translate}}</label>
+                            <input type="text" [disabled]="!isHidden" class="form-control" name="name" placeholder="{{ 'scenarios.inName_scenar' | translate }}" ngModel>
+                        </div>
+
                     </div>
                     <div class="row">
-                        <div class="col-md-9 col-sm-6 col-xs-12 ">
-                            <div class="row">
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <label>{{'scenarios-birthday.sender_name' | translate}}</label>
-                                    <angular2-multiselect style="margin-top:6px ;" [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" name="slSenderName">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <label>{{'scenarios-birthday.SendAtTime' | translate}}</label>
-                                    <input type="number" class="form-control" name="SendAtTime" ngModel placeholder="{{ 'scenarios-birthday.InPutSendAtTime' | translate }}">
-
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <label>{{'scenarios-birthday.sendbeforedays' | translate}}</label>
-                                    <input type="number" class="form-control" name="SendBeforeDays" ngModel placeholder="{{ 'scenarios-birthday.insendbeforedays' | translate }}">
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>{{'scenarios-detail.packageVTL' | translate}}</label>
-                                    <angular2-multiselect style="margin-top:6px ;" [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" name="packageVTL">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>{{'scenarios-detail.packageGPC' | translate}}</label>
-                                    <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" name="packageGPC">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>{{'scenarios-detail.packageVMS' | translate}}</label>
-                                    <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" name="packageVMS">
-                                    </angular2-multiselect>
-                                </div>
-                            </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios-birthday.sender_name' | translate}}</label>
+                            <angular2-multiselect style="margin-top:6px ;" [data]="dataSenderNameAdd" [(ngModel)]="selectedItemComboboxSenderAdd" [settings]="settingsFilterSenderAdd" name="slSenderName">
+                            </angular2-multiselect>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 ">
-                            <div class="row" style="margin-top: 10px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <img src="{{urlImageUpload}}" style="width: 200px; height: 130px;" />
-                                    <label class="remove-node" (click)="removeImage()"><i class="fa fa-times-circle"></i></label>
-                                </div>
-                            </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios-birthday.SendAtTime' | translate}}</label>
+                            <input type="number" class="form-control" name="SendAtTime" ngModel placeholder="{{ 'scenarios-birthday.InPutSendAtTime' | translate }}">
+
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios-birthday.sendbeforedays' | translate}}</label>
+                            <input type="number" class="form-control" name="SendBeforeDays" ngModel placeholder="{{ 'scenarios-birthday.insendbeforedays' | translate }}">
                         </div>
                     </div>
+
                     <div class="row">
-                        <div class="col-md-9 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios-detail.packageVTL' | translate}}</label>
+                            <angular2-multiselect style="margin-top:6px ;" [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" name="packageVTL">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios-detail.packageGPC' | translate}}</label>
+                            <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" name="packageGPC">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios-detail.packageVMS' | translate}}</label>
+                            <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" name="packageVMS">
+                            </angular2-multiselect>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios-birthday.tittle_sms' | translate}}</label>
                             <textarea type="text" class="form-control" name="content" rows="3" placeholder="{{ 'scenarios.inContent' | translate }}" ngModel></textarea>
 
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group" style="margin-top: 10px;">
                             <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" name="isActive" (click)="oncheckActive()"/>
+                                <label><input type="checkbox" value="" class="checkbox" name="checkActive" (click)="oncheckActive()"/>
                                     <span>{{'scenarios.active' | translate}}</span> </label>
                             </div>
                         </div>
@@ -232,7 +212,6 @@
 
                 </div>
             </form>
-            <!-- kịch bản chi tiết -->
 
         </div>
     </div>
@@ -251,104 +230,78 @@
             <form [formGroup]="formEditScenariosBirthday" (ngSubmit)="editScenariosBirthday()">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-9 col-sm-6 col-xs-12">
-                            <div class="row">
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>{{'scenarios.account' | translate}}</label>
-                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccountEdit" formControlName="accountEdit">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-4 col-xs-12 form-group">
-                                    <label>{{ 'scenarios-birthday.group' | translate }}</label>
-                                    <angular2-multiselect [data]="dataGroupEdit" [(ngModel)]="selectedComboboxGroupEdit" [settings]="settingsFilterGroupEdit" formControlName="slGroupEdit">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <label>{{'scenarios.name_scenar' | translate}}</label>
-                                    <input type="text" class="form-control" formControlName="nameEdit" placeholder="{{ 'scenarios.inName_scenar' | translate }}">
-                                </div>
-                            </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios.account' | translate}}</label>
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccountEdit" formControlName="accountEdit">
+                            </angular2-multiselect>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="row rowimage">
-                                <label>{{ 'global.chooseImage' | translate }}</label>
-                                <input type="file" #uploadImageEdit class="form-control" (change)="submitUploadImageEdit()" placeholder="Click chọn ảnh kịch bản" formControlName="url_poster">
-                            </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                            <label>{{ 'scenarios-birthday.group' | translate }}</label>
+                            <angular2-multiselect [data]="dataGroupEdit" [(ngModel)]="selectedComboboxGroupEdit" [settings]="settingsFilterGroupEdit" formControlName="slGroupEdit">
+                            </angular2-multiselect>
                         </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-md-9 col-sm-6 col-xs-12">
-
-                            <div class="row">
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <label>{{'scenarios-birthday.sender_name' | translate}}</label>
-                                    <angular2-multiselect style="margin-top:6px ;" [data]="dataSenderNameEdit" [(ngModel)]="selectedItemComboboxSenderEdit" [settings]="settingsFilterSender" formControlName="slSenderNameEdit">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <label>{{'scenarios-birthday.SendAtTime' | translate}}</label>
-                                    <input type="number" class="form-control" formControlName="SendAtTimeEdit" ngModel placeholder="{{ 'scenarios-birthday.InPutSendAtTime' | translate }}">
-
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <label>{{'scenarios-birthday.sendbeforedays' | translate}}</label>
-                                    <input type="number" class="form-control" formControlName="SendBeforeDaysEdit" ngModel placeholder="{{ 'scenarios-birthday.insendbeforedays' | translate }}">
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>{{'scenarios-detail.packageVTL' | translate}}</label>
-                                    <angular2-multiselect style="margin-top:6px ;" [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" formControlName="packageVTLEdit">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>{{'scenarios-detail.packageGPC' | translate}}</label>
-                                    <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" formControlName="packageGPCEdit">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>{{'scenarios-detail.packageVMS' | translate}}</label>
-                                    <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" formControlName="packageVMSEdit">
-                                    </angular2-multiselect>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 ">
-                            <div class="row" style="margin-top: 10px;">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <img src="{{urlImageUploadEdit}}" style="width: 200px; height: 130px;" />
-                                    <label class="remove-node" (click)="removeImage()"><i class="fa fa-times-circle"></i></label>
-                                </div>
-                            </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios.name_scenar' | translate}}</label>
+                            <input type="text" class="form-control" formControlName="nameEdit" placeholder="{{ 'scenarios.inName_scenar' | translate }}">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-9 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios-birthday.sender_name' | translate}}</label>
+                            <angular2-multiselect style="margin-top:6px ;" [data]="dataSenderNameEdit" [(ngModel)]="selectedItemComboboxSenderEdit" [settings]="settingsFilterSenderEdit" formControlName="slSenderNameEdit">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios-birthday.SendAtTime' | translate}}</label>
+                            <input type="number" class="form-control" formControlName="SendAtTimeEdit" ngModel placeholder="{{ 'scenarios-birthday.InPutSendAtTime' | translate }}">
+
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'scenarios-birthday.sendbeforedays' | translate}}</label>
+                            <input type="number" class="form-control" formControlName="SendBeforeDaysEdit" ngModel placeholder="{{ 'scenarios-birthday.insendbeforedays' | translate }}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios-detail.packageVTL' | translate}}</label>
+                            <angular2-multiselect style="margin-top:6px ;" [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" formControlName="packageVTLEdit">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios-detail.packageGPC' | translate}}</label>
+                            <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" formControlName="packageGPCEdit">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'scenarios-detail.packageVMS' | translate}}</label>
+                            <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" formControlName="packageVMSEdit">
+                            </angular2-multiselect>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios-birthday.tittle_sms' | translate}}</label>
                             <textarea type="text" class="form-control" formControlName="contentEdit" rows="3" placeholder="{{ 'scenarios.inContent' | translate }}" ngModel></textarea>
 
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group" style="margin-top: 10px;">
                             <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" formControlName="isActiveEdit" (click)="oncheckActive()"/>
-                                    <span>{{'scenarios.active' | translate}}</span> </label>
+                                <label><input type="checkbox" value="" class="checkbox" formControlName="isActiveEdit"/>
+                                <span>{{'scenarios.active' | translate}}</span> </label>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
+                        <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
+                    </div>
+                </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
-                    <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
-                </div>
             </form>
         </div>
     </div>
 </div>
+
 <!-- modal xác nhận xóa kịch bản-->
 <div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-sm">

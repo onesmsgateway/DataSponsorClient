@@ -26,3 +26,24 @@
         height: 92px;
     }
 }
+
+.ckmg {
+    margin-top: 60%;
+    float: right;
+    width: 15px;
+    height: 15px;
+}
+
+.margin-top {
+    margin-top: 10px;
+}
+
+.lable-font {
+    font-style: italic;
+    font-size: 12px;
+}
+
+.b-font {
+    text-align: center;
+    font-size: 13px;
+}

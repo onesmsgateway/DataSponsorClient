@@ -62,6 +62,7 @@ export class ScenariosBirthdayComponent implements OnInit {
   public checkSendSmsEdit: boolean = true;
   public data = [];
   public dataAccount = [];
+  public dataAccountAdd = [];
   public scenariosDetail = [];
   public dataPackage = [];
   public dataPackageVTL = [];
@@ -89,24 +90,26 @@ export class ScenariosBirthdayComponent implements OnInit {
   public selectedPackage = [];
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxAccountEdit = [];
-  public selectedItemComboboxAccountCreate = [];
+  public selectedItemComboboxAccountAdd = [];
   public selectedComboboxGroupCreate = [];
   public selectedItemComboboxscenariosDetail = [];
 
 
   public selectedItemComboboxSender = [];
+  public selectedItemComboboxSenderAdd = [];
   public selectedItemComboboxSenderEdit = [];
   public dataSenderName = [];
+  public dataSenderNameAdd = [];
   public dataSenderNameEdit = [];
   public dataGroupCreate = [];
   public dataGroupEdit = [];
   public settingsFilterSender = {};
+  public settingsFilterSenderAdd = {};
+  public settingsFilterSenderEdit = {};
   public scenario_type: string = '';
   public isscenario: boolean = false;
   public checkcodetrim: boolean = false;
   public codetrim: string = "";
-  public urlImageUpload
-  public urlImageUploadEdit
 
 
   constructor(
@@ -124,6 +127,24 @@ export class ScenariosBirthdayComponent implements OnInit {
       })
     });
     this.settingsFilterSender = {
+      text: this.utilityService.translate('package.choose_sender'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+    this.settingsFilterSenderAdd = {
+      text: this.utilityService.translate('package.choose_sender'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+    this.settingsFilterSenderEdit = {
       text: this.utilityService.translate('package.choose_sender'),
       singleSelection: true,
       enableSearchFilter: true,
@@ -261,8 +282,8 @@ export class ScenariosBirthdayComponent implements OnInit {
       packageGPCEdit: new FormControl(),
       packageVMSEdit: new FormControl(),
       contentEdit: new FormControl(),
-      isActiveEdit: new FormControl(),
-      url_poster: new FormControl()
+      isActiveEdit: new FormControl()
+
     });
 
 
@@ -303,6 +324,7 @@ export class ScenariosBirthdayComponent implements OnInit {
       let response: any = await this.dataService.getAsync('/api/account')
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+        this.dataAccountAdd.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
       }
     }
     else {
@@ -310,22 +332,24 @@ export class ScenariosBirthdayComponent implements OnInit {
         this.authService.currentUserValue.ACCOUNT_ID);
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+        this.dataAccountAdd.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
       }
       if (this.dataAccount.length == 1) {
         this.selectedAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
+        this.selectedItemComboboxAccountAdd.push({ "id": this.dataAccountAdd[0].id, "itemName": this.dataAccountAdd[0].itemName });
         this.getDataSenderName(this.dataAccount[0].id);
-        this.getDataSenderNameEdit(this.dataAccount[0].id);
-        //this.getDataGroupEdit(this.dataAccount[0].id);
       }
       else
-        this.selectedAccount.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
+        this.selectedItemComboboxAccountAdd.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
     }
 
   }
   changeAccount() {
-  
-    this.getDataSenderName(this.selectedItemComboboxAccountCreate[0].id);
-    this.getDataGroupCreate(this.selectedItemComboboxAccountCreate[0].id);
+    this.getDataSenderName(this.selectedItemComboboxAccount[0].id);
+  }
+  changeAccountAdd() {
+    this.getDataSenderNameAdd(this.selectedItemComboboxAccountAdd[0].id);
+    this.getDataGroupCreate(this.selectedItemComboboxAccountAdd[0].id);
   }
 
   deSelectAccount() {
@@ -374,7 +398,7 @@ export class ScenariosBirthdayComponent implements OnInit {
     for (let index in response.data) {
       this.dataGroupEdit.push({ "id": response.data[index].GROUP_ID, "itemName": response.data[index].GROUP_NAME });
     }
-  
+
   }
 
   //#region load data
@@ -429,59 +453,72 @@ export class ScenariosBirthdayComponent implements OnInit {
   //#endregion
 
   confirmShowModalCreate() {
+    this.selectedItemComboboxAccountAdd=[];
+    this.selectedComboboxGroupCreate=[];
+    this.selectedPackageVTL=[];
+    this.selectedPackageGPC=[];
+    this.selectedPackageVMS=[];
+    debugger
+    let account;
+    if (this.isAdmin) {
+      account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
+    }
+    else {
+      account = this.selectedItemComboboxAccountAdd.length != 0 && this.selectedItemComboboxAccountAdd[0].id != "" ? this.selectedItemComboboxAccountAdd[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+    }
     this.isAdded = false;
     this.getDataPackageVTL();
     this.getDataPackageGPC();
     this.getDataPackageVMS();
-    let account_id = this.selectedItemComboboxAccountCreate.length != 0 && this.selectedItemComboboxAccountCreate[0].id != "" ? this.selectedItemComboboxAccountCreate[0].id : "";
-    this.getDataGroupCreate(account_id);
-    this.getDataSenderName(account_id);
+    this.getDataGroupCreate(account);
+    this.getDataSenderNameAdd(account);
     this.isHidden = true;
-    if (this.authService.currentUserValue.AVATAR == null || this.authService.currentUserValue.AVATAR == "" || this.authService.currentUserValue.AVATAR == "undefined") {
-      this.urlImageUpload = "../../assets/img/logo-login.png";
-    } else {
-      this.urlImageUpload = this.authService.currentUserValue.AVATAR;
-    }
-    this.uploadImage.nativeElement.value = "";
     this.showModalCreate.show();
 
   }
 
   //#region create new
   async createScenariosBirthday(item) {
-
     let scenar = item.value;
     let combobox = item.controls;
     let SENDER_NAME = "";
+    let GROUP_ID;
 
-    if (combobox.slAccount.value.length == 0) {
+    if (combobox.slAccountAdd.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
     }
-    let ACCOUNT_ID = combobox.slAccount.value[0].id;
+    let ACCOUNT_ID = combobox.slAccountAdd.value[0].id;
 
     if (combobox.slGroupcreate.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-96"));
       return;
+    } else {
+      GROUP_ID = combobox.slGroupcreate.value[0].id;
     }
-    let GROUP_ID = combobox.slGroupcreate.value[0].id;
 
     let SCENARIO_NAME = scenar.name;
     if (SCENARIO_NAME == "" || SCENARIO_NAME == null) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-93"));
       return;
     }
-
-    let URL_POSTER = (this.urlImageUpload != null && this.urlImageUpload != "undefined" && this.urlImageUpload != "") ? this.urlImageUpload : ""
     if (combobox.slSenderName.value.length == 0) {
       SENDER_NAME = "";
     } else {
       SENDER_NAME = combobox.slSenderName.value[0].itemName;
     }
+    let SEND_AT_TIME = scenar.SendAtTime;
+    if (SEND_AT_TIME != null || SEND_AT_TIME != "") {
+      SEND_AT_TIME.toString();
+    }
 
-
-    let SEND_AT_TIME = scenar.SendAtTime.toString();
-    let SEND_BEFORE_DAYS = scenar.SendBeforeDays;
+    let SEND_BEFORE_DAYS;
+    if (SEND_BEFORE_DAYS == null || SEND_BEFORE_DAYS == "") {
+      SEND_BEFORE_DAYS=0;
+    }else{
+      SEND_BEFORE_DAYS = scenar.SendBeforeDays;
+    }
+   
 
     if (combobox.packageVTL.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-110"));
@@ -506,18 +543,20 @@ export class ScenariosBirthdayComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
       return;
     }
+    debugger
     let IS_ACTIVE = this.checkActive == true ? 1 : 0;
     let response: any = await this.dataService.postAsync('/api/BirthdayScenario', {
-      ACCOUNT_ID, GROUP_ID, SCENARIO_NAME, URL_POSTER, SENDER_NAME, SMS_CONTENT, SEND_AT_TIME, SEND_BEFORE_DAYS, PACKAGE_ID_VTL
+      ACCOUNT_ID, GROUP_ID, SCENARIO_NAME, SENDER_NAME, SMS_CONTENT, SEND_AT_TIME, SEND_BEFORE_DAYS, PACKAGE_ID_VTL
       , PACKAGE_ID_GPC,
       PACKAGE_ID_VMS, IS_ACTIVE
     })
+    debugger
     if (response) {
       if (response.err_code == 0) {
-        item.reset();
+        this.getData();
         this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
         this.showModalCreate.hide();
-        this.getData();
+
       }
       else if (response.err_code == -19) {
         this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-19"));
@@ -544,7 +583,9 @@ export class ScenariosBirthdayComponent implements OnInit {
     let sender_name = "";
 
     this.selectedComboboxGroupEdit = [];
+    this.selectedItemComboboxSenderEdit = [];
     let response: any = await this.dataService.getAsync('/api/BirthdayScenario/' + id);
+    debugger
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
       account_id = dataDetail.ACCOUNT_ID;
@@ -552,7 +593,6 @@ export class ScenariosBirthdayComponent implements OnInit {
       sender_name = dataDetail.ID != "" && dataDetail.ID != null ? dataDetail.SENDER_NAME : "";
       groupId = dataDetail.GROUP_ID != "" && dataDetail.GROUP_ID != null ? dataDetail.GROUP_ID : "";
       groupName = dataDetail.GROUP_ID != "" && dataDetail.GROUP_ID != null ? dataDetail.GROUP_NAME : "";
-      this.checkActive = dataDetail.IS_ACTIVE == 1 ? true : false;
       this.formEditScenariosBirthday = new FormGroup({
         id: new FormControl(id),
         accountEdit: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
@@ -571,8 +611,7 @@ export class ScenariosBirthdayComponent implements OnInit {
         packageVMSEdit: new FormControl(dataDetail.PACKAGE_ID_VMS != "" && dataDetail.PACKAGE_ID_VMS != null ? [{ "id": dataDetail.PACKAGE_ID_VMS, "itemName": dataDetail.PACKAGE_NAME_VMS }]
           : [{ "id": "", "itemName": this.utilityService.translate('global.choose_group') }]),
         contentEdit: new FormControl(dataDetail.SMS_CONTENT),
-        isActiveEdit: new FormControl(dataDetail.IS_ACTIVE),
-        url_poster: new FormControl(dataDetail.URL_POSTER)
+        isActiveEdit: new FormControl(dataDetail.IS_ACTIVE)
       });
 
       this.getDataGroupEdit(account_id);
@@ -581,13 +620,6 @@ export class ScenariosBirthdayComponent implements OnInit {
       this.getDataSenderNameEdit(account_id);
       if (this.selectedItemComboboxSenderEdit.length == 0)
         this.selectedItemComboboxSenderEdit.push({ "id": sender_id, "itemName": sender_name });
-
-      if (response.data[0].URL_POSTER == null || response.data[0].URL_POSTER == "") {
-        this.urlImageUploadEdit = "../../assets/img/logo-login.png";
-      } else {
-        this.urlImageUploadEdit = response.data[0].URL_POSTER;
-      }
-      this.uploadImageEdit.nativeElement.value = "";
       this.showModalUpdate.show();
     } else {
       this.notificationService.displayErrorMessage(response.err_message);
@@ -606,7 +638,6 @@ export class ScenariosBirthdayComponent implements OnInit {
 
   // update tin mẫu
   async editScenariosBirthday() {
-
     let formData = this.formEditScenariosBirthday.controls;
     let ID = formData.id.value;
     if (formData.accountEdit.value.length == 0) {
@@ -626,11 +657,6 @@ export class ScenariosBirthdayComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-93"));
       return;
     }
-
-    let URL_POSTER = (this.urlImageUploadEdit != null && this.urlImageUploadEdit != "undefined" && this.urlImageUploadEdit != "") ?
-      this.urlImageUploadEdit : ""
-
-
     if (formData.slSenderNameEdit.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-104"));
       return;
@@ -663,13 +689,13 @@ export class ScenariosBirthdayComponent implements OnInit {
       return;
     }
 
-    let IS_ACTIVE = this.checkActive == true ? 1 : 0;
+    let IS_ACTIVE = formData.isActiveEdit.value == true ? 1 : 0;
 
     let response: any = await this.dataService.putAsync('/api/BirthdayScenario/' + ID, {
-      ACCOUNT_ID, GROUP_ID, SCENARIO_NAME, URL_POSTER, SEND_AT_TIME, IS_ACTIVE, SEND_BEFORE_DAYS,
+      ACCOUNT_ID, GROUP_ID, SCENARIO_NAME, SEND_AT_TIME, IS_ACTIVE, SEND_BEFORE_DAYS,
       PACKAGE_ID_VTL, PACKAGE_ID_GPC, PACKAGE_ID_VMS, SENDER_NAME, SMS_CONTENT,
     })
-  
+
     if (response.err_code == 0) {
       this.selectedStatus = [];
       this.showModalUpdate.hide();
@@ -697,10 +723,10 @@ export class ScenariosBirthdayComponent implements OnInit {
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();
-      this.notificationService.displaySuccessMessage(response.err_message);
+      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("200"));
     }
     else {
-      this.notificationService.displayErrorMessage(response.err_message);
+      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
     }
   }
 
@@ -781,20 +807,6 @@ export class ScenariosBirthdayComponent implements OnInit {
     this.checkActive = !this.checkActive;
   }
 
-  //#region upload avatar
-  //#region upload avatar
-  public async submitUploadImage() {
-    let file = this.uploadImage.nativeElement;
-    if (file.files.length > 0) {
-      let response: any = await this.dataService.postFileAsync(null, file.files);
-      if (response) {
-        this.urlImageUpload = AppConst.DATA_SPONSOR_API + response.data;
-      }
-      else {
-        this.notificationService.displayErrorMessage("Upload ảnh không thành công");
-      }
-    }
-  }
 
   //get data sender
   async getDataSenderName(accountID) {
@@ -808,34 +820,32 @@ export class ScenariosBirthdayComponent implements OnInit {
     if (this.dataSenderName.length == 1)
       this.selectedItemComboboxSender.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
   }
+
+  ////get data sender
+  async getDataSenderNameAdd(accountID) {
+    debugger
+    this.selectedItemComboboxSenderAdd = [];
+    this.dataSenderNameAdd = [];
+    let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
+      accountID)
+      debugger
+    for (let index in response.data) {
+      this.dataSenderNameAdd.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
+    }
+    // if (this.dataSenderNameAdd.length == 1)
+    //   this.selectedItemComboboxSenderAdd.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
+  }
   //get data sender
   async getDataSenderNameEdit(accountID) {
+    debugger
     this.selectedItemComboboxSenderEdit = [];
     this.dataSenderNameEdit = [];
     let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
       accountID)
     for (let index in response.data) {
-      this.dataSenderNameEdit.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
+      this.dataSenderNameEdit.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
     }
 
-  }
-
-
-  public async submitUploadImageEdit() {
-    let file = this.uploadImageEdit.nativeElement;
-    if (file.files.length > 0) {
-      let response: any = await this.dataService.postFileAsync(null, file.files);
-      if (response) {
-        this.urlImageUploadEdit = AppConst.DATA_SPONSOR_API + response.data;
-      }
-      else {
-        this.notificationService.displayErrorMessage("Upload ảnh không thành công");
-      }
-    }
-  }
-
-  removeImage() {
-    this.urlImageUploadEdit = ""
   }
 
 }

@@ -93,6 +93,7 @@ export class PopupComponent implements OnInit {
   }
   //#region create new
   async createMember(item) {
+    debugger
     let member = item.value;
     let ACCOUNT_ID = this.account_Id;
     let SCENARIO_CODE = this.scenarioCode;
@@ -124,7 +125,10 @@ export class PopupComponent implements OnInit {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-103"));
       this.issuccess = false;
     }
-    else {
+    else if (response.err_code == -108) {
+      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-108"));
+      this.issuccess = false;
+    }else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
       this.issuccess = false;
     }

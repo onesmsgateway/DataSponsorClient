@@ -64,19 +64,19 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group">
                                     <input type="text" class="form-control" name="programCode" [(ngModel)]="programCode" placeholder="{{ 'send_data.inProgram_code' | translate }}">
                                 </div>
-                                <div class="col-md-3 col-sm-3 col-xs-3">
-                                    <div class="checkbox" style="margin: 0;">
-                                        <label><input type="checkbox" value="" class="checkbox" name="chkOnlyOneCreate"
-                                                [(ngModel)]="chkOnlyOneCreate"
-                                                (change)="chkSendOne($event.currentTarget.checked)">
-                                            <span>{{ 'send_data.only_one' | translate }}</span> </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-6 pull-right" style="padding: 0;" *ngIf="isOneSend">
+                                <div class="col-md-6 col-sm-6 col-xs-6" style="padding: 0;">
                                     <div class="col-md-6 col-sm-6 col-xs-6 form-group text-right">
-                                        <label>{{ 'send_data.time_donate' | translate }}</label>
+                                        <label>{{ 'send_data.number_reward' | translate }}</label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-6 form-group">
+                                        <input type="number" class="form-control" name="NumberRewardTimesInDay" [(ngModel)]="NumberRewardTimesInDay">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6 pull-right" style="padding: 0;">
+                                    <div class="col-md-8 col-sm-6 col-xs-6 form-group text-right">
+                                        <label>{{ 'send_data.time_donate' | translate }}</label>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-xs-6 form-group">
                                         <input type="number" class="form-control" name="timeDonateCreate" [(ngModel)]="timeDonateCreate">
                                     </div>
                                 </div>
@@ -87,20 +87,28 @@
                                     <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign" [settings]="settingsFilterCampaign" name="slCampaign" (onSelect)="selectCampaign()" (onDeSelect)="deSelectCampaign()">
                                     </angular2-multiselect>
                                 </div>
-                                <div class="col-md-3 col-sm-3 col-xs-3">
-                                    <div class="checkbox" style="margin: 0;">
-                                        <label><input type="checkbox" value="" class="checkbox" name="chkOnlyOneOld"
-                                                [(ngModel)]="chkOnlyOneOld" disabled>
-                                            <span>{{ 'send_data.only_one' | translate }}</span> </label>
+                            </div>
+                            <div class="row" *ngIf="!chkcampaign">
+                                <div class="col-md-5 col-sm-6 col-xs-12" style="padding: 0;">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 form-group text-right">
+                                        <label>{{ 'send_data.number_reward' | translate }}</label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 form-group">
+                                        <input type="number" class="form-control" name="NumberRewardTimesInDayOld" [(ngModel)]="NumberRewardTimesInDayOld" readonly>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-6 form-group text-right">
-                                    <label>{{ 'send_data.time_donate' | translate }}</label>
+                                <div class="col-md-7 col-sm-6 col-xs-12 form-group">
+                                    <div class="col-md-8 col-sm-8 col-xs-12 form-group text-right">
+                                        <label>{{ 'send_data.time_donate' | translate }}</label>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                                        <input type="number" class="form-control" name="timeDonateOld" [(ngModel)]="timeDonateOld" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-md-3 col-sm-3 col-xs-3 form-group">
-                                    <input type="number" class="form-control" name="timeDonateOld" [(ngModel)]="timeDonateOld" readonly>
-                                </div>
+
                             </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -145,30 +153,37 @@
                     </div>
                     <div class="x_content">
                         <div class="row" style="padding-left: 10px !important; padding-right: 10px !important;">
-                            <div class="col-md-4 col-sm-4 col-xs-12 form-group pull-right text-right" style="padding: 0">
+                            <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right text-right" style="padding: 0">
                                 <label style="margin-bottom: 0;">
                                     (<span style="display:inline-block !important">{{numberChar}}</span>
                                     {{'data-sms.text_countmes2' | translate}}) (<span
                                         style="display:inline-block !important">{{numberSMS}}</span>{{'data-sms.text_countmes3' | translate}})
                                 </label>
                             </div>
-                            <div class="col-md-4 col-sm-5 col-xs-12" style="padding:0">
+                            <div class="col-md-2 col-sm-2 col-xs-12" style="padding:0">
                                 <div class="checkbox" style="margin: 0;">
                                     <label><input type="checkbox" value="" class="checkbox" name="isSendSMS"
                                             [(ngModel)]="isSendSMS" (click)="enableSend($event.currentTarget.checked)">
                                         <span>{{ 'send_data.is_send_sms' | translate }}</span> </label>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-3 col-xs-12 form-group has-feedback" style="padding: 0;">
+                            <div class="col-md-3 col-sm-3 col-xs-12 form-group has-feedback" style="padding: 0;">
                                 <angular2-multiselect [data]="dataOptionInsert" [(ngModel)]="selectedOptionInsert" [settings]="settingsFilterOptionInsert" name="slOptionInsert" (onSelect)="changeOptionInsert()">
                                 </angular2-multiselect>
                             </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback" style="padding-left: 10px;">
+                                <angular2-multiselect [data]="dataOptionInsertSms" [(ngModel)]="selectedOptionTempSms" [settings]="settingsFilterOptionTempSms" name="slOptionTempSms" (onSelect)="changeOptionInsertSms()">
+                                </angular2-multiselect>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left: 5px;">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                                <textarea type="text" class="form-control has-feedback-left modal-popup" #contentSMS name="smsContent" rows="3" maxlength="459" placeholder="{{ 'data-sms.iSms_content' | translate }}" [(ngModel)]="smsContent" (change)="countSMS($event.target.value)" (keyup)="countSMS($event.target.value)"
+                                    (keydow)="countSMS($event.target.value)"></textarea>
+                            </div>
+
                         </div>
 
-                        <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0">
-                            <textarea type="text" class="form-control has-feedback-left modal-popup" #contentSMS name="smsContent" rows="3" maxlength="459" placeholder="{{ 'data-sms.iSms_content' | translate }}" [(ngModel)]="smsContent" (change)="countSMS($event.target.value)" (keyup)="countSMS($event.target.value)"
-                                (keydow)="countSMS($event.target.value)"></textarea>
-                        </div>
                     </div>
                 </div>
 
@@ -297,34 +312,38 @@
                         </button>
                     </div>
                     <div class="x_content">
-                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                            <label>{{'send_data.lb_upload' | translate}}</label>
-                            <div class="input-group">
-                                <input type="file" #uploadFile name="uploadFile" class="form-control">
-                                <div class="input-group-btn" style="padding:0">
-                                    <button type="button" title="Loại bỏ các tệp đã chọn" (click)="clearData()" class="btn btn-default fileinput-remove fileinput-remove-button" style="background-color:rgba(128, 128, 128, 0.10);">
-                                        <i class="glyphicon glyphicon-trash"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-link" (click)="excelTemplate()">{{'send_data.export_template' | translate}}</button>
+                        <div class="row" style="margin-right: 5px; margin-left: 5px;">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <label>{{'send_data.lb_upload' | translate}}</label>
+                                <div class="input-group">
+                                    <input type="file" #uploadFile name="uploadFile" class="form-control">
+                                    <div class="input-group-btn" style="padding:0">
+                                        <button type="button" title="Loại bỏ các tệp đã chọn" (click)="clearData()" class="btn btn-default fileinput-remove fileinput-remove-button" style="background-color:rgba(128, 128, 128, 0.10);">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-link" (click)="excelTemplate()">{{'send_data.export_template' | translate}}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="margin-right: 5px; margin-left: 5px;">
                             <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                 <label>{{'send_data.group' | translate}}</label>
                                 <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedGroupUpload" [settings]="settingsFilterGroupUpload" name="slGroupUpload">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-1 col-sm-1 col-xs-12 form-group">
-                                <label style="padding-top: 30px;">Hoặc</label>
+                                <label style="padding-top: 30px; float: left;">Hoặc</label>
+                                <input type="checkbox" value="" class="checkbox ckmg" name="chkOnlyOneCreateGroup" (click)="checkboxGroup()">
                             </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+
+                            <div class="col-md-4 col-sm-3 col-xs-12 form-group">
                                 <label>{{'send_data.group_code' | translate}}</label>
-                                <input type="text" class="form-control" name="groupCode" placeholder="{{'send_data.inGroup_code' | translate}}" [(ngModel)]="groupCode">
+                                <input type="text" [disabled]="!ischeckgroup" class="form-control" name="groupCode" placeholder="{{'send_data.inGroup_code' | translate}}" [(ngModel)]="groupCode">
                             </div>
-                            <div class="col-md-5 col-sm-5 col-xs-12 form-group">
+                            <div class="col-md-4 col-sm-5 col-xs-12 form-group">
                                 <label>{{'send_data.group_name' | translate}}</label>
-                                <input type="text" class="form-control" name="groupName" placeholder="{{'send_data.inGroup_name' | translate}}" [(ngModel)]="groupName">
+                                <input type="text" [disabled]="!ischeckgroup" class="form-control" name="groupName" placeholder="{{'send_data.inGroup_name' | translate}}" [(ngModel)]="groupName">
                             </div>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group text-right" style="padding:0">
@@ -600,6 +619,40 @@
                 />
                 <button type="button" class="btn btn-default" (click)="confirmSendDataSMSModal.hide()">{{'global.cancel' | translate}}</button>
                 <button type="submit" class="btn btn-success" (click)="confirmSendSMS()">{{'global.confirm' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- model gui otp -->
+<div class="modal fade" bsModal #confirmOtp="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'send_data.confirmOtp' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmOtp.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <b class="b-font">{{'send_data.messageOtp' | translate}}</b><br />
+                </div>
+                <div class="row margin-top">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="number" class="form-control" name="numberOtp" [(ngModel)]="numberOtp" placeholder="{{'send_data.inputOtp' | translate}}">
+                    </div>
+                </div>
+                <div class="margin-top">
+                    <timer countdown="10041" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm pull-left" (click)="sendContinuous()">{{'send_data.sendto' | translate}}</button>
+                <button type="button" class="btn btn-default btn-sm" (click)="confirmOtp.hide()">{{'global.cancel' | translate}}</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="sendContinuous()">
+                    {{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>

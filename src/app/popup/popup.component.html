@@ -1,11 +1,10 @@
 <div class="login">
     <div class="login_wrapper">
-        <div class="animate form login_form" style="padding: 0 5% 0 5%; margin-top: 10%;">
+        <div class="animate form login_form" style="padding: 0 5% 0 5%; margin-top: 10%; background-color: azure;">
             <section class="login_content" [ngStyle]="{'display':(issuccess == true) ? 'none' : 'block'}">
                 <form #formAdd="ngForm" (ngSubmit)="createMember(formAdd)">
                     <div class="row">
-                        <!-- <img src="{{avartaName}}" class="styleImage" /> -->
-                        <img src="{{posterImage}}" style="width: 300px; height: 170px; margin-bottom: 20px" />
+                        <img src="{{posterImage}}" style="width: 100%; height: 170px; margin-bottom: 20px; margin-top: 6px; margin-right: 6px;" />
                     </div>
                     <div>
                         <div class="input-group" style="margin-top: 5%;">
@@ -26,29 +25,18 @@
                     </div>
                     <div>
                         <button style="margin-top: 5%;" type="submit" class="btn btn btn-primary submit">{{ 'register.submit_register' | translate }}</button>
-
                     </div>
                 </form>
-                <div class="row" style="margin-top: 15%;">
-                    <label style="float: left; margin-bottom: 10px;">Thông tin mô tả chiến dịch</label>
-                    <textarea class="form-control has-feedback-left modal-popup" name="contentsc" rows="5" [(ngModel)]="contentsc"></textarea>
+                <div class="row" style="margin-top: 15%;background-color: white; margin-bottom: 10px;">
+                    <!-- <label style="float: left; margin-bottom: 10px;">Thông tin mô tả chiến dịch</label> -->
+                    <label style="padding-bottom: 10px; padding-top: 10px;">{{contentsc}}</label>
+
                 </div>
-
             </section>
-
-            <div style="background-color: #F4F6F6; width: 400px; height: 200px; margin-top: 20%;" [ngStyle]="{'display':(issuccess == false) ? 'none' : 'block'}">
+            <div style="height: 200px; margin-top: 20%;" [ngStyle]="{'display':(issuccess == false) ? 'none' : 'block'}">
                 <h3 style="text-align: center; padding-top: 17%; color: #F810C7;">Đăng ký thành công!</h3>
                 <h4 style="text-align: center; color: #F810C7;">Xin cảm ơn!</h4>
             </div>
         </div>
     </div>
 </div>
-<footer>
-    <marquee onmouseover="this.stop()" onmouseout="this.start()">
-        <span>© 2019 Conek, focus on solution and technologies related SMS services. </span>
-        <a target="_blank" href="http://conektelecom.com/"> Go to Home</a>
-        <span style="margin-left: 50px">Hotline: 02462 912 952</span>
-        <span style="margin-left: 50px">Contact: Ms.Đỗ Cẩm (skype: camdt.onesms, hotline: 0973 796 903), Ms.Minh Tâm
-        (skype: live:b878f19ad2d737a3, hotline: 0949 350 996)</span>
-    </marquee>
-</footer>

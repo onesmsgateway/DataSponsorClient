@@ -132,7 +132,9 @@ export class PackageComponent implements OnInit {
   async getData() {
     let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&package_name=" + this.inPackageName.trim())
-    this.loadData(response);
+      if(response){
+        this.loadData(response);
+      }
   }
 
   loadData(response?: any) {

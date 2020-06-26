@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ModalDirective, BsModalService } from 'ngx-bootstrap';
 import { Pagination } from 'src/app/core/models/pagination';
 import { Role } from 'src/app/core/models/role';
@@ -7,21 +7,24 @@ import { ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
-import { async } from '@angular/core/testing';
+
 
 @Component({
   selector: 'app-send-data',
   templateUrl: './send-data.component.html',
-  styleUrls: ['./send-data.component.css']
+  styleUrls: ['./send-data.component.css'],
+
 })
-export class SendDataComponent implements OnInit {
+export class SendDataComponent implements OnInit{
   @ViewChild('contentSMS', { static: false }) public contentSMS;
   @ViewChild('confirmDeleteFilePhoneModal', { static: false }) public confirmDeleteFilePhoneModal: ModalDirective;
   @ViewChild('confirmAfterSuccessModal', { static: false }) public confirmAfterSuccessModal: ModalDirective;
   @ViewChild('confirmSendDataSMSModal', { static: false }) public confirmSendDataSMSModal: ModalDirective;
+  @ViewChild('confirmOtp', { static: false }) public confirmOtp: ModalDirective;
   @ViewChild('choosePackageModal', { static: false }) public choosePackageModal: ModalDirective;
   @ViewChild('uploadFile', { static: false }) public uploadFile;
   @ViewChild('uploadExcelModal', { static: false }) public uploadExcelModal;
+  
 
   public dataPhone = [];
   public dataPhoneTamp = [];
@@ -35,6 +38,7 @@ export class SendDataComponent implements OnInit {
   public dataGroup = [];
   public dataCampaign = [];
   public dataOptionInsert = [];
+  public dataOptionInsertSms = [];
   public settingsFilterAccount = {};
   public settingsFilterSender = {};
   public settingsFilterPackageVTL = {};
@@ -44,6 +48,7 @@ export class SendDataComponent implements OnInit {
   public settingsFilterCampaign = {};
   public settingsFilterGroupUpload = {};
   public settingsFilterOptionInsert = {};
+  public settingsFilterOptionTempSms = {};
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxSender = [];
   public selectedGroup = [];
@@ -53,6 +58,7 @@ export class SendDataComponent implements OnInit {
   public selectedPackageGPC = [];
   public selectedPackageVMS = [];
   public selectedOptionInsert = [];
+  public selectedOptionTempSms = [];
   public lstChecked = [];
   public lstCheckedName = [];
   public phone;
@@ -83,12 +89,15 @@ export class SendDataComponent implements OnInit {
   public countVMS = 0;
   public totalAmt = 0;
   public timeDonateCreate = 0;
+  public NumberRewardTimesInDay = 0;
+  public NumberRewardTimesInDayOld = 0;
   public timeDonateOld = 0;
   public isSendSMS: boolean = true;
   public chkcampaign: boolean = true;
   public chkOnlyOneCreate: boolean = false;
   public chkOnlyOneOld: boolean = false;
   public campaign: boolean = true;
+  public ischeckgroup: boolean = false;
   public isSendVTL: boolean = false;
   public isSendGPC: boolean = false;
   public isSendVMS: boolean = false;
@@ -114,6 +123,7 @@ export class SendDataComponent implements OnInit {
   public IS_SEND_SMS: any = null;
   public PACKAGE_ID: any = null;
   public totalNumberSendSms = 0;
+  public date: Date = new Date();
 
   public amt_expected = null;
   public numberPhone = 0;
@@ -237,6 +247,15 @@ export class SendDataComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
+    this.settingsFilterOptionTempSms = {
+      text: this.utilityService.translate('send_data.optionSms'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
 
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate());
@@ -245,6 +264,7 @@ export class SendDataComponent implements OnInit {
     this.dataOptionInsert.push({ "id": this.utilityService.translate('send_data.inData'), "itemName": this.utilityService.translate('send_data.inData') });
     this.dataOptionInsert.push({ "id": this.utilityService.translate('send_data.inDateUse'), "itemName": this.utilityService.translate('send_data.inDateUse') });
     this.dataOptionInsert.push({ "id": this.utilityService.translate('send_data.inPhone'), "itemName": this.utilityService.translate('send_data.inPhone') });
+
   }
   ngOnInit() {
     this.getAccountLogin();
@@ -259,6 +279,7 @@ export class SendDataComponent implements OnInit {
       this.isAdmin = false;
     }
     this.getDataAccount();
+    this.getDataSmsTemp();
   }
 
   //#region view quy data
@@ -294,11 +315,14 @@ export class SendDataComponent implements OnInit {
   checkCampaign(event) {
     if (event == "0") {
       this.chkcampaign = true;
+      this.createCodeNameCampaing();
     }
     else {
       this.chkcampaign = false;
+      this.programCode="";
       this.getCampaign();
     }
+    
   }
 
   async getCampaign() {
@@ -310,6 +334,18 @@ export class SendDataComponent implements OnInit {
       this.dataCampaign.push({ "id": response.data[index].ID, "itemName": response.data[index].PROGRAM_NAME });
     }
   }
+
+//get sms temp
+
+async getDataSmsTemp() {
+  debugger
+  this.dataOptionInsertSms = [];
+  this.selectedOptionTempSms = [];
+  let response: any = await this.dataService.getAsync('/api/SmsTemplate')
+  for (let index in response.data) {
+    this.dataOptionInsertSms.push({ "id": response.data[index].ID, "itemName": response.data[index].TEMP_NAME, "conten_sms": response.data[index].TEMPLATE_CONTENT });
+  }
+}
 
   async selectCampaign() {
     let campaignId = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != null ? this.selectedCampaign[0].id : 0;
@@ -328,12 +364,12 @@ export class SendDataComponent implements OnInit {
     this.timeDonateOld = 0;
   }
 
-  chkSendOne(event) {
-    if (event)
-      this.isOneSend = true;
-    else
-      this.isOneSend = false;
-  }
+  // chkSendOne(event) {
+  //   if (event)
+  //     this.isOneSend = true;
+  //   else
+  //     this.isOneSend = false;
+  // }
 
   // get phone by file list 
   async getPhoneNumber(event) {
@@ -359,15 +395,15 @@ export class SendDataComponent implements OnInit {
       this.totalAmtGPC = 0;
       this.totalAmtVMS = 0;
       this.totalAmt = 0;
-      this.packViettel ="0";
-      this.packGPC="0";
-      this.packVMS="0";
+      this.packViettel = "0";
+      this.packGPC = "0";
+      this.packVMS = "0";
       this.countVTL = 0;
       this.countGPC = 0;
       this.countVMS = 0;
       this.totalNumber = 0;
       this.totalPackVTL = 0;
-      this.totalPackGPC= 0;
+      this.totalPackGPC = 0;
       this.totalPackVMS = 0;
       return;
     }
@@ -384,7 +420,7 @@ export class SendDataComponent implements OnInit {
       this.countVMS = data.countMOBIFONE;
       this.totalNumber = this.dataPhoneTamp.length;
       this.totalNumberSendSms = this.dataPhoneTamp.length + this.numberPhone;
-      if(this.dataPhoneTamp.length == 0){
+      if (this.dataPhoneTamp.length == 0) {
         this.totalNumberSendSms = this.numberPhone;
       }
 
@@ -413,7 +449,7 @@ export class SendDataComponent implements OnInit {
       this.totalAmt = 0;
     }
     //this.GetPackage();
-   
+
   }
 
   async countPhone(phone) {
@@ -467,10 +503,10 @@ export class SendDataComponent implements OnInit {
       this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
     }
     this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
-     
-        this.totalNumberSendSms = this.numberPhone + this.totalNumber;
-     
-    
+
+    this.totalNumberSendSms = this.numberPhone + this.totalNumber;
+
+
   }
 
   // count phone
@@ -569,6 +605,8 @@ export class SendDataComponent implements OnInit {
     this.getDataGroup();
     this.getCampaign();
     this.viewQuyData(this.selectedItemComboboxAccount[0].id);
+    this.createCodeNameCampaing();
+    this.createCodeGroup();
   }
 
   deSelectAccount() {
@@ -585,6 +623,21 @@ export class SendDataComponent implements OnInit {
     let endString = this.contentSMS.nativeElement.value.substr(this.contentSMS.nativeElement.selectionStart, this.contentSMS.nativeElement.value.length);
     this.smsContent = startString.trim() + this.selectedOptionInsert[0].id + endString.trim();
     this.contentSMS.nativeElement.focus();
+    this.countSMS(this.smsContent);
+    
+  }
+  //option insert
+  changeOptionInsertSms() {
+    debugger
+    this.contentSMS.nativeElement.value="";
+    this.contentSMS.nativeElement.focus();
+    let startString = this.contentSMS.nativeElement.value.substr(0, this.contentSMS.nativeElement.selectionStart);
+    let endString = this.contentSMS.nativeElement.value.substr(this.contentSMS.nativeElement.selectionStart, this.contentSMS.nativeElement.value.length);
+    this.smsContent = startString.trim() + this.selectedOptionTempSms[0].conten_sms + endString.trim();
+    this.contentSMS.nativeElement.focus();
+    this.countSMS(this.smsContent);
+  //   this.selectedOptionTempSms=[];
+  //  this.selectedOptionTempSms.push({"id": "" , "itemName":this.utilityService.translate('send_data.optionSms')});
   }
 
   async getDataSenderName(accountID) {
@@ -760,17 +813,17 @@ export class SendDataComponent implements OnInit {
       this.dataPhone = dataPaging;
       this.totalNumber = this.pagination.totalRow;
       this.totalNumberSendSms = this.pagination.totalRow + this.numberPhone;
-       if (this.totalNumberSendSms == 0) {
-         this.totalNumberSendSms = this.numberPhone;
+      if (this.totalNumberSendSms == 0) {
+        this.totalNumberSendSms = this.numberPhone;
       }
     }
     else {
       this.dataPhone = this.dataPhonePaging;
       this.totalNumber = this.dataPhoneTamp.length;
       this.totalNumberSendSms = this.dataPhoneTamp.length + this.numberPhone;
-       if (this.totalNumberSendSms == 0) {
+      if (this.totalNumberSendSms == 0) {
         this.totalNumberSendSms = this.numberPhone;
-       }
+      }
     }
   }
 
@@ -810,6 +863,7 @@ export class SendDataComponent implements OnInit {
   //#region 
   // show modal upload excel
   showModalUpload() {
+     this.confirmOtp.show();
     if (this.isAdmin) {
       this.accountId = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
       if (this.accountId == "") {
@@ -827,7 +881,7 @@ export class SendDataComponent implements OnInit {
   }
 
   async getDataGroup() {
- 
+
     this.selectedGroup = [];
     this.dataGroup = [];
     let account = "";
@@ -843,18 +897,18 @@ export class SendDataComponent implements OnInit {
   // upload file
   public async submitUploadFile() {
     this.loading = true;
-   
+
     if (this.selectedGroupUpload.length == 0 && (this.groupCode == null || this.groupCode == "")) {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-99"));
       this.loading = false;
       return;
-    }else if(this.selectedGroupUpload.length == 0 && (this.groupCode != null || this.groupCode != "")){
-      if(this.groupName == null || this.groupName == ""){
+    } else if (this.selectedGroupUpload.length == 0 && (this.groupCode != null || this.groupCode != "")) {
+      if (this.groupName == null || this.groupName == "") {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-96"));
         this.loading = false;
         return;
       }
-     
+
     }
     let file = this.uploadFile.nativeElement;
     if (file.files.length > 0) {
@@ -866,11 +920,11 @@ export class SendDataComponent implements OnInit {
           this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-100"));
           this.loading = false;
           return;
-        }else if(response.err_code == -109){
+        } else if (response.err_code == -109) {
           this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-109"));
           this.loading = false;
           return;
-        }else{
+        } else {
           this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("130"));
           this.groupCode = "";
           this.groupName = "";
@@ -881,10 +935,10 @@ export class SendDataComponent implements OnInit {
           } else {
             this.selectedGroup.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME })
           }
-  
+
           this.getPhoneNumber(this.selectedGroup[0]);
         }
-        
+
       }
       else {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
@@ -922,6 +976,7 @@ export class SendDataComponent implements OnInit {
 
   //show confirm send data sms
   async sendDataSMS() {
+    debugger
     this.ACCOUNT_ID = this.selectedItemComboboxAccount.length > 0 ? this.selectedItemComboboxAccount[0].id : 0;
     if (this.ACCOUNT_ID == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-21"));
@@ -1020,8 +1075,9 @@ export class SendDataComponent implements OnInit {
       PACKAGE_NAME_VMS = this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim();
       DATA_VMS = this.dataViettel;
     }
-    let SEND_ONE = this.chkOnlyOneCreate == true ? 1 : 0;
-    let TIME_DONATE = this.timeDonateCreate;
+    debugger
+    let REWARD_NUMBER = this.NumberRewardTimesInDay;
+    let REWARD_NUMBER_TIME_IN_DAYS = this.timeDonateCreate;
     let chkCampaign = this.chkcampaign == true ? 0 : 1;
     let DATA_CAMPAIGN_ID = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : null;
 
@@ -1035,7 +1091,7 @@ export class SendDataComponent implements OnInit {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VTL, DATA_AMT: this.packageAmtVTL, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
             , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: Number(PACKAGE_ID_VTL), PACKAGE_NAME: PACKAGE_NAME_VTL
-            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVTL
+            , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVTL
           });
         }
         else if (this.isSendGPC && this.dataPhoneTamp[i].TELCO == "GPC") {
@@ -1044,7 +1100,7 @@ export class SendDataComponent implements OnInit {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_GPC, DATA_AMT: this.packageAmtGPC, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
             , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_GPC, PACKAGE_NAME: PACKAGE_NAME_GPC
-            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackGPC
+            , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackGPC
           });
         }
         else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
@@ -1053,7 +1109,7 @@ export class SendDataComponent implements OnInit {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
             , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS
-            , SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS
+            , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS
           });
         }
       }
@@ -1064,19 +1120,19 @@ export class SendDataComponent implements OnInit {
         if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "VIETTEL") {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VTL, DATA_AMT: this.packageAmtVTL, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
-            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VTL, PACKAGE_NAME: PACKAGE_NAME_VTL, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVTL
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VTL, PACKAGE_NAME: PACKAGE_NAME_VTL, REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVTL, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVTL
           });
         }
         else if (this.isSendGPC && this.dataPhoneTamp[i].TELCO == "GPC") {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_GPC, DATA_AMT: this.packageAmtGPC, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
-            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_GPC, PACKAGE_NAME: PACKAGE_NAME_GPC, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackGPC
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_GPC, PACKAGE_NAME: PACKAGE_NAME_GPC, REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountGPC, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackGPC
           });
         }
         else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
-            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS, SEND_ONE, TIME_DONATE, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS, REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS
           });
         }
       }
@@ -1176,4 +1232,70 @@ export class SendDataComponent implements OnInit {
       telco = response;
     return telco;
   }
+
+  async checkboxGroup() {
+    this.ischeckgroup = !this.ischeckgroup;
+    if (this.ischeckgroup == true) {
+      this.settingsFilterGroupUpload = {
+        text: this.utilityService.translate('send_data.inGroup'),
+        singleSelection: true,
+        enableSearchFilter: true,
+        enableFilterSelectAll: true,
+        searchPlaceholderText: this.utilityService.translate('global.search'),
+        noDataLabel: this.utilityService.translate('global.no_data'),
+        showCheckbox: false,
+        disabled: true
+      };
+      this.createCodeGroup();
+    } else {
+      this.settingsFilterGroupUpload = {
+        text: this.utilityService.translate('send_data.inGroup'),
+        singleSelection: true,
+        enableSearchFilter: true,
+        enableFilterSelectAll: true,
+        searchPlaceholderText: this.utilityService.translate('global.search'),
+        noDataLabel: this.utilityService.translate('global.no_data'),
+        showCheckbox: false,
+        disabled: false
+      };
+      this.groupCode="";
+    }
+   
+  }
+  async createCodeNameCampaing(){
+    debugger
+    let USER_NAME;
+    if(this.isAdmin){
+      USER_NAME = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].itemName : this.authService.currentUserValue.USER_NAME;
+    }else{
+      USER_NAME  =this.authService.currentUserValue.USER_NAME;
+    }
+   
+    if(USER_NAME != null || USER_NAME !=""){
+      let accountName = USER_NAME.substring(0,3);
+    let codeName = (accountName + this.utilityService.formatDateToString(this.date, "yyMMddHHmm")).toUpperCase();
+    this.programCode = codeName;
+    }
+    
+  }
+
+  async createCodeGroup(){
+    let USER_NAME;
+    if(this.isAdmin){
+      USER_NAME = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].itemName : this.authService.currentUserValue.USER_NAME;
+    }else{
+      USER_NAME  =this.authService.currentUserValue.USER_NAME;
+    }
+    if(this.ischeckgroup == true){
+      if(USER_NAME != null || USER_NAME !=""){
+        let accountName = USER_NAME.substring(0,3);
+      let codeGroup = (accountName +'_' +'GRP'+'_'+this.utilityService.formatDateToString(this.date, "yyMMdd") + '_'+this.utilityService.formatDateToString(this.date, "HHmm")).toUpperCase();
+      this.groupCode = codeGroup;
+      }
+    }else{
+      this.groupCode = "";
+    }
+   
+  }
+  
 }

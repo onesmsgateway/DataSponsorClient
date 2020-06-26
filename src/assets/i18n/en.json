@@ -241,6 +241,7 @@
         "edit_sysvar": "Edit SysVar"
     },
     "sms_template": {
+        "account": "Account",
         "list_sms_template": "List sms template",
         "iSender_name": "Choose sender name",
         "iTemp_name": "Input template name",
@@ -383,7 +384,52 @@
         "inData": "[Data]",
         "inPack": "[Package]",
         "inDateUse": "[DateExpired]",
-        "send_continue": "Send continue"
+        "send_continue": "Send continue",
+        "tempsms": "Template sms",
+        "optionSms": "Please choose template sms",
+        "inTempSmsOne": "Chúc mừng sinh nhật [name] , Công ty [ConekData] chuc ban 1 ngay moi tot lanh",
+        "inTempSmsTwo": "Công ty [ConekData] tặng bạn [DungLuong] data mien phi, chuc ban ngay moi tot lanh!",
+        "inTempSmsThree": "(ConekData) Chuc … mot ngay... lam viec hieu qua",
+        "inTempSmsFour": "Tri an Khach hang",
+        "number_reward": "Input number reward",
+        "tempOne": "[MauSNKhachHang]",
+        "tempTwo": "[MauSNCongTy]",
+        "tempThree": "[MauHangNgay]",
+        "tempFour": "[MauTriAn]",
+        "confirmOtp": "Confirm OTP",
+        "messageOtp": "OTP code has been sent to your phone number!",
+        "inputOtp": "Please input OTP 6 number",
+        "sendto": "Send to OTP",
+        "sendinputOtp": "Import time remaining"
+    },
+    "scenarios-birthday": {
+        "title-birthday": "Manager birthday scripts",
+        "name_scenar_birthday": "Birthday scenario name",
+        "inCode_scenar_birthday": "Please input code scenario",
+        "inName_scenar_birthday": "Please input birthday scenario name",
+        "create_date": "Create date",
+        "active": "Active",
+        "inActive": "Not active",
+        "isSendSms": "Send SMS",
+        "accumulate_points": "Accumulate points",
+        "delete": "Delete birthday scenario",
+        "delete_notify": "Are you sure you want to delete birthday scenario ",
+        "inContent": "Please input message",
+        "content": "Content",
+        "account": "Account",
+        "packageVTL": "Package Viettel",
+        "packageGPC": "Package Vina",
+        "packageVMS": "Package Mobi",
+        "group": "Group",
+        "sender_name": "Sender name",
+        "SendAtTime": "Send at time",
+        "InPutSendAtTime": "In put send at time",
+        "sendbeforedays": "Send before days",
+        "insendbeforedays": "Input send before days",
+        "tittle_sms": "Tittle sms",
+        "add": "Add birthday scenario",
+        "edit": "Edit birthday scenario"
+
     },
     "package": {
         "title": "Package manager",
@@ -625,7 +671,9 @@
         "edit": "Edit member",
         "delete_notify": "Are you sure delete ",
         "group": "Group",
-        "manager_member": "Member manager file"
+        "manager_member": "Member manager file",
+        "birthday": "Birthday",
+        "inputbirthday": "Please input Birthday"
     },
     "account_history": {
         "title": "Account history send data",

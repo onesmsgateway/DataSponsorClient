@@ -101,7 +101,7 @@
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.ACCUMULATED_POINTS == 1 ? true : false" class="checkbox" disabled></td>
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox" disabled></td>
                                                 <td>{{item.CREATED_TIME}}</td>
-                                                <td>{{item.GROUP_NAMES}}</td>
+                                                <td>{{item.GROUP_NAME}}</td>
                                                 <td class="text-center">
                                                     <div class="tool">
                                                         <button type="submit" (click)="confirmUpdateModal(item.PERSON_ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
@@ -152,53 +152,63 @@
 
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.account' | translate}} <span style="color: red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate" [settings]="settingsFilterAccount" name="slAccount">
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate" [settings]="settingsFilterAccount" name="slAccountCreate" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                             </angular2-multiselect>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.code' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="text" class="form-control" name="code" placeholder="{{ 'member.inCode' | translate }}" ngModel>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.name' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="text" class="form-control" name="name" placeholder="{{ 'member.inName' | translate }}" ngModel>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.phone' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="text" class="form-control" name="phone" placeholder="{{ 'member.inPhone' | translate }}" ngModel>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.group' | translate}}</label>
-                            <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedItemComboboxGroupCreate" [settings]="settingsFilterGroup" name="group" (onSelect)="getIdGroup($event)" (onDeSelect)="getIdGroup($event)">
+                            <angular2-multiselect [data]="dataGroupCreate" [(ngModel)]="selectedItemComboboxGroupCreate" [settings]="settingsFilterGroupCreate" name="groupcreate" (onSelect)="getIdGroup($event)" (onDeSelect)="getIdGroup($event)">
                             </angular2-multiselect>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.mail' | translate}}</label>
                             <input type="text" class="form-control" name="mail" placeholder="{{ 'member.inMail' | translate }}" ngModel>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.address' | translate}}</label>
                             <input type="text" class="form-control" name="address" placeholder="{{ 'member.inAddress' | translate }}" ngModel>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'member.birthday' | translate}}</label>
+                            <input type="text" class="form-control" name="birthday" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'member.inputbirthday' | translate }}">
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
                             <label>&nbsp;</label>
                             <div class="checkbox">
                                 <label style="padding-right: 20px;"><input type="checkbox" value="" class="checkbox"
-                                        name="accumulatedPoint" ngModel>
-                                    <span>{{'member.accumulated_point' | translate}}</span> </label>
+                                            name="accumulatedPoint" ngModel>
+                                        <span>{{'member.accumulated_point' | translate}}</span> </label>
                                 <label><input type="checkbox" value="" class="checkbox" name="isActive" ngModel>
-                                    <span>{{'member.is_active' | translate}}</span> </label>
+                                        <span>{{'member.is_active' | translate}}</span> </label>
                             </div>
                         </div>
-                        <div class="col-md-9 col-sm-12 col-xs-12 form-group">
+                    </div>
+
+
+                    <!-- <div class="col-md-9 col-sm-12 col-xs-12 form-group">
                             <label>{{'member.notes' | translate}}</label>
                             <input type="text" class="form-control" name="notes" placeholder="{{ 'member.inNotes' | translate }}" ngModel>
-                        </div>
-                    </div>
+                        </div> -->
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
@@ -223,52 +233,58 @@
             <form [formGroup]="formEditMember" (ngSubmit)="editMember()">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'member.account' | translate}}</label>
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccount" formControlName="account">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'member.account' | translate}} <span style="color: red;">(*)</span></label>
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccountEdit" formControlName="account">
                             </angular2-multiselect>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.code' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="hidden" formControlName="personId">
-                            <input type="text" class="form-control" formControlName="code" placeholder="{{ 'member.inCode' | translate }}">
+                            <input type="text" disabled="isNameCode" class="form-control" formControlName="code" placeholder="{{ 'member.inCode' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'member.name' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="name" placeholder="{{ 'member.inName' | translate }}">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'member.name' | translate}}<span style="color: red;">(*)</span></label>
+                            <input type="text" disabled="isName" class="form-control" formControlName="name" placeholder="{{ 'member.inName' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'member.phone' | translate}}</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'member.phone' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="text" class="form-control" formControlName="phone" placeholder="{{ 'member.inPhone' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
                             <label>{{'member.group' | translate}}</label>
-                            <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedItemComboboxGroupEdit" [settings]="settingsFilterGroupEdit" formControlName="group" (onSelect)="getIdGroup($event)" (onDeSelect)="getIdGroup($event)">
+                            <angular2-multiselect [data]="dataGroupEdit" [(ngModel)]="selectedItemComboboxGroupEdit" [settings]="settingsFilterGroupEdit" formControlName="groupedit" (onSelect)="getIdGroup($event)" (onDeSelect)="getIdGroup($event)">
                             </angular2-multiselect>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.mail' | translate}}</label>
                             <input type="text" class="form-control" formControlName="mail" placeholder="{{ 'member.inMail' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.address' | translate}}</label>
                             <input type="text" class="form-control" formControlName="address" placeholder="{{ 'member.inAddress' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'member.birthday' | translate}}</label>
+                            <input type="text" disabled="isName" class="form-control" formControlName="birthdayEdit" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'member.inputbirthday' | translate }}">
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
                             <label>&nbsp;</label>
                             <div class="checkbox">
                                 <label style="padding-right: 20px;"><input type="checkbox" value="" class="checkbox"
-                                        formControlName="accumulatedPoint">
-                                    <span>{{'member.accumulated_point' | translate}}</span> </label>
+                                            formControlName="accumulatedPoint">
+                                        <span>{{'member.accumulated_point' | translate}}</span> </label>
                                 <label><input type="checkbox" value="" class="checkbox" formControlName="isActive">
-                                    <span>{{'member.is_active' | translate}}</span> </label>
+                                        <span>{{'member.is_active' | translate}}</span> </label>
                             </div>
                         </div>
-                        <div class="col-md-9 col-sm-12 col-xs-12 form-group">
-                            <label>{{'member.notes' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="notes" placeholder="{{ 'member.inNotes' | translate }}">
-                        </div>
                     </div>
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>

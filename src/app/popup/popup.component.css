@@ -53,3 +53,11 @@
     color: red;
     margin-bottom: 10px;
 }
+
+.nav-md {
+    background-color: #66CCFF !important;
+}
+
+body {
+    background-color: #66CCFF !important;
+}

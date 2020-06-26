@@ -7,37 +7,27 @@
         </div>
     </section>
     <section>
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel portlet">
-                    <div class="x_content">
-                        <form class="row form-horizontal form-label-left input_mask">
-                            <div class="col-md-6 col-sm-12 col-xs-12 form-group" style="padding: 0;">
-                                <div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
-                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" (onSelect)="onItemSelectAccount()" (onDeSelect)="onItemSelectAccount()" name="slAccount">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
-                                    <angular2-multiselect [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" (onSelect)="onItemSelectSender()" (onDeSelect)="onItemSelectSender()" name="slSender">
-                                    </angular2-multiselect>
-                                </div>
-                                <div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
-                                    <angular2-multiselect [data]="dataSmsType" [(ngModel)]="selectedSmsType" [settings]="settingsFilterSmsType" (onSelect)="onItemSelectSmsType()" (onDeSelect)="onItemSelectSmsType()" name="smsType">
-                                    </angular2-multiselect>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12 col-xs-12 form-group" style="padding: 0;">
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <input type="text" class="form-control has-feedback-left" name="inTempName" [(ngModel)]="inTempName" placeholder="{{ 'sms_template.filter_name' | translate }}" (keyup.enter)="getData()">
-                                    <span class="fa fa-indent form-control-feedback left" aria-hidden="true"></span>
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <button type="button" style="float: right; margin-right: 0;" (click)="getData()" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
-                                </div>
-                            </div>
-                        </form>
+        <div class="x_panel portlet">
+            <div class="x_content">
+                <form class="row form-horizontal form-label-left input_mask">
+                    <div class="row margin-row">
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" (onSelect)="onItemSelectAccount()" (onDeSelect)="onItemSelectAccount()" name="slAccount">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
+                            <angular2-multiselect [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" (onSelect)="onItemSelectSender()" (onDeSelect)="onItemSelectSender()" name="slSender">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
+                            <input type="text" class="form-control" name="tempName" [(ngModel)]="tempName" placeholder="{{ 'sms_template.iTemp_name' | translate }}" (onchage)="onItemSelectSms()" (keyup)="onItemSelectSms()" (keydown)="onItemSelectSms()">
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
+                            <button type="button" style="float: right; margin-right: 0;" (click)="getData()" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                        </div>
                     </div>
-                </div>
+
+                </form>
             </div>
         </div>
     </section>
@@ -49,7 +39,7 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="corfimShowModalCreate()">{{ 'global.add_new' | translate }}</button>
                                 </div>
                             </div>
                         </form>
@@ -60,12 +50,10 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-center" style="width:5%">STT</th>
-                                                <th class="text-center" style="white-space: nowrap;">
+                                                <th class="text-center" style="white-space: nowrap; width:15%;">
                                                     {{ 'sms_template.sender_name' | translate }}</th>
                                                 <th class="text-center" style="width:15%">{{ 'sms_template.temp_name' | translate }}</th>
                                                 <th class="text-center">{{ 'sms_template.temp_content' | translate }}</th>
-                                                <th class="text-center" style="white-space: nowrap;">{{ 'sms_template.sms_type' | translate }}
-                                                </th>
                                                 <th class="text-center" style="width:8%">{{ 'global.tool' | translate }}</th>
                                             </tr>
                                         </thead>
@@ -74,8 +62,8 @@
                                                 <td class="text-center" scope="row">{{i+1}}</td>
                                                 <td>{{item.SENDER_NAME}}</td>
                                                 <td>{{item.TEMP_NAME}}</td>
-                                                <td>{{item.TEMPLATE_CONTENT}}</td>
-                                                <td>{{item.SMS_TYPE}}</td>
+                                                <td style="vertical-align: inherit">
+                                                    <textarea class="form-control" style="resize: vertical;padding: 2px 9px;" readonly>{{item.TEMPLATE_CONTENT}}</textarea></td>
                                                 <td class="text-center">
                                                     <div class="tool">
                                                         <button type="submit" (click)="confirmUpdateModal(item.ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
@@ -126,18 +114,18 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'sms_template.account' | translate}} <span style="color: red;">(*)</span></label>
+                            <angular2-multiselect [data]="dataAccountAdd" [(ngModel)]="selectedItemComboboxAccountAdd" [settings]="settingsFilterAccountAdd" name="slAccountAdd" (onSelect)="onItemSelectAccountAdd()" (onDeSelect)="onItemSelectAccountAdd()">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'sms_template.sender_name' | translate}} <span style="color: red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" name="slSender">
+                            <angular2-multiselect [data]="dataSenderNameAdd" [(ngModel)]="selectedItemComboboxSenderAdd" [settings]="settingsFilterSenderAdd" name="slSenderAdd">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'sms_template.temp_name' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="text" class="form-control" name="tempName" placeholder="{{ 'sms_template.iTemp_name' | translate }}" ngModel>
-                        </div>
-                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                            <label>{{'sms_template.sms_type' | translate}} <span style="color: red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataSmsType" [(ngModel)]="selectedSmsType" [settings]="settingsFilterSmsType" name="type">
-                            </angular2-multiselect>
                         </div>
                     </div>
                     <div class="row" style="margin-top: 15px;">
@@ -170,25 +158,25 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'sms_template.account' | translate}} <span style="color: red;">(*)</span></label>
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccountEdit" formControlName="slAccountEdit">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'sms_template.sender_name' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="hidden" formControlName="id">
-                            <angular2-multiselect [data]="dataSenderName" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" formControlName="slSender">
+                            <angular2-multiselect [data]="dataSenderNameEdit" [(ngModel)]="selectedItemComboboxSenderEdit" [settings]="settingsFilterSenderEdit" formControlName="slSenderEdit">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <label>{{'sms_template.temp_name' | translate}} <span style="color: red;">(*)</span></label>
-                            <input type="text" class="form-control" formControlName="tempName" placeholder="{{ 'sms_template.iTemp_name' | translate }}">
-                        </div>
-                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                            <label>{{'sms_template.sms_type' | translate}} <span style="color: red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataSmsType" [(ngModel)]="selectedSmsType" [settings]="settingsFilterSmsType" formControlName="slSmsType">
-                            </angular2-multiselect>
+                            <input type="text" class="form-control" formControlName="tempNameEdit" placeholder="{{ 'sms_template.iTemp_name' | translate }}">
                         </div>
                     </div>
                     <div class="row" style="margin-top: 15px;">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <label>{{'sms_template.temp_content' | translate}} <span style="color: red;">(*)</span></label>
-                            <textarea class="form-control" formControlName="tempContent" rows="3" placeholder="{{ 'sms_template.iTemp_content' | translate }}"></textarea>
+                            <textarea class="form-control" formControlName="tempContentEdit" rows="3" placeholder="{{ 'sms_template.iTemp_content' | translate }}"></textarea>
                         </div>
                     </div>
                 </div>

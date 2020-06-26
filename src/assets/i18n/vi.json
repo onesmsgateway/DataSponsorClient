@@ -279,6 +279,7 @@
         "edit_sysvar": "Sửa khai báo hệ thống"
     },
     "sms_template": {
+        "account": "Tài khoản",
         "list_sms_template": "Danh sách tin nhắn mẫu",
         "iSender_name": "Chọn thương hiệu",
         "iTemp_name": "Nhập tên mẫu",
@@ -378,7 +379,7 @@
         "telco": "Nhà mạng",
         "up_load": "Upload file excel",
         "text_num": " số",
-        "iText_add_phone_number": "Nhập số điện thoại dạng 03xx..., 08xx..., 07xx... hoặc 09xx... cách nhau bởi dấu ; ...",
+        "iText_add_phone_number": "VD, 0987xxxxxx; 0848xxxxxx (cách nhau bởi dấu ; )",
         "total_num": "Tổng",
         "phone_list_manage": "Quản lý danh sách file số điện thoại",
         "list_group": "Danh sách nhóm",
@@ -386,7 +387,7 @@
         "export_template": "Click vào đây để tải file mẫu",
         "export": "Xuất excel",
         "move_data_manager": "Đi đến quản lý đơn hàng",
-        "is_send_sms": "Gửi SMS thương hiệu",
+        "is_send_sms": "Gửi SMS",
         "send_from_file_list": "Gửi từ danh sách trên hệ thống",
         "send_from_excel": "Gửi từ file excel",
         "confirm_send_sms": "Bạn có chắc muốn gửi tin nhắn theo thông tin này?",
@@ -411,6 +412,7 @@
         "campaign_old": "Chiến dịch đang chạy",
         "only_one": "Tặng 1 lần",
         "time_donate": "Khung thời gian tặng(ngày)",
+        "number_reward": "Số lần tặng",
         "inCampaign": "Chọn chiến dịch",
         "phone_new": "Nhập bổ sung số ĐT nhận data",
         "total_phone": "Tổng số điện thoại",
@@ -421,7 +423,22 @@
         "inPack": "[GoiCuoc]",
         "inDateUse": "[NgaySuDung]",
         "send_continue": "Gửi tiếp",
-        "choose_data": "Gói data đã chọn"
+        "choose_data": "Gói data đã chọn",
+        "tempsms": "Tin nhắn mẫu",
+        "optionSms": "Chọn tin nhắn mẫu",
+        "inTempSmsOne": "Chuc mung sinh nhat [name] , Cong ty [ConekData] chuc ban 1 ngay moi tot lanh",
+        "inTempSmsTwo": "Nhan dip sinh nhat cong ty [ConekData] tang ban [DungLuong] data mien phi, chuc ban ngay moi tot lanh!",
+        "inTempSmsThree": "(ConekData) Chuc … mot ngay... lam viec hieu qua",
+        "inTempSmsFour": "Tri an Khach hang",
+        "tempOne": "[MauSNKhachHang]",
+        "tempTwo": "[MauSNCongTy]",
+        "tempThree": "[MauHangNgay]",
+        "tempFour": "[MauTriAn]",
+        "confirmOtp": "Xác nhận mã OTP",
+        "messageOtp": "Mã OTP đã được gửi đến số điện thoại của bạn!",
+        "inputOtp": "Vui lòng nhập mã OTP gồm 6 chữ số",
+        "sendto": "Gửi lại OTP",
+        "sendinputOtp": "Thời gian nhập còn lại"
     },
     "package": {
         "title": "Quản lý gói cước One",
@@ -717,7 +734,9 @@
         "edit": "Sửa thành viên",
         "delete_notify": "Bạn có chắc chắn muốn xóa ",
         "group": "Nhóm",
-        "manager_member": "Qản lý danh dách file thành viên"
+        "manager_member": "Qản lý danh dách file thành viên",
+        "birthday": "Ngày sinh",
+        "inputbirthday": "Chọn ngày sinh"
     },
     "account_history": {
         "title": "Lịch sử khách hàng gửi data",
