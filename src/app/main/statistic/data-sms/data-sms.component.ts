@@ -1,18 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Pagination } from 'src/app/core/models/pagination';
 import { DataService } from 'src/app/core/services/data.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-data-sms',
   templateUrl: './data-sms.component.html',
-  styleUrls: ['./data-sms.component.css']
+  styleUrls: ['./data-sms.component.css'],
+
 })
 export class DataSmsComponent implements OnInit {
 
+
   public dataSms = [];
+  public dataScenario = [];
   public dataAccount = [];
   public dataCampaign = [];
   public dataPkNameDisplay = [];
@@ -20,21 +25,25 @@ export class DataSmsComponent implements OnInit {
   public dataPackageGPC = [];
   public dataPackageVMS = [];
   public dataStatus = [];
-  public dataTelco =[];
+  public dataTelco = [];
 
   public pagination: Pagination = new Pagination();
   public smsContent: string = "";
   public phone: string = "";
-  public fromDate : string = "" ;
-  public toDate : string = "" ;
+  public fromDate: string = "";
+  public toDate: string = "";
+  public account_id_scenario: string = "";
+  public scenario_id_scenario: string = "";
+  public fromDate_scenario: string = "";
+  public toDate_scenario: string = "";
   public timeFrom: Date = new Date();
   public timeTo: Date = new Date();
-  
+
   public isAdmin = false;
   public stringVTL = "VIETTEL";
   public stringGPC = "GPC";
   public stringVMS = "VMS";
-  
+
   public countAll = 0;
   public countVTL = 0;
   public countGPC = 0;
@@ -44,7 +53,9 @@ export class DataSmsComponent implements OnInit {
   public selectedAccount = [];
   public settingsFilterCampaign = {};
   public selectedCampaign = [];
-  public settingsFilterPkNameDisplay ={};
+  public selectedScenario = [];
+  public settingsFilterScenario = {};
+  public settingsFilterPkNameDisplay = {};
   public settingsFilterPackageVTL = {};
   public settingsFilterTelco = {};
   public selectedPackageVTL = [];
@@ -54,12 +65,14 @@ export class DataSmsComponent implements OnInit {
   public selectedPackageVMS = [];
   public settingsFilterStatus = {};
   public selectedStatus = [];
-  public selectedPkNameDisplay =[];
+  public selectedPkNameDisplay = [];
 
   constructor(private authService: AuthService,
     private dataService: DataService,
     private utilityService: UtilityService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+    private activatedRoute: ActivatedRoute,
+  ) {
 
     this.settingsFilterAccount = {
       text: this.utilityService.translate('global.choose_account'),
@@ -80,6 +93,15 @@ export class DataSmsComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
+    this.settingsFilterScenario = {
+      text: this.utilityService.translate('scenarios.choose_scenario'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
     this.settingsFilterPkNameDisplay = {
       text: this.utilityService.translate('statistic-data-sms.choose_data'),
       singleSelection: true,
@@ -89,7 +111,7 @@ export class DataSmsComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
-    
+
     this.settingsFilterPackageVTL = {
       text: this.utilityService.translate('statistic-data-sms.inPackageVTL'),
       singleSelection: true,
@@ -108,7 +130,7 @@ export class DataSmsComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
-    
+
 
     this.settingsFilterPackageGPC = {
       text: this.utilityService.translate('statistic-data-sms.inPackageGPC'),
@@ -147,9 +169,25 @@ export class DataSmsComponent implements OnInit {
     this.dataPackageGPC.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.dataPackageVMS.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.dataTelco.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
-    this.getAccountLogin();
     this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd") + "000000";
     this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd") + "235959";
+    this.getAccountLogin();
+
+    if ((this.activatedRoute.snapshot.queryParamMap.get('account_id') != "" && this.activatedRoute.snapshot.queryParamMap.get('account_id') != null)
+      && (this.activatedRoute.snapshot.queryParamMap.get('scenario_id') != "" && this.activatedRoute.snapshot.queryParamMap.get('scenario_id') != null)) {
+      this.timeFrom = this.utilityService.formatDateTempalte(this.activatedRoute.snapshot.queryParamMap.get('fromDate'));
+      this.timeTo = this.utilityService.formatDateTempalte(this.activatedRoute.snapshot.queryParamMap.get('enddate'));
+      this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd") + "000000";
+      this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd") + "235959";
+
+      this.account_id_scenario = this.activatedRoute.snapshot.queryParamMap.get('account_id');
+      this.scenario_id_scenario = this.activatedRoute.snapshot.queryParamMap.get('scenario_id')
+      this.selectedAccount.push({ "id": this.account_id_scenario, "itemName": this.activatedRoute.snapshot.queryParamMap.get('account_name') });
+
+    } else {
+      this.scenario_id_scenario = "";
+      this.account_id_scenario = "";
+    }
   }
 
   async getAccountLogin() {
@@ -159,6 +197,7 @@ export class DataSmsComponent implements OnInit {
       this.isAdmin = true;
     } else {
       this.isAdmin = false;
+
     }
     this.bindDataAccount();
     this.getDataPackageVTL();
@@ -167,11 +206,13 @@ export class DataSmsComponent implements OnInit {
     this.bindDataStatus();
     this.getListDataSms();
     this.getPackageNameDisplay();
+    this.getCampaign();
+    this.getScenario();
   }
 
   //#region account
   public async bindDataAccount() {
- 
+
     if (this.isAdmin) {
       let response: any = await this.dataService.getAsync('/api/account');
       for (let index in response.data) {
@@ -186,16 +227,20 @@ export class DataSmsComponent implements OnInit {
       }
       if (this.dataAccount.length == 1)
         this.selectedAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
+
       else
         this.selectedAccount.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_account') });
+
     }
+
   }
   //#endregion
 
   ChangeDropdownListAccount() {
     this.getCampaign();
+    this.getScenario();
     this.getListDataSms();
-    
+
   }
 
   ChangeDropdownList() {
@@ -212,24 +257,58 @@ export class DataSmsComponent implements OnInit {
       account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     // let account = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
     let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignByAccount?account_id=' + account)
-    for (let index in response.data) {
-      this.dataCampaign.push({ "id": response.data[index].ID, "itemName": response.data[index].PROGRAM_NAME });
+    if (response) {
+      for (let index in response.data) {
+        this.dataCampaign.push({ "id": response.data[index].ID, "itemName": response.data[index].PROGRAM_NAME });
+      }
+    }
+
+  }
+
+  //get data scenario
+  async getScenario() {
+
+    this.dataScenario = [];
+    this.selectedScenario = [];
+    let account = "";
+    if (this.isAdmin)
+      account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    else
+      account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+    let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosByAccount?account_id=' + account)
+    if (response) {
+      for (let index in response.data) {
+        this.dataScenario.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
+      }
+      if (this.dataScenario.length == 1) {
+        this.selectedScenario.push({ "id": this.dataScenario[0].id, "itemName": this.dataScenario[0].itemName });
+      } else {
+        if (this.scenario_id_scenario != null && this.scenario_id_scenario != "") {
+          this.selectedScenario.push({ "id": this.scenario_id_scenario, "itemName": this.activatedRoute.snapshot.queryParamMap.get('scenario_name') });
+        } else {
+          this.selectedScenario.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_scenario') });
+        }
+
+      }
+
     }
   }
 
   // get package name display
-  
+
   async getPackageNameDisplay() {
     debugger
     this.dataPkNameDisplay = [];
     this.selectedPkNameDisplay = [];
     let response: any = await this.dataService.getAsync('/api/PackageTelco/GetPackageNameDisplay')
-    debugger
     let ID = 1;
-    for (let index in response.data) {
-      this.dataPkNameDisplay.push({ "id":ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
-      ID++;
+    if (response) {
+      for (let index in response.data) {
+        this.dataPkNameDisplay.push({ "id": ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
+        ID++;
+      }
     }
+
   }
   //#region package
   // viettel
@@ -274,48 +353,61 @@ export class DataSmsComponent implements OnInit {
 
   //#region load data and paging
   public async getListDataSms() {
-debugger
     this.dataSms = [];
     let account_id = "";
-    if (this.isAdmin)
-    account_id = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
-    else
-    account_id = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+    let scenario_id = "";
     let campaign_id = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     let packVTL = this.selectedPackageVTL.length > 0 && this.selectedPackageVTL[0].id != "" ? this.selectedPackageVTL[0].itemName.substr(0, this.selectedPackageVTL[0].itemName.indexOf('-') - 1).trim() : "";
     let packGPC = this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != "" ? this.selectedPackageGPC[0].itemName.substr(0, this.selectedPackageGPC[0].itemName.indexOf('-') - 1).trim() : "";
     let packVMS = this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != "" ? this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim() : "";
-    let package_name_display = this.selectedPkNameDisplay.length > 0 && this.selectedPkNameDisplay[0].itemName != "" ? this.selectedPkNameDisplay[0].itemName: "";
+    let package_name_display = this.selectedPkNameDisplay.length > 0 && this.selectedPkNameDisplay[0].itemName != "" ? this.selectedPkNameDisplay[0].itemName : "";
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : "";
-    let response = await this.dataService.getAsync('/api/DataSms/GetDataSmsPaging?pageIndex=' + this.pagination.pageIndex +
-      '&pageSize=' + this.pagination.pageSize + '&account_id=' + account_id + '&campaign_id=' + campaign_id +
-      '&package_name_display=' + package_name_display  + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate + 
-      '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
-    if (response.err_code == 0) {
-      this.dataSms = response.data;
-      if ('pagination' in response) {
-        this.pagination.pageSize = response.pagination.PageSize;
-        this.pagination.totalRow = response.pagination.TotalRows;
-      }
 
-      let sumSms = response.pagination.TotalRows;
-      if (sumSms > 0) {
-        let responseCountSms = await this.dataService.getAsync('/api/DataSms/CountPhoneFilterByTelco?account_id=' + account_id +
-        '&packageVTL=' + packVTL + '&packageGPC=' + packGPC + '&packageVMS=' + packVMS + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate + 
-        '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
-        if (responseCountSms != null && responseCountSms.data != null && responseCountSms.data.length > 0) {
-          this.countVTL = responseCountSms.data[0].COUNT_VIETTEL;
-          this.countGPC = responseCountSms.data[0].COUNT_VINAPHONE;
-          this.countVMS = responseCountSms.data[0].COUNT_MOBIFONE;
-          this.countAll = this.countVTL + this.countGPC + this.countVMS;
-        }
+    if (this.scenario_id_scenario != null && this.scenario_id_scenario != "" && this.account_id_scenario != null && this.account_id_scenario != "") {
+      account_id = this.account_id_scenario;
+      scenario_id = this.scenario_id_scenario;
+    } else {
+      if (this.isAdmin) {
+        account_id = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
       } else {
-        this.countVTL = 0;
-        this.countGPC = 0;
-        this.countVMS = 0;
-        this.countAll = 0;
+        account_id = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+      }
+      scenario_id = this.selectedScenario.length > 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
+    }
+    let response = await this.dataService.getAsync('/api/DataSms/GetDataSmsPaging?pageIndex=' + this.pagination.pageIndex +
+      '&pageSize=' + this.pagination.pageSize + '&account_id=' + account_id + '&campaign_id=' + campaign_id + '&scenario_id=' + scenario_id +
+      '&package_name_display=' + package_name_display + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate +
+      '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
+    if (response) {
+      if (response.err_code == 0) {
+        this.dataSms = response.data;
+        if ('pagination' in response) {
+          this.pagination.pageSize = response.pagination.PageSize;
+          this.pagination.totalRow = response.pagination.TotalRows;
+        }
+
+        let sumSms = response.pagination.TotalRows;
+        if (sumSms > 0) {
+          let responseCountSms = await this.dataService.getAsync('/api/DataSms/CountPhoneFilterByTelco?account_id=' + account_id +
+            '&packageVTL=' + packVTL + '&packageGPC=' + packGPC + '&packageVMS=' + packVMS + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate +
+            '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
+          if (responseCountSms != null && responseCountSms.data != null && responseCountSms.data.length > 0) {
+            this.countVTL = responseCountSms.data[0].COUNT_VIETTEL;
+            this.countGPC = responseCountSms.data[0].COUNT_VINAPHONE;
+            this.countVMS = responseCountSms.data[0].COUNT_MOBIFONE;
+            this.countAll = this.countVTL + this.countGPC + this.countVMS;
+          }
+        } else {
+          this.countVTL = 0;
+          this.countGPC = 0;
+          this.countVMS = 0;
+          this.countAll = 0;
+        }
+
       }
     }
+    this.account_id_scenario = "";
+    this.scenario_id_scenario = "";
   }
 
   pageChanged(event: any): void {
@@ -339,8 +431,8 @@ debugger
     if (this.fromDate == '19700101000000') {
       this.fromDate = '';
     }
-    if(this.fromDate !== '' && this.toDate !== ''){
-      if(this.fromDate > this.toDate){
+    if (this.fromDate !== '' && this.toDate !== '') {
+      if (this.fromDate > this.toDate) {
         this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
         return;
       }
@@ -350,19 +442,19 @@ debugger
   }
 
   onChangeToDate(event) {
-   
+
     this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "235959";
     if (this.toDate == '19700101000000') {
       this.toDate = '';
     }
-    if(this.fromDate !== '' && this.toDate !== ''){
-      if(this.fromDate > this.toDate){
+    if (this.fromDate !== '' && this.toDate !== '') {
+      if (this.fromDate > this.toDate) {
         this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
         return;
       }
     }
     this.getListDataSms();
-    
+
   }
 
   public async searchSms(form) {

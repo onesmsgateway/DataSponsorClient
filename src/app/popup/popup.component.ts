@@ -3,7 +3,7 @@ import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
-import { FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 //import { registerpersoncomponent }   from './register-person.component';
 
 @Component({
@@ -26,36 +26,38 @@ export class PopupComponent implements OnInit {
   public ids: string = '';
   public isActive = true;
   public issuccess = false;
-  mobNumberPattern = "^((\\84-?)|0)?[0-9]{9}$";  
- isValidFormSubmitted = false;
+  public scenario_id: number;
+  mobNumberPattern = "^((\\84-?)|0)?[0-9]{9}$";
+  isValidFormSubmitted = false;
 
   constructor(private dataService: DataService,
-     private notificationService: NotificationService,
-     private utilityService: UtilityService,
-     private route: ActivatedRoute, private router: Router
-    ) {
+    private notificationService: NotificationService,
+    private utilityService: UtilityService,
+    private route: ActivatedRoute, private router: Router
+  ) {
   }
-  
+
 
   ngOnInit() {
     this.subaccountID();
-     this.loadAcount();
-     this.loadscenario();
-  
-  }
- async subaccountID(){
-  this.linkinput = window.location.href;
-  var rlink = this.linkinput.split(/[=\-&]/);
-  for (var i = 0; i < rlink.length; i++) {
-    this.scenarioCode = (rlink[1]);
-    this.account_Id = parseInt(rlink[3]);
-  }
- }
+    this.loadAcount();
+    this.loadscenario();
 
- async loadscenario(){
-   var scenario_code = this.scenarioCode;
-   let response: any = await this.dataService.getAsync('/api/Popup/GetScenariosByCode?code='+ scenario_code);
-    if(response != null){
+  }
+  async subaccountID() {
+    this.linkinput = window.location.href;
+    var rlink = this.linkinput.split(/[=\-&]/);
+    for (var i = 0; i < rlink.length; i++) {
+      this.scenarioCode = (rlink[1]);
+      this.account_Id = parseInt(rlink[3]);
+    }
+  }
+
+  async loadscenario() {
+    debugger
+    var scenario_code = this.scenarioCode;
+    let response: any = await this.dataService.getAsync('/api/Popup/GetScenariosByCode?code=' + scenario_code);
+    if (response != null) {
       if (response.data[0] == null) {
         alert('Kịch bản không tồn tại!');
         this.posterImage = this.avartaName;
@@ -65,18 +67,19 @@ export class PopupComponent implements OnInit {
       } else {
         this.posterImage = response.data[0].URL_POSTER;
         this.contentsc = response.data[0].DESC_CONTENT;
+        this.scenario_id = response.data[0].ID;
         if (this.posterImage == null || this.posterImage == '') {
           this.posterImage = this.avartaName;
           this.contentsc = 'Chào mừng bạn đến với chương trình tặng Data';
         }
-      }  
+      }
     }
- }
+  }
   //#region create new
   async loadAcount() {
     var accountid = this.account_Id;
     let response: any = await this.dataService.getAsync('/api/Popup/' + accountid);
-    if(response != null){
+    if (response != null) {
       if (response.data[0] == null) {
         alert('Tài khoàn chưa tạo kịch bản');
         this.avartaName = '../../assets/img/user-icon.jpg';
@@ -87,9 +90,9 @@ export class PopupComponent implements OnInit {
         if (this.avartaName == null || this.avartaName == '') {
           this.avartaName = '../../assets/img/logo-login.png';
         }
-      }  
+      }
     }
-    
+
   }
   //#region create new
   async createMember(item) {
@@ -107,32 +110,34 @@ export class PopupComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-62"));
       return;
     }
-    this.isValidFormSubmitted = false;  
-   if (item.invalid) {  
-      return;  
-   }  
-   this.isValidFormSubmitted = true;  
-   item.resetForm();  
-    let response: any = await this.dataService.postAsync('/api/Popup/PostPersonAccount?SCENARIO_CODE='+SCENARIO_CODE ,{
+    this.isValidFormSubmitted = false;
+    if (item.invalid) {
+      return;
+    }
+    this.isValidFormSubmitted = true;
+    item.resetForm();
+    let response: any = await this.dataService.postAsync('/api/Popup/PostPersonAccount?SCENARIO_CODE=' + SCENARIO_CODE + '&scenario_id=' + this.scenario_id, {
       ACCOUNT_ID, PERSON_FULLNAME, PHONE_NUMBER
     })
-    if (response.err_code == 0) {
-      item.reset();
-      // this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
+    if (response.err_code == 0 || response.err_code == -103) {
+      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("400"));
       this.issuccess = true;
-    }
-    else if (response.err_code == -103) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-103"));
+    } else if (response.err_code == -116) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-116"));
       this.issuccess = false;
+      return
     }
-    else if (response.err_code == -108) {
-      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-108"));
+    else if (response.err_code == -119) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-119"));
       this.issuccess = false;
-    }else {
+      return
+    }
+    else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
       this.issuccess = false;
+      return
     }
   }
   //#endregion
-  
+
 }

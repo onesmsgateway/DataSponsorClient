@@ -88,11 +88,19 @@
                                                 <td class="text-center">{{item.START_DATE}}</td>
                                                 <td class="text-center">{{item.END_DATE}}</td>
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox" disabled></td>
-                                                <td class="text-center">
-                                                    <div class="tool">
+                                                <td class="text-center" style="vertical-align: inherit;">
+                                                    <div class="tool" style="padding-bottom: 10px;">
                                                         <button type="submit" (click)="confirmUpdateModal(item.ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
                                                         <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(item.ID, item.NAME)">{{ 'global.delete' | translate }}</button>
+                                                    </div>
+                                                    <div class="tool">
                                                         <button type="button" [disabled]="!isCreatelink[item.ID]" class="btn btn-primary btn-sm" (click)="showModalCreateLinkDetail(item.ID)">Tạo link</button>
+                                                        <button type="button" class="btn btn-primary btn-sm">
+                                                        <a style="color: #FFF;" [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ account_id: item.ACCOUNT_ID,account_name: item.USER_NAME, scenario_id: item.ID, scenario_name: item.NAME,
+                                                             fromDate: item.START_DATE, enddate: item.END_DATE }">{{ 'global.detail' | translate }}</a>
+
+                                                        </button>
+                                                        <!-- <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showDetailScenario()">{{ 'global.detail' | translate }}</button> -->
                                                     </div>
                                                 </td>
                                             </tr>
@@ -151,10 +159,6 @@
                                     <span style="color:red" *ngIf="codetrim?.length > 10">
                                         {{'scenarios.checkcode' | translate}}
                                     </span>
-                                    <!-- <span style="color:red" *ngIf="checkcodetrim">
-                                        {{'scenarios.checkcodetrim' | translate}}
-                                    </span> -->
-
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                                     <label>{{'scenarios.name_scenar' | translate}}</label>
@@ -167,9 +171,6 @@
 
                                 <label>{{ 'global.chooseImage' | translate }}</label>
                                 <input type="file" #uploadImage name="avatar" class="form-control" (change)="submitUploadImage()" placeholder="Click chọn ảnh kịch bản">
-
-                                <!-- <label>{{ 'global.chooseImage' | translate }}</label>
-                                <input type="text" [disabled]="!isHidden" class="form-control" name="checkSendSms" placeholder="Click chọn ảnh kịch bản" ngModel> -->
                             </div>
                         </div>
                     </div>
@@ -193,24 +194,35 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" (click)="oncheckRewardOneTime()" value="" [disabled]="!isHidden" class="checkbox" name="checkRewardOneTime" ngModel>
-                                            <span>{{'scenarios.checkRewardOneTime' | translate}}</span> </label>
-                                    </div>
-                                    <input type="number" class="form-control" [disabled]="isHiddencheckOne" name="RewardOneTimeInDay" ngModel placeholder="{{ 'send_data.time_donate' | translate }}">
+                                    <label>{{ 'scenarios.checkRewardOneTime' | translate }}</label>
+                                    <input type="number" class="form-control" [disabled]="!isHidden" name="checkRewardOneTime" ngModel placeholder="{{ 'scenarios.InputcheckRewardOneTime' | translate }}">
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <div class="checkbox">
+                                    <div class="checkbox" style="margin-top: 15%;">
                                         <label><input type="checkbox" (click)="oncheckActive()" value="" [disabled]="!isHidden" class="checkbox" name="checkActive" ngModel>
                                             <span>{{'scenarios.active' | translate}}</span> </label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <div class="checkbox" style="margin-top: 15px;">
+                                    <div class="checkbox" style="margin-top: 15%;">
                                         <label><input type="checkbox" (click)="onisCheckAccumulatePoint()" value="" [disabled]="!isHidden" class="checkbox" name="isCheckAccumulatePoint"
                                                 ngModel>
                                             <span>{{'scenarios.accumulate_points' | translate}}</span> </label>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{ 'send_data.time_donate' | translate }}</label>
+                                    <input type="number" class="form-control" [disabled]="!isHidden" name="RewardOneTimeInDay" ngModel placeholder="{{ 'send_data.time_donate' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{ 'send_data.limitUse' | translate }}</label>
+                                    <input type="number" class="form-control" name="limitUse" ngModel placeholder="{{ 'send_data.limitUse' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{ 'send_data.totalMoney' | translate }}</label>
+                                    <input type="number" class="form-control" name="totalUse" [(ngModel)]="totalUse" placeholder="{{ 'send_data.totalMoney' | translate }}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -400,26 +412,40 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" (click)="oncheckRewardOneTime()" value=""  class="checkbox" formControlName="checkRewardOneTime">
-                                            <span>{{'scenarios.checkRewardOneTime' | translate}}</span> </label>
-                                    </div>
-                                    <input type="number" class="form-control" [disabled]="isHiddencheckOne" formControlName="RewardOneTimeInDay" placeholder="{{ 'send_data.time_donate' | translate }}">
+                                    <label>{{ 'scenarios.checkRewardOneTime' | translate }}</label>
+                                    <input type="number" class="form-control" formControlName="checkRewardOneTime" [(ngModel)]="checkRewardOneTime" placeholder="{{ 'scenarios.InputcheckRewardOneTime' | translate }}">
+
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <div class="checkbox">
+                                    <div class="checkbox" style="margin-top: 15%;">
                                         <label><input type="checkbox" value="" class="checkbox" formControlName="isActive">
                                     <span>{{'scenarios.active' | translate}}</span> </label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
-                                    <div class="checkbox" style="margin-top: 15px;">
+                                    <div class="checkbox" style="margin-top: 15%;">
                                         <label><input type="checkbox" (click)="onisCheckAccumulatePoint()" value="" [disabled]="!isHidden" class="checkbox" formControlName="isCheckAccumulatePoint"
                                                 ngModel>
                                             <span>{{'scenarios.accumulate_points' | translate}}</span> </label>
                                     </div>
                                 </div>
                             </div>
+                            <!-- them row -->
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{ 'send_data.time_donate' | translate }}</label>
+                                    <input type="number" class="form-control" [disabled]="isHiddencheckOne" formControlName="RewardOneTimeInDay" ngModel placeholder="{{ 'send_data.time_donate' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{ 'send_data.limitUse' | translate }}</label>
+                                    <input type="number" class="form-control" formControlName="limitUseEdit" [(ngModel)]="limitUseEdit" placeholder="{{ 'send_data.limitUse' | translate }}">
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                                    <label>{{ 'send_data.totalMoney' | translate }}</label>
+                                    <input type="text" class="form-control" formControlName="totalUseEdit" [(ngModel)]="totalUseEdit" placeholder="{{ 'send_data.totalMoney' | translate }}" readonly>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <div class="row" style="margin-top: 10px;">

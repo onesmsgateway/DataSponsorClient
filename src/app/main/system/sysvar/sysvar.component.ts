@@ -21,6 +21,7 @@ export class SysvarComponent implements OnInit {
   public pagination: Pagination = new Pagination();
   public varName;
   public id;
+  public isdelete = [];
   public inVarGroup: string = '';
   public inVarName: string = '';
   public inVarValue: string = '';
@@ -45,7 +46,7 @@ export class SysvarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pagination.pageSize = 10;
+    this.pagination.pageSize = 20;
     this.getData();
   }
 
@@ -54,6 +55,7 @@ export class SysvarComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/sysvar/GetSysVarPaging?pageIndex=' + this.pagination.pageIndex + '&pageSize=' +
       this.pagination.pageSize + "&varGroup=" + this.inVarGroup + "&varName=" + this.inVarName + "&varValue=" + this.inVarValue)
     this.loadData(response);
+   
   }
 
   loadData(response?: any) {
@@ -101,7 +103,7 @@ export class SysvarComponent implements OnInit {
       return;
     }
     let DESCRIPTION = sysvar.description;
-    let ORDER_NUM = sysvar.orderNum;
+    let ORDER_NUM =Number(sysvar.orderNum);
     let response: any = await this.dataService.postAsync('/api/sysvar', { VAR_GROUP, VAR_NAME, VAR_VALUE, DESCRIPTION, ORDER_NUM })
     if (response.err_code == 0) {
       this.getData();

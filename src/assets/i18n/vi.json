@@ -438,7 +438,9 @@
         "messageOtp": "Mã OTP đã được gửi đến số điện thoại của bạn!",
         "inputOtp": "Vui lòng nhập mã OTP gồm 6 chữ số",
         "sendto": "Gửi lại OTP",
-        "sendinputOtp": "Thời gian nhập còn lại"
+        "totalMoney": "Tổng tiền đã sử dụng(đ)",
+        "limitUse": "Hạn mức sử dụng(đ)",
+        "sendinputOtp": "Thời gian nhập otp còn lại"
     },
     "package": {
         "title": "Quản lý gói cước One",
@@ -519,6 +521,10 @@
         "coefficient": "Hệ số",
         "data_campaign_confirm": "Xác nhận hủy đơn hàng"
     },
+    "data_otp": {
+        "inputOtp": "Mã otp không được trống"
+
+    },
     "statistic-data-sms": {
         "title": "Thống kê gửi Data",
         "account": "Tài khoản",
@@ -554,6 +560,7 @@
     },
     "scenarios": {
         "title": "Quản lý kịch bản",
+        "choose_scenario": "Chọn kịch bản",
         "code_scenar": "Mã kịch bản",
         "name_scenar": "Tên kịch bản",
         "inCode_scenar": "Nhập mã kịch bản",
@@ -565,7 +572,8 @@
         "isSendSms": "Gửi SMS",
         "accumulate_points": "Tích điểm",
         "IsMultiple": "Tạo 1 chiến dịch con",
-        "checkRewardOneTime": "Tặng 1 lần",
+        "checkRewardOneTime": "Số lần tặng",
+        "InputcheckRewardOneTime": "Nhập số lần tặng",
         "phone": "Số điện thoại",
         "add": "Thêm kịch bản",
         "edit": "Sửa kịch bản",

@@ -514,8 +514,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-success btn-sm" (click)="sendContinuous()">
                     {{'global.ok' | translate}}</button>
-                <button type="submit" class="btn btn-success" *ngIf="isAdmin"><a routerLink=""
-                        style="color: #fff">{{'send_data.move_data_manager' | translate}}</a></button>
+                <!-- <button type="submit" class="btn btn-success" *ngIf="isAdmin"><a routerLink=""
+                        style="color: #fff">{{'send_data.move_data_manager' | translate}}</a></button> -->
             </div>
         </div>
     </div>
@@ -618,7 +618,7 @@
                 <img *ngIf="loading" class="pl-2" style="margin-right: 10px" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
                 />
                 <button type="button" class="btn btn-default" (click)="confirmSendDataSMSModal.hide()">{{'global.cancel' | translate}}</button>
-                <button type="submit" class="btn btn-success" (click)="confirmSendSMS()">{{'global.confirm' | translate}}</button>
+                <button type="submit" class="btn btn-success" (click)="createDataOtp()">{{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>
@@ -639,19 +639,18 @@
                 </div>
                 <div class="row margin-top">
                     <div class="col-md-12 col-sm-12 col-xs-12">
-                        <input type="number" class="form-control" name="numberOtp" [(ngModel)]="numberOtp" placeholder="{{'send_data.inputOtp' | translate}}">
+                        <input type="number" class="form-control" name="numberOtp" [(ngModel)]="numberOtp" placeholder="{{'send_data.inputOtp' | translate}}" (keyup)="checkOtpLength()" (keydown)="checkOtpLength()">
                     </div>
                 </div>
                 <div class="margin-top">
-                    <timer countdown="10041" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer>
+                    <label style="font-style: italic; font-size: 12px;">{{'send_data.sendinputOtp' | translate}}&nbsp;
+                       <span style="color: red;">{{countermin}}:{{countersec}}</span>&nbsp;giây</label>
                 </div>
-
             </div>
-
             <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm pull-left" (click)="sendContinuous()">{{'send_data.sendto' | translate}}</button>
-                <button type="button" class="btn btn-default btn-sm" (click)="confirmOtp.hide()">{{'global.cancel' | translate}}</button>
-                <button type="button" class="btn btn-success btn-sm" (click)="sendContinuous()">
+                <button type="button" class="btn btn-default btn-sm pull-left" (click)="resendOtp()" [disabled]="!disable_resend_otp">{{'send_data.sendto' | translate}}</button>
+                <button type="button" class="btn btn-default btn-sm" (click)="confirmOtphide()">{{'global.cancel' | translate}}</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="confirmSendDataOtp()">
                     {{'global.confirm' | translate}}</button>
             </div>
         </div>

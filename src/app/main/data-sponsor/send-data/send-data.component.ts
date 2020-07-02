@@ -15,7 +15,7 @@ import { UtilityService } from 'src/app/core/services/utility.service';
   styleUrls: ['./send-data.component.css'],
 
 })
-export class SendDataComponent implements OnInit{
+export class SendDataComponent implements OnInit {
   @ViewChild('contentSMS', { static: false }) public contentSMS;
   @ViewChild('confirmDeleteFilePhoneModal', { static: false }) public confirmDeleteFilePhoneModal: ModalDirective;
   @ViewChild('confirmAfterSuccessModal', { static: false }) public confirmAfterSuccessModal: ModalDirective;
@@ -24,7 +24,7 @@ export class SendDataComponent implements OnInit{
   @ViewChild('choosePackageModal', { static: false }) public choosePackageModal: ModalDirective;
   @ViewChild('uploadFile', { static: false }) public uploadFile;
   @ViewChild('uploadExcelModal', { static: false }) public uploadExcelModal;
-  
+
 
   public dataPhone = [];
   public dataPhoneTamp = [];
@@ -95,6 +95,7 @@ export class SendDataComponent implements OnInit{
   public isSendSMS: boolean = true;
   public chkcampaign: boolean = true;
   public chkOnlyOneCreate: boolean = false;
+  public disable_resend_otp: boolean = false;
   public chkOnlyOneOld: boolean = false;
   public campaign: boolean = true;
   public ischeckgroup: boolean = false;
@@ -124,7 +125,8 @@ export class SendDataComponent implements OnInit{
   public PACKAGE_ID: any = null;
   public totalNumberSendSms = 0;
   public date: Date = new Date();
-
+  public countermin: number;
+  public countersec: number;
   public amt_expected = null;
   public numberPhone = 0;
   public totalNumber = 0;
@@ -134,16 +136,28 @@ export class SendDataComponent implements OnInit{
   public smsContent: string = '';
   public minDate: Date;
   public pagination: Pagination = new Pagination();
+  public numberOtp: number;
+  public campaign_id: number;
 
   public timeSchedule: Date;
   public programCode: string = '';
   public programName: string = '';
+  public limit_time: string='';
 
   public total_amt = 0;
   public quota = 0;
   public role: Role = new Role();
   public loading: boolean = false;
   public isAdmin: boolean = false;
+
+  // get data insert dataOtp
+  public phoneDataOtp: string = '';
+  public telcoDataOtp: string = '';
+  public accountDataOtp: string = '';
+  public otpDataOtp: number;
+  public otpSmsDataOtp: string = '';
+  public senderNameDataOtp: string = '';
+
 
   constructor(private dataService: DataService,
     private modalService: BsModalService,
@@ -268,11 +282,23 @@ export class SendDataComponent implements OnInit{
   }
   ngOnInit() {
     this.getAccountLogin();
+    this.GetDataSysVarOtp();
   }
-
+  async GetDataSysVarOtp() {
+    let result = await this.dataService.getAsync('/api/SysVar/GetSysVarOtp');
+    debugger
+    if (result) {
+      if (result.err_code == 0) {
+         this.otpSmsDataOtp = result.data[0].VAR_VALUE;
+         this.limit_time = result.data[1].VAR_VALUE;
+         this.senderNameDataOtp = result.data[2].VAR_VALUE;
+      }
+    }
+  }
   async getAccountLogin() {
     let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
     let roleAccess = result.data[0].ROLE_ACCESS;
+    this.phoneDataOtp = result.data[0].PHONE;
     if (roleAccess != null && roleAccess == 50) {
       this.isAdmin = true;
     } else {
@@ -319,10 +345,10 @@ export class SendDataComponent implements OnInit{
     }
     else {
       this.chkcampaign = false;
-      this.programCode="";
+      this.programCode = "";
       this.getCampaign();
     }
-    
+
   }
 
   async getCampaign() {
@@ -330,32 +356,34 @@ export class SendDataComponent implements OnInit{
     this.selectedCampaign = [];
     let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignByAccount?account_id=' + account)
+    if (response) {
+      for (let index in response.data) {
+        this.dataCampaign.push({ "id": response.data[index].ID, "itemName": response.data[index].PROGRAM_NAME });
+      }
+    }
+
+  }
+
+  //get sms temp
+
+  async getDataSmsTemp() {
+    this.dataOptionInsertSms = [];
+    this.selectedOptionTempSms = [];
+    let response: any = await this.dataService.getAsync('/api/SmsTemplate')
     for (let index in response.data) {
-      this.dataCampaign.push({ "id": response.data[index].ID, "itemName": response.data[index].PROGRAM_NAME });
+      this.dataOptionInsertSms.push({ "id": response.data[index].ID, "itemName": response.data[index].TEMP_NAME, "conten_sms": response.data[index].TEMPLATE_CONTENT });
     }
   }
-
-//get sms temp
-
-async getDataSmsTemp() {
-  debugger
-  this.dataOptionInsertSms = [];
-  this.selectedOptionTempSms = [];
-  let response: any = await this.dataService.getAsync('/api/SmsTemplate')
-  for (let index in response.data) {
-    this.dataOptionInsertSms.push({ "id": response.data[index].ID, "itemName": response.data[index].TEMP_NAME, "conten_sms": response.data[index].TEMPLATE_CONTENT });
-  }
-}
 
   async selectCampaign() {
     let campaignId = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != null ? this.selectedCampaign[0].id : 0;
     let response: any = await this.dataService.getAsync('/api/DataCampaign/' + campaignId);
     if (response.err_code == 0 && response.data.length > 0) {
-      if (response.data[0].IS_REWARD_ONE_TIME == 1)
+      if (response.data[0].REWARD_NUMBER_ONE_TIME == 1)
         this.chkOnlyOneOld = true;
       else
         this.chkOnlyOneOld = false;
-      this.timeDonateOld = response.data[0].REWARD_ONE_TIME_IN_DAYS;
+      this.timeDonateOld = response.data[0].REWARD_NUMBER_TIME_IN_DAYS;
     }
   }
 
@@ -363,13 +391,6 @@ async getDataSmsTemp() {
     this.chkOnlyOneOld = false;
     this.timeDonateOld = 0;
   }
-
-  // chkSendOne(event) {
-  //   if (event)
-  //     this.isOneSend = true;
-  //   else
-  //     this.isOneSend = false;
-  // }
 
   // get phone by file list 
   async getPhoneNumber(event) {
@@ -624,20 +645,19 @@ async getDataSmsTemp() {
     this.smsContent = startString.trim() + this.selectedOptionInsert[0].id + endString.trim();
     this.contentSMS.nativeElement.focus();
     this.countSMS(this.smsContent);
-    
+
   }
   //option insert
   changeOptionInsertSms() {
-    debugger
-    this.contentSMS.nativeElement.value="";
+    this.contentSMS.nativeElement.value = "";
     this.contentSMS.nativeElement.focus();
     let startString = this.contentSMS.nativeElement.value.substr(0, this.contentSMS.nativeElement.selectionStart);
     let endString = this.contentSMS.nativeElement.value.substr(this.contentSMS.nativeElement.selectionStart, this.contentSMS.nativeElement.value.length);
     this.smsContent = startString.trim() + this.selectedOptionTempSms[0].conten_sms + endString.trim();
     this.contentSMS.nativeElement.focus();
     this.countSMS(this.smsContent);
-  //   this.selectedOptionTempSms=[];
-  //  this.selectedOptionTempSms.push({"id": "" , "itemName":this.utilityService.translate('send_data.optionSms')});
+    //   this.selectedOptionTempSms=[];
+    //  this.selectedOptionTempSms.push({"id": "" , "itemName":this.utilityService.translate('send_data.optionSms')});
   }
 
   async getDataSenderName(accountID) {
@@ -863,7 +883,7 @@ async getDataSmsTemp() {
   //#region 
   // show modal upload excel
   showModalUpload() {
-     this.confirmOtp.show();
+
     if (this.isAdmin) {
       this.accountId = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
       if (this.accountId == "") {
@@ -976,7 +996,6 @@ async getDataSmsTemp() {
 
   //show confirm send data sms
   async sendDataSMS() {
-    debugger
     this.ACCOUNT_ID = this.selectedItemComboboxAccount.length > 0 ? this.selectedItemComboboxAccount[0].id : 0;
     if (this.ACCOUNT_ID == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-21"));
@@ -984,6 +1003,7 @@ async getDataSmsTemp() {
       return;
     }
     this.account = this.selectedItemComboboxAccount[0].itemName;
+    this.accountDataOtp = this.ACCOUNT_ID;
     //send sms to customer from One
     if (this.isSendSMS) {
       this.SENDER_ID = this.selectedItemComboboxSender.length > 0 ? this.selectedItemComboboxSender[0].id : "";
@@ -993,6 +1013,7 @@ async getDataSmsTemp() {
         return;
       }
       this.senderName = this.selectedItemComboboxSender[0].itemName;
+      this.senderNameDataOtp = this.senderName;
       // check chiến dịch
       if (this.chkcampaign) {
         this.PROGRAM_NAME = this.programName;
@@ -1032,6 +1053,7 @@ async getDataSmsTemp() {
     this.timeSend = this.utilityService.formatDateToString(time, "yyyy/MM/dd HH:mm:ss");
     this.IS_SEND_SMS = this.isSendSMS ? 1 : 0;
     this.confirmSendDataSMSModal.show();
+
   }
 
   // send data sms
@@ -1075,7 +1097,6 @@ async getDataSmsTemp() {
       PACKAGE_NAME_VMS = this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim();
       DATA_VMS = this.dataViettel;
     }
-    debugger
     let REWARD_NUMBER = this.NumberRewardTimesInDay;
     let REWARD_NUMBER_TIME_IN_DAYS = this.timeDonateCreate;
     let chkCampaign = this.chkcampaign == true ? 0 : 1;
@@ -1138,9 +1159,7 @@ async getDataSmsTemp() {
       }
     }
 
-
     let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, listSmsSend);
-
     if (insertSms.err_code == 0) {
       this.messageAfterSend = insertSms.err_message;
       this.confirmAfterSuccessModal.show();
@@ -1163,7 +1182,44 @@ async getDataSmsTemp() {
     }
   }
 
-
+  async createDataOtp() {
+    debugger
+    let response: any = await this.dataService.postAsync('/api/DataOtp/InsertDataOtp?phone=' + this.phoneDataOtp + '&telco=' +
+      this.telcoDataOtp + '&account_id=' + this.accountDataOtp + '&sender_name=' + this.senderNameDataOtp + '&otp_sms=' + this.otpSmsDataOtp)
+    if (response) {
+      if (response.err_code == 0) {
+        this.confirmOtp.show();
+        this.startTimer();
+      } else {
+        this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("110"));
+        return;
+      }
+    }
+  }
+  async confirmSendDataOtp() {
+    let otp = this.numberOtp;
+    if (otp == 0 && otp == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.translate('data_otp.inputOtp'));
+      return;
+    }
+    let response: any = await this.dataService.getAsync('/api/DataOtp/GetDataOtpByOtp?otp=' + otp)
+    if (response) {
+      if (response.err_code == 0) {
+        this.confirmOtp.hide();
+        this.confirmSendSMS();
+      }
+      else if (response.err_code == -117) {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-117"));
+        return;
+      } else if (response.err_code == -118) {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-118"));
+        return;
+      } else {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+        return;
+      }
+    }
+  }
   //send sms continue
   sendContinuous() {
     this.confirmAfterSuccessModal.hide();
@@ -1258,44 +1314,88 @@ async getDataSmsTemp() {
         showCheckbox: false,
         disabled: false
       };
-      this.groupCode="";
-    }
-   
-  }
-  async createCodeNameCampaing(){
-    debugger
-    let USER_NAME;
-    if(this.isAdmin){
-      USER_NAME = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].itemName : this.authService.currentUserValue.USER_NAME;
-    }else{
-      USER_NAME  =this.authService.currentUserValue.USER_NAME;
-    }
-   
-    if(USER_NAME != null || USER_NAME !=""){
-      let accountName = USER_NAME.substring(0,3);
-    let codeName = (accountName + this.utilityService.formatDateToString(this.date, "yyMMddHHmm")).toUpperCase();
-    this.programCode = codeName;
-    }
-    
-  }
-
-  async createCodeGroup(){
-    let USER_NAME;
-    if(this.isAdmin){
-      USER_NAME = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].itemName : this.authService.currentUserValue.USER_NAME;
-    }else{
-      USER_NAME  =this.authService.currentUserValue.USER_NAME;
-    }
-    if(this.ischeckgroup == true){
-      if(USER_NAME != null || USER_NAME !=""){
-        let accountName = USER_NAME.substring(0,3);
-      let codeGroup = (accountName +'_' +'GRP'+'_'+this.utilityService.formatDateToString(this.date, "yyMMdd") + '_'+this.utilityService.formatDateToString(this.date, "HHmm")).toUpperCase();
-      this.groupCode = codeGroup;
-      }
-    }else{
       this.groupCode = "";
     }
-   
+
   }
+  async createCodeNameCampaing() {
+    let USER_NAME;
+    if (this.isAdmin) {
+      USER_NAME = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].itemName : this.authService.currentUserValue.USER_NAME;
+    } else {
+      USER_NAME = this.authService.currentUserValue.USER_NAME;
+    }
+
+    if (USER_NAME != null || USER_NAME != "") {
+      let accountName = USER_NAME.substring(0, 3);
+      let codeName = (accountName + this.utilityService.formatDateToString(this.date, "yyMMddHHmm")).toUpperCase();
+      this.programCode = codeName;
+    }
+
+  }
+
+  async createCodeGroup() {
+    let USER_NAME;
+    if (this.isAdmin) {
+      USER_NAME = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].itemName : this.authService.currentUserValue.USER_NAME;
+    } else {
+      USER_NAME = this.authService.currentUserValue.USER_NAME;
+    }
+    if (this.ischeckgroup == true) {
+      if (USER_NAME != null || USER_NAME != "") {
+        let accountName = USER_NAME.substring(0, 3);
+        let codeGroup = (accountName + '_' + 'GRP' + '_' + this.utilityService.formatDateToString(this.date, "yyMMdd") + '_' + this.utilityService.formatDateToString(this.date, "HHmm")).toUpperCase();
+        this.groupCode = codeGroup;
+      }
+    } else {
+      this.groupCode = "";
+    }
+
+  }
+  public intervalId = null
+  async startTimer() {
+    if((Number(this.limit_time) > 0)){
+      let smin = ((Number(this.limit_time) % 100));
+      let minsec = (smin - 60)/10;
+      if(smin > 60){
+        this.countersec = 60;
+      }else{
+        this.countersec = smin;
+      }
+      if(minsec > 0){
+        this.countermin = Math.floor(Number(this.limit_time) / 100) + minsec ;
+      }else{
+        this.countermin = Math.floor(Number(this.limit_time) / 100);
+      }
   
+    }
+   
+    this.intervalId = setInterval(() => {
+      this.disable_resend_otp = false;
+      if (this.countersec - 1 == -1) {
+        this.countermin -= 1;
+        this.countersec = 59
+      }
+      else {
+        this.countersec -= 1
+      }
+      if (this.countermin === 0 && this.countersec == 0) {
+        this.disable_resend_otp = true;
+        clearInterval(this.intervalId)
+      }
+    }, 1000)
+
+  }
+  async confirmOtphide() {
+    clearInterval(this.intervalId);
+    this.confirmOtp.hide();
+  }
+  async checkOtpLength() {
+    if (this.numberOtp != null && this.numberOtp.toString().length > 6) {
+      this.numberOtp = Number(this.numberOtp.toString().substr(0, 5));
+    }
+  }
+  async resendOtp() {
+    this.createDataOtp();
+  }
 }

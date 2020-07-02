@@ -113,9 +113,12 @@ export class AccountHistoryComponent implements OnInit {
     this.selectedCampaign = [];
     let account = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : null;
     let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignByAccount?account_id=' + account)
-    for (let index in response.data) {
-      this.dataCampaign.push({ "id": response.data[index].ID, "itemName": response.data[index].PROGRAM_NAME });
+    if(response){
+      for (let index in response.data) {
+        this.dataCampaign.push({ "id": response.data[index].ID, "itemName": response.data[index].PROGRAM_NAME });
+      }
     }
+  
   }
 
   //#region load data and paging

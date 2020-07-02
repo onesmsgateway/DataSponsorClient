@@ -400,6 +400,8 @@
         "messageOtp": "OTP code has been sent to your phone number!",
         "inputOtp": "Please input OTP 6 number",
         "sendto": "Send to OTP",
+        "totalMoney": "Total money used(vnd)",
+        "limitUse": "Limit Use(vnd)",
         "sendinputOtp": "Import time remaining"
     },
     "scenarios-birthday": {
@@ -539,6 +541,7 @@
     },
     "scenarios": {
         "title": "Scenarios manager",
+        "choose_scenario": "Choose scenario",
         "code_scenar": "Code",
         "name_scenar": "Nam",
         "inCode_scenar": "Input code",
@@ -551,7 +554,8 @@
         "inActive": "In active",
         "accumulate_points": "Accumulate points",
         "isSendSms": "Send SMS",
-        "checkRewardOneTime": "Donate 1 time",
+        "checkRewardOneTime": "Donate time",
+        "InputcheckRewardOneTime": "Input donate time",
         "IsMultiple": "Create 1 scenarios detail",
         "value": "Value",
         "phone": "Phone",
@@ -674,6 +678,9 @@
         "manager_member": "Member manager file",
         "birthday": "Birthday",
         "inputbirthday": "Please input Birthday"
+    },
+    "data_otp": {
+        "inputOtp": "Mã otp không được trống"
     },
     "account_history": {
         "title": "Account history send data",

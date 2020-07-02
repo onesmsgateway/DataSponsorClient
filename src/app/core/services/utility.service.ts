@@ -79,6 +79,7 @@ export class UtilityService {
     return new Date(input.replace(/(\d{2})[-/](\d{2})[-/](\d+)/, "$2/$1/$3"));
   }
 
+
   public formatDateToString(input: any, template: string): string {
     if (typeof input == "object") {
       return formatDate(input, template, 'en-US');

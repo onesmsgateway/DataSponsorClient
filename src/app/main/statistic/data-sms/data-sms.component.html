@@ -28,14 +28,19 @@
                                     </angular2-multiselect>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-xs-6 form-group">
+                                    <angular2-multiselect [data]="dataScenario" [(ngModel)]="selectedScenario" [settings]="settingsFilterScenario" name="scenario" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-6 form-group">
                                     <angular2-multiselect [data]="dataPkNameDisplay" [(ngModel)]="selectedPkNameDisplay" [settings]="settingsFilterPkNameDisplay" name="pkNameDisplay" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                     </angular2-multiselect>
                                 </div>
+
+                            </div>
+                            <div class="row" style="margin-left: 10px; margin-right: 10px;">
                                 <div class="col-md-3 col-sm-3 col-xs-6 form-group">
                                     <input type="text" class="form-control" placeholder="{{'statistic-data-sms.phone' | translate}}" name="phone" ngModel>
                                 </div>
-                            </div>
-                            <div class="row" style="margin-left: 10px; margin-right: 10px;">
                                 <div class="col-md-3 col-sm-3 col-xs-6 form-group">
                                     <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
                                 </div>
@@ -44,7 +49,7 @@
                                     <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
                                 </div>
 
-                                <div class="col-md-6 col-sm-3 col-xs-6 form-group">
+                                <div class="col-md-3 col-sm-3 col-xs-6 form-group">
                                     <input type="text" class="form-control" placeholder="{{'statistic-data-sms.content' | translate}}" name="smsContent" ngModel>
                                     <!-- <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco" [settings]="settingsFilterTelco" name="Telco" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect> -->
