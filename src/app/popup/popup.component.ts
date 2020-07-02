@@ -54,7 +54,6 @@ export class PopupComponent implements OnInit {
   }
 
   async loadscenario() {
-    debugger
     var scenario_code = this.scenarioCode;
     let response: any = await this.dataService.getAsync('/api/Popup/GetScenariosByCode?code=' + scenario_code);
     if (response != null) {
@@ -96,7 +95,6 @@ export class PopupComponent implements OnInit {
   }
   //#region create new
   async createMember(item) {
-    debugger
     let member = item.value;
     let ACCOUNT_ID = this.account_Id;
     let SCENARIO_CODE = this.scenarioCode;

@@ -6,12 +6,7 @@
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
                         <h2>{{ 'sys_var.list_sys_var' | translate }}</h2>
-                        <!-- <ul class="nav navbar-right panel_toolbox">
-              <li><a class="collapse-link" onclick="collapseBox(this)"><i class="fa fa-chevron-up"></i></a>
-              </li>
-              <li><a class="close-link" onclick="closeBox(this)"><i class="fa fa-close"></i></a>
-              </li>
-            </ul> -->
+
                     </div>
                     <div class="x_content">
                         <form class="row form-horizontal form-label-left input_mask">
@@ -45,7 +40,7 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
                                     <button type="submit" class="btn btn-success btn-sm" (click)="exportExcel()">{{ 'global.export_excel' | translate }}</button>
                                 </div>
                             </div>
@@ -75,8 +70,8 @@
                                                     <td class="text-center">{{ data.LIST_SYSVAR[0].ORDER_NUM }}</td>
                                                     <td>
                                                         <div class="tool">
-                                                            <button type="submit" (click)="confirmUpdateModal(data.LIST_SYSVAR[0].ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                            <button type="submit" (click)="showConfirmDelete(data.LIST_SYSVAR[0].ID,data.LIST_SYSVAR[0].VAR_NAME)" class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
+                                                            <button type="submit" *ngIf="role.IS_EDIT" (click)="confirmUpdateModal(data.LIST_SYSVAR[0].ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                            <button type="submit" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(data.LIST_SYSVAR[0].ID,data.LIST_SYSVAR[0].VAR_NAME)" class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -88,8 +83,8 @@
                                                         <td class="text-center">{{number.ORDER_NUM}}</td>
                                                         <td>
                                                             <div class="tool">
-                                                                <button type="submit" (click)="confirmUpdateModal(data.LIST_SYSVAR[i].ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                                <button type="submit" (click)="showConfirmDelete(data.LIST_SYSVAR[i].ID, data.LIST_SYSVAR[i].VAR_NAME)" class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
+                                                                <button type="submit" *ngIf="role.IS_EDIT" (click)="confirmUpdateModal(data.LIST_SYSVAR[i].ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                                <button type="submit" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(data.LIST_SYSVAR[i].ID, data.LIST_SYSVAR[i].VAR_NAME)" class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
                                                             </div>
                                                         </td>
                                                     </tr>

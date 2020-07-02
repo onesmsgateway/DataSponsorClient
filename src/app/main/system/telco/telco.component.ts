@@ -7,6 +7,8 @@ import { NotificationService } from 'src/app/core/services/notification.service'
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AppConst } from 'src/app/core/common/app.constants';
 import { UtilityService } from 'src/app/core/services/utility.service';
+import { Role } from 'src/app/core/models/role';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-telco',
@@ -22,6 +24,7 @@ export class TelcoComponent implements OnInit {
   public dataTelco;
   public pagination: Pagination = new Pagination();
   public telCode;
+  public role: Role = new Role();
   public inTelCode: string = '';
   public inTelName: string = '';
   public isCheckedDelete: boolean = false;
@@ -33,11 +36,17 @@ export class TelcoComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private modalService: BsModalService,
+    private activatedRoute: ActivatedRoute,
     private notificationService: NotificationService,
     private utilityService: UtilityService,
     private authService: AuthService) {
     modalService.config.backdrop = 'static';
-
+    debugger
+    this.activatedRoute.data.subscribe(data => {
+      this.utilityService.getRole(data.MENU_CODE).then((response) => {
+        if (response) this.role = response;
+      })
+    });
     this.formEditTelco = new FormGroup({
       id: new FormControl(),
       telCode: new FormControl(),

@@ -158,7 +158,6 @@ export class SmsTemplateComponent implements OnInit {
 
   //#region load account
   async getDataAccount() {
-    debugger
     if (this.isAdmin) {
       this.selectedItemComboboxAccount = [{ "id": "", "itemName": this.utilityService.translate("global.choose_account") }];
       this.selectedItemComboboxAccountAdd = [{ "id": "", "itemName": this.utilityService.translate("global.choose_account") }];
@@ -207,7 +206,6 @@ export class SmsTemplateComponent implements OnInit {
   //#endregion
 
   onItemSelectSms() {
-    debugger
     this.getData();
   }
   //#endregion
@@ -220,13 +218,8 @@ export class SmsTemplateComponent implements OnInit {
       sender_id = this.selectedItemComboboxSender.length > 0 ? this.selectedItemComboboxSender[0].id : "";
     }
     else {
-      this.accountID = (this.selectedItemComboboxAccount.length > 0) ? this.selectedItemComboboxAccount[0].id : "0";
-      if (this.selectedItemComboboxSender.length > 0)
-        sender_id = this.selectedItemComboboxSender[0].id;
-      else if (this.selectedItemComboboxAccount.length > 0)
-        sender_id = "";
-      else
-        sender_id = "0";
+      this.accountID = (this.selectedItemComboboxAccount.length > 0) ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+      sender_id = this.selectedItemComboboxSender.length > 0 ? this.selectedItemComboboxSender[0].id : "";
     }
     let response: any = await this.dataService.getAsync('/api/SmsTemplate/GetSmsTemplatePaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&accountID=" + this.accountID +
@@ -414,7 +407,6 @@ export class SmsTemplateComponent implements OnInit {
     }
     let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
       account_id)
-    debugger
     for (let index in response.data) {
       this.dataSenderName.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
     }
@@ -428,7 +420,6 @@ export class SmsTemplateComponent implements OnInit {
     let account_id = this.selectedItemComboboxAccountAdd.length > 0 ? this.selectedItemComboboxAccountAdd[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
       account_id)
-    debugger
     for (let index in response.data) {
       this.dataSenderNameAdd.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
     }
@@ -443,7 +434,6 @@ export class SmsTemplateComponent implements OnInit {
     let account_id = this.selectedItemComboboxSenderEdit.length > 0 ? this.selectedItemComboboxSenderEdit[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
       account_id)
-    debugger
     for (let index in response.data) {
       this.dataSenderNameEdit.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
     }

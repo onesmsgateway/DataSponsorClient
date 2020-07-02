@@ -42,6 +42,7 @@ export class UtilityService {
   }
 
   public async getRole(menuCode: string) {
+debugger
     let response: any = await this.http.get(AppConst.DATA_SPONSOR_API + "/api/AccessRole/GetRoleByMenuCode?menuCode=" + menuCode).toPromise();
     if(response && response.data) {
       return <Role>response.data;

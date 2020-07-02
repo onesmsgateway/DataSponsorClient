@@ -184,24 +184,4 @@ export class AccountHistoryComponent implements OnInit {
     this.getListDataSms();
   }
   //#endregion
-
-  // public async exportExcel() {
-  //   debugger
-  //   let accountID = "0";
-  //   if (this.isAdmin)
-  //     accountID = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
-  //   else if (!this.isAdmin && this.selectedAccount.length == 0)
-  //     accountID = "0";
-  //   else accountID = this.selectedAccount[0].id;
-  //   let campaignId = this.selectedCampaign.length > 0 ? this.selectedCampaign[0].id : "";
-
-  //   let result: boolean = await this.dataService.getFileExtentionAccountHistoryAsync("/api/FileExtention/ExportExcelAccountHistory",
-  //     accountID, campaignId, this.smsContent, this.ip, this.fromDate, this.toDate, "AccountHistory");
-  //   if (result) {
-  //     this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
-  //   }
-  //   else {
-  //     this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("125"));
-  //   }
-  // }
 }

@@ -224,7 +224,6 @@ export class GroupsComponent implements OnInit {
 
   // update tin mẫu
   async editGroup() {
-debugger
     let formData = this.formEditGroup.controls;
     let ID = formData.groupId.value;
     if (formData.account.value.length == 0) {

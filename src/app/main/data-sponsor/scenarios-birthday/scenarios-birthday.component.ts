@@ -120,7 +120,6 @@ export class ScenariosBirthdayComponent implements OnInit {
     private utilityService: UtilityService,
     private authService: AuthService) {
     modalService.config.backdrop = 'static';
-
     this.activatedRoute.data.subscribe(data => {
       this.utilityService.getRole(data.MENU_CODE).then((response) => {
         if (response) this.role = response;
@@ -458,7 +457,6 @@ export class ScenariosBirthdayComponent implements OnInit {
     this.selectedPackageVTL=[];
     this.selectedPackageGPC=[];
     this.selectedPackageVMS=[];
-    debugger
     let account;
     if (this.isAdmin) {
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
@@ -543,14 +541,12 @@ export class ScenariosBirthdayComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
       return;
     }
-    debugger
     let IS_ACTIVE = this.checkActive == true ? 1 : 0;
     let response: any = await this.dataService.postAsync('/api/BirthdayScenario', {
       ACCOUNT_ID, GROUP_ID, SCENARIO_NAME, SENDER_NAME, SMS_CONTENT, SEND_AT_TIME, SEND_BEFORE_DAYS, PACKAGE_ID_VTL
       , PACKAGE_ID_GPC,
       PACKAGE_ID_VMS, IS_ACTIVE
     })
-    debugger
     if (response) {
       if (response.err_code == 0) {
         this.getData();
@@ -585,7 +581,6 @@ export class ScenariosBirthdayComponent implements OnInit {
     this.selectedComboboxGroupEdit = [];
     this.selectedItemComboboxSenderEdit = [];
     let response: any = await this.dataService.getAsync('/api/BirthdayScenario/' + id);
-    debugger
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
       account_id = dataDetail.ACCOUNT_ID;
@@ -823,21 +818,17 @@ export class ScenariosBirthdayComponent implements OnInit {
 
   ////get data sender
   async getDataSenderNameAdd(accountID) {
-    debugger
     this.selectedItemComboboxSenderAdd = [];
     this.dataSenderNameAdd = [];
     let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
       accountID)
-      debugger
     for (let index in response.data) {
       this.dataSenderNameAdd.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
     }
-    // if (this.dataSenderNameAdd.length == 1)
-    //   this.selectedItemComboboxSenderAdd.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
+   
   }
   //get data sender
   async getDataSenderNameEdit(accountID) {
-    debugger
     this.selectedItemComboboxSenderEdit = [];
     this.dataSenderNameEdit = [];
     let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +

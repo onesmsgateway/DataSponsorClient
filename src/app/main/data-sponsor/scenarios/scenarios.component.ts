@@ -358,7 +358,6 @@ export class ScenariosComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&code=" + this.inCodeScenar +
       "&name=" + this.inNameScenar + "&active=" + active)
-      debugger
     if (response) {
       if (response.err_code == 0) {
         this.loadData(response);
@@ -449,7 +448,6 @@ export class ScenariosComponent implements OnInit {
 
   //#region create new
   async createScenarios(item) {
-debugger
     let scenar = item.value;
     let combobox = item.controls;
     let SENDER_NAME = "";
@@ -523,20 +521,17 @@ debugger
      }else{
       SENDER_NAME = "";
      }
-   
-     debugger
+
     let LIMIT_USE_MAX = scenar.limitUse;
     if(LIMIT_USE_MAX ==null || LIMIT_USE_MAX ==""){
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-115"));
       return
     }
-    debugger
     let response: any = await this.dataService.postAsync('/api/Scenarios', {
       ACCOUNT_ID, CODE, NAME, DESC_CONTENT, START_DATE, END_DATE, IS_ACTIVE, IS_ACCUMULATE_POINT, IS_SEND_SMS, SCENARIO_TYPE
       , REWARD_NUMBER_ONE_TIME,
       REWARD_NUMBER_TIME_IN_DAYS, SMS_CONTENT, URL_POSTER, SENDER_NAME,LIMIT_USE_MAX
     })
-    debugger
     if (response) {
       if (response.err_code == 0) {
         //item.reset();
@@ -617,7 +612,6 @@ debugger
 
   // show update modal
   async confirmUpdateModal(id) {
-   debugger
     this.settingsFilterAccountEdit = {
       text: this.utilityService.translate('global.choose_account'),
       singleSelection: true,
@@ -662,7 +656,6 @@ debugger
       this.componentScenariosDetail.quantityVMS = 1;
       this.componentScenariosDetail.quantityVTL = 1;
       this.componentScenariosDetail.getData();
-      debugger
       this.getDataCimastEdit(account_id);
       if (response.data[0].URL_POSTER == null || response.data[0].URL_POSTER == "") {
         this.urlImageUploadEdit = "../../assets/img/logo-login.png";
@@ -679,7 +672,6 @@ debugger
 
   // update tin mẫu
   async editScenarios() {
-debugger
     let formData = this.formEditScenarios.controls;
     let ID = formData.id.value;
     if (formData.account.value.length == 0) {
@@ -741,18 +733,14 @@ debugger
     let IS_ACCUMULATE_POINT = formData.isCheckAccumulatePoint.value == true ? 1 : 0;
     let IS_SEND_SMS = formData.checkSendSms.value == true ? 1 : 0;
     let REWARD_NUMBER_ONE_TIME = parseInt(formData.checkRewardOneTime.value);
-   
     let REWARD_NUMBER_TIME_IN_DAYS = parseInt(formData.RewardOneTimeInDay.value);
-
      let LIMIT_USE_MAX;
-     debugger
      if(formData.limitUseEdit.value ==null || formData.limitUseEdit.value ==""){
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-115"));
       return
     }else{
       LIMIT_USE_MAX = formData.limitUseEdit.value;
     }
-    debugger
     let response: any = await this.dataService.putAsync('/api/Scenarios/' + ID, {
       ACCOUNT_ID, NAME, DESC_CONTENT, START_DATE, END_DATE, IS_ACTIVE, IS_ACCUMULATE_POINT,
       IS_SEND_SMS, SCENARIO_TYPE, REWARD_NUMBER_ONE_TIME, REWARD_NUMBER_TIME_IN_DAYS, SENDER_NAME, SMS_CONTENT, URL_POSTER,LIMIT_USE_MAX
@@ -1101,13 +1089,11 @@ debugger
   }
  
  async getSendID(Id) {
-   debugger
    this.Idsend = Id;
    this.getScenarioById();
   }
   async getScenarioById(){
     let response: any = await this.dataService.getAsync('/api/Scenarios/' +  this.Idsend)
-    debugger
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
      this.Account_Id_SMS = dataDetail.ACCOUNT_ID;
@@ -1116,7 +1102,6 @@ debugger
     } 
   }
   async getDataCimastAdd() {
-debugger
     let account = "";
     if (this.isAdmin)
       account = this.selectedItemComboboxAccountCreate.length != 0 && this.selectedItemComboboxAccountCreate[0].id != "" ? this.selectedItemComboboxAccountCreate[0].id : 0;
@@ -1128,12 +1113,9 @@ debugger
     }
   }
   async getDataCimastEdit(account_id) {
-
     let response: any = await this.dataService.getAsync('/api/Scenarios/GetDataCimast?account_id=' + account_id);
     if (response != null && response.data.length > 0) {
       this.totalUseEdit = Number(Math.round(response.data[0].TOTAL_USE)).toLocaleString('en-GB');
-      console.log(this.totalUseEdit);
-      
     }
   }
 }

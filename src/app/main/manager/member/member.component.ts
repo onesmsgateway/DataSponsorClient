@@ -331,7 +331,6 @@ export class MemberComponent implements OnInit {
     let response: any = await this.dataService.postAsync('/api/Person', {
       ACCOUNT_ID, PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, NOTES, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS, BIRTHDAY
     })
-    debugger
     if (response.err_code == 0) {
       item.reset();
       this.getData();
@@ -349,7 +348,6 @@ export class MemberComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
-    debugger
     let account_id = 0;
     let group_id = 0;
     let groupName="";
@@ -364,7 +362,6 @@ export class MemberComponent implements OnInit {
       disabled: true
     };
     let response: any = await this.dataService.getAsync('/api/Person/' + id)
-    debugger
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
       account_id= dataDetail.ACCOUNT_ID;
@@ -480,7 +477,6 @@ export class MemberComponent implements OnInit {
   // export template excel
   async excelTemplateMember() {
     let result: boolean = await this.dataService.getFileExtentionAsync("/api/FileExtention/ExportExcelTemplateMember", "DataSms", "template_member.xlsx");
-    debugger
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
     }
@@ -493,7 +489,6 @@ export class MemberComponent implements OnInit {
   }
   // upload file
   public async submitUploadFile() {
-    debugger
     if (this.selectedGroupUpload.length == 0 && (this.groupCode == null || this.groupCode == "")) {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-99"));
       this.loading = false;

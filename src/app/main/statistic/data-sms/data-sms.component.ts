@@ -297,7 +297,6 @@ export class DataSmsComponent implements OnInit {
   // get package name display
 
   async getPackageNameDisplay() {
-    debugger
     this.dataPkNameDisplay = [];
     this.selectedPkNameDisplay = [];
     let response: any = await this.dataService.getAsync('/api/PackageTelco/GetPackageNameDisplay')

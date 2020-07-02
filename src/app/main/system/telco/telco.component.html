@@ -39,8 +39,8 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
-                                    <button type="button" class="btn btn-danger btn-sm" (click)="confirmDeleteMulti()">{{ 'global.multi_delete' | translate }}</button>
+                                    <button type="button" *ngIf="role.IS_ADD" class="btn btn-primary btn-sm" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
+                                    <button type="button" *ngIf="role.IS_DELETE" class="btn btn-danger btn-sm" (click)="confirmDeleteMulti()">{{ 'global.multi_delete' | translate }}</button>
                                 </div>
                             </div>
                         </form>
@@ -59,7 +59,7 @@
                                                 <th class="text-center">{{ 'telco.tel_code' | translate }}</th>
                                                 <th class="text-center">{{ 'telco.tel_name' | translate }}</th>
                                                 <th class="text-center">{{ 'telco.phone_header' | translate }}</th>
-                                                <th class="text-center">{{ 'global.tool' | translate }}</th>
+                                                <th class="text-center" *ngIf="role.IS_EDIT">{{ 'global.tool' | translate }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -71,9 +71,9 @@
                                                 <td>{{item.TEL_CODE}}</td>
                                                 <td>{{item.TEL_NAME}}</td>
                                                 <td>{{item.PHONE_HEADER}}</td>
-                                                <td class="text-center">
+                                                <td class="text-center" *ngIf="role.IS_EDIT">
                                                     <div class="tool">
-                                                        <button type="submit" (click)="confirmUpdateModal(item.ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                        <button type="submit" *ngIf="role.IS_EDIT" (click)="confirmUpdateModal(item.ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
                                                     </div>
                                                 </td>
                                             </tr>

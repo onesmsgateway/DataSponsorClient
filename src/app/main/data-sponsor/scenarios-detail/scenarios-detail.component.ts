@@ -156,7 +156,6 @@ export class ScenariosDetailComponent implements OnInit {
   }
   //loaddataScenario
   async getDataScenario() {
-    debugger
     let response: any = await this.dataService.getAsync('/api/Scenarios/' + this.scenarioId)
    this.scenario_type = response.data[0].SCENARIO_TYPE;
    if(this.scenario_type!=this.utilityService.translate('scenarios.scenariosDetailTwo')){

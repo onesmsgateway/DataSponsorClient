@@ -286,7 +286,6 @@ export class SendDataComponent implements OnInit {
   }
   async GetDataSysVarOtp() {
     let result = await this.dataService.getAsync('/api/SysVar/GetSysVarOtp');
-    debugger
     if (result) {
       if (result.err_code == 0) {
          this.otpSmsDataOtp = result.data[0].VAR_VALUE;
@@ -1183,7 +1182,6 @@ export class SendDataComponent implements OnInit {
   }
 
   async createDataOtp() {
-    debugger
     let response: any = await this.dataService.postAsync('/api/DataOtp/InsertDataOtp?phone=' + this.phoneDataOtp + '&telco=' +
       this.telcoDataOtp + '&account_id=' + this.accountDataOtp + '&sender_name=' + this.senderNameDataOtp + '&otp_sms=' + this.otpSmsDataOtp)
     if (response) {

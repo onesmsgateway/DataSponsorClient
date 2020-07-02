@@ -5,6 +5,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
+import { Role } from 'src/app/core/models/role';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-sysvar',
@@ -21,6 +23,7 @@ export class SysvarComponent implements OnInit {
   public pagination: Pagination = new Pagination();
   public varName;
   public id;
+  public role: Role = new Role();
   public isdelete = [];
   public inVarGroup: string = '';
   public inVarName: string = '';
@@ -29,12 +32,19 @@ export class SysvarComponent implements OnInit {
   public formEditSysVar: FormGroup;
 
   constructor(
+    
     private dataService: DataService,
     private modalService: BsModalService,
+    private activatedRoute: ActivatedRoute,
     private notificationService: NotificationService,
     private utilityService: UtilityService) {
-    this.modalService.config.backdrop = 'static';
-
+      modalService.config.backdrop = 'static';
+      debugger
+      this.activatedRoute.data.subscribe(data => {
+        this.utilityService.getRole(data.MENU_CODE).then((response) => {
+          if (response) this.role = response;
+        })
+      });
     this.formEditSysVar = new FormGroup({
       id: new FormControl(),
       varGroup: new FormControl(),

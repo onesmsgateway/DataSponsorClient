@@ -86,11 +86,6 @@ export class DataCimastComponent implements OnInit {
   // get total data
   async getDataTotal() {
 
-    let result: any = await this.dataService.getAsync('/api/DataSponsor/GetDataSponsorBalance');
-    if (result != null && result.data.length > 0) {
-      this.total_amt_telco = Math.round(result.data[0].TOTAL_REMAIN);
-    }
-
     let account = this.selectedAccountID.length != 0 && this.selectedAccountID[0].id != "" ? this.selectedAccountID[0].id : "";
     let response: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=' + this.isAdmin + '&account_id=' + account);
     if (response != null && response.data.length > 0) {

@@ -55,7 +55,6 @@ export class LoginComponent implements OnInit {
   }
 
   public async loginSystem() {
-    debugger
     this.submitted = true;
     if (this.loginForm.invalid) {
       return;
