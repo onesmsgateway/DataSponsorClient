@@ -103,7 +103,7 @@ export class AccountComponent implements OnInit {
       accountId: new FormControl(),
       userName: new FormControl(),
       fullName: new FormControl(),
-      avataredit: new FormControl(),
+      // avataredit: new FormControl(),
       phone: new FormControl(),
       email: new FormControl(),
       skype: new FormControl(),
@@ -193,9 +193,11 @@ export class AccountComponent implements OnInit {
         }
       }
     }else{
-      let role_id=0;
+
+      let account_id = Number(this.authService.currentUserValue.ACCOUNT_ID);
       let response = await this.dataService.getAsync('/api/accessrole/GetRoleByAccountid?account_id=' +
-       this.authService.currentUserValue.ACCOUNT_ID +'&role_id=' + role_id);
+      account_id);
+  
       if (response.err_code == 0) {
         let result = response.data;
         for (let i in result) {
@@ -317,14 +319,13 @@ export class AccountComponent implements OnInit {
     this.urlImageUpload = "../../assets/img/user_icon.jpg";
     this.uploadImage.nativeElement.value = "";
     this.createAccountModal.show();
+    this.loadListRole();
   }
 
   
   model: any = {};
   mobNumberPattern = "^(84|0)?[0-9]{9}$"
-
   async createAccount() {
-
     let USER_NAME = this.model.userName;
     let PHONE = this.model.phone;
     let IS_ACTIVE = this.checkActive == true ? 1 : 0;
@@ -424,7 +425,7 @@ export class AccountComponent implements OnInit {
         accountId: new FormControl(accountId),
         userName: new FormControl(dataAccount.USER_NAME),
         fullName: new FormControl(dataAccount.FULL_NAME),
-        avataredit: new FormControl(dataAccount.AVATAR),
+        // avataredit: new FormControl(dataAccount.AVATAR),
         phone: new FormControl(dataAccount.PHONE),
         email: new FormControl(dataAccount.EMAIL),
         skype: new FormControl(dataAccount.SKYPE),

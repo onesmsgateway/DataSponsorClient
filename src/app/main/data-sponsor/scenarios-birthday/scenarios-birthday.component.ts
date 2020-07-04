@@ -516,26 +516,19 @@ export class ScenariosBirthdayComponent implements OnInit {
     }else{
       SEND_BEFORE_DAYS = scenar.SendBeforeDays;
     }
-   
-
-    if (combobox.packageVTL.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-110"));
-      return;
+    let PACKAGE_ID_VTL;
+     if (combobox.packageVTL.value.length != 0) {
+       PACKAGE_ID_VTL = Number(combobox.packageVTL.value[0].id);
+     }
+    let PACKAGE_ID_GPC;
+    if (combobox.packageGPC.value.length != 0) {
+      PACKAGE_ID_GPC = Number(combobox.packageGPC.value[0].id);
     }
-    let PACKAGE_ID_VTL = combobox.packageVTL.value[0].id;
-
-    if (combobox.packageGPC.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-111"));
-      return;
-    }
-    let PACKAGE_ID_GPC = combobox.packageGPC.value[0].id;
-
-    if (combobox.packageVMS.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-112"));
-      return;
-    }
-    let PACKAGE_ID_VMS = combobox.packageVMS.value[0].id;
-
+    let PACKAGE_ID_VMS;
+     if (combobox.packageVMS.value.length != 0) {
+      PACKAGE_ID_VMS= Number(combobox.packageVMS.value[0].id);
+   }
+  
     let SMS_CONTENT = scenar.content;
     if (SMS_CONTENT == "" || SMS_CONTENT == null) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
@@ -582,10 +575,11 @@ export class ScenariosBirthdayComponent implements OnInit {
     this.selectedItemComboboxSenderEdit = [];
     let response: any = await this.dataService.getAsync('/api/BirthdayScenario/' + id);
     if (response.err_code == 0) {
+      debugger
       let dataDetail = response.data[0];
       account_id = dataDetail.ACCOUNT_ID;
       sender_id = dataDetail.ID != "" && dataDetail.ID != null ? dataDetail.ID : "";;
-      sender_name = dataDetail.ID != "" && dataDetail.ID != null ? dataDetail.SENDER_NAME : "";
+      sender_name = dataDetail.ID != "" && dataDetail.ID != null ? dataDetail.SENDER_NAME : this.utilityService.translate('package.choose_sender');
       groupId = dataDetail.GROUP_ID != "" && dataDetail.GROUP_ID != null ? dataDetail.GROUP_ID : "";
       groupName = dataDetail.GROUP_ID != "" && dataDetail.GROUP_ID != null ? dataDetail.GROUP_NAME : "";
       this.formEditScenariosBirthday = new FormGroup({
@@ -598,13 +592,13 @@ export class ScenariosBirthdayComponent implements OnInit {
         slSenderNameEdit: new FormControl(dataDetail.ID != "" && dataDetail.ID != null ? [{ "id": dataDetail.ID, "itemName": dataDetail.SENDER_NAME }]
           : [{ "id": "", "itemName": this.utilityService.translate('package.choose_sender') }]),
         SendAtTimeEdit: new FormControl(dataDetail.SEND_AT_TIME),
-        SendBeforeDaysEdit: new FormControl(dataDetail.SEND_BEFORE_DAYS),
+        SendBeforeDaysEdit: new FormControl(dataDetail.SEND_BEFORE_DAYS == 0 ? parseInt(""): dataDetail.SEND_BEFORE_DAYS),
         packageVTLEdit: new FormControl(dataDetail.PACKAGE_ID_VTL != "" && dataDetail.PACKAGE_ID_VTL != null ? [{ "id": dataDetail.PACKAGE_ID_VTL, "itemName": dataDetail.PACKAGE_NAME_VTL }]
-          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_group') }]),
+          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
         packageGPCEdit: new FormControl(dataDetail.PACKAGE_ID_GPC != "" && dataDetail.PACKAGE_ID_GPC != null ? [{ "id": dataDetail.PACKAGE_ID_GPC, "itemName": dataDetail.PACKAGE_NAME_GPC }]
-          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_group') }]),
+          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
         packageVMSEdit: new FormControl(dataDetail.PACKAGE_ID_VMS != "" && dataDetail.PACKAGE_ID_VMS != null ? [{ "id": dataDetail.PACKAGE_ID_VMS, "itemName": dataDetail.PACKAGE_NAME_VMS }]
-          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_group') }]),
+          : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
         contentEdit: new FormControl(dataDetail.SMS_CONTENT),
         isActiveEdit: new FormControl(dataDetail.IS_ACTIVE)
       });
@@ -659,25 +653,19 @@ export class ScenariosBirthdayComponent implements OnInit {
     let SENDER_NAME = formData.slSenderNameEdit.value[0].itemName;
     let SEND_AT_TIME = formData.SendAtTimeEdit.value.toString();
     let SEND_BEFORE_DAYS = formData.SendBeforeDaysEdit.value;
-
-    if (formData.packageVTLEdit.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-110"));
-      return;
+    let PACKAGE_ID_VTL;
+    if (formData.packageVTLEdit.value.length != 0) {
+      PACKAGE_ID_VTL= Number(formData.packageVTLEdit.value[0].id);
     }
-    let PACKAGE_ID_VTL = formData.packageVTLEdit.value[0].id;
-
-    if (formData.packageGPCEdit.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-111"));
-      return;
+    let PACKAGE_ID_GPC;
+    if (formData.packageGPCEdit.value.length != 0) {
+      PACKAGE_ID_GPC= Number(formData.packageGPCEdit.value[0].id);
     }
-    let PACKAGE_ID_GPC = formData.packageGPCEdit.value[0].id;
-
-    if (formData.packageVMSEdit.value.length == 0) {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-112"));
-      return;
+   
+    let PACKAGE_ID_VMS;
+    if (formData.packageVMSEdit.value.length != 0) {
+     PACKAGE_ID_VMS = Number(formData.packageVMSEdit.value[0].id);
     }
-    let PACKAGE_ID_VMS = formData.packageVMSEdit.value[0].id;
-
     let SMS_CONTENT = formData.contentEdit.value;
     if (SMS_CONTENT == "" || SMS_CONTENT == null) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));

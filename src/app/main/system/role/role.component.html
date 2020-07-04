@@ -14,7 +14,7 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" (click)="createRoleModal.show()">{{ 'global.add_new' | translate }}</button>
+                                    <button *ngIf="rolepm.IS_ADD" type="button" class="btn btn-primary btn-sm" (click)="createRoleModal.show()">{{ 'global.add_new' | translate }}</button>
                                     <button type="submit" class="btn btn-success btn-sm" (click)="exportExcelRole()">{{ 'global.export_excel' | translate }}</button>
                                 </div>
                             </div>
@@ -28,6 +28,7 @@
                                                 <th class="text-center">STT</th>
                                                 <th class="text-center">{{'role.role_name' | translate}}</th>
                                                 <th class="text-center">{{'role.role_description' | translate}}</th>
+                                                <th class="text-center">{{'role.role_level' | translate}}</th>
                                                 <th class="text-center" style="width: 150px;">Công cụ</th>
                                             </tr>
                                         </thead>
@@ -36,12 +37,12 @@
                                                 <td class="text-center">{{i + 1}}</td>
                                                 <td>{{role.ROLE_NAME}}</td>
                                                 <td>{{role.ROLE_DESCRIPTION}}</td>
+                                                <td class="text-center">{{role.ROLE_LEVEL}}</td>
                                                 <td class="text-center">
                                                     <div class="tool">
-                                                        <button type="submit" class="btn btn-success btn-sm" (click)="showConfirmEditRole(role.ID)">{{ 'global.edit' | translate }}</button>
-                                                        <button type="button" class="btn btn-success btn-sm" (click)="showPhanQuyen(role.ID)">
-                              {{'account.permission' | translate}}</button>
-                                                        <button type="button" class="btn btn-danger btn-sm" (click)="showConfirmDeleteRole(role.ID, role.ROLE_NAME)">{{ 'global.delete' | translate }}</button>
+                                                        <button *ngIf="rolepm.IS_EDIT" type="submit" class="btn btn-success btn-sm" (click)="showConfirmEditRole(role.ID)">{{ 'global.edit' | translate }}</button>
+                                                        <button *ngIf="rolepm.IS_EDIT" type="button" class="btn btn-success btn-sm" (click)="showPhanQuyen(role.ID)">{{'account.permission' | translate}}</button>
+                                                        <button *ngIf="rolepm.IS_DELETE" type="button" class="btn btn-danger btn-sm" (click)="showConfirmDeleteRole(role.ID, role.ROLE_NAME)">{{ 'global.delete' | translate }}</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -52,11 +53,11 @@
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
                                         Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)" [value]="pagination.pageSize">
-                      <option value="20">20</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
-                      <option value="99999999">Tất cả</option>
-                    </select> bản ghi.
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="99999999">Tất cả</option>
+                                        </select> bản ghi.
                                     </div>
                                     <div class="col-md-6 col-sm-6" style="margin-bottom:10px">
                                         <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
@@ -76,7 +77,7 @@
 
 <!-- modal thêm nhóm quyền-->
 <div class="modal fade" bsModal #createRoleModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'role.create_role' | translate}}</h4>
@@ -89,11 +90,17 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <label for="roleName">{{'role.role_name' | translate}} <span style="color:red;">(*)</span></label>
-                            <input type="text" id="roleName" class="form-control" name="roleName" required="" ngModel>
+                            <input type="text" id="roleName" class="form-control" name="roleName" required="" ngModel placeholder="{{'role.input_role_name' | translate}}">
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label>{{'role.role_level' | translate}} <span style="color:red;">(*)</span></label>
+                            <input type="number" class="form-control" name="roleLevel" required="" ngModel placeholder="{{'role.input_role_level' | translate}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group_bt">
                             <label for="roleDescription">{{'role.role_description' | translate}}</label>
-                            <input type="text" id="roleDescription" class="form-control" name="roleDescription" required="" ngModel>
+                            <input type="text" id="roleDescription" class="form-control" name="roleDescription" required="" ngModel placeholder="{{'role.input_role_description' | translate}}">
                         </div>
                     </div>
                 </div>
@@ -108,7 +115,7 @@
 
 <!-- modal sửa nhóm quyền-->
 <div class="modal fade" bsModal #editRoleModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'role.edit_role' | translate}}</h4>
@@ -124,6 +131,13 @@
                             <input type="text" class="form-control" formControlName="roleName" required="">
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label>{{'role.role_level' | translate}}<span style="color:red;">(*)</span></label>
+                            <input type="number" class="form-control" formControlName="roleLevelEdit" required="">
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <label>{{'role.role_description' | translate}}</label>
                             <input type="text" class="form-control" formControlName="roleDescription" required="">
                         </div>

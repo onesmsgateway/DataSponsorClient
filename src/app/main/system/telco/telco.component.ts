@@ -41,7 +41,6 @@ export class TelcoComponent implements OnInit {
     private utilityService: UtilityService,
     private authService: AuthService) {
     modalService.config.backdrop = 'static';
-    debugger
     this.activatedRoute.data.subscribe(data => {
       this.utilityService.getRole(data.MENU_CODE).then((response) => {
         if (response) this.role = response;

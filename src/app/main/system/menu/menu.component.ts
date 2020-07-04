@@ -2,8 +2,12 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { DataService } from 'src/app/core/services/data.service';
 import { Menu } from '../../../core/models/menu';
 import { NotificationService } from 'src/app/core/services/notification.service';
-import { DxDataGridComponent } from 'devextreme-angular';
 import { MainComponent } from '../../main.component';
+import { Role } from 'src/app/core/models/role';
+import { ActivatedRoute } from '@angular/router';
+import { UtilityService } from 'src/app/core/services/utility.service';
+import { BsModalService } from 'ngx-bootstrap';
+import { DxDataGridComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-menu',
@@ -17,6 +21,9 @@ export class MenuComponent implements OnInit {
   public lookupDataMenu: any = [];
   public dataMenu: Object = [];
   public keysExpand: string[] = [];
+  public role: Role = new Role();
+  public isRole: boolean = false;
+
   public columnChooserModes = [{
     key: "dragAndDrop",
     name: "Kéo thả ở đây"
@@ -26,8 +33,18 @@ export class MenuComponent implements OnInit {
   }];
 
   constructor(private dataService: DataService,
+    private activatedRoute: ActivatedRoute,
     private notificationService: NotificationService,
+    private utilityService: UtilityService,
+    private modalService: BsModalService,
     private mainComponent: MainComponent) {
+      modalService.config.backdrop = 'static';
+      this.activatedRoute.data.subscribe(data => {
+        this.utilityService.getRole(data.MENU_CODE).then((response) => {
+          if (response) this.role = response;
+          this.isRole = this.role.IS_ADD;
+        })
+      });
   }
 
   async ngOnInit() {
@@ -47,7 +64,8 @@ export class MenuComponent implements OnInit {
     }
   }
 
-  public onToolbarPreparing(e) {
+  public async onToolbarPreparing(e) {
+
     e.toolbarOptions.items.unshift({
       location: 'after',
       widget: 'dxButton',
@@ -57,7 +75,7 @@ export class MenuComponent implements OnInit {
         onClick: this.addNewRow.bind(this)
       }
     });
-
+   
     e.toolbarOptions.items.unshift({
       location: 'after',
       widget: 'dxButton',
@@ -73,7 +91,6 @@ export class MenuComponent implements OnInit {
         }
       }
     });
-
     e.toolbarOptions.items.unshift({
       location: 'after',
       widget: 'dxButton',
@@ -85,6 +102,7 @@ export class MenuComponent implements OnInit {
         }
       }
     });
+    
   }
 
   settingTreeGrid() {

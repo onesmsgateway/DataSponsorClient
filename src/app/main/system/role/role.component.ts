@@ -8,6 +8,10 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { RoleMenuComponent } from '../role-menu/role-menu.component';
 import { UtilityService } from 'src/app/core/services/utility.service';
+import { Role } from 'src/app/core/models/role';
+import { ActivatedRoute } from '@angular/router';
+import { async } from '@angular/core/testing';
+
 
 @Component({
   selector: 'app-role',
@@ -27,17 +31,25 @@ export class RoleComponent implements OnInit {
   public roleName;
   public roleID;
   public formEditRole: FormGroup;
+  public rolepm: Role = new Role();
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private modalService: BsModalService,
     private dataService: DataService,
     private notificationService: NotificationService,
     private authService: AuthService,
     private utilityService: UtilityService) {
     modalService.config.backdrop = 'static';
+    this.activatedRoute.data.subscribe(data => {
+      this.utilityService.getRole(data.MENU_CODE).then((response) => {
+        if (response) this.rolepm = response;
+      })
+    });
     this.formEditRole = new FormGroup({
       id: new FormControl(),
       roleName: new FormControl(),
+      roleLevelEdit: new FormControl(),
       roleDescription: new FormControl()
     });
   }
@@ -49,8 +61,8 @@ export class RoleComponent implements OnInit {
 
   //#region load data and paging
   async getDataRole() {
-    let response = await this.dataService.getAsync('/api/AccessRole/GetAccessRolePaging?pageIndex=' + 
-    this.pagination.pageIndex + '&pageSize=' + this.pagination.pageSize)
+    let response = await this.dataService.getAsync('/api/AccessRole/GetAccessRolePaging?pageIndex=' +
+      this.pagination.pageIndex + '&pageSize=' + this.pagination.pageSize)
     if (response.err_code == 0) this.loadData(response);
   }
 
@@ -81,24 +93,32 @@ export class RoleComponent implements OnInit {
   //#endregion
 
   async createRole(role) {
-
     let ROLE_NAME = role.roleName;
+    let ROLE_LEVEL = role.roleLevel;
     let ROLE_DESCRIPTION = role.roleDescription;
     let CREATE_USER = this.authService.currentUserValue.USER_NAME;
-    if (ROLE_NAME == "") {
-      this.notificationService.displayErrorMessage("Bạn phải nhập tên nhóm quyền!");
+    if (ROLE_NAME == "" && ROLE_LEVEL == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-200"));
       return;
     }
-    let dataInsert = await this.dataService.postAsync('/api/accessrole', { ROLE_NAME, ROLE_DESCRIPTION, CREATE_USER });
-    if (dataInsert.err_code == 0) {
-      this.getDataRole();
-      this.createRoleModal.hide();
-      this.roleMenu.loadListRole();
-      this.notificationService.displaySuccessMessage("Tạo nhóm quyền thành công");
+    if (ROLE_LEVEL == "" && ROLE_LEVEL == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-201"));
+      return;
     }
-    else {
-      this.notificationService.displayErrorMessage("Tạo nhóm quyền thất bại");
+    let dataInsert = await this.dataService.postAsync('/api/accessrole', { ROLE_NAME, ROLE_LEVEL, ROLE_DESCRIPTION, CREATE_USER });
+    if (dataInsert) {
+      if (dataInsert.err_code == 0) {
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("100"));
+        this.getDataRole();
+        this.createRoleModal.hide();
+        this.roleMenu.loadListRole();
+      }
+      else {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+        return;
+      }
     }
+
   }
 
   showConfirmDeleteRole(id, name) {
@@ -123,7 +143,7 @@ export class RoleComponent implements OnInit {
 
   async exportExcelRole() {
     let result: boolean = await this.dataService.getFileExtentionAsync("/api/FileExtention/ExportExcel",
-      "AccessRole","AccessRole")
+      "AccessRole", "AccessRole")
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
     }
@@ -140,6 +160,7 @@ export class RoleComponent implements OnInit {
           this.formEditRole = new FormGroup({
             id: new FormControl(roleID),
             roleName: new FormControl(dataAccount.ROLE_NAME),
+            roleLevelEdit: new FormControl(dataAccount.ROLE_LEVEL),
             roleDescription: new FormControl(dataAccount.ROLE_DESCRIPTION),
           });
           this.editRoleModal.show();
@@ -149,26 +170,31 @@ export class RoleComponent implements OnInit {
       })
   }
 
-  editRole() {
+  async editRole() {
     let formData = this.formEditRole.controls;
     let ID = formData.id.value;
     let ROLE_NAME = formData.roleName.value;
+    let ROLE_LEVEL = formData.roleLevelEdit.value;
     let ROLE_DESCRIPTION = formData.roleDescription.value;
     let EDIT_USER = this.authService.currentUserValue.USER_NAME;
-    if (ROLE_NAME == "") {
-      this.notificationService.displayErrorMessage("Bạn phải nhập tên nhóm quyền!");
+    if (ROLE_NAME == "" && ROLE_LEVEL == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-200"));
       return;
     }
-    this.dataService.put('/api/accessRole/' + ID, { ROLE_NAME, ROLE_DESCRIPTION, EDIT_USER })
-      .subscribe((response: any) => {
-        if (response.err_code == 0) {
-          this.getDataRole();
-          this.editRoleModal.hide();
-          this.notificationService.displaySuccessMessage("Sửa nhóm quyền thành công");
-        } else {
-          this.notificationService.displayErrorMessage(response.err_message);
-        }
-      });
+    if (ROLE_LEVEL == "" && ROLE_LEVEL == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-201"));
+      return;
+    }
+    let response: any = await this.dataService.putAsync('/api/AccessRole/' + ID, { ROLE_NAME, ROLE_LEVEL, ROLE_DESCRIPTION, EDIT_USER })
+      if (response.err_code == 0) {
+        this.getDataRole();
+        this.editRoleModal.hide();
+        this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
+      } else {
+        this.notificationService.displayErrorMessage(response.err_message);
+        return
+      }
+
   }
 
   showPhanQuyen(id) {

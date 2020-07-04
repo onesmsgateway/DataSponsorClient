@@ -39,7 +39,6 @@ export class SysvarComponent implements OnInit {
     private notificationService: NotificationService,
     private utilityService: UtilityService) {
       modalService.config.backdrop = 'static';
-      debugger
       this.activatedRoute.data.subscribe(data => {
         this.utilityService.getRole(data.MENU_CODE).then((response) => {
           if (response) this.role = response;

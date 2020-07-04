@@ -94,9 +94,13 @@
         "role_management": "Role Management",
         "list_role": "List role",
         "role_description": "Description",
+        "input_role_description": " Input description",
         "role_name": "Role name",
+        "input_role_name": "Input role name",
         "create_role": "Create role",
-        "edit_role": "Edit role"
+        "edit_role": "Edit role",
+        "role_level": "Decentralize rights group",
+        "input_role_level": "Input decentralize rights group"
     },
     "role_menu": {
         "form_title": "Permission role menu",

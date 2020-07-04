@@ -362,101 +362,104 @@
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.account_name' | translate}} <span style="color:red;">(*)</span></label>
-                                    <input type="text" class="form-control" formControlName="userName" required="" [attr.disabled]="true">
+                                    <input type="text" class="form-control" formControlName="userName" required="" [attr.disabled]="true" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.account_fullname' | translate}}</label>
-                                    <input type="text" class="form-control" formControlName="fullName" required="">
+                                    <input type="text" class="form-control" formControlName="fullName" required="" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'global.phone' | translate}}</label>
-                                    <input type="text" class="form-control" formControlName="phone" required="">
+                                    <input type="text" class="form-control" formControlName="phone" required="" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>Skype</label>
-                                    <input type="text" class="form-control" formControlName="skype" required="">
+                                    <input type="text" class="form-control" formControlName="skype" required="" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-8 col-sm-6 col-xs-12">
                                     <div class="checkbox">
-                                        <label><input type="checkbox" value="" class="checkbox" formControlName="isActive" required="">
-                      <span>{{'account.account_active' | translate}}</span> </label>
+                                        <label>
+										<input type="checkbox" class="checkbox" formControlName="isActive" required=""/>
+										<span>{{'account.account_active' | translate}}</span> 
+										</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                     <div class="checkbox" *ngIf="isCheckAdmin">
-                                        <label><input type="checkbox" value="" class="checkbox" formControlName="isAdmin" required="">
-                      <span>{{'account.is_admin' | translate}}</span> </label>
+                                        <label>
+                                            <input type="checkbox" class="checkbox" formControlName="isAdmin" required=""/>
+                                            <span>{{'account.is_admin' | translate}}</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-8 col-sm-6 col-xs-12">
                                     <div class="checkbox">
-                                        <label><input type="checkbox" value="" class="checkbox" formControlName="checkSendSmsLoop"
-                        required="" [(ngModel)]="checkSendSmsLoop">
-                      <span>{{'account.sms_loop' | translate}}</span> </label>
+                                        <label>
+										<input type="checkbox" class="checkbox" formControlName="checkSendSmsLoop"
+										required="" [(ngModel)]="checkSendSmsLoop"/>
+										<span>{{'account.sms_loop' | translate}}</span> 
+										</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                     <div class="checkbox">
-                                        <label><input type="checkbox" value="" class="checkbox" formControlName="enableSmsCSKH" required="">
-                      <span>{{'account.send_sms' | translate}}</span> </label>
+                                        <label>
+										<input type="checkbox" class="checkbox" formControlName="enableSmsCSKH" required=""/>
+										<span>{{'account.send_sms' | translate}}</span> 
+										</label>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <div class="checkbox">
-                                        <label><input type="checkbox" value="" class="checkbox" formControlName="dlvr" required="">
-                      <span>{{'account.receive_report_sms' | translate}}</span> </label>
+                                        <label>
+										<input type="checkbox" class="checkbox" formControlName="dlvr" required=""/>
+										<span>{{'account.receive_report_sms' | translate}}</span>
+										</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <!-- <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label>{{'account.account_pass' | translate}} <span style="color:red;">(*)</span></label>
-                                    <input type="text" class="form-control" formControlName="password" ngModel="password" />
-                                     <span style="color: red;" *ngIf="password?.length > 1">
-                                        Password must be at least 6 characters
-                                    </span>
-                                </div>
-                            </div> -->
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'global.email'|translate}}</label>
-                                    <input type="email" class="form-control" formControlName="email" required="">
+                                    <input type="email" class="form-control" formControlName="email" required="" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.bank_account' | translate}}</label>
-                                    <input type="text" class="form-control" formControlName="bankAccount" required="">
+                                    <input type="text" class="form-control" formControlName="bankAccount" required="" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.bank_account_name' | translate}}</label>
-                                    <input type="text" class="form-control" formControlName="bankAccountName" required="">
+                                    <input type="text" class="form-control" formControlName="bankAccountName" required="" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.bank_name' | translate}}</label>
-                                    <input type="text" class="form-control" formControlName="bankName" required="">
+                                    <input type="text" class="form-control" formControlName="bankName" required="" />
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.company' | translate}}</label>
-                                    <input type="text" class="form-control" formControlName="companyName" required="">
+                                    <input type="text" class="form-control" formControlName="companyName" required="" />
                                 </div>
                             </div>
                         </div>
@@ -483,12 +486,14 @@
                                 </div>
 
                             </div>
+
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px;">
                                     <label>{{'global.avatar' | translate}}</label>
-                                    <input type="file" #uploadImageEdit class="form-control" (change)="submitUploadImageEdit()" formControlName="avataredit">
+                                    <input type="file" #uploadImageEdit class="form-control" (change)="submitUploadImageEdit()" />
                                 </div>
                             </div>
+
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <img src="{{ urlImageUploadEdit }}" style="width: 150px; height: 150px;" />

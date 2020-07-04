@@ -87,8 +87,7 @@
                                                     <div class="tool">
                                                         <button type="submit" (click)="confirmUpdateModal(item.ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
                                                         <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="confirmDelete(item.ID, item.NAME)" style="margin: 2px">{{ 'global.delete' | translate }}</button>
-                                                        <!-- <button type="submit" (click)="showFormThreadSms(item.ID, item.NAME)" *ngIf="role.IS_EDIT"
-                                class="btn btn-success btn-sm">Đối tác</button> -->
+
                                                     </div>
                                                 </td>
                                             </tr>

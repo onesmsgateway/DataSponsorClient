@@ -7,6 +7,7 @@ import { DataService } from 'src/app/core/services/data.service';
 import { ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-mapping',
@@ -28,9 +29,10 @@ export class MappingComponent implements OnInit {
   public dataPartner = [];
   public dataSenderGroup = [];
   public settingsFilterSender = {};
-  public settingsFilterSenderCreate={};
+  public settingsFilterSenderCreate = {};
   public settingsFilterPartner = {};
   public settingsFilterTelco = {};
+  public isAdmin = false;
 
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxSender = [];
@@ -47,7 +49,7 @@ export class MappingComponent implements OnInit {
   public partnerSenderId;
   public settingsFilterAccount = {};
   public settingsFilterAccountFilter = {}
- 
+
   public dataAccount = [];
   public selectedAccountID = [];
   public selectedAccountFilter = []
@@ -67,6 +69,7 @@ export class MappingComponent implements OnInit {
   public checkActiveGtel = true
 
   constructor(
+    private authService: AuthService,
     private dataService: DataService,
     modalService: BsModalService,
     private activatedRoute: ActivatedRoute,
@@ -89,7 +92,7 @@ export class MappingComponent implements OnInit {
       noDataLabel: this.utilityService.translate("global.no_data"),
       showCheckbox: false
     };
-   
+
     this.settingsFilterAccount = {
       text: this.utilityService.translate('global.choose_account'),
       singleSelection: true,
@@ -175,7 +178,7 @@ export class MappingComponent implements OnInit {
       id: new FormControl(),
       accountIDEdit: new FormControl(),
       senderIDEdit: new FormControl(),
-     
+
     });
   }
 
@@ -186,15 +189,43 @@ export class MappingComponent implements OnInit {
     this.pagination.pageSize = 20;
     this.getData();
   }
+  async getAccountLogin() {
+    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
+    let roleAccess = result.data[0].ROLE_ACCESS;
+    if (roleAccess != null && roleAccess == 50) {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+
+    }
+  }
 
   //#region load data account
   public async getDataAccount() {
     this.dataAccount = []
     this.dataAccount.push({ "id": "", "itemName": "Chọn tài khoản" });
-    let response: any = await this.dataService.getAsync('/api/account');
-    for (let index in response.data) {
-      this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+    if (this.isAdmin) {
+      let response: any = await this.dataService.getAsync('/api/account');
+      if (response) {
+        for (let index in response.data) {
+          this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+        }
+      }
+    }else {
+      let response = await this.dataService.getAsync('/api/account/GetLisAccountParentAndChild?account_id=' +
+       Number(this.authService.currentUserValue.ACCOUNT_ID));
+      for (let index in response.data) {
+        this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+      }
+      if (this.dataAccount.length == 1)
+        this.selectedItemComboboxAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
+
+      else
+        this.selectedItemComboboxAccount.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_account') });
+
     }
+
+
   }
 
   onItemSelectAccount() {
@@ -205,8 +236,9 @@ export class MappingComponent implements OnInit {
   //#region load data and paging
   async getData() {
     this.dataSenderMapping = [];
+    
     let accountID = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
-    let senderID = this.selectedItemComboboxSender.length>0 && this.selectedItemComboboxSender[0].id!=""? this.selectedItemComboboxSender[0].id : "";
+    let senderID = this.selectedItemComboboxSender.length > 0 && this.selectedItemComboboxSender[0].id != "" ? this.selectedItemComboboxSender[0].id : "";
     let response: any = await this.dataService.getAsync('/api/accountsender/GetAccountSenderPaging?pageIndex=' +
       this.pagination.pageIndex + '&pageSize=' + this.pagination.pageSize + "&accountId=" + accountID + "&senderId=" + senderID)
     this.loadData(response);
@@ -313,7 +345,7 @@ export class MappingComponent implements OnInit {
     } else if (response.err_code == -19) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-19"));
     }
-    else{
+    else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
     }
   }
@@ -342,10 +374,10 @@ export class MappingComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-63"));
       return;
     }
-   
+
     let SENDER_ID = formData.senderIDEdit.value[0].id;
     let ACCOUNT_ID = formData.accountIDEdit.value[0].id;
-    let response: any = await this.dataService.putAsync('/api/accountsender/EditAccountSender?id=' + ID, {ACCOUNT_ID,SENDER_ID})
+    let response: any = await this.dataService.putAsync('/api/accountsender/EditAccountSender?id=' + ID, { ACCOUNT_ID, SENDER_ID })
     if (response.err_code == 0) {
       this.showModalUpdate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));

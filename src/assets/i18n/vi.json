@@ -101,9 +101,13 @@
         "role_management": "Quản lý nhóm quyền",
         "list_role": "Danh sách nhóm quyền",
         "role_description": "Mô tả",
+        "input_role_description": "Nhập mô tả nhóm quyền",
         "role_name": "Tên nhóm quyền",
+        "input_role_name": "Nhập tên nhóm quyền",
         "create_role": "Thêm nhóm quyền",
-        "edit_role": "Sửa nhóm quyền"
+        "edit_role": "Sửa nhóm quyền",
+        "role_level": "Phân cấp nhóm quyền",
+        "input_role_level": "Nhập phân cấp nhóm quyền"
     },
     "account_cimast": {
         "list_acc_cimast": "Danh sách lịch sử giao dịch",
