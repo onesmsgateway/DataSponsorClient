@@ -39,6 +39,7 @@ export class MemberComponent implements OnInit {
   public isAdmin: boolean = false;
   public isNameCode: boolean = false;
   public isName: boolean = false;
+  public isBirthday: boolean = false;
   public loading: boolean = false;
   public isActive = true;
 
@@ -229,8 +230,8 @@ export class MemberComponent implements OnInit {
   }
   ChangeDropdownList() {
     this.getData();
-   
-    this.getDataGroupCreate( this.selectedItemComboboxAccountCreate[0].id);
+
+    this.getDataGroupCreate(this.selectedItemComboboxAccountCreate[0].id);
   }
 
   searchForm() {
@@ -268,6 +269,7 @@ export class MemberComponent implements OnInit {
   }
 
   pageChanged(event: any): void {
+
     this.setPageIndex(event.page);
   }
 
@@ -295,6 +297,7 @@ export class MemberComponent implements OnInit {
 
   //#region create new
   async createMember(item) {
+
     let member = item.value;
     let combobox = item.controls;
     if (combobox.slAccountCreate.value.length == 0) {
@@ -320,19 +323,15 @@ export class MemberComponent implements OnInit {
     let GROUP_IDS = this.ids;
     let EMAIL = member.mail;
     let ADDRESS = member.address;
-    let NOTES = member.notes;
     let IS_ACTIVE = this.isActive == true ? 1 : 0;
     let ACCUMULATED_POINTS = this.isActive == true ? 1 : 0;
     let BIRTHDAY = member.birthday;
-    if (BIRTHDAY != '' && BIRTHDAY != null) {
-      let birthday = this.utilityService.formatDateTempalte(BIRTHDAY.toString());
-    }
-    BIRTHDAY = this.utilityService.formatDateToString(BIRTHDAY, "yyyyMMdd") + "000000";
+    BIRTHDAY = this.utilityService.formatDateToString(BIRTHDAY, "yyyyMMddHHMMSS");
+   
     let response: any = await this.dataService.postAsync('/api/Person', {
-      ACCOUNT_ID, PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, NOTES, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS, BIRTHDAY
+      ACCOUNT_ID, PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS, BIRTHDAY
     })
     if (response.err_code == 0) {
-      item.reset();
       this.getData();
       this.showModalCreate.hide();
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
@@ -348,9 +347,10 @@ export class MemberComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
+    let birthdaycheck;
     let account_id = 0;
     let group_id = 0;
-    let groupName="";
+    let groupName = "";
     this.settingsFilterAccountEdit = {
       text: this.utilityService.translate('global.choose_account'),
       singleSelection: true,
@@ -364,24 +364,30 @@ export class MemberComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/Person/' + id)
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
-      account_id= dataDetail.ACCOUNT_ID;
+      account_id = dataDetail.ACCOUNT_ID;
+      birthdaycheck = dataDetail.BIRTHDAY;
+      if (birthdaycheck != null && birthdaycheck != "") {
+        this.isBirthday = true;
+      }else{
+        this.isBirthday = false;
+      }
       let group = response.data[1].GROUP_MODEL;
       if (group.length > 0) {
         this.selectedItemComboboxGroupEdit = [];
         for (let i = 0; i < group.length; i++) {
           this.selectedItemComboboxGroupEdit.push({ "id": group[i].GROUP_ID, "itemName": group[i].GROUP_NAME });
-          group_id= group[i].GROUP_ID != "" && group[i].GROUP_ID ? group[i].GROUP_ID : "";
+          group_id = group[i].GROUP_ID != "" && group[i].GROUP_ID ? group[i].GROUP_ID : "";
           groupName = group[i].GROUP_ID != "" && group[i].GROUP_ID != "" != null ? group[i].GROUP_NAME : "";
         }
       } else {
         this.selectedItemComboboxGroupEdit = [];
       }
-     
+
       this.formEditMember = new FormGroup({
         personId: new FormControl(id),
         account: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
           : this.utilityService.translate('global.choose_account')),
-        groupedit: new FormControl(this.selectedItemComboboxGroupEdit),
+        groupedit: new FormControl(this.selectedItemComboboxGroupEdit.length > 0 ? this.selectedItemComboboxGroupEdit[0].itemName: ""),
         code: new FormControl(dataDetail.PERSON_CODE),
         name: new FormControl(dataDetail.PERSON_FULLNAME),
         phone: new FormControl(dataDetail.PHONE_NUMBER),
@@ -393,7 +399,7 @@ export class MemberComponent implements OnInit {
       });
       this.getDataGroupEdit(account_id);
       if (this.selectedItemComboboxGroupEdit.length == 0)
-      this.selectedItemComboboxGroupEdit.push({ "id": group_id, "itemName": groupName });
+        this.selectedItemComboboxGroupEdit.push({ "id": group_id, "itemName": groupName });
       this.showModalUpdate.show();
     } else {
       this.notificationService.displayErrorMessage(response.err_message);
@@ -435,23 +441,23 @@ export class MemberComponent implements OnInit {
           GROUP_IDS += "," + this.selectedItemComboboxGroupEdit[i].id.toString();
       }
     }
-    if (formData.mail.value == null || formData.mail.value == "") {
-      this.notificationService.displayWarnMessage(this.utilityService.translate('global.inputEmail'));
-      return;
-    } else {
+    if (formData.mail.value != null || formData.mail.value != "") {
       EMAIL = formData.mail.value;
-    }
-    if (formData.address.value == null || formData.address.value == "") {
-      this.notificationService.displayWarnMessage(this.utilityService.translate('global.inputAddre'));
-      return;
-    } else {
+    } 
+    if (formData.address.value != null || formData.address.value != "") {
       ADDRESS = formData.address.value;
-    }
+    } 
 
     let ACCUMULATED_POINTS = formData.accumulatedPoint.value == true ? 1 : 0;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
+    let BIRTHDAY;
+    debugger
+   if(formData.birthdayEdit.value!=null && formData.birthdayEdit.value!=""){
+    BIRTHDAY= formData.birthdayEdit.value;
+    BIRTHDAY = this.utilityService.formatDateToString(BIRTHDAY, "yyyyMMddHHMMSS");
+   }
     let response: any = await this.dataService.putAsync('/api/Person/' + ID, {
-      ACCOUNT_ID, PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS
+      ACCOUNT_ID, PERSON_CODE, PERSON_FULLNAME, PHONE_NUMBER, EMAIL, ADDRESS, IS_ACTIVE, ACCUMULATED_POINTS, GROUP_IDS, BIRTHDAY
     })
     if (response.err_code == 0) {
       this.showModalUpdate.hide();

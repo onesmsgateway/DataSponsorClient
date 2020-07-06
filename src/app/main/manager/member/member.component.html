@@ -189,7 +189,7 @@
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.birthday' | translate}}</label>
-                            <input type="text" class="form-control" name="birthday" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'member.inputbirthday' | translate }}">
+                            <input type="text" class="form-control" name="birthday" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="birthday" placeholder="{{ 'member.inputbirthday' | translate }}">
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <label>&nbsp;</label>
@@ -241,11 +241,11 @@
                         <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.code' | translate}} <span style="color: red;">(*)</span></label>
                             <input type="hidden" formControlName="personId">
-                            <input type="text" disabled="isNameCode" class="form-control" formControlName="code" placeholder="{{ 'member.inCode' | translate }}">
+                            <input type="text" class="form-control" formControlName="code" placeholder="{{ 'member.inCode' | translate }}">
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.name' | translate}}<span style="color: red;">(*)</span></label>
-                            <input type="text" disabled="isName" class="form-control" formControlName="name" placeholder="{{ 'member.inName' | translate }}">
+                            <input type="text" class="form-control" formControlName="name" placeholder="{{ 'member.inName' | translate }}">
                         </div>
                     </div>
                     <div class="row">
@@ -270,7 +270,7 @@
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                             <label>{{'member.birthday' | translate}}</label>
-                            <input type="text" disabled="isName" class="form-control" formControlName="birthdayEdit" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'member.inputbirthday' | translate }}">
+                            <input type="text" [disabled]="isBirthday" class="form-control" formControlName="birthdayEdit" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'member.inputbirthday' | translate }}">
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <label>&nbsp;</label>

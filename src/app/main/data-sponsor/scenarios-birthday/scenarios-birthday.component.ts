@@ -687,9 +687,11 @@ export class ScenariosBirthdayComponent implements OnInit {
     }
     else if (response.err_code == 103) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("-103"));
+      return;
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+      return;
     }
 
   }
@@ -706,10 +708,11 @@ export class ScenariosBirthdayComponent implements OnInit {
     if (response.err_code == 0) {
       this.getData();
       this.confirmDeleteModal.hide();
-      this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("200"));
+      this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("200"));
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+      return;
     }
   }
 
