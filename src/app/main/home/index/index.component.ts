@@ -164,4 +164,38 @@ export class IndexComponent implements OnInit {
   precipitationCustomizeText() {
     return this.valueText + " SMS";
   }
+  public barChartLabels = ['03/07/2020', '04/07/2020', '05/07/2020', '06/07/2020', '07/07/2020', '08/07/2020'];
+  public barChartType = 'bar';
+  public barChartLegend = true;
+  public barChartData = [
+    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Viettel',stack:'1'},
+    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Vina',stack:'1'},
+    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Mobi',stack:'1'}
+  ];
+
+  public barChartLabels1 = ['03/07/2020', '04/07/2020', '05/07/2020', '06/07/2020', '07/07/2020', '08/07/2020'];
+  public barChartType1 = 'bar';
+  public barChartLegend1 = true;
+  public barChartData1 = [
+    {data: [65, 59, 80, 81, 56, 55, 40], label: 'KH Viettel mới',stack:'1'},
+    {data: [28, 48, 40, 19, 86, 27, 90], label: 'KH Vina mới',stack:'1'},
+    {data: [28, 48, 40, 19, 86, 27, 90], label: 'KH Mobi mới',stack:'1'},
+    {data: [28, 48, 40, 19, 86, 27, 90], label: 'KH Vietel cũ',stack:'2'},
+    {data: [28, 48, 40, 19, 86, 27, 90], label: 'KH Vina cũ',stack:'2'},
+    {data: [28, 48, 40, 19, 86, 27, 90], label: 'KH Mobi cũ',stack:'2'},
+
+  ];
+  public lineChartLabels = ['6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM'];
+  public lineChartType = 'line';
+  public lineChartData = [
+    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Viettel',backgroundColor:"rgba(0, 0, 0, 0.1)"},
+    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Vina',backgroundColor:"rgba(0, 0, 0, 0.1)"},
+    {data: [10, 50, 100, 7, 80, 20, 40], label: 'Mobi',backgroundColor:"rgba(0, 0, 0, 0.1)"}
+  ];
+  public lineChartOptions={
+    title: {
+      text: 'Thống kê từng giờ được số KH đã đăng ký nhận data',
+      display: true
+    }
+  };
 }

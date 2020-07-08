@@ -15,6 +15,7 @@ import { DxPieChartModule, DxChartModule } from 'devextreme-angular';
 
 import { HomeComponent } from './home.component';
 import { IndexComponent } from './index/index.component';
+import { ChartsModule } from 'ng2-charts';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
@@ -37,6 +38,7 @@ export const homeRoutes: Routes = [{
     AngularMultiSelectModule,
     DxPieChartModule,
     DxChartModule,
+    ChartsModule,
     PaginationModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),

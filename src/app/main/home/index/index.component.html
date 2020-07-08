@@ -81,6 +81,63 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>Thống kê lượt KH kích vào link truy cập quà tặng hàng ngày</h2>
+                    </div>
+                    <div class="x_content">
+                        <div style="display: block">
+                            <canvas baseChart
+                            [datasets]="barChartData"
+                            [labels]="barChartLabels"
+                            [legend]="barChartLegend"
+                            [chartType]="barChartType">
+                            </canvas>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+    <section>
+        <div class="row" style="margin-top:20px;margin-bottom:20px">
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>Thống kê theo từng ngày, từng giờ được số KH đã đăng ký nhận data</h2>
+                    </div>
+                    <div class="x_content">
+                        <div style="display: block">
+                            <canvas baseChart
+                            [datasets]="barChartData1"
+                            [labels]="barChartLabels1"
+                            [legend]="barChartLegend1"
+                            [chartType]="barChartType1">
+                            </canvas>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>Thống kê từng giờ được số KH đã đăng ký nhận data</h2>
+                    </div>
+                    <div class="x_content">
+                        <div style="display: block">
+                            <canvas baseChart
+                            [datasets]="lineChartData"
+                            [labels]="lineChartLabels"
+                            [legend]="lineChartLegend"
+                            [options]="lineChartOptions"
+                            [chartType]="lineChartType">
+                            </canvas>
+                          </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </article>
