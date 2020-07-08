@@ -142,7 +142,7 @@ export class SendDataComponent implements OnInit {
   public timeSchedule: Date;
   public programCode: string = '';
   public programName: string = '';
-  public limit_time: string='';
+  public limit_time: string = '';
 
   public total_amt = 0;
   public quota = 0;
@@ -288,9 +288,9 @@ export class SendDataComponent implements OnInit {
     let result = await this.dataService.getAsync('/api/SysVar/GetSysVarOtp');
     if (result) {
       if (result.err_code == 0) {
-         this.otpSmsDataOtp = result.data[0].VAR_VALUE;
-         this.limit_time = result.data[1].VAR_VALUE;
-         this.senderNameDataOtp = result.data[2].VAR_VALUE;
+        this.otpSmsDataOtp = result.data[0].VAR_VALUE;
+        this.limit_time = result.data[1].VAR_VALUE;
+        this.senderNameDataOtp = result.data[2].VAR_VALUE;
       }
     }
   }
@@ -393,7 +393,6 @@ export class SendDataComponent implements OnInit {
 
   // get phone by file list 
   async getPhoneNumber(event) {
-
     this.countPhone(this.phoneList);
     this.dataPhoneTamp = [];
     this.dataPhone = [];
@@ -486,22 +485,29 @@ export class SendDataComponent implements OnInit {
       this.numberPhone = phoneList.split(';').length - 1;
       let lstSplit = phoneList.substr(0, phoneList.length - 1).split(';');
       for (let i in lstSplit) {
-        let phone = this.dataPhoneAddNew.filter(s => lstSplit[i].includes(s.PHONE));
-        if (phone == null || phone.length == 0) {
-          let telco = await this.getTelco(lstSplit[i]);
-          this.dataPhoneAddNew.push({ PHONE: lstSplit[i], TELCO: telco });
-          if (telco == "VIETTEL") {
-            this.cntVTL++;
-          }
-          else if (telco == "GPC") {
-            this.cntGPC++;
-          }
-          else if (telco == "VMS") {
-            this.cntVMS++;
+        let telco = await this.getTelco(lstSplit[i]);
+        if (telco != null && telco != "") {
+          let phone = this.dataPhoneAddNew.filter(s => lstSplit[i].includes(s.PHONE));
+          if (phone == null || phone.length == 0) {
+            this.dataPhoneAddNew.push({ PHONE: lstSplit[i], TELCO: telco });
+            if (telco == "VIETTEL") {
+              this.cntVTL++;
+            }
+            else if (telco == "GPC") {
+              this.cntGPC++;
+            }
+            else if (telco == "VMS") {
+              this.cntVMS++;
+            }
+
+
           }
         }
+
       }
+      console.log(this.dataPhoneAddNew);
     }
+
     else {
       this.numberPhone = 1;
       this.dataPhoneAddNew.push({ PHONE: phoneList.substr(0, phoneList.length - 1), TELCO: this.telco });
@@ -672,7 +678,7 @@ export class SendDataComponent implements OnInit {
   }
   // get data package viettel
   async getDataPackageVTL() {
-
+    debugger
     this.dataPackageVTL = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL')
     for (let index in response.data) {
@@ -683,7 +689,7 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageVTL() {
-
+    debugger
     this.packViettel = "0";
     if (this.selectedPackageVTL.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
@@ -780,6 +786,7 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageVMS() {
+    debugger
     this.packVMS = "0";
     if (this.selectedPackageVMS.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);
@@ -1352,22 +1359,22 @@ export class SendDataComponent implements OnInit {
   }
   public intervalId = null
   async startTimer() {
-    if((Number(this.limit_time) > 0)){
+    if ((Number(this.limit_time) > 0)) {
       let smin = ((Number(this.limit_time) % 100));
-      let minsec = (smin - 60)/10;
-      if(smin > 60){
+      let minsec = (smin - 60) / 10;
+      if (smin > 60) {
         this.countersec = 60;
-      }else{
+      } else {
         this.countersec = smin;
       }
-      if(minsec > 0){
-        this.countermin = Math.floor(Number(this.limit_time) / 100) + minsec ;
-      }else{
+      if (minsec > 0) {
+        this.countermin = Math.floor(Number(this.limit_time) / 100) + minsec;
+      } else {
         this.countermin = Math.floor(Number(this.limit_time) / 100);
       }
-  
+
     }
-   
+
     this.intervalId = setInterval(() => {
       this.disable_resend_otp = false;
       if (this.countersec - 1 == -1) {

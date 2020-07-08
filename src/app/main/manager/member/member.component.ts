@@ -27,6 +27,7 @@ export class MemberComponent implements OnInit {
   public dataGroup = [];
   public dataGroupEdit = [];
   public lstChecked = [];
+  public birthday:string ='';
   public pagination: Pagination = new Pagination();
   public personId;
   public fullName: string = '';
