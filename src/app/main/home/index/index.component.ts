@@ -3,6 +3,7 @@ import { DataService } from 'src/app/core/services/data.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
 import { Pagination } from 'src/app/core/models/pagination';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-index',
@@ -119,8 +120,10 @@ export class IndexComponent implements OnInit {
     };
   }
 
+
   ngOnInit() {
     this.getAccountLogin();
+    this.CustomerFilterChart();
   }
 
   // bind data account
@@ -198,4 +201,63 @@ export class IndexComponent implements OnInit {
       display: true
     }
   };
+  // bieu do co filter
+  barChart;
+  levelsArr = ['Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'Aug'];
+  months = [{month: 'Jan', value: '0'},
+  {month: 'Feb', value: '1'},
+  {month: 'Mar', value: '2'},
+  {month: 'Apr', value: '3'},
+  {month: 'May', value: '4'},
+  {month: 'Jun', value: '5'},
+  {month: 'Jul', value: '6'},
+  {month: 'Aug', value: '7'}];
+
+  from = '0';
+
+  toMonth = '7';
+  chartData = {
+    "dataSet1" :[65, 59, 80, 81, 56, 55, 40,100],
+    "dataSet2" :  [28, 48, 40, 19, 86, 27, 90,10]
+  };
+  public CustomerFilterChart(){
+    this.barChart = new Chart('test', {
+      type: 'bar',
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: 'Thống kê KH nhận data hàng tháng'
+        },
+      },
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'Aug'],
+        datasets: [
+          {
+            type: 'bar',
+            label: 'KH Viettel',
+            data: this.chartData.dataSet1,
+            backgroundColor: 'rgba(20,200,10,0.4)',
+            borderColor: 'rgba(20,200,10,0.4)',
+            fill: false,
+            stack:'1',
+          }, {
+            type: 'bar',
+            label: 'KH Vina',
+            data: this.chartData.dataSet2,
+            backgroundColor: 'rgba(100,189,200,0.4)',
+            borderColor: 'rgba(100,189,200,0.4)',
+            fill: false,
+            stack:'1',
+          }
+        ]
+      }
+    });
+  }
+  applyDateFilter(){
+    this.barChart.data.labels = this.levelsArr.slice(parseInt(this.from), parseInt(this.toMonth) + 1);
+  debugger;
+    this.barChart.update();
+   
+  }
 }

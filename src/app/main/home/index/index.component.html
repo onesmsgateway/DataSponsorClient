@@ -140,4 +140,23 @@
             </div>
         </div>
     </section>
+    <section>
+        <div class="row" style="margin-bottom:20px;padding-bottom:20px">
+            <div class="col-md-6">
+                <canvas id="test"></canvas>
+                <div style="margin-left: auto">
+                    <select [(ngModel)]="from" style="width: 150px;height: 30px;">
+                      <option *ngFor="let m of months" [value]='m.value'>{{m.month}}</option>
+                    </select>
+                      &nbsp;&nbsp;
+                
+                  <select [(ngModel)]="toMonth" style="width: 150px;height: 30px;">
+                    <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
+                  </select> 
+                  <button class="btn btn-primary" (click)="applyDateFilter()">Filter by month</button>
+                  </div>
+                  
+            </div>
+        </div>
+    </section>
 </article>
