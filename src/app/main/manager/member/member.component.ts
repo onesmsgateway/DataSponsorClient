@@ -151,6 +151,7 @@ export class MemberComponent implements OnInit {
   }
 
   ngOnInit() {
+    debugger;
     this.dataAccount.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.dataGroup.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.getAccountLogin();
@@ -171,6 +172,7 @@ export class MemberComponent implements OnInit {
   }
 
   async getDataAccount() {
+    debugger;
     if (this.isAdmin) {
       this.selectedItemComboboxAccount = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
       this.selectedItemComboboxAccountMember = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
