@@ -218,7 +218,8 @@ export class IndexComponent implements OnInit {
   toMonth = '7';
   chartData = {
     "dataSet1" :[65, 59, 80, 81, 56, 55, 40,100],
-    "dataSet2" :  [28, 48, 40, 19, 86, 27, 90,10]
+    "dataSet2" :  [28, 48, 40, 19, 86, 27, 90,10],
+    "dataSet3":[20,50,70,90,100,80,50,90],
   };
   public CustomerFilterChart(){
     this.barChart = new Chart('test', {
@@ -237,7 +238,7 @@ export class IndexComponent implements OnInit {
             type: 'bar',
             label: 'KH Viettel',
             data: this.chartData.dataSet1,
-            backgroundColor: 'rgba(20,200,10,0.4)',
+            backgroundColor: '#ffa1b5',
             borderColor: 'rgba(20,200,10,0.4)',
             fill: false,
             stack:'1',
@@ -245,8 +246,17 @@ export class IndexComponent implements OnInit {
             type: 'bar',
             label: 'KH Vina',
             data: this.chartData.dataSet2,
-            backgroundColor: 'rgba(100,189,200,0.4)',
+            backgroundColor: '#86c7f3',
             borderColor: 'rgba(100,189,200,0.4)',
+            fill: false,
+            stack:'1',
+          },
+          {
+            type: 'bar',
+            label: 'KH Mobi',
+            data: this.chartData.dataSet3,
+            backgroundColor: '#ffe29a',
+            borderColor: 'rgba(100,200,200,0.4)',
             fill: false,
             stack:'1',
           }

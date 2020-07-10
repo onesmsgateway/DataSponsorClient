@@ -63,7 +63,7 @@
                         <h2>Data theo nhà mạng</h2>
                     </div>
                     <div class="x_content">
-                        <dx-chart id="chart" title="" [dataSource]="grossSmsTelco" (onPointClick)="onPointClick($event)">
+                        <dx-chart id="chart" title="" [dataSource]="grossSmsTelco" (onPointClick)="onPointClick($event)" style="height:300px">
                             <dxi-series valueField="monthOld2" name="Tháng {{month_old2}}"></dxi-series>
                             <dxi-series valueField="monthOld1" name="Tháng {{month_old1}}"></dxi-series>
                             <dxi-series valueField="monthNow" name="Tháng {{month_now}}"></dxi-series>
@@ -142,20 +142,27 @@
     </section>
     <section>
         <div class="row" style="margin-bottom:20px;padding-bottom:20px">
-            <div class="col-md-6">
-                <canvas id="test"></canvas>
-                <div style="margin-left: auto">
-                    <select [(ngModel)]="from" style="width: 150px;height: 30px;">
-                      <option *ngFor="let m of months" [value]='m.value'>{{m.month}}</option>
-                    </select>
-                      &nbsp;&nbsp;
-                
-                  <select [(ngModel)]="toMonth" style="width: 150px;height: 30px;">
-                    <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
-                  </select> 
-                  <button class="btn btn-primary" (click)="applyDateFilter()">Filter by month</button>
-                  </div>
-                  
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>Thống kê KH nhận data hàng tháng</h2>
+                    </div>
+                    <div class="x_content">
+                        <canvas id="test"></canvas>
+                        <div style="margin-left: auto">
+                            <select [(ngModel)]="from" style="width: 150px;height: 30px;">
+                            <option *ngFor="let m of months" [value]='m.value'>{{m.month}}</option>
+                            </select>
+                            &nbsp;&nbsp;
+                        
+                        <select [(ngModel)]="toMonth" style="width: 150px;height: 30px;">
+                            <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
+                        </select> 
+                        <button class="btn btn-primary" (click)="applyDateFilter()">Filter by month</button>
+                        </div>
+                        </div>
+                    
+                </div>
             </div>
         </div>
     </section>
