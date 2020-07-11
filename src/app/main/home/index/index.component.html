@@ -84,7 +84,7 @@
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2>Thống kê lượt KH kích vào link truy cập quà tặng hàng ngày</h2>
+                        <h2>{{'index.chart_view_click_day' | translate}}</h2>
                     </div>
                     <div class="x_content">
                         <div style="display: block">
@@ -101,7 +101,7 @@
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2>Thống kê theo từng ngày, từng giờ được số KH cũ,mới đăng ký tặng data</h2>
+                        <h2>{{'index.chart_view_register' | translate}}</h2>
                     </div>
                     <div class="x_content">
                         <div style="display: block">
@@ -119,11 +119,11 @@
         
     </section>
     <section>
-        <div class="row" style="margin-bottom:20px;padding-bottom:20px">
+        <div class="row" style="margin-top: 20px">
             <div class="col-md-6 col-sm-12 col-xs-12">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2>Thống kê KH nhận data hàng tháng</h2>
+                        <h2>{{'index.chart_view_receive_by_month' | translate}}</h2>
                     </div>
                     <div class="x_content">
                         <canvas id="test"></canvas>
@@ -145,7 +145,7 @@
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2>Thống kê từng giờ được số KH đã đăng ký nhận data</h2>
+                        <h2> {{'index.chart_view_receive_by_hours' | translate}}</h2>
                     </div>
                     <div class="x_content">
                         <div style="display: block">
@@ -162,6 +162,28 @@
                 </div>
             </div>
            
+        </div>
+    </section>
+    <section>
+        <div class="row" style="margin-bottom:20px;padding-bottom:20px">
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>{{'index.chart_view_receive_by_tel' | translate}}</h2>
+                    </div>
+                    <div class="x_content">
+                        <div style="display:block">
+                            <div style="display: block">
+                                <canvas id="ChartReceiDataByTel" baseChart 
+                                        [data]="dataChartReceiveDataByTel"
+                                        [labels]="LabelChartReceiveDataByTel"
+                                        [chartType]="TypeChartReceiveDataByTel"
+                                        ></canvas>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </article>

@@ -269,4 +269,9 @@ export class IndexComponent implements OnInit {
     this.barChart.update();
    
   }
+
+  public LabelChartReceiveDataByTel = ['Viettel', 'Vina', 'Mobi'];
+  public dataChartReceiveDataByTel = [300, 150, 180];
+  public TypeChartReceiveDataByTel = 'pie';
+ 
 }

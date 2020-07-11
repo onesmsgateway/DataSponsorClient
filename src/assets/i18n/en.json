@@ -701,5 +701,13 @@
         "time_send": "Time send",
         "type_send": "Type send",
         "amt_used": "Amt used"
+    },
+    "index":{
+        "chart_view_click_day":" Statistics of customers who click on the link to access daily gifts",
+        "chart_view_register":"Statistics of old and new customers registered to give data",
+        "chart_view_receive":"Statistics of old and new customers registered to receive data",
+        "chart_view_receive_by_month":"Customer statistics receive monthly data",
+        "chart_view_receive_by_tel":"Statistics customers receive data by network",
+        "chart_view_receive_by_hours":"Statistics customers receive data every hour"
     }
 }
