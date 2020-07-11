@@ -167,13 +167,12 @@ export class IndexComponent implements OnInit {
   precipitationCustomizeText() {
     return this.valueText + " SMS";
   }
+  // Thống kê lượt KH kích vào link truy cập hàng ngày
   public barChartLabels = ['03/07/2020', '04/07/2020', '05/07/2020', '06/07/2020', '07/07/2020', '08/07/2020'];
   public barChartType = 'bar';
   public barChartLegend = true;
   public barChartData = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Viettel',stack:'1'},
-    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Vina',stack:'1'},
-    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Mobi',stack:'1'}
+    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Lượt truy cập',stack:'1'},
   ];
 
   public barChartLabels1 = ['03/07/2020', '04/07/2020', '05/07/2020', '06/07/2020', '07/07/2020', '08/07/2020'];

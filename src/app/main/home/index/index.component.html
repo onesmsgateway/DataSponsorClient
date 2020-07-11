@@ -57,7 +57,7 @@
     <!-- chart -->
     <section>
         <div class="row" style="margin-top: 20px">
-            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+            <!-- <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
                         <h2>Data theo nhà mạng</h2>
@@ -80,7 +80,7 @@
                         </dx-chart>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
@@ -98,15 +98,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
-    </section>
-    <section>
-        <div class="row" style="margin-top:20px;margin-bottom:20px">
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2>Thống kê theo từng ngày, từng giờ được số KH đã đăng ký nhận data</h2>
+                        <h2>Thống kê theo từng ngày, từng giờ được số KH cũ,mới đăng ký tặng data</h2>
                     </div>
                     <div class="x_content">
                         <div style="display: block">
@@ -118,6 +113,33 @@
                             </canvas>
                           </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+    <section>
+        <div class="row" style="margin-bottom:20px;padding-bottom:20px">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>Thống kê KH nhận data hàng tháng</h2>
+                    </div>
+                    <div class="x_content">
+                        <canvas id="test"></canvas>
+                        <div style="margin-left: auto">
+                            <select [(ngModel)]="from" style="width: 50px;height: 30px;">
+                            <option *ngFor="let m of months" [value]='m.value'>{{m.month}}</option>
+                            </select>
+                            &nbsp;&nbsp;
+                        
+                        <select [(ngModel)]="toMonth" style="width: 50px;height: 30px;">
+                            <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
+                        </select> 
+                        <button class="btn btn-primary" (click)="applyDateFilter()">Filter by month</button>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
@@ -135,35 +157,11 @@
                             [chartType]="lineChartType">
                             </canvas>
                           </div>
+                          <div style="width: 150px;height: 30px;"></div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section>
-        <div class="row" style="margin-bottom:20px;padding-bottom:20px">
-            <div class="col-md-6 col-sm-12 col-xs-12">
-                <div class="x_panel portlet">
-                    <div class="x_title clearfix">
-                        <h2>Thống kê KH nhận data hàng tháng</h2>
-                    </div>
-                    <div class="x_content">
-                        <canvas id="test"></canvas>
-                        <div style="margin-left: auto">
-                            <select [(ngModel)]="from" style="width: 150px;height: 30px;">
-                            <option *ngFor="let m of months" [value]='m.value'>{{m.month}}</option>
-                            </select>
-                            &nbsp;&nbsp;
-                        
-                        <select [(ngModel)]="toMonth" style="width: 150px;height: 30px;">
-                            <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
-                        </select> 
-                        <button class="btn btn-primary" (click)="applyDateFilter()">Filter by month</button>
-                        </div>
-                        </div>
-                    
-                </div>
-            </div>
+           
         </div>
     </section>
 </article>
