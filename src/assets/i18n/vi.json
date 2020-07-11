@@ -774,7 +774,8 @@
         "chart_view_receive":"Thống kê KH đăng ký nhận data hàng ngày",
         "chart_view_receive_by_month":"Thống kê KH nhận data hàng tháng",
         "chart_view_receive_by_tel":"Thống kê KH nhận data theo nhà mạng",
-        "chart_view_receive_by_hours":"Thống kê KH nhận data từng giờ"
+        "chart_view_receive_by_hours":"Thống kê KH nhận data từng giờ",
+        "chart_customer_regular":"Thống kê KH thường xuyên"
     }
 
 }

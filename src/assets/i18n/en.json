@@ -708,6 +708,7 @@
         "chart_view_receive":"Statistics of old and new customers registered to receive data",
         "chart_view_receive_by_month":"Customer statistics receive monthly data",
         "chart_view_receive_by_tel":"Statistics customers receive data by network",
-        "chart_view_receive_by_hours":"Statistics customers receive data every hour"
+        "chart_view_receive_by_hours":"Statistics customers receive data every hour",
+        "chart_customer_regular":"Statistics of regular customers"
     }
 }

@@ -273,5 +273,14 @@ export class IndexComponent implements OnInit {
   public LabelChartReceiveDataByTel = ['Viettel', 'Vina', 'Mobi'];
   public dataChartReceiveDataByTel = [300, 150, 180];
   public TypeChartReceiveDataByTel = 'pie';
- 
+  colorChartReceiveDataByTel:any = [
+    {
+        backgroundColor: ['rgba(30, 169, 224, 0.8)',
+        'rgba(255,165,0,0.9)',
+        'rgba(139, 136, 136, 0.9)',
+        ]
+    }
+  ]
+  // Chart KH thường xuyên
+  
 }
