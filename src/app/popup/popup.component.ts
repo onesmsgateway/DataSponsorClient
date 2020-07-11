@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-//import { registerpersoncomponent }   from './register-person.component';
+import { FormGroup } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-popup',
@@ -14,6 +14,8 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 
 export class PopupComponent implements OnInit {
 
+  public ipAddress = '';
+  public city = '';
   public ngForm: FormGroup;
   public dataPerson = [];
   public scenarioCode: string = '';
@@ -33,17 +35,26 @@ export class PopupComponent implements OnInit {
   constructor(private dataService: DataService,
     private notificationService: NotificationService,
     private utilityService: UtilityService,
-    private route: ActivatedRoute, private router: Router
+    private http: HttpClient
   ) {
   }
-
-
   ngOnInit() {
+    debugger
     this.subaccountID();
-    this.loadAcount();
-    this.loadscenario();
-
+    this.getIpLocation();
   }
+
+  async getIpLocation() {
+    let response: any = await this.dataService.getAsync('/api/Popup/GetIPAddress');
+    if (response) {
+      this.ipAddress = response.query;
+      this.city = response.city;
+      if(this.ipAddress !=null && this.ipAddress !=""){
+        this.createChartPopupView();
+      }
+    }
+  }
+
   async subaccountID() {
     this.linkinput = window.location.href;
     var rlink = this.linkinput.split(/[=\-&]/);
@@ -51,39 +62,49 @@ export class PopupComponent implements OnInit {
       this.scenarioCode = (rlink[1]);
       this.account_Id = parseInt(rlink[3]);
     }
+    if(this.scenarioCode!=null && this.scenarioCode!=""){
+      this.loadAcount();
+      this.loadscenario();
+    }
   }
 
   async loadscenario() {
     var scenario_code = this.scenarioCode;
-    let response: any = await this.dataService.getAsync('/api/Popup/GetScenariosByCode?code=' + scenario_code);
-    if (response != null) {
-      if (response.data[0] == null) {
-        alert('Kịch bản không tồn tại!');
-        this.posterImage = this.avartaName;
-        this.contentsc = 'Chào mừng bạn đến với chương trình tặng Data';
-        this.ngForm.disable();
-        return false;
-      } else {
-        this.posterImage = response.data[0].URL_POSTER;
-        this.contentsc = response.data[0].DESC_CONTENT;
-        this.scenario_id = response.data[0].ID;
-        if (this.posterImage == null || this.posterImage == '') {
+    var account_id = this.account_Id;
+    if (scenario_code != null && account_id != null) {
+      let response: any = await this.dataService.getAsync('/api/Popup/GetScenariosByCode?code=' + scenario_code +
+        '&account_id=' + account_id);
+      if (response) {
+        if (response.data[0] == null || response.data[0] == "") {
+          alert('Kịch bản không tồn tại!');
           this.posterImage = this.avartaName;
           this.contentsc = 'Chào mừng bạn đến với chương trình tặng Data';
+          this.ngForm.disable();
+          return;
+        } else {
+          this.posterImage = response.data[0].URL_POSTER;
+          this.contentsc = response.data[0].DESC_CONTENT;
+          this.scenario_id = response.data[0].ID;
+          if (this.posterImage == null || this.posterImage == '') {
+            this.posterImage = this.avartaName;
+            this.contentsc = 'Chào mừng bạn đến với chương trình tặng Data';
+          }
+
         }
       }
     }
+
   }
   //#region create new
   async loadAcount() {
     var accountid = this.account_Id;
     let response: any = await this.dataService.getAsync('/api/Popup/' + accountid);
-    if (response != null) {
+    if (response) {
       if (response.data[0] == null) {
         alert('Tài khoàn chưa tạo kịch bản');
         this.avartaName = '../../assets/img/user-icon.jpg';
         this.ngForm.disable();
-        return false;
+        return;
       } else {
         this.avartaName = response.data[0].AVATAR;
         if (this.avartaName == null || this.avartaName == '') {
@@ -113,7 +134,6 @@ export class PopupComponent implements OnInit {
       return;
     }
     this.isValidFormSubmitted = true;
-    item.resetForm();
     let response: any = await this.dataService.postAsync('/api/Popup/PostPersonAccount?SCENARIO_CODE=' + SCENARIO_CODE + '&scenario_id=' + this.scenario_id, {
       ACCOUNT_ID, PERSON_FULLNAME, PHONE_NUMBER
     })
@@ -135,6 +155,39 @@ export class PopupComponent implements OnInit {
       this.issuccess = false;
       return
     }
+  }
+
+  //#endregion
+
+  //region create chart popup view
+
+  async createChartPopupView() {
+    let ACCOUNT_ID = this.account_Id;
+    let SCENARIO_ID = this.scenario_id;
+    let IP_VIEW = this.ipAddress;
+    let LOCATION = this.city;
+    let response: any = await this.dataService.postAsync('/api/ChartPopupView', { ACCOUNT_ID, SCENARIO_ID, IP_VIEW, LOCATION }
+    )
+    if (response) {
+      if (response.err_code == 0) {
+        let resSummaryDay: any = await this.dataService.postAsync('/api/ChartPopupViewSummaryDay', { ACCOUNT_ID, SCENARIO_ID})
+        if(resSummaryDay.err_code != 0){
+          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+          return;
+        }
+        let resSummaryHour: any = await this.dataService.postAsync('/api/ChartPopupViewSummaryHour', { ACCOUNT_ID, SCENARIO_ID})
+        if(resSummaryHour.err_code != 0){
+          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+          return;
+        }
+
+        
+      } else {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+        return;
+      }
+    }
+
   }
   //#endregion
 

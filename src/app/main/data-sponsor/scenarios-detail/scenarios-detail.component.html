@@ -99,37 +99,55 @@
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios-detail.value' | translate}}</label>
-                            <input [disabled]="true" type="number" class="form-control" name="valueScenar" placeholder="{{ 'scenarios-detail.inValue' | translate }}" ngModel>
+                            <input [disabled]="!isScPopup" type="number" class="form-control" name="valueScenar" placeholder="{{ 'scenarios-detail.inValue' | translate }}" ngModel>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'scenarios-detail.packageVTL' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" name="packageVTL">
-                            </angular2-multiselect>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'scenarios-detail.packageGPC' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" name="packageGPC">
-                            </angular2-multiselect>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'scenarios-detail.packageVMS' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" name="packageVMS">
-                            </angular2-multiselect>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group"></div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios-detail.quantityVTL' | translate}}</label>
-                            <input type="number" class="form-control" name="quantityVTL" [(ngModel)]="quantityVTL">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios-detail.quantityGPC' | translate}}</label>
-                            <input type="number" class="form-control" name="quantityGPC" [(ngModel)]="quantityGPC">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios-detail.quantityVMS' | translate}}</label>
-                            <input type="number" class="form-control" name="quantityVMS" [(ngModel)]="quantityVMS">
+                        <div class="col-md-9 col-sm-6 col-xs-12 form-group">
+                            <!-- viettel -->
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageVTL' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" name="packageVTL">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtVTL" readonly [(ngModel)]="packageAmtVTL">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-detail.quantityVTL' | translate}}</label>
+                                    <input type="number" class="form-control" name="quantityVTL" [(ngModel)]="quantityVTL">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageGPC' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" name="packageGPC">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtGPC" readonly [(ngModel)]="packageAmtGPC">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-detail.quantityGPC' | translate}}</label>
+                                    <input type="number" class="form-control" name="quantityGPC" [(ngModel)]="quantityGPC">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageVMS' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" name="packageVMS">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtVMS" readonly [(ngModel)]="packageAmtVMS">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-detail.quantityVMS' | translate}}</label>
+                                    <input type="number" class="form-control" name="quantityVMS" [(ngModel)]="quantityVMS">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -144,7 +162,7 @@
 
 <!-- modal sửa kịch bản chi tiết -->
 <div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'scenarios.editDetail' | translate}}
@@ -159,38 +177,54 @@
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                             <label>{{'scenarios-detail.value' | translate}}</label>
                             <input type="hidden" formControlName="id">
-                            <input type="number" class="form-control" formControlName="valueScenar" placeholder="{{ 'scenarios-detail.inValue' | translate }} " disabled="isScPopup">
+                            <input type="number" class="form-control" formControlName="valueScenar" placeholder="{{ 'scenarios-detail.inValue' | translate }}">
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'scenarios-detail.packageVTL' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" formControlName="packageVTL">
-                            </angular2-multiselect>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <label>{{'scenarios-detail.packageGPC' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" formControlName="packageGPC">
-                            </angular2-multiselect>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback" style="height: 58.35px;">
-                            <label>{{'scenarios-detail.packageVMS' | translate}}</label>
-                            <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" formControlName="packageVMS">
-                            </angular2-multiselect>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group"></div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios-detail.quantityVTL' | translate}}</label>
-                            <input type="number" class="form-control" formControlName="quantityVTL">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios-detail.quantityGPC' | translate}}</label>
-                            <input type="number" class="form-control" formControlName="quantityGPC">
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-                            <label>{{'scenarios-detail.quantityVMS' | translate}}</label>
-                            <input type="number" class="form-control" formControlName="quantityVMS">
+                        <div class="col-md-9 col-sm-6 col-xs-12 form-group">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageVTL' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVTL" [(ngModel)]="selectedPackageVTL" [settings]="settingsFilterPackageVTL" formControlName="packageVTL" (onSelect)="changePackageVTL()" (onDeSelect)="changePackageVTL()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" formControlName="packageAmtVTL" readonly [(ngModel)]="packageAmtVTL">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-detail.quantityVTL' | translate}}</label>
+                                    <input type="number" class="form-control" formControlName="quantityVTL">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageGPC' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageGPC" [(ngModel)]="selectedPackageGPC" [settings]="settingsFilterPackageGPC" formControlName="packageGPC" (onSelect)="changePackageGPC()" (onDeSelect)="changePackageGPC()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" formControlName="packageAmtGPC" readonly [(ngModel)]="packageAmtGPC">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-detail.quantityGPC' | translate}}</label>
+                                    <input type="number" class="form-control" formControlName="quantityGPC">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label>{{'scenarios-detail.packageVMS' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVMS" [(ngModel)]="selectedPackageVMS" [settings]="settingsFilterPackageVMS" formControlName="packageVMS" (onSelect)="changePackageVMS()" (onDeSelect)="changePackageVMS()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" formControlName="packageAmtVMS" readonly [(ngModel)]="packageAmtVMS">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                    <label>{{'scenarios-detail.quantityVMS' | translate}}</label>
+                                    <input type="number" class="form-control" formControlName="quantityVMS">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

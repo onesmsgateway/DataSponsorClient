@@ -72,7 +72,7 @@ export class MainComponent {
   }
 
   async getAccountLogin() {
-   
+   debugger
     let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
    
     let roleAccess = result.data[0].ROLE_ACCESS;

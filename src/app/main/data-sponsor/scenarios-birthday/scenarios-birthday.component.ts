@@ -575,7 +575,6 @@ export class ScenariosBirthdayComponent implements OnInit {
     this.selectedItemComboboxSenderEdit = [];
     let response: any = await this.dataService.getAsync('/api/BirthdayScenario/' + id);
     if (response.err_code == 0) {
-      debugger
       let dataDetail = response.data[0];
       account_id = dataDetail.ACCOUNT_ID;
       sender_id = dataDetail.ID != "" && dataDetail.ID != null ? dataDetail.ID : "";;

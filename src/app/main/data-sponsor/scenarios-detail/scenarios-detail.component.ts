@@ -32,6 +32,9 @@ export class ScenariosDetailComponent implements OnInit {
   public role: Role = new Role();
   public isAdmin: boolean = false;
   public loading: boolean = true;
+  public packageAmtVTL = 0;
+  public packageAmtGPC = 0;
+  public packageAmtVMS = 0;
 
   public dataPackageVTL = [];
   public settingsFilterPackageVTL = {};
@@ -100,7 +103,10 @@ export class ScenariosDetailComponent implements OnInit {
       packageVMS: new FormControl(),
       quantityVTL: new FormControl(),
       quantityGPC: new FormControl(),
-      quantityVMS: new FormControl()
+      quantityVMS: new FormControl(),
+      packageAmtVTL: new FormControl(),
+      packageAmtGPC: new FormControl(),
+      packageAmtVMS: new FormControl()
     });
   }
 
@@ -256,7 +262,10 @@ export class ScenariosDetailComponent implements OnInit {
           : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
         quantityVTL: new FormControl(dataDetail.PACKAGE_QUANTITY_VIETTEL),
         quantityGPC: new FormControl(dataDetail.PACKAGE_QUANTITY_VINAPHONE),
-        quantityVMS: new FormControl(dataDetail.PACKAGE_QUANTITY_MOBIFONE)
+        quantityVMS: new FormControl(dataDetail.PACKAGE_QUANTITY_MOBIFONE),
+        packageAmtVTL: new FormControl(dataDetail.AMT_VIETTEL),
+        packageAmtGPC: new FormControl(dataDetail.AMT_VINAPHONE),
+        packageAmtVMS: new FormControl(dataDetail.AMT_MOBIFONE)
       });
      
       this.showModalUpdate.show();
@@ -328,5 +337,35 @@ export class ScenariosDetailComponent implements OnInit {
     else {
       this.notificationService.displayErrorMessage(response.err_message);
     }
+  }
+  async changePackageVTL() {
+    if (this.selectedPackageVTL.length > 0) {
+      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
+      if (response != null && response.err_code == 0) {
+        this.packageAmtVTL = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+      }
+    }
+    else
+      this.packageAmtVTL = 0;
+  }
+  async changePackageGPC() {
+    if (this.selectedPackageGPC.length > 0) {
+      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageGPC[0].id);
+      if (response != null && response.err_code == 0) {
+        this.packageAmtGPC = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+      }
+    }
+    else
+      this.packageAmtGPC = 0;
+  }
+  async changePackageVMS() {
+    if (this.selectedPackageVMS.length > 0) {
+      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);
+      if (response != null && response.err_code == 0) {
+        this.packageAmtVMS = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+      }
+    }
+    else
+      this.packageAmtVMS = 0;
   }
 }

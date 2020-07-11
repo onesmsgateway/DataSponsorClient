@@ -377,18 +377,19 @@ export class MemberComponent implements OnInit {
         this.selectedItemComboboxGroupEdit = [];
         for (let i = 0; i < group.length; i++) {
           this.selectedItemComboboxGroupEdit.push({ "id": group[i].GROUP_ID, "itemName": group[i].GROUP_NAME });
-          group_id = group[i].GROUP_ID != "" && group[i].GROUP_ID ? group[i].GROUP_ID : "";
-          groupName = group[i].GROUP_ID != "" && group[i].GROUP_ID != "" != null ? group[i].GROUP_NAME : "";
+          group_id = group[i].GROUP_ID != "" && group[i].GROUP_ID !=null ? group[i].GROUP_ID : "";
+          groupName = group[i].GROUP_ID != "" && group[i].GROUP_ID != null != null ? group[i].GROUP_NAME: this.utilityService.translate('global.choose_group');
         }
       } else {
         this.selectedItemComboboxGroupEdit = [];
+       
       }
 
       this.formEditMember = new FormGroup({
         personId: new FormControl(id),
         account: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
           : this.utilityService.translate('global.choose_account')),
-        groupedit: new FormControl(this.selectedItemComboboxGroupEdit.length > 0 ? this.selectedItemComboboxGroupEdit[0].itemName: ""),
+        groupedit: new FormControl(this.selectedItemComboboxGroupEdit.length > 0 ? [{ "id": this.selectedItemComboboxGroupEdit[0].id, "itemName": this.selectedItemComboboxGroupEdit[0].itemName }]: this.utilityService.translate('global.choose_group')),
         code: new FormControl(dataDetail.PERSON_CODE),
         name: new FormControl(dataDetail.PERSON_FULLNAME),
         phone: new FormControl(dataDetail.PHONE_NUMBER),
@@ -399,8 +400,10 @@ export class MemberComponent implements OnInit {
         birthdayEdit: new FormControl(dataDetail.BIRTHDAY)
       });
       this.getDataGroupEdit(account_id);
-      if (this.selectedItemComboboxGroupEdit.length == 0)
+      if(groupName!=""){
+        if (this.selectedItemComboboxGroupEdit.length == 0)
         this.selectedItemComboboxGroupEdit.push({ "id": group_id, "itemName": groupName });
+      }
       this.showModalUpdate.show();
     } else {
       this.notificationService.displayErrorMessage(response.err_message);
@@ -452,7 +455,6 @@ export class MemberComponent implements OnInit {
     let ACCUMULATED_POINTS = formData.accumulatedPoint.value == true ? 1 : 0;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
     let BIRTHDAY;
-    debugger
    if(formData.birthdayEdit.value!=null && formData.birthdayEdit.value!=""){
     BIRTHDAY= formData.birthdayEdit.value;
     BIRTHDAY = this.utilityService.formatDateToString(BIRTHDAY, "yyyyMMddHHMMSS");

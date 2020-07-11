@@ -678,7 +678,6 @@ export class SendDataComponent implements OnInit {
   }
   // get data package viettel
   async getDataPackageVTL() {
-    debugger
     this.dataPackageVTL = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL')
     for (let index in response.data) {
@@ -689,7 +688,6 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageVTL() {
-    debugger
     this.packViettel = "0";
     if (this.selectedPackageVTL.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
@@ -786,7 +784,6 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageVMS() {
-    debugger
     this.packVMS = "0";
     if (this.selectedPackageVMS.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);

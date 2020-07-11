@@ -12,7 +12,7 @@ import { ScenariosDetailComponent } from '../scenarios-detail/scenarios-detail.c
 import { async } from '@angular/core/testing';
 import { AppConst } from 'src/app/core/common/app.constants';
 import { User } from 'src/app/core/models/user';
-import {DataSmsComponent} from '../../statistic/data-sms/data-sms.component';
+import { DataSmsComponent } from '../../statistic/data-sms/data-sms.component';
 
 @Component({
   selector: 'app-scenarios',
@@ -32,6 +32,7 @@ export class ScenariosComponent implements OnInit {
   @ViewChild('uploadImageEdit', { static: false }) public uploadImageEdit;
   @ViewChild('uploadImage', { static: false }) public uploadImage;
   @ViewChild('dataComponent', { static: false }) public dataComponent: DataSmsComponent;
+  @ViewChild('contentSMS', { static: false }) public contentSMS;
 
   public user: User = this.authService.currentUserValue;
   public dataScenarios = [];
@@ -47,14 +48,20 @@ export class ScenariosComponent implements OnInit {
   public Account_Id_SMS: string = '';
   public Scenario_Id_SMS: string = '';
   public limitUseEdit;
-
+  public dataOptionInsert = [];
+  public dataOptionInsertSms = [];
+  public selectedOptionInsert = [];
+  public selectedOptionInsertEdit = [];
+  public packageAmtVTL = 0;
+  public packageAmtGPC = 0;
+  public packageAmtVMS = 0;
   public id;
   public Idsend;
   public name;
   public inCodeScenar: string = '';
   public inNameScenar: string = '';
   public totalUse: number;
-  public totalUseEdit: string ='';
+  public totalUseEdit: string = '';
   public formEditScenarios: FormGroup;
   public formEditScenariosDetail: FormGroup;
   public formLinkDetail: FormGroup;
@@ -92,6 +99,7 @@ export class ScenariosComponent implements OnInit {
   public selectedPackageVMS = [];
   public settingsFilterStatus = {};
   public selectedStatus = [];
+  public settingsFilterOptionInsert = {};
   public settingsFilterAccount = {};
   public settingsFilterAccountEdit = {};
   public settingsFilterAccountAdd = {};
@@ -103,6 +111,7 @@ export class ScenariosComponent implements OnInit {
   public selectedItemComboboxAccountEdit = [];
   public selectedItemComboboxAccountCreate = [];
   public selectedItemComboboxscenariosDetail = [];
+  public contentsms: string = '';
 
 
   public selectedItemComboboxSender = [];
@@ -152,7 +161,15 @@ export class ScenariosComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
-
+    this.settingsFilterOptionInsert = {
+      text: this.utilityService.translate('send_data.option_insert'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
     this.settingsFilterAccount = {
       text: this.utilityService.translate('global.choose_account'),
       singleSelection: true,
@@ -250,7 +267,8 @@ export class ScenariosComponent implements OnInit {
       isActive: new FormControl(),
       slSenderName: new FormControl(),
       limitUseEdit: new FormControl(),
-      totalUseEdit: new FormControl()
+      totalUseEdit: new FormControl(),
+      slOptionInsert: new FormControl(),
 
     });
 
@@ -262,11 +280,18 @@ export class ScenariosComponent implements OnInit {
       packageVMS: new FormControl(),
       quantityVTL: new FormControl(),
       quantityGPC: new FormControl(),
-      quantityVMS: new FormControl()
+      quantityVMS: new FormControl(),
+      packageAmtVTL: new FormControl(),
+      packageAmtGPC: new FormControl(),
+      packageAmtVMS: new FormControl()
     });
   }
 
   ngOnInit() {
+    this.dataOptionInsert.push({ "id": this.utilityService.translate('send_data.inPack'), "itemName": this.utilityService.translate('send_data.inPack') });
+    this.dataOptionInsert.push({ "id": this.utilityService.translate('send_data.inData'), "itemName": this.utilityService.translate('send_data.inData') });
+    this.dataOptionInsert.push({ "id": this.utilityService.translate('send_data.inDateUse'), "itemName": this.utilityService.translate('send_data.inDateUse') });
+    this.dataOptionInsert.push({ "id": this.utilityService.translate('send_data.inPhone'), "itemName": this.utilityService.translate('send_data.inPhone') });
     this.dataAccount.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.scenariosDetail.push({ "id": "", "itemName": this.utilityService.translate('scenarios.scenariosDetailOne') });
     this.scenariosDetail.push({ "id": "", "itemName": this.utilityService.translate('scenarios.scenariosDetailTwo') });
@@ -324,7 +349,7 @@ export class ScenariosComponent implements OnInit {
   }
   changeAccountEdit() {
     this.getDataSenderNameEdit(this.selectedItemComboboxAccountCreate[0].id);
-    
+
   }
   deSelectAccount() {
     this.getData();
@@ -487,11 +512,11 @@ export class ScenariosComponent implements OnInit {
       return;
     }
     let SMS_CONTENT = ""
-    if ((scenar.contentsms == "" && scenar.contentsms == null) && this.checkSendSms == true ) {
+    if ((scenar.contentsms == "" && scenar.contentsms == null) && this.checkSendSms == true) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
       return;
     }
-    else{
+    else {
       SMS_CONTENT = scenar.contentsms;
     }
     let START_DATE = scenar.startDate;
@@ -509,28 +534,28 @@ export class ScenariosComponent implements OnInit {
     let IS_ACTIVE = this.checkActive == true ? 1 : 0;
     let IS_SEND_SMS = this.checkSendSms == true ? 1 : 0;
     let IS_ACCUMULATE_POINT = this.isCheckAccumulatePoint == true ? 1 : 0;
-    let REWARD_NUMBER_ONE_TIME =  parseInt(scenar.checkRewardOneTime);
+    let REWARD_NUMBER_ONE_TIME = parseInt(scenar.checkRewardOneTime);
     let REWARD_NUMBER_TIME_IN_DAYS = parseInt(scenar.RewardOneTimeInDay);
-    
-     if(this.checkSendSms == true){
-      if (combobox.slSenderName.value.length ==0) {
+
+    if (this.checkSendSms == true) {
+      if (combobox.slSenderName.value.length == 0) {
         SENDER_NAME = "";
       } else {
         SENDER_NAME = combobox.slSenderName.value[0].itemName;
       }
-     }else{
+    } else {
       SENDER_NAME = "";
-     }
+    }
 
     let LIMIT_USE_MAX = scenar.limitUse;
-    if(LIMIT_USE_MAX ==null || LIMIT_USE_MAX ==""){
+    if (LIMIT_USE_MAX == null || LIMIT_USE_MAX == "") {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-115"));
       return
     }
     let response: any = await this.dataService.postAsync('/api/Scenarios', {
       ACCOUNT_ID, CODE, NAME, DESC_CONTENT, START_DATE, END_DATE, IS_ACTIVE, IS_ACCUMULATE_POINT, IS_SEND_SMS, SCENARIO_TYPE
       , REWARD_NUMBER_ONE_TIME,
-      REWARD_NUMBER_TIME_IN_DAYS, SMS_CONTENT, URL_POSTER, SENDER_NAME,LIMIT_USE_MAX
+      REWARD_NUMBER_TIME_IN_DAYS, SMS_CONTENT, URL_POSTER, SENDER_NAME, LIMIT_USE_MAX
     })
     if (response) {
       if (response.err_code == 0) {
@@ -555,7 +580,7 @@ export class ScenariosComponent implements OnInit {
         };
       }
       else if (response.err_code == -114) {
-        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-114"));
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-114"));
         this.isHidden = true;
         this.isHiddencheckOne = false;
         this.isHiddencheckSms = false;
@@ -570,8 +595,8 @@ export class ScenariosComponent implements OnInit {
           disabled: false
         };
         return
-      }else if(response.err_code == -19){
-        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-19"));
+      } else if (response.err_code == -19) {
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-19"));
         this.isHidden = true;
         this.isHiddencheckOne = false;
         this.isHiddencheckSms = false;
@@ -586,6 +611,9 @@ export class ScenariosComponent implements OnInit {
           disabled: false
         };
         return
+      } else if (response.err_code == -202) {
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-202"));
+        return;
       }
       else {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
@@ -612,6 +640,7 @@ export class ScenariosComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
+    this.selectedOptionInsertEdit = [];
     this.settingsFilterAccountEdit = {
       text: this.utilityService.translate('global.choose_account'),
       singleSelection: true,
@@ -626,8 +655,7 @@ export class ScenariosComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/Scenarios/' + id);
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
-
-      account_id=dataDetail.ACCOUNT_ID;
+      account_id = dataDetail.ACCOUNT_ID;
       this.formEditScenarios = new FormGroup({
         id: new FormControl(id),
         account: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
@@ -639,8 +667,8 @@ export class ScenariosComponent implements OnInit {
         slScenarioType: new FormControl(dataDetail.SCENARIO_TYPE != "" && dataDetail.SCENARIO_TYPE != null ? [{ "id": dataDetail.SCENARIO_TYPE, "itemName": dataDetail.SCENARIO_TYPE }]
           : [{ "id": "", "itemName": this.utilityService.translate('global.choose_scenarios_type') }]),
         startDate: new FormControl(dataDetail.START_DATE),
-        checkRewardOneTime: new FormControl(dataDetail.REWARD_NUMBER_ONE_TIME ==0 ? parseInt(""):dataDetail.REWARD_NUMBER_ONE_TIME),
-        RewardOneTimeInDay: new FormControl(dataDetail.REWARD_NUMBER_TIME_IN_DAYS ==0?parseInt(""):dataDetail.REWARD_NUMBER_TIME_IN_DAYS),
+        checkRewardOneTime: new FormControl(dataDetail.REWARD_NUMBER_ONE_TIME == 0 ? parseInt("") : dataDetail.REWARD_NUMBER_ONE_TIME),
+        RewardOneTimeInDay: new FormControl(dataDetail.REWARD_NUMBER_TIME_IN_DAYS == 0 ? parseInt("") : dataDetail.REWARD_NUMBER_TIME_IN_DAYS),
         checkSendSms: new FormControl(dataDetail.IS_SEND_SMS),
         contentsms: new FormControl(dataDetail.SMS_CONTENT),
         endDate: new FormControl(dataDetail.END_DATE),
@@ -649,7 +677,8 @@ export class ScenariosComponent implements OnInit {
           : [{ "id": "", "itemName": this.utilityService.translate('package.choose_sender') }]),
         isCheckAccumulatePoint: new FormControl(dataDetail.IS_ACCUMULATE_POINT),
         limitUseEdit: new FormControl(dataDetail.LIMIT_USE_MAX),
-        totalUseEdit: new FormControl(0)
+        totalUseEdit: new FormControl(0),
+        slOptionInsert: new FormControl([{ "id": "", "itemName": this.utilityService.translate('send_data.option_insert') }]),
       });
       this.componentScenariosDetail.scenarioId = id;
       this.componentScenariosDetail.quantityGPC = 1;
@@ -711,11 +740,11 @@ export class ScenariosComponent implements OnInit {
       return;
     }
     let SMS_CONTENT = formData.contentsms.value;
-    if ((SMS_CONTENT == "" || SMS_CONTENT == null) && this.checkSendSms == true ) {
+    if ((SMS_CONTENT == "" || SMS_CONTENT == null) && this.checkSendSms == true) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
       return;
     }
-   
+
 
     let START_DATE = formData.startDate.value;
     let END_DATE = formData.endDate.value;
@@ -734,16 +763,16 @@ export class ScenariosComponent implements OnInit {
     let IS_SEND_SMS = formData.checkSendSms.value == true ? 1 : 0;
     let REWARD_NUMBER_ONE_TIME = parseInt(formData.checkRewardOneTime.value);
     let REWARD_NUMBER_TIME_IN_DAYS = parseInt(formData.RewardOneTimeInDay.value);
-     let LIMIT_USE_MAX;
-     if(formData.limitUseEdit.value ==null || formData.limitUseEdit.value ==""){
+    let LIMIT_USE_MAX;
+    if (formData.limitUseEdit.value == null || formData.limitUseEdit.value == "") {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-115"));
       return
-    }else{
+    } else {
       LIMIT_USE_MAX = formData.limitUseEdit.value;
     }
     let response: any = await this.dataService.putAsync('/api/Scenarios/' + ID, {
       ACCOUNT_ID, NAME, DESC_CONTENT, START_DATE, END_DATE, IS_ACTIVE, IS_ACCUMULATE_POINT,
-      IS_SEND_SMS, SCENARIO_TYPE, REWARD_NUMBER_ONE_TIME, REWARD_NUMBER_TIME_IN_DAYS, SENDER_NAME, SMS_CONTENT, URL_POSTER,LIMIT_USE_MAX
+      IS_SEND_SMS, SCENARIO_TYPE, REWARD_NUMBER_ONE_TIME, REWARD_NUMBER_TIME_IN_DAYS, SENDER_NAME, SMS_CONTENT, URL_POSTER, LIMIT_USE_MAX
     })
     if (response) {
       if (response.err_code == 0) {
@@ -751,7 +780,7 @@ export class ScenariosComponent implements OnInit {
         this.showModalUpdate.hide();
         this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
         this.getData();
-      }else if (response.err_code == -114) {
+      } else if (response.err_code == -114) {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-114"));
         return
       }
@@ -938,7 +967,10 @@ export class ScenariosComponent implements OnInit {
           : [{ "id": "", "itemName": this.utilityService.translate('global.choose_package') }]),
         quantityVTL: new FormControl(dataDetail.PACKAGE_QUANTITY_VIETTEL),
         quantityGPC: new FormControl(dataDetail.PACKAGE_QUANTITY_VINAPHONE),
-        quantityVMS: new FormControl(dataDetail.PACKAGE_QUANTITY_MOBIFONE)
+        quantityVMS: new FormControl(dataDetail.PACKAGE_QUANTITY_MOBIFONE),
+        packageAmtVTL: new FormControl(dataDetail.AMT_VIETTEL),
+        packageAmtGPC: new FormControl(dataDetail.AMT_VINAPHONE),
+        packageAmtVMS: new FormControl(dataDetail.AMT_MOBIFONE)
       });
       this.showModalUpdateDetail.show();
     } else {
@@ -1064,7 +1096,7 @@ export class ScenariosComponent implements OnInit {
       this.dataSenderName.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
     }
     if (this.dataSenderName.length == 1)
-      this.selectedItemComboboxSender.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
+      this.selectedItemComboboxSenderEdit.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
   }
 
 
@@ -1087,19 +1119,19 @@ export class ScenariosComponent implements OnInit {
   showDetailScenario() {
 
   }
- 
- async getSendID(Id) {
-   this.Idsend = Id;
-   this.getScenarioById();
+
+  async getSendID(Id) {
+    this.Idsend = Id;
+    this.getScenarioById();
   }
-  async getScenarioById(){
-    let response: any = await this.dataService.getAsync('/api/Scenarios/' +  this.Idsend)
+  async getScenarioById() {
+    let response: any = await this.dataService.getAsync('/api/Scenarios/' + this.Idsend)
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
-     this.Account_Id_SMS = dataDetail.ACCOUNT_ID;
-     this.Scenario_Id_SMS = dataDetail.ID;
-      
-    } 
+      this.Account_Id_SMS = dataDetail.ACCOUNT_ID;
+      this.Scenario_Id_SMS = dataDetail.ID;
+
+    }
   }
   async getDataCimastAdd() {
     let account = "";
@@ -1112,10 +1144,51 @@ export class ScenariosComponent implements OnInit {
       this.totalUse = Math.round(response.data[0].TOTAL_USE);
     }
   }
+
+
+  //option insert
+  changeOptionInsert() {
+    this.contentSMS.nativeElement.focus();
+    let startString = this.contentSMS.nativeElement.value.substr(0, this.contentSMS.nativeElement.selectionStart);
+    let endString = this.contentSMS.nativeElement.value.substr(this.contentSMS.nativeElement.selectionStart, this.contentSMS.nativeElement.value.length);
+    this.contentsms = startString.trim() + this.selectedOptionInsert[0].id + endString.trim();
+    this.contentSMS.nativeElement.focus();
+  }
+
   async getDataCimastEdit(account_id) {
     let response: any = await this.dataService.getAsync('/api/Scenarios/GetDataCimast?account_id=' + account_id);
     if (response != null && response.data.length > 0) {
       this.totalUseEdit = Number(Math.round(response.data[0].TOTAL_USE)).toLocaleString('en-GB');
     }
+  }
+  async changePackageVTL() {
+    if (this.selectedPackageVTL.length > 0) {
+      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
+      if (response != null && response.err_code == 0) {
+        this.packageAmtVTL = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+      }
+    }
+    else
+      this.packageAmtVTL = 0;
+  }
+  async changePackageGPC() {
+    if (this.selectedPackageGPC.length > 0) {
+      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageGPC[0].id);
+      if (response != null && response.err_code == 0) {
+        this.packageAmtGPC = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+      }
+    }
+    else
+      this.packageAmtGPC = 0;
+  }
+  async changePackageVMS() {
+    if (this.selectedPackageVMS.length > 0) {
+      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);
+      if (response != null && response.err_code == 0) {
+        this.packageAmtVMS = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+      }
+    }
+    else
+      this.packageAmtVMS = 0;
   }
 }

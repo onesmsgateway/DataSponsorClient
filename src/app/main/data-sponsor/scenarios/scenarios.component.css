@@ -23,3 +23,13 @@
 .labelcontent {
     margin-bottom: 10px !important;
 }
+
+.fromsmstemp {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+}
+
+.form-group-temp {
+    padding-left: 0px !important;
+    margin-bottom: 10px !important;
+}
