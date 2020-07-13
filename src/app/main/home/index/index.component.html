@@ -81,7 +81,8 @@
                     </div>
                 </div>
             </div> -->
-            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+            <!--Biểu đồ Thống kê lượt KH kích vào link truy cập quà tặng hàng ngày-->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
                         <h2>{{'index.chart_view_click_day' | translate}}</h2>
@@ -98,7 +99,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+            <!--Thống kê lượt KH cũ, mới đăng ký tặng data hàng ngày-->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
                         <h2>{{'index.chart_view_register' | translate}}</h2>
@@ -120,6 +122,7 @@
     </section>
     <section>
         <div class="row" style="margin-top: 20px">
+            <!-- Biểu đồ Thống kê KH nhận data hàng tháng-->
             <div class="col-md-6 col-sm-12 col-xs-12">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
@@ -142,7 +145,8 @@
                     
                 </div>
             </div>
-            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+            <!--biểu đồ Thống kê KH nhận data từng giờ-->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
                         <h2> {{'index.chart_view_receive_by_hours' | translate}}</h2>
@@ -166,10 +170,11 @@
     </section>
     <section>
         <div class="row" style="margin-bottom:20px;padding-bottom:20px">
-            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+            <!--Biểu đồ thống kê KH nhận data theo nhà mạng năm 2020-->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2>{{'index.chart_view_receive_by_tel' | translate}}</h2>
+                        <h2>{{'index.chart_view_receive_by_tel' | translate}} 2020</h2>
                     </div>
                     <div class="x_content">
                         <div style="display:block">
@@ -179,13 +184,33 @@
                                         [labels]="LabelChartReceiveDataByTel"
                                         [chartType]="TypeChartReceiveDataByTel"
                                         [colors]="colorChartReceiveDataByTel"
+                                        [options]="optionChartReceiveDataByTel"
                                         ></canvas>
                               </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+            <!--Thống kê KH sử dụng thường xuyên-->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>Biểu đồ thống kê KH sử dụng thường xuyên</h2>
+                    </div>
+                    <div class="x_content">
+                        <div style="display:block">
+                            <div style="display: block">
+                                <canvas baseChart
+                                        [datasets]="dataKHSDTX"
+                                        [labels]="labelKHSDTX"
+                                        [legend]="legendKHSDTX"
+                                        [chartType]="typeKHSDTX">
+                                </canvas>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </article>
