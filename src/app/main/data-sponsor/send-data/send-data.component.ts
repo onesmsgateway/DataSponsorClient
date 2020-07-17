@@ -505,9 +505,7 @@ export class SendDataComponent implements OnInit {
         }
 
       }
-      console.log(this.dataPhoneAddNew);
     }
-
     else {
       this.numberPhone = 1;
       this.dataPhoneAddNew.push({ PHONE: phoneList.substr(0, phoneList.length - 1), TELCO: this.telco });

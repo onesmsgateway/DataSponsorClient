@@ -13,7 +13,6 @@ import { Role } from '../models/role';
 
 export class UtilityService {
   constructor(private trans: TranslateService, private http: HttpClient) { }
-
   public changeLanguageCurrent(language: string) {
     if (language != localStorage.getItem(AppConst.CURRENT_LANG)) {
       this.trans.use(language);

@@ -39,30 +39,33 @@ export class PopupComponent implements OnInit {
   ) {
   }
   ngOnInit() {
-    debugger
-    this.subaccountID();
-    this.getIpLocation();
+     this.subaccountID();
+     this.getIpLocation();
+ 
   }
 
+// lay gia tri ip click vao link tang data
   async getIpLocation() {
+    debugger
     let response: any = await this.dataService.getAsync('/api/Popup/GetIPAddress');
     if (response) {
       this.ipAddress = response.query;
       this.city = response.city;
-      if(this.ipAddress !=null && this.ipAddress !=""){
+      if (this.ipAddress != null && this.ipAddress != "") {
         this.createChartPopupView();
       }
     }
   }
 
   async subaccountID() {
+    debugger
     this.linkinput = window.location.href;
     var rlink = this.linkinput.split(/[=\-&]/);
     for (var i = 0; i < rlink.length; i++) {
       this.scenarioCode = (rlink[1]);
       this.account_Id = parseInt(rlink[3]);
     }
-    if(this.scenarioCode!=null && this.scenarioCode!=""){
+    if (this.scenarioCode != null && this.scenarioCode != "") {
       this.loadAcount();
       this.loadscenario();
     }
@@ -89,7 +92,7 @@ export class PopupComponent implements OnInit {
             this.posterImage = this.avartaName;
             this.contentsc = 'Chào mừng bạn đến với chương trình tặng Data';
           }
-
+        
         }
       }
     }
@@ -170,18 +173,18 @@ export class PopupComponent implements OnInit {
     )
     if (response) {
       if (response.err_code == 0) {
-        let resSummaryDay: any = await this.dataService.postAsync('/api/ChartPopupViewSummaryDay', { ACCOUNT_ID, SCENARIO_ID})
-        if(resSummaryDay.err_code != 0){
+        let resSummaryDay: any = await this.dataService.postAsync('/api/ChartPopupViewSummaryDay', { ACCOUNT_ID, SCENARIO_ID })
+        if (resSummaryDay.err_code != 0) {
           this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
           return;
         }
-        let resSummaryHour: any = await this.dataService.postAsync('/api/ChartPopupViewSummaryHour', { ACCOUNT_ID, SCENARIO_ID})
-        if(resSummaryHour.err_code != 0){
+        let resSummaryHour: any = await this.dataService.postAsync('/api/ChartPopupViewSummaryHour', { ACCOUNT_ID, SCENARIO_ID })
+        if (resSummaryHour.err_code != 0) {
           this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
           return;
         }
 
-        
+
       } else {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
         return;

@@ -53,72 +53,218 @@
             </div>
         </section>
     </div>
-
-    <!-- chart -->
-    <section>
-        <div class="row" style="margin-top: 20px">
-            <!-- <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
-                <div class="x_panel portlet">
-                    <div class="x_title clearfix">
-                        <h2>Data theo nhà mạng</h2>
-                    </div>
-                    <div class="x_content">
-                        <dx-chart id="chart" title="" [dataSource]="grossSmsTelco" (onPointClick)="onPointClick($event)" style="height:300px">
-                            <dxi-series valueField="monthOld2" name="Tháng {{month_old2}}"></dxi-series>
-                            <dxi-series valueField="monthOld1" name="Tháng {{month_old1}}"></dxi-series>
-                            <dxi-series valueField="monthNow" name="Tháng {{month_now}}"></dxi-series>
-                            <dxo-common-series-settings argumentField="state" type="bar" hoverMode="allArgumentPoints" selectionMode="allArgumentPoints">
-                                <dxo-label [visible]="true" [format]="{
-                            type: 'fixedPoint',
-                            precision: '0'
-                        }">
-                                </dxo-label>
-                            </dxo-common-series-settings>
-                            <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
-                            </dxo-legend>
-                            <dxo-export [enabled]="false"></dxo-export>
-                        </dx-chart>
+    <section style="margin-top: 30px;">
+        <div class="x_panel portlet">
+            <div class="row" style="margin-top: 20px">
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount" [settings]="settingsFilterAccount" name="account" (onSelect)="ChangeDropdownListAccount()" (onDeSelect)="ChangeDropdownListAccount()">
+                    </angular2-multiselect>
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                    <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign" [settings]="settingsFilterCampaign" name="campaign" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                    </angular2-multiselect>
+                </div>
+                <!--(onSelect)="ChangeDropdownListAccount()" (onDeSelect)="ChangeDropdownListAccount()"  (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()"-->
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                    <angular2-multiselect [data]="dataScenario" [(ngModel)]="selectedScenario" [settings]="settingsFilterScenario" name="scenario" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                    </angular2-multiselect>
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group" style="margin-top: 5px;">
+                    <div class="radio">
+                        <div class="col-md-6 col-sm-6 col-xs-12 form-group" style="float:left">
+                            <label><input class="form-check-input" type="radio" value="0" name="click_event" ngModel checked
+                                            (click)="checkDay(0)">{{ 'index.click_day' | translate }}</label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 form-group" style="float: right;">
+                            <label><input class="form-check-input" type="radio" value="1" name="click_event" ngModel
+                                            (click)="checkDay(1)">{{ 'index.click_hour' | translate }}</label>
+                        </div>
                     </div>
                 </div>
-            </div> -->
-            <!--Biểu đồ Thống kê lượt KH kích vào link truy cập quà tặng hàng ngày-->
+                <div class="col-md-2 col-sm-3 col-xs-12 form-group" style="margin-top: 5px;" *ngIf="checkDayhour">
+                    <label><i class="fa fa-calendar" aria-hidden="true"></i> Thống kê 30 ngày gần đây</label>
+                </div>
+                <!-- tim kiem theo ngay gio -->
+                <div class="col-md-2 col-sm-3 col-xs-12 form-group" *ngIf="isHour">
+                    <input type="text" class="form-control" name="chosseDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'index.choose_date' | translate }}" [(ngModel)]="timeday" (ngModelChange)="onChangeChooseDate($event)">
+                </div>
+                <div class="col-md-1 col-sm-6 col-xs-12 form-group" *ngIf="isHour">
+                    <angular2-multiselect [data]="dataHour" [(ngModel)]="selectedFromHour" [settings]="settingsFilterFromHour" name="fromhour" (onSelect)="ChangeDropdownListHourn()" (onDeSelect)="ChangeDropdownListHourn()">
+                    </angular2-multiselect>
+                </div>
+                <div class="col-md-1 col-sm-6 col-xs-12 form-group" *ngIf="isHour">
+                    <angular2-multiselect [data]="dataHour" [(ngModel)]="selectedToHour" [settings]="settingsFilterFromHour" name="tohour" (onSelect)="ChangeDropdownListHourn()" (onDeSelect)="ChangeDropdownListHourn()">
+                    </angular2-multiselect>
+                </div>
+                <!-- tim kiem theo ngay -->
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group" *ngIf="isDay">
+                    <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group" *ngIf="isDay">
+                    <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- chart -->
+    <section>
+        <div class="row">
+            <!--Biểu đồ Thống kê lượt KH click vào link truy cập quà tặng hàng ngày du lieu nho hon 8 ngay-->
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2>{{'index.chart_view_click_day' | translate}}</h2>
+                        <h2 style="float: none; text-align: center;">{{'index.chart_view_click_day' | translate}}</h2>
                     </div>
                     <div class="x_content">
                         <div style="display: block">
-                            <canvas baseChart
-                            [datasets]="barChartData"
-                            [labels]="barChartLabels"
-                            [legend]="barChartLegend"
-                            [chartType]="barChartType">
-                            </canvas>
-                          </div>
+                            <canvas baseChart [datasets]="barChartDataClick" [labels]="barChartLabelsClick" [legend]="barChartLegendClick" [chartType]="barChartTypeClick">
+                                </canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!--Thống kê lượt KH cũ, mới đăng ký tặng data hàng ngày-->
+            <!-- Thong ke kh dang ky nhan data hang ngay/go -->
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2>{{'index.chart_view_register' | translate}}</h2>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h2>{{'index.customer_register' | translate}}</h2>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 5px;">
+                            <div class="checkbox" style="display: inline-block">
+                                <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                            checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
+                                        <span>Viettel</span> </label>
+                            </div>
+                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                            checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                        <span>Vinaphone</span> </label>
+                            </div>
+                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                            checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                        <span>Mobiphone</span> </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="x_content">
                         <div style="display: block">
-                            <canvas baseChart
-                            [datasets]="barChartData1"
-                            [labels]="barChartLabels1"
-                            [legend]="barChartLegend1"
-                            [chartType]="barChartType1">
+                            <canvas baseChart [datasets]="chartDataRegisterDay" [labels]="labelsChartRegisterDay" [legend]="barChartLegendRegisterDay" [chartType]="barChartTypeRegisterDay">
                             </canvas>
-                          </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+    </section>
+    <section>
+        <div class="row">
+            <!-- Thong ke kh dang ky nhan data hang ngay/go khach hang cu -->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h2>{{'index.chart_register_old' | translate}}</h2>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 5px;">
+                            <div class="checkbox" style="display: inline-block">
+                                <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                            checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
+                                        <span>Viettel</span> </label>
+                            </div>
+                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                            checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                        <span>Vinaphone</span> </label>
+                            </div>
+                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                            checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                        <span>Mobiphone</span> </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_content">
+                        <div style="display: block">
+                            <canvas baseChart [datasets]="barChartDataRegisterOld" [labels]="barChartLabelsRegisterOld" [legend]="barChartLegendRegisterOld" [chartType]="barChartTypeRegisterOld">
+                            </canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Thong ke kh dang ky nhan data hang ngay/go khach hang moi -->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h2>{{'index.chart_register_new' | translate}}</h2>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 5px;">
+                            <div class="checkbox" style="display: inline-block">
+                                <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                            checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
+                                        <span>Viettel</span> </label>
+                            </div>
+                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                            checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                        <span>Vinaphone</span> </label>
+                            </div>
+                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                            checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                        <span>Mobiphone</span> </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_content">
+                        <div style="display: block">
+                            <canvas baseChart [datasets]="barChartDataRegisterNew" [labels]="barChartLabelsRegisterNew" [legend]="barChartLegendRegisterNew" [chartType]="barChartTypeRegisterNew">
+                            </canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <!-- thong ke khach hang da nhan data -->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h2>{{'index.customer_received' | translate}}</h2>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 5px;">
+                            <div class="checkbox" style="display: inline-block">
+                                <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                            checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
+                                        <span>Viettel</span> </label>
+                            </div>
+                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                            checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                        <span>Vinaphone</span> </label>
+                            </div>
+                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
+                                <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                            checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                        <span>Mobiphone</span> </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_content">
+                        <div style="display: block">
+                            <canvas baseChart [datasets]="barChartDataReceived" [labels]="barLabelsChartReceived" [legend]="barChartLegendReceived" [chartType]="barChartTypeReceived">
+                            </canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
     <section>
         <div class="row" style="margin-top: 20px">
@@ -131,18 +277,17 @@
                     <div class="x_content">
                         <canvas id="test"></canvas>
                         <div style="margin-left: auto">
-                            <select [(ngModel)]="from" style="width: 50px;height: 30px;">
+                            <select [(ngModel)]="fromMonth" style="width: 50px;height: 30px;">
                             <option *ngFor="let m of months" [value]='m.value'>{{m.month}}</option>
-                            </select>
-                            &nbsp;&nbsp;
-                        
-                        <select [(ngModel)]="toMonth" style="width: 50px;height: 30px;">
+                            </select> &nbsp;&nbsp;
+
+                            <select [(ngModel)]="toMonth" style="width: 50px;height: 30px;">
                             <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
-                        </select> 
-                        <button class="btn btn-primary" (click)="applyDateFilter()">Filter by month</button>
+                        </select>
+                            <button class="btn btn-primary" (click)="applyDateFilter()">Filter by month</button>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
             <!--biểu đồ Thống kê KH nhận data từng giờ-->
@@ -153,19 +298,14 @@
                     </div>
                     <div class="x_content">
                         <div style="display: block">
-                            <canvas baseChart
-                            [datasets]="lineChartData"
-                            [labels]="lineChartLabels"
-                            [legend]="lineChartLegend"
-                            [options]="lineChartOptions"
-                            [chartType]="lineChartType">
+                            <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [legend]="lineChartLegend" [options]="lineChartOptions" [chartType]="lineChartType">
                             </canvas>
-                          </div>
-                          <div style="width: 150px;height: 30px;"></div>
+                        </div>
+                        <div style="width: 150px;height: 30px;"></div>
                     </div>
                 </div>
             </div>
-           
+
         </div>
     </section>
     <section>
@@ -179,14 +319,8 @@
                     <div class="x_content">
                         <div style="display:block">
                             <div style="display: block">
-                                <canvas id="ChartReceiDataByTel" baseChart 
-                                        [data]="dataChartReceiveDataByTel"
-                                        [labels]="LabelChartReceiveDataByTel"
-                                        [chartType]="TypeChartReceiveDataByTel"
-                                        [colors]="colorChartReceiveDataByTel"
-                                        [options]="optionChartReceiveDataByTel"
-                                        ></canvas>
-                              </div>
+                                <canvas id="ChartReceiDataByTel" baseChart [data]="dataChartReceiveDataByTel" [labels]="LabelChartReceiveDataByTel" [chartType]="TypeChartReceiveDataByTel" [colors]="colorChartReceiveDataByTel" [options]="optionChartReceiveDataByTel"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -200,17 +334,14 @@
                     <div class="x_content">
                         <div style="display:block">
                             <div style="display: block">
-                                <canvas baseChart
-                                        [datasets]="dataKHSDTX"
-                                        [labels]="labelKHSDTX"
-                                        [legend]="legendKHSDTX"
-                                        [chartType]="typeKHSDTX">
+                                <canvas baseChart [datasets]="dataKHSDTX" [labels]="labelKHSDTX" [legend]="legendKHSDTX" [chartType]="typeKHSDTX">
                                 </canvas>
-                              </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
 </article>

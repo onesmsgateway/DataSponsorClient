@@ -40,11 +40,13 @@ export class AccountInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadDataLog();
+    setTimeout(() => {
+      this.loadDataLog();
+    }, 1000);
+   
   }
 
   async loadDataLog() {
-
     //#region get infor
     let dataUser = await this.dataService.getAsync('/api/account/' + this.user.ACCOUNT_ID);
     if (dataUser.err_code == 0) {
@@ -55,9 +57,7 @@ export class AccountInfoComponent implements OnInit {
       this.user.AVATAR = (userDetail[0].AVATAR != "" && userDetail[0].AVATAR != null && userDetail[0].AVATAR != "undefined") ?
         userDetail[0].AVATAR : "../../assets/img/user_icon.jpg"
     }
-
     //#endregion
-
     let response: any = await this.dataService.getAsync("/api/account/GetLogAsync?pageIndex=" + this.pagination.pageIndex + "&pageSize=" + this.pagination.pageSize);
     if (response) {
       this.dataLog = response.data;

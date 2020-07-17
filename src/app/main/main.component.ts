@@ -72,9 +72,7 @@ export class MainComponent {
   }
 
   async getAccountLogin() {
-   debugger
     let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
-   
     let roleAccess = result.data[0].ROLE_ACCESS;
     if (roleAccess != null && roleAccess == 50) {
       this.isAdmin = true;
@@ -82,7 +80,10 @@ export class MainComponent {
       this.isAdmin = false;
     }
     this.viewQuyTin(false);
-    this.getBalance();
+    setTimeout(() => {
+      this.getBalance();
+    }, 1000);
+    
   }
 
   //#region view quy tin

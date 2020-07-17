@@ -1,0 +1,14 @@
+.checkbox label,
+.radio label {
+    padding-left: 15px !important;
+}
+
+.checkbox,
+.radio {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.checkbox span {
+    line-height: 0px !important;
+}

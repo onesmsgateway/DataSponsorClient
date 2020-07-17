@@ -702,13 +702,23 @@
         "type_send": "Type send",
         "amt_used": "Amt used"
     },
-    "index":{
-        "chart_view_click_day":" Statistics of customers who click on the link to access daily gifts",
-        "chart_view_register":"Statistics of old and new customers registered to give data",
-        "chart_view_receive":"Statistics of old and new customers registered to receive data",
-        "chart_view_receive_by_month":"Customer statistics receive monthly data",
-        "chart_view_receive_by_tel":"Statistics customers receive data by network",
-        "chart_view_receive_by_hours":"Statistics customers receive data every hour",
-        "chart_customer_regular":"Statistics of regular customers"
+    "index": {
+        "chart_view_click_day": "Statistics customers click on the link day/hour",
+        "click_day": "Click day",
+        "click_hour": "Click hour",
+        "choose_date": "Choose day",
+        "choose_month": "Choose month",
+        "choose_hour": "Choose hour",
+        "filter_hour": "Filtering time is not satisfied",
+        "chart_view_register": "Statistics of old and new customers registered to give data",
+        "chart_view_receive": "Statistics of old and new customers registered to receive data",
+        "chart_view_receive_by_month": "Customer statistics receive monthly data",
+        "chart_view_receive_by_tel": "Statistics customers receive data by network",
+        "chart_view_receive_by_hours": "Statistics customers receive data every hour",
+        "chart_customer_regular": "Statistics of regular customers",
+        "customer_register": "Customers registered to receive data",
+        "chart_register_old": "Customers registered to receive data old",
+        "chart_register_new": "Customers registered to receive data new",
+        "customer_received": "Statistics customers received data"
     }
 }

@@ -768,14 +768,25 @@
         "type_send": "Loại gửi",
         "amt_used": "Số tiền sử dụng"
     },
-    "index":{
-        "chart_view_click_day":"Thống kê lượt KH kích vào link truy cập quà tặng hàng ngày",
-        "chart_view_register":"Thống kê lượt KH cũ, mới đăng ký tặng data hàng ngày",
-        "chart_view_receive":"Thống kê KH đăng ký nhận data hàng ngày",
-        "chart_view_receive_by_month":"Thống kê KH nhận data hàng tháng",
-        "chart_view_receive_by_tel":"Thống kê KH nhận data theo nhà mạng",
-        "chart_view_receive_by_hours":"Thống kê KH nhận data từng giờ",
-        "chart_customer_regular":"Thống kê KH thường xuyên"
+    "index": {
+        "chart_view_click_day": "Thống kê lượt KH click vào link tặng data",
+        "click_day": "Theo ngày",
+        "click_hour": "Theo giờ",
+        "choose_date": "Chọn ngày",
+        "choose_month": "Chọn tháng",
+        "choose_hour": "Chọn giờ",
+        "filter_hour": "Giờ lọc chưa thỏa mãn",
+        "chart_view_register": "Thống kê lượt KH cũ, mới đăng ký tặng data hàng ngày",
+        "chart_view_receive": "Thống kê KH đăng ký nhận data hàng ngày",
+        "chart_view_receive_by_month": "Thống kê KH nhận data hàng tháng",
+        "chart_view_receive_by_tel": "Thống kê KH nhận data theo nhà mạng",
+        "chart_view_receive_by_hours": "Thống kê KH nhận data từng giờ",
+        "chart_customer_regular": "Thống kê KH thường xuyên",
+        "customer_register": "Thống kê KH đăng ký nhận data",
+        "chart_register_old": "Khách hàng đăng ký nhận data cũ",
+        "chart_register_new": "Khách hàng đăng ký nhận data mới",
+        "customer_received": "Thống kê KH đã nhận data"
+
     }
 
 }

@@ -171,8 +171,10 @@ export class DataSmsComponent implements OnInit {
     this.dataTelco.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
     this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd") + "000000";
     this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd") + "235959";
-    this.getAccountLogin();
-
+    setTimeout(() => {
+      this.getAccountLogin();
+    }, 500);
+   
     if ((this.activatedRoute.snapshot.queryParamMap.get('account_id') != "" && this.activatedRoute.snapshot.queryParamMap.get('account_id') != null)
       && (this.activatedRoute.snapshot.queryParamMap.get('scenario_id') != "" && this.activatedRoute.snapshot.queryParamMap.get('scenario_id') != null)) {
       this.timeFrom = this.utilityService.formatDateTempalte(this.activatedRoute.snapshot.queryParamMap.get('fromDate'));
@@ -183,11 +185,12 @@ export class DataSmsComponent implements OnInit {
       this.account_id_scenario = this.activatedRoute.snapshot.queryParamMap.get('account_id');
       this.scenario_id_scenario = this.activatedRoute.snapshot.queryParamMap.get('scenario_id')
       this.selectedAccount.push({ "id": this.account_id_scenario, "itemName": this.activatedRoute.snapshot.queryParamMap.get('account_name') });
-
+      this.selectedScenario.push({ "id": this.scenario_id_scenario, "itemName": this.activatedRoute.snapshot.queryParamMap.get('scenario_name') });
     } else {
       this.scenario_id_scenario = "";
       this.account_id_scenario = "";
     }
+    
   }
 
   async getAccountLogin() {
@@ -205,9 +208,16 @@ export class DataSmsComponent implements OnInit {
     this.getDataPackageVMS();
     this.bindDataStatus();
     this.getListDataSms();
-    this.getPackageNameDisplay();
-    this.getCampaign();
-    this.getScenario();
+    setTimeout(() => {
+      this.getPackageNameDisplay();
+    }, 1500);
+    setTimeout(() => {
+      this.getCampaign();
+    }, 1500);
+    setTimeout(() => {
+      this.getScenario();
+    }, 1500);
+   
   }
 
   //#region account
@@ -227,10 +237,7 @@ export class DataSmsComponent implements OnInit {
       }
       if (this.dataAccount.length == 1)
         this.selectedAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
-
-      else
-        this.selectedAccount.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_account') });
-
+    
     }
 
   }
@@ -283,13 +290,13 @@ export class DataSmsComponent implements OnInit {
       if (this.dataScenario.length == 1) {
         this.selectedScenario.push({ "id": this.dataScenario[0].id, "itemName": this.dataScenario[0].itemName });
       } else {
-        if (this.scenario_id_scenario != null && this.scenario_id_scenario != "") {
-          this.selectedScenario.push({ "id": this.scenario_id_scenario, "itemName": this.activatedRoute.snapshot.queryParamMap.get('scenario_name') });
-        } else {
-          this.selectedScenario.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_scenario') });
-        }
-
-      }
+        this.selectedScenario.push({ "id": this.scenario_id_scenario, "itemName": this.activatedRoute.snapshot.queryParamMap.get('scenario_name') });
+       if(this.selectedScenario[0].id == "" && this.selectedScenario[0].itemName==null){
+        this.selectedScenario=[];
+        this.selectedScenario.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_scenario') });
+       }
+       
+       }
 
     }
   }
@@ -313,21 +320,27 @@ export class DataSmsComponent implements OnInit {
   // viettel
   async getDataPackageVTL() {
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL')
-    for (let index in response.data) {
-      this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+    if(response){
+      for (let index in response.data) {
+        this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+      }
+      if (this.dataPackageVTL.length == 1)
+        this.selectedPackageVTL.push({ "id": this.dataPackageVTL[0].id, "itemName": this.dataPackageVTL[0].itemName });
     }
-    if (this.dataPackageVTL.length == 1)
-      this.selectedPackageVTL.push({ "id": this.dataPackageVTL[0].id, "itemName": this.dataPackageVTL[0].itemName });
+   
   }
 
   // vina
   async getDataPackageGPC() {
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC')
-    for (let index in response.data) {
-      this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+    if(response){
+      for (let index in response.data) {
+        this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+      }
+      if (this.dataPackageGPC.length == 1)
+        this.selectedPackageGPC.push({ "id": this.dataPackageGPC[0].id, "itemName": this.dataPackageGPC[0].itemName });
     }
-    if (this.dataPackageGPC.length == 1)
-      this.selectedPackageGPC.push({ "id": this.dataPackageGPC[0].id, "itemName": this.dataPackageGPC[0].itemName });
+   
   }
 
   // mobi
@@ -512,7 +525,7 @@ export class DataSmsComponent implements OnInit {
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : "";
 
     let result: boolean = await this.dataService.getFileExtentionDataSmsStatisticAsync("/api/FileExtention/ExportExcelDataSmsStatistic",
-      accountID, pack, status, this.fromDate, this.toDate, this.smsContent, this.phone, this.stringVTL, this.stringGPC, this.stringVMS, "SmsList");
+      accountID, pack, status, this.fromDate, this.toDate, this.smsContent, this.phone, this.stringVTL, this.stringGPC, this.stringVMS, "DataList");
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
     }

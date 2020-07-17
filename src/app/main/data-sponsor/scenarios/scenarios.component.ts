@@ -640,6 +640,7 @@ export class ScenariosComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
+    debugger
     this.selectedOptionInsertEdit = [];
     this.settingsFilterAccountEdit = {
       text: this.utilityService.translate('global.choose_account'),
@@ -652,10 +653,12 @@ export class ScenariosComponent implements OnInit {
       disabled: true
     };
     let account_id;
+    let checkSendSms;
     let response: any = await this.dataService.getAsync('/api/Scenarios/' + id);
     if (response.err_code == 0) {
       let dataDetail = response.data[0];
       account_id = dataDetail.ACCOUNT_ID;
+      checkSendSms = dataDetail.IS_SEND_SMS;
       this.formEditScenarios = new FormGroup({
         id: new FormControl(id),
         account: new FormControl(dataDetail.ACCOUNT_ID != "" && dataDetail.ACCOUNT_ID != null ? [{ "id": dataDetail.ACCOUNT_ID, "itemName": dataDetail.USER_NAME }]
@@ -680,6 +683,11 @@ export class ScenariosComponent implements OnInit {
         totalUseEdit: new FormControl(0),
         slOptionInsert: new FormControl([{ "id": "", "itemName": this.utilityService.translate('send_data.option_insert') }]),
       });
+      if (checkSendSms == 0) {
+        this.checkSendSmsEdit = false;
+      }else{
+        this.checkSendSmsEdit = true;
+      }
       this.componentScenariosDetail.scenarioId = id;
       this.componentScenariosDetail.quantityGPC = 1;
       this.componentScenariosDetail.quantityVMS = 1;
@@ -1042,21 +1050,29 @@ export class ScenariosComponent implements OnInit {
   }
 
   async oncheckActive() {
+    
     this.checkActive = !this.checkActive;
   }
   async onisCheckAccumulatePoint() {
     this.isCheckAccumulatePoint = !this.isCheckAccumulatePoint;
   }
-  async oncheckSendSms() {
-    this.checkSendSms = !this.checkSendSms;
+ 
+   oncheckSendSms() {
+      if(this.checkSendSms == false){
+        this.checkSendSms = true;
+      }else{
+        this.checkSendSms = false;
+      }
     if (this.checkSendSms == true) {
       this.isHiddencheckSms = false;
       this.isHiddenSen = false;
       this.checkSendSmsEdit = true;
+      this.contentSMS.nativeElement.readOnly = false;
     } else {
       this.isHiddencheckSms = true;
       this.isHiddenSen = true;
       this.checkSendSmsEdit = false;
+      this.contentSMS.nativeElement.readOnly = true;
     }
   }
   //#region upload avatar

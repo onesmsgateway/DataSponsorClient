@@ -12,7 +12,7 @@
                         <h2>{{ 'global.search' | translate }}</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link" onclick="collapseBox(this)"><i
-                                        class="fa fa-chevron-up"></i></a>
+                                            class="fa fa-chevron-up"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -52,30 +52,30 @@
                                 <div class="col-md-3 col-sm-3 col-xs-6 form-group">
                                     <input type="text" class="form-control" placeholder="{{'statistic-data-sms.content' | translate}}" name="smsContent" ngModel>
                                     <!-- <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco" [settings]="settingsFilterTelco" name="Telco" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
-                                </angular2-multiselect> -->
+                                    </angular2-multiselect> -->
                                 </div>
                             </div>
                             <div class="row" style="margin-left: 10px; margin-right: 10px;">
                                 <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                                     <div class="checkbox" style="display: inline-block">
                                         <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
-                                                checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
-                                            <span>Viettel</span> </label>
+                                                    checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
+                                                <span>Viettel</span> </label>
                                     </div>
                                     <div class="checkbox" style="display: inline-block; margin-left: 20px;">
                                         <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
-                                                checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
-                                            <span>Mobiphone</span> </label>
+                                                    checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                                <span>Mobiphone</span> </label>
                                     </div>
                                     <div class="checkbox" style="display: inline-block; margin-left: 20px;">
                                         <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
-                                                checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
-                                            <span>Vinaphone</span> </label>
+                                                    checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                                <span>Vinaphone</span> </label>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-xs-12 form-group" style="float: right;">
                                     <button type="submit" style="float: right; margin-right: 0;" class="btn btn-primary btn-sm">
-                                        {{ 'global.search' | translate }}</button>
+                                            {{ 'global.search' | translate }}</button>
                                 </div>
                             </div>
 
@@ -91,13 +91,13 @@
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
                         <label>
-                            {{ 'statistic-data-sms.total_sms' | translate }}: {{countAll}}
-                            ({{ 'statistic-data-sms.viettel' | translate }}: {{countVTL}},
-                            {{ 'statistic-data-sms.gpc' | translate }}: {{countGPC}},
-                            {{ 'statistic-data-sms.vms' | translate }}: {{countVMS}})
-                        </label>
+                                {{ 'statistic-data-sms.total_sms' | translate }}: {{countAll}}
+                                ({{ 'statistic-data-sms.viettel' | translate }}: {{countVTL}},
+                                {{ 'statistic-data-sms.gpc' | translate }}: {{countGPC}},
+                                {{ 'statistic-data-sms.vms' | translate }}: {{countVMS}})
+                            </label>
                         <button type="button" style="float: right; margin-right: 0;" class="btn btn-success btn-sm" (click)="exportExcel()">
-                            {{ 'global.export_excel' | translate }}</button>
+                                {{ 'global.export_excel' | translate }}</button>
                     </div>
                     <div class="x_content">
                         <div class="row">
@@ -152,12 +152,12 @@
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
                                         Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)" [value]="pagination.pageSize">
-                                            <option value="20" selected="">20</option>
-                                            <option value="50">50</option>
-                                            <option value="100">100</option>
-                                            
-                                            <option value="99999999">{{ 'global.all' | translate }}</option>
-                                        </select> bản ghi.
+                                                <option value="20" selected="">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                
+                                                <option value="99999999">{{ 'global.all' | translate }}</option>
+                                            </select> bản ghi.
                                     </div>
                                     <div class="col-md-6 col-sm-6" style="margin-bottom:10px">
                                         <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
