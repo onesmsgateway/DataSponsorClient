@@ -769,23 +769,26 @@
         "amt_used": "Số tiền sử dụng"
     },
     "index": {
-        "chart_view_click_day": "Thống kê lượt KH click vào link tặng data",
+        "title_statistics": "Thống kê số lượng khách hàng theo ngày/giờ",
+        "title_total": "Thống kê số lượng khách hàng theo tháng/năm",
+        "chart_view_click_day": "Số lượng KH click vào link tặng data",
         "click_day": "Theo ngày",
         "click_hour": "Theo giờ",
         "choose_date": "Chọn ngày",
         "choose_month": "Chọn tháng",
         "choose_hour": "Chọn giờ",
         "filter_hour": "Giờ lọc chưa thỏa mãn",
-        "chart_view_register": "Thống kê lượt KH cũ, mới đăng ký tặng data hàng ngày",
-        "chart_view_receive": "Thống kê KH đăng ký nhận data hàng ngày",
-        "chart_view_receive_by_month": "Thống kê KH nhận data hàng tháng",
-        "chart_view_receive_by_tel": "Thống kê KH nhận data theo nhà mạng",
+        "chart_view_receive": "Số lượng KH đăng ký nhận data",
+        "chart_view_receive_by_month": "Số lượng KH nhận data hàng tháng",
+        "chart_view_receive_by_tel": "Số lượng khách hàng nhận data năm ",
         "chart_view_receive_by_hours": "Thống kê KH nhận data từng giờ",
         "chart_customer_regular": "Thống kê KH thường xuyên",
-        "customer_register": "Thống kê KH đăng ký nhận data",
-        "chart_register_old": "Khách hàng đăng ký nhận data cũ",
-        "chart_register_new": "Khách hàng đăng ký nhận data mới",
-        "customer_received": "Thống kê KH đã nhận data"
+        "customer_register": "Số lượng KH đăng ký nhận data",
+        "chart_register_old": "Số lượng KH cũ đăng ký nhận data",
+        "chart_register_new": "Số lượng KH mới đăng ký nhận data",
+        "customer_received": "Số lượng KH đã nhận data",
+        "purchase_rate_register": "Tỷ lệ số KH mua hàng trên số KH đăng ký nhận data",
+        "filter_month": "Lọc theo tháng"
 
     }
 

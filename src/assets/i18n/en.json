@@ -719,6 +719,7 @@
         "customer_register": "Customers registered to receive data",
         "chart_register_old": "Customers registered to receive data old",
         "chart_register_new": "Customers registered to receive data new",
-        "customer_received": "Statistics customers received data"
+        "customer_received": "Statistics customers received data",
+        "filter_month": "Filter month"
     }
 }

@@ -27,6 +27,10 @@ export class SendDataComponent implements OnInit {
 
 
   public dataPhone = [];
+  public sendNow = '0';
+  public cpm = '0';
+  public cpm1 = '1';
+  public timer = '1';
   public dataPhoneTamp = [];
   public dataPhoneAddNew = [];
   public dataAccount = [];

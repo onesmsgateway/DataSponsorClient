@@ -46,7 +46,7 @@ export class PopupComponent implements OnInit {
 
 // lay gia tri ip click vao link tang data
   async getIpLocation() {
-    debugger
+
     let response: any = await this.dataService.getAsync('/api/Popup/GetIPAddress');
     if (response) {
       this.ipAddress = response.query;
@@ -58,7 +58,7 @@ export class PopupComponent implements OnInit {
   }
 
   async subaccountID() {
-    debugger
+
     this.linkinput = window.location.href;
     var rlink = this.linkinput.split(/[=\-&]/);
     for (var i = 0; i < rlink.length; i++) {

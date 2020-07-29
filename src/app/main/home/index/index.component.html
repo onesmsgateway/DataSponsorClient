@@ -53,9 +53,11 @@
             </div>
         </section>
     </div>
+    <!-- loc gia tri theo tieu chi thong ke khach hang ngay/goi -->
     <section style="margin-top: 30px;">
         <div class="x_panel portlet">
             <div class="row" style="margin-top: 20px">
+                <h3 style="text-align: center; margin-bottom: 20px; color: black;">{{ 'index.title_statistics' | translate }}</h3>
                 <div class="col-md-2 col-sm-6 col-xs-12 form-group">
                     <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount" [settings]="settingsFilterAccount" name="account" (onSelect)="ChangeDropdownListAccount()" (onDeSelect)="ChangeDropdownListAccount()">
                     </angular2-multiselect>
@@ -72,12 +74,14 @@
                 <div class="col-md-2 col-sm-6 col-xs-12 form-group" style="margin-top: 5px;">
                     <div class="radio">
                         <div class="col-md-6 col-sm-6 col-xs-12 form-group" style="float:left">
-                            <label><input class="form-check-input" type="radio" value="0" name="click_event" ngModel checked
-                                            (click)="checkDay(0)">{{ 'index.click_day' | translate }}</label>
+                            <label class="radio-inline" style="font-size: 13px !important;"><input
+                                    class="form-check-input" type="radio" value="0" name="click_event" ngModel
+                                    (click)="checkDay(0)">{{ 'index.click_day' | translate }}</label>
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-12 form-group" style="float: right;">
-                            <label><input class="form-check-input" type="radio" value="1" name="click_event" ngModel
-                                            (click)="checkDay(1)">{{ 'index.click_hour' | translate }}</label>
+                            <label class="radio-inline" style="font-size: 13px !important;"><input class="form-check-input"
+                                type="radio" value="1" name="click_event" ngModel
+                                (click)="checkDay('1')">{{ 'index.click_hour' | translate }}</label>
                         </div>
                     </div>
                 </div>
@@ -97,10 +101,10 @@
                     </angular2-multiselect>
                 </div>
                 <!-- tim kiem theo ngay -->
-                <div class="col-md-2 col-sm-6 col-xs-12 form-group" *ngIf="isDay">
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group" *ngIf="isDayCheck">
                     <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
                 </div>
-                <div class="col-md-2 col-sm-6 col-xs-12 form-group" *ngIf="isDay">
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group" *ngIf="isDayCheck">
                     <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
                 </div>
 
@@ -110,7 +114,7 @@
     <!-- chart -->
     <section>
         <div class="row">
-            <!--Biểu đồ Thống kê lượt KH click vào link truy cập quà tặng hàng ngày du lieu nho hon 8 ngay-->
+            <!--Biểu đồ Thống kê lượt KH click vào link truy cập quà tặng hàng ngày-->
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
@@ -128,24 +132,32 @@
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h2>{{'index.customer_register' | translate}}</h2>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 5px;">
-                            <div class="checkbox" style="display: inline-block">
-                                <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
-                                            checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
-                                        <span>Viettel</span> </label>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2>{{'index.customer_register' | translate}}</h2>
                             </div>
-                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
-                                <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
-                                            checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
-                                        <span>Vinaphone</span> </label>
-                            </div>
-                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
-                                <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
-                                            checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
-                                        <span>Mobiphone</span> </label>
+                            <div class="col-md-6 col-sm-12 col-xs-12" style="padding-top: 5px; font-size: 13px !important;">
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block">
+                                        <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                                    checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
+                                                <span>Viettel</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                                    checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                                <span>Vinaphone</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                                    checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                                <span>Mobiphone</span> </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -159,30 +171,39 @@
             </div>
         </div>
     </section>
+    <!-- khach hang cu moi dk -->
     <section>
         <div class="row">
             <!-- Thong ke kh dang ky nhan data hang ngay/go khach hang cu -->
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h2>{{'index.chart_register_old' | translate}}</h2>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 5px;">
-                            <div class="checkbox" style="display: inline-block">
-                                <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
-                                            checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
-                                        <span>Viettel</span> </label>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h2>{{'index.chart_register_old' | translate}}</h2>
                             </div>
-                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
-                                <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
-                                            checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
-                                        <span>Vinaphone</span> </label>
-                            </div>
-                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
-                                <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
-                                            checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
-                                        <span>Mobiphone</span> </label>
+                            <div class="col-md-6 col-sm-12 col-xs-12" style="padding-top: 5px; font-size: 13px !important;">
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block">
+                                        <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                                    checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
+                                                <span>Viettel</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                                    checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                                <span>Vinaphone</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                                    checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                                <span>Mobiphone</span> </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -198,24 +219,32 @@
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h2>{{'index.chart_register_new' | translate}}</h2>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 5px;">
-                            <div class="checkbox" style="display: inline-block">
-                                <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
-                                            checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
-                                        <span>Viettel</span> </label>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2>{{'index.chart_register_new' | translate}}</h2>
                             </div>
-                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
-                                <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
-                                            checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
-                                        <span>Vinaphone</span> </label>
-                            </div>
-                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
-                                <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
-                                            checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
-                                        <span>Mobiphone</span> </label>
+                            <div class="col-md-6 col-sm-12 col-xs-12" style="padding-top: 5px; font-size: 13px !important;">
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block">
+                                        <label><input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                                    checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)"/>
+                                                <span>Viettel</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                                    checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                                <span>Vinaphone</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block">
+                                        <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                                    checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                                <span>Mobiphone</span> </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -231,28 +260,34 @@
     </section>
     <section>
         <div class="row">
-            <!-- thong ke khach hang da nhan data -->
+            <!-- thong ke khach hang da nhan data hang ngay ngay / gio -->
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h2>{{'index.customer_received' | translate}}</h2>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <h2 style="text-align: center;">{{ 'index.customer_received' | translate }}</h2>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top: 5px;">
-                            <div class="checkbox" style="display: inline-block">
-                                <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
-                                            checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
-                                        <span>Viettel</span> </label>
+                        <div class="col-md-6 col-sm-12 col-xs-12" style="padding-top: 5px;font-size: 13px !important;">
+                            <div class="col-md-4 col-sm-2 col-xs-12">
+                                <div class="checkbox" style="display: inline-block">
+                                    <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                                checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
+                                            <span>Viettel</span> </label>
+                                </div>
                             </div>
-                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
-                                <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
-                                            checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
-                                        <span>Vinaphone</span> </label>
+                            <div class="col-md-4 col-sm-2 col-xs-12">
+                                <div class="checkbox" style="display: inline-block;">
+                                    <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                                checked="isCheckGPC" (change)="onChangeGPC($event.currentTarget.checked)">
+                                            <span>Vinaphone</span> </label>
+                                </div>
                             </div>
-                            <div class="checkbox" style="display: inline-block; margin-left: 20px;">
-                                <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
-                                            checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
-                                        <span>Mobiphone</span> </label>
+                            <div class="col-md-4 col-sm-2 col-xs-12">
+                                <div class="checkbox" style="display: inline-block;">
+                                    <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                                checked="isCheckVMS" (change)="onChangeVMS($event.currentTarget.checked)">
+                                            <span>Mobiphone</span> </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -264,79 +299,129 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section>
-        <div class="row" style="margin-top: 20px">
-            <!-- Biểu đồ Thống kê KH nhận data hàng tháng-->
-            <div class="col-md-6 col-sm-12 col-xs-12">
-                <div class="x_panel portlet">
-                    <div class="x_title clearfix">
-                        <h2>{{'index.chart_view_receive_by_month' | translate}}</h2>
-                    </div>
-                    <div class="x_content">
-                        <canvas id="test"></canvas>
-                        <div style="margin-left: auto">
-                            <select [(ngModel)]="fromMonth" style="width: 50px;height: 30px;">
-                            <option *ngFor="let m of months" [value]='m.value'>{{m.month}}</option>
-                            </select> &nbsp;&nbsp;
-
-                            <select [(ngModel)]="toMonth" style="width: 50px;height: 30px;">
-                            <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
-                        </select>
-                            <button class="btn btn-primary" (click)="applyDateFilter()">Filter by month</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <!--biểu đồ Thống kê KH nhận data từng giờ-->
+            <!-- thong ke ty khach hang mua hang/khach hang dang ky theo ngay / gio -->
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2> {{'index.chart_view_receive_by_hours' | translate}}</h2>
+                        <h2 style="float: none; text-align: center;">{{ 'index.purchase_rate_register' | translate }}</h2>
                     </div>
                     <div class="x_content">
                         <div style="display: block">
-                            <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [legend]="lineChartLegend" [options]="lineChartOptions" [chartType]="lineChartType">
-                            </canvas>
+                            <canvas baseChart [datasets]="barChartDataBuyDayRGTDay" [labels]="barChartLabelsBuyDayRGTDay" [legend]="barChartLegendBuyDayRGTDay" [chartType]="barChartTypeBuyDayRGTDay">
+                                </canvas>
                         </div>
-                        <div style="width: 150px;height: 30px;"></div>
                     </div>
                 </div>
             </div>
-
+        </div>
+    </section>
+    <!-- tong hop so luong khach hang theo thang/nam -->
+    <section style="margin-top: 30px;">
+        <div class="x_panel portlet">
+            <div class="row" style="margin-top: 20px">
+                <h3 style="text-align: center; margin-bottom: 20px; color: black;">{{ 'index.title_total' | translate }}</h3>
+                <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount" [settings]="settingsFilterAccount" name="account" (onSelect)="ChangeAccount()" (onDeSelect)="ChangeAccount()">
+                    </angular2-multiselect>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                    <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign" [settings]="settingsFilterCampaign" name="campaign" (onSelect)="ChangeList()" (onDeSelect)="ChangeList()">
+                    </angular2-multiselect>
+                </div>
+                <!--(onSelect)="ChangeDropdownListAccount()" (onDeSelect)="ChangeDropdownListAccount()"  (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()"-->
+                <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                    <angular2-multiselect [data]="dataScenario" [(ngModel)]="selectedScenario" [settings]="settingsFilterScenario" name="scenario" (onSelect)="ChangeList()" (onDeSelect)="ChangeList()">
+                    </angular2-multiselect>
+                </div>
+            </div>
         </div>
     </section>
     <section>
         <div class="row" style="margin-bottom:20px;padding-bottom:20px">
-            <!--Biểu đồ thống kê KH nhận data theo nhà mạng năm 2020-->
+            <!-- thong ke khach hang nhan data hang thang -->
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
                 <div class="x_panel portlet">
                     <div class="x_title clearfix">
-                        <h2>{{'index.chart_view_receive_by_tel' | translate}} 2020</h2>
-                    </div>
-                    <div class="x_content">
-                        <div style="display:block">
-                            <div style="display: block">
-                                <canvas id="ChartReceiDataByTel" baseChart [data]="dataChartReceiveDataByTel" [labels]="LabelChartReceiveDataByTel" [chartType]="TypeChartReceiveDataByTel" [colors]="colorChartReceiveDataByTel" [options]="optionChartReceiveDataByTel"></canvas>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <h2 style="text-align: center;">{{ 'index.chart_view_receive_by_month' | translate }}</h2>
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-xs-12" style="padding-top: 5px; font-size: 13px !important;">
+                            <div class="col-md-4 col-sm-2 col-xs-12">
+                                <div class="checkbox" style="display: inline-block">
+                                    <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                                checked="isCheckVTL" (change)="onChangeVTLMonthYear($event.currentTarget.checked)">
+                                            <span>Viettel</span> </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-2 col-xs-12">
+                                <div class="checkbox" style="display: inline-block;">
+                                    <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                                checked="isCheckGPC" (change)="onChangeGPCMonthYear($event.currentTarget.checked)">
+                                            <span>Vinaphone</span> </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-2 col-xs-12">
+                                <div class="checkbox" style="display: inline-block;">
+                                    <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                                checked="isCheckVMS" (change)="onChangeVMSMonthYear($event.currentTarget.checked)">
+                                            <span>Mobiphone</span> </label>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="x_content">
+                        <div style="display: block">
+                            <canvas baseChart [datasets]="barChartDataReceivedMonth" [labels]="barLabelsChartReceivedMonth" [legend]="barChartLegendReceivedMonth" [chartType]="barChartTypeReceivedMonth">
+                            </canvas>
+                        </div>
+                    </div>
+                    <!-- tim kiem theo thang -->
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 20px;">
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <form class="container">
+                                <input style="border-radius: 10px" [(ngModel)]="timeMonthFrom" autocomplete="off" class="form-control" name="fromMonth" bsDatepicker [bsConfig]="{dateInputFormat: 'MM/YYYY'}" (onShown)="onOpenCalendar($event)" (ngModelChange)="onChangeFromMonthYear($event)"
+                                    placeholder="Từ tháng">
+                            </form>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <form class="container">
+                                <input style="border-radius: 10px" [(ngModel)]="timeTo" autocomplete="off" class="form-control" name="toMonth" bsDatepicker [bsConfig]="{dateInputFormat: 'MM/YYYY'}" (onShown)="onOpenCalendar($event)" (ngModelChange)="onChangeToMonthYear($event)" placeholder="Đến tháng">
+                            </form>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <button style="border-radius: 10px" type="button" class="btn btn-primary" (click)="filterByMonth()">{{ 'index.filter_month' | translate }}</button>
+                        </div>
+                    </div>
                 </div>
+
             </div>
-            <!--Thống kê KH sử dụng thường xuyên-->
+            <!--Biểu đồ thống kê KH nhận data theo nhà mạng năm-->
             <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isCheckUser">
-                <div class="x_panel portlet">
+                <div class="x_panel portlet fixheght">
                     <div class="x_title clearfix">
-                        <h2>Biểu đồ thống kê KH sử dụng thường xuyên</h2>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h2 style="padding-left: 20%;">{{'index.chart_view_receive_by_tel' | translate}} {{chooseeYear}}</h2>
+                        </div>
                     </div>
                     <div class="x_content">
-                        <div style="display:block">
-                            <div style="display: block">
-                                <canvas baseChart [datasets]="dataKHSDTX" [labels]="labelKHSDTX" [legend]="legendKHSDTX" [chartType]="typeKHSDTX">
-                                </canvas>
-                            </div>
+                        <div id="chart">
+                            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [labels]="chartOptions.labels" [responsive]="chartOptions.responsive"></apx-chart>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 20px; margin-bottom: 6px;">
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <form class="container">
+                                <label>&nbsp;</label>
+                            </form>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <form class="container">
+                                <label>&nbsp;</label>
+                            </form>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                            <label>&nbsp;</label>
                         </div>
                     </div>
                 </div>

@@ -640,7 +640,6 @@ export class ScenariosComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
-    debugger
     this.selectedOptionInsertEdit = [];
     this.settingsFilterAccountEdit = {
       text: this.utilityService.translate('global.choose_account'),
