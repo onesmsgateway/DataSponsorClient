@@ -58,7 +58,7 @@ export class DataService {
       return null;
     }
   }
-
+ 
   public async postAsync(uri: string, data?: any): Promise<any> {
     try {
       const response = await this.http.post(AppConst.DATA_SPONSOR_API + uri, data).toPromise();

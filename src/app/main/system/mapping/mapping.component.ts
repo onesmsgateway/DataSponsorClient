@@ -183,26 +183,30 @@ export class MappingComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+    this.getAccountLogin();
+    
+  }
+  async getAccountLogin() {
+    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
+    let roleAccess = result.data[0].ROLE_ACCESS;
+    if (roleAccess == 50) {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+
+    }
     this.getDataAccount()
     this.getDataSender();
     this.getDataPartner();
     this.pagination.pageSize = 20;
     this.getData();
   }
-  async getAccountLogin() {
-    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
-    let roleAccess = result.data[0].ROLE_ACCESS;
-    if (roleAccess != null && roleAccess == 50) {
-      this.isAdmin = true;
-    } else {
-      this.isAdmin = false;
-
-    }
-  }
 
   //#region load data account
   public async getDataAccount() {
-    this.dataAccount = []
+   
+    this.dataAccount = [];
     this.dataAccount.push({ "id": "", "itemName": "Chọn tài khoản" });
     if (this.isAdmin) {
       let response: any = await this.dataService.getAsync('/api/account');
@@ -320,6 +324,7 @@ export class MappingComponent implements OnInit {
     this.selectedItemComboboxPartnerGPC = []
     this.selectedItemComboboxPartnerVNM = []
     this.selectedItemComboboxPartnerGtel = []
+    this.getDataAccount();
     this.showModalCreate.show();
   }
 

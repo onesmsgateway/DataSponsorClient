@@ -21,6 +21,7 @@ export class MainComponent {
   public dataMenu: any = [];
   public viewQuyTinCSKH = 0;
   public viewQuyTien = 0;
+  public viewData = 0;
   public viewQuyViettel = 0;
   public viewQuyVina = 0;
   public viewQuyMobi = 0;
@@ -91,24 +92,27 @@ export class MainComponent {
     if (!isSend) {
       let accountID = this.authService.currentUserValue.ACCOUNT_ID;
       if (accountID != undefined && accountID != "") {
-
         let getDataAccount: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' +
           accountID);
         if (getDataAccount != null && getDataAccount.data.length > 0) {
           this.viewQuyTien = getDataAccount.data[0].TOTAL_REMAIN;
+          this.viewData = getDataAccount.data[0].TOTAL_DATA_REMAIN != null? getDataAccount.data[0].TOTAL_DATA_REMAIN:0;
         }
         else {
           this.viewQuyTien = 0;
+          this.viewData = 0;
         }
       }
       else {
         this.viewQuyTinCSKH = this.authService.viewQuyTinCSKH = 0;
         this.viewQuyTien = this.authService.viewQuyTinQC = 0;
+        this.viewData = 0;
       }
     }
     else {
       this.viewQuyTinCSKH = this.authService.viewQuyTinCSKH;
-      this.viewQuyTien = this.authService.viewQuyTinQC
+      this.viewQuyTien = this.authService.viewQuyTinQC;
+      this.viewData = 0;
     }
   }
   //#endregion

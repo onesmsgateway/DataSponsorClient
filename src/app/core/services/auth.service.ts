@@ -55,6 +55,13 @@ export class AuthService {
     }
     return response;
   }
+  public async getAccountLink(ACCOUNT_ID) {
+    let response: any = await this.dataService.getAsync("/api/popup/GetAccountId?account_id=" +  ACCOUNT_ID);
+    if (response && response.err_code == 0) {
+      this.currentUserSubject.next(<User>response.data);
+    }
+    return response;
+  }
 
   // public loginWithGoogle(): void {
   //   this.authSocial.signIn(GoogleLoginProvider.PROVIDER_ID).then(async response => {
@@ -101,7 +108,6 @@ export class AuthService {
   //     console.log("loginWithFacebook", error);
   //   });
   // }
-
   private setLogin(user: User) {
     localStorage.setItem(AppConst.CURRENT_USER, JSON.stringify(user));
     this.currentUserSubject.next(user);

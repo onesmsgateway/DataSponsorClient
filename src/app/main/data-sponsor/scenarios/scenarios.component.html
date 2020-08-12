@@ -98,7 +98,6 @@
                                                         <button type="button" class="btn btn-primary btn-sm">
                                                         <a style="color: #FFF;" [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ account_id: item.ACCOUNT_ID,account_name: item.USER_NAME, scenario_id: item.ID, scenario_name: item.NAME,
                                                              fromDate: item.START_DATE, enddate: item.END_DATE }">{{ 'global.detail' | translate }}</a>
-
                                                         </button>
                                                         <!-- <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showDetailScenario()">{{ 'global.detail' | translate }}</button> -->
                                                     </div>
@@ -199,7 +198,7 @@
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                                     <div class="checkbox" style="margin-top: 15%;">
-                                        <label><input type="checkbox" (click)="oncheckActive()" value="" [disabled]="!isHidden" class="checkbox" name="checkActive" ngModel>
+                                        <label><input type="checkbox" (change)="oncheckActive($event.currentTarget.checked)" value="" [disabled]="!isHidden" class="checkbox" name="checkActive" ngModel>
                                             <span>{{'scenarios.active' | translate}}</span> </label>
                                     </div>
                                 </div>
@@ -418,7 +417,7 @@
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                                     <div class="checkbox" style="margin-top: 15%;">
-                                        <label><input type="checkbox" value="" class="checkbox" formControlName="isActive">
+                                        <label><input type="checkbox" value="" class="checkbox" formControlName="isActive" (change)="oncheckActive($event.currentTarget.checked)" ngModel>
                                     <span>{{'scenarios.active' | translate}}</span> </label>
                                     </div>
                                 </div>

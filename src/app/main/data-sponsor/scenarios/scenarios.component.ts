@@ -14,6 +14,7 @@ import { AppConst } from 'src/app/core/common/app.constants';
 import { User } from 'src/app/core/models/user';
 import { DataSmsComponent } from '../../statistic/data-sms/data-sms.component';
 
+
 @Component({
   selector: 'app-scenarios',
   templateUrl: './scenarios.component.html',
@@ -33,6 +34,7 @@ export class ScenariosComponent implements OnInit {
   @ViewChild('uploadImage', { static: false }) public uploadImage;
   @ViewChild('dataComponent', { static: false }) public dataComponent: DataSmsComponent;
   @ViewChild('contentSMS', { static: false }) public contentSMS;
+
 
   public user: User = this.authService.currentUserValue;
   public dataScenarios = [];
@@ -112,6 +114,8 @@ export class ScenariosComponent implements OnInit {
   public selectedItemComboboxAccountCreate = [];
   public selectedItemComboboxscenariosDetail = [];
   public contentsms: string = '';
+  public active;
+  public activeold;
 
 
   public selectedItemComboboxSender = [];
@@ -124,8 +128,6 @@ export class ScenariosComponent implements OnInit {
   public codetrim: string = "";
   public urlImageUpload
   public urlImageUploadEdit
-
-
 
 
   constructor(
@@ -297,7 +299,14 @@ export class ScenariosComponent implements OnInit {
     this.scenariosDetail.push({ "id": "", "itemName": this.utilityService.translate('scenarios.scenariosDetailTwo') });
     this.scenariosDetail.push({ "id": "", "itemName": this.utilityService.translate('scenarios.scenariosDetailThree') });
     this.getAccountLogin();
-
+    if (this.activatedRoute.snapshot.queryParamMap.get('status') != null && this.activatedRoute.snapshot.queryParamMap.get('status') != "") {
+      this.active = this.activatedRoute.snapshot.queryParamMap.get('status');
+    }else if(this.activatedRoute.snapshot.queryParamMap.get('statusold') != null && this.activatedRoute.snapshot.queryParamMap.get('statusold') != ""){
+      this.active = this.activatedRoute.snapshot.queryParamMap.get('statusold');
+    }else{
+      this.active = "";
+    }
+    
   }
   copyInputMessage(inputElement) {
     inputElement.select();
@@ -313,25 +322,34 @@ export class ScenariosComponent implements OnInit {
     } else {
       this.isAdmin = false;
     }
-    this.getDataAccount();
+    setTimeout(() => {
+      this.getDataAccount();
+    }, 1000);
     this.bindDataStatus();
     this.getDataPackage();
-    this.getData();
+    setTimeout(() => {
+      this.getData();
+    }, 1000);
   }
 
   async getDataAccount() {
     if (this.isAdmin) {
       this.selectedAccount = [{ "id": "", "itemName": this.utilityService.translate('global.choose_account') }];
       let response: any = await this.dataService.getAsync('/api/account')
-      for (let index in response.data) {
-        this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+      if (response) {
+        for (let index in response.data) {
+          this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+        }
       }
+
     }
     else {
       let response = await this.dataService.getAsync('/api/account/GetLisAccountParentAndChild?account_id=' +
         this.authService.currentUserValue.ACCOUNT_ID);
-      for (let index in response.data) {
-        this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+      if (response) {
+        for (let index in response.data) {
+          this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+        }
       }
       if (this.dataAccount.length == 1) {
         this.selectedAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
@@ -364,13 +382,16 @@ export class ScenariosComponent implements OnInit {
     this.selectedPackage = [];
     this.dataPackage = [];
     let response: any = await this.dataService.getAsync('/api/packageDomain/GetPackageDomainPaging?pageIndex=1&pageSize=9999&package_name=')
-    for (let index in response.data) {
-      this.dataPackage.push({ "id": response.data[index].ID, "itemName": response.data[index].DATA + "MB" });
+    if (response) {
+      if (response.err_code == 0) {
+        for (let index in response.data) {
+          this.dataPackage.push({ "id": response.data[index].ID, "itemName": response.data[index].DATA + "MB" });
+        }
+        if (this.dataPackage.length == 1)
+          this.selectedPackage.push({ "id": this.dataPackage[0].id, "itemName": this.dataPackage[0].itemName });
+      }
     }
-    if (this.dataPackage.length == 1)
-      this.selectedPackage.push({ "id": this.dataPackage[0].id, "itemName": this.dataPackage[0].itemName });
   }
-
   //#region load data
   async getData() {
     let account = "";
@@ -379,10 +400,11 @@ export class ScenariosComponent implements OnInit {
     else
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     // let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
-    let active = this.selectedStatus.length > 0 && this.selectedStatus[0].id != "" ? this.selectedStatus[0].id : "";
+      let isactive = this.selectedStatus.length > 0 && this.selectedStatus[0].id != "" ? this.selectedStatus[0].id : this.active;
+    
     let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&code=" + this.inCodeScenar +
-      "&name=" + this.inNameScenar + "&active=" + active)
+      "&name=" + this.inNameScenar + "&active=" + isactive)
     if (response) {
       if (response.err_code == 0) {
         this.loadData(response);
@@ -684,7 +706,7 @@ export class ScenariosComponent implements OnInit {
       });
       if (checkSendSms == 0) {
         this.checkSendSmsEdit = false;
-      }else{
+      } else {
         this.checkSendSmsEdit = true;
       }
       this.componentScenariosDetail.scenarioId = id;
@@ -764,8 +786,8 @@ export class ScenariosComponent implements OnInit {
       }
     }
     START_DATE = this.utilityService.formatDateToString(START_DATE, "yyyyMMddHHmmss");
-    END_DATE = this.utilityService.formatDateToString(END_DATE, "yyyyMMddHHmmss");
-    let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
+    END_DATE = this.utilityService.formatDateToString(END_DATE, "yyyyMMdd") + "235959";
+    let IS_ACTIVE = this.checkActive == true ? 1 : 0;
     let IS_ACCUMULATE_POINT = formData.isCheckAccumulatePoint.value == true ? 1 : 0;
     let IS_SEND_SMS = formData.checkSendSms.value == true ? 1 : 0;
     let REWARD_NUMBER_ONE_TIME = parseInt(formData.checkRewardOneTime.value);
@@ -803,8 +825,6 @@ export class ScenariosComponent implements OnInit {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
       }
     }
-
-
   }
 
   showConfirmDelete(id, name) {
@@ -1048,20 +1068,23 @@ export class ScenariosComponent implements OnInit {
     }
   }
 
-  async oncheckActive() {
-    
-    this.checkActive = !this.checkActive;
+  async oncheckActive(isCheckActive) {
+    if (isCheckActive) {
+      this.checkActive = true;
+    } else {
+      this.checkActive = false;
+    }
   }
   async onisCheckAccumulatePoint() {
     this.isCheckAccumulatePoint = !this.isCheckAccumulatePoint;
   }
- 
-   oncheckSendSms() {
-      if(this.checkSendSms == false){
-        this.checkSendSms = true;
-      }else{
-        this.checkSendSms = false;
-      }
+
+  oncheckSendSms() {
+    if (this.checkSendSms == false) {
+      this.checkSendSms = true;
+    } else {
+      this.checkSendSms = false;
+    }
     if (this.checkSendSms == true) {
       this.isHiddencheckSms = false;
       this.isHiddenSen = false;

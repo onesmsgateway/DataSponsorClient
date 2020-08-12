@@ -58,6 +58,7 @@
         "note": "Ghi chú",
         "total": "Tổng",
         "money_remain": "Tổng tiền còn lại",
+        "data_remain": "Tổng data KM còn lại",
         "success": "Thành công",
         "fail": "Thất bại",
         "ok": "Ok",
@@ -66,8 +67,17 @@
         "inputNote": "Bạn hãy nhập ghi chú",
         "balanceViettel": "Số dư Viettel",
         "balanceVina": "Số dư Vina",
-        "balanceMobi": "Số dư Mobi"
-
+        "balanceMobi": "Số dư Mobi",
+        "total_scenario": "Kịch bản",
+        "total_scenario_ran": "Tổng kịch bản đang chạy",
+        "total_campaign": "Chiến dịch",
+        "total_campaign_end": "Tổng chiến dịch đã chạy",
+        "total_scenario_end": "Tổng kịch bản đã chạy",
+        "total_data_sent": "Data",
+        "total_money_sent_end": "Tiền",
+        "total_data_sent_end": "Tổng Data đã gửi đi",
+        "total_money_sent": "Tổng tiền đã gửi đi",
+        "choose_money": "Chọn mệnh giá tiền"
     },
     "home": {
         "sms_error": "Tin lỗi",
@@ -94,7 +104,7 @@
     "register": {
         "fullName": "Họ và tên",
         "phoneNumber": "Số điện thoại",
-        "submit_register": "Đăng ký nhận data",
+        "submit_register": "Đăng ký",
         "validatePhone": "Vui lòng nhập đúng định dạng số điện thoại."
     },
     "role": {
@@ -350,11 +360,17 @@
         "label_system": "Tiền trên hệ thống: ",
         "label_system_remain": "Tiền còn lại trên hệ thống: ",
         "provide_amt": "Cấp tiền cho TK",
+        "provide_data": "Cấp data KM cho TK",
         "account": "Tài khoản",
-        "total_data": "Tổng cấp",
+        "total_data": "Tổng tiền cấp",
         "total_use": "Tổng đã sử dụng",
         "total_remain": "Tổng còn",
         "total_amt": "Tổng tiền",
+        "total_data_amt": "Tổng tiền",
+        "total_data_vol": "Tổng data khuyến mại",
+        "total_data_viettel": "Tổng data Viettel",
+        "total_data_gpc": "Tổng data Vinaphone",
+        "total_data_vms": "Tổng data Mobifone",
         "supplier": "Nhà cung cấp",
         "type": "Loại",
         "create_date": "Ngày cấp",
@@ -544,10 +560,12 @@
         "is_send": "Gửi Sms?",
         "status": "Trạng thái",
         "program_name": "Đơn hàng",
-        "total_sms": "Tổng số điện thoại",
-        "viettel": "Viettel",
-        "gpc": "VinaPhone",
-        "vms": "Mobiphone",
+        "total_sms": "Tổng SDT",
+        "total_money": "Tổng tiền",
+        "total_data": "Tổng data",
+        "viettel": "VT",
+        "gpc": "GPC",
+        "vms": "VMS",
         "inPackageVTL": "Chọn gói cước Viettel",
         "inTelco": "Chọn nhà mạng",
         "inPackageGPC": "Chọn gói cước Vina",
@@ -789,7 +807,16 @@
         "customer_received": "Số lượng KH đã nhận data",
         "purchase_rate_register": "Tỷ lệ số KH mua hàng trên số KH đăng ký nhận data",
         "filter_month": "Lọc theo tháng"
-
+    },
+    "data_code": {
+        "data_code": "Quản lý data code",
+        "status_active": "Hiệu lực",
+        "status_lock": "Hết hiệu lực",
+        "account": "Tài khoản",
+        "code": "Mã data",
+        "money": "Mệnh giá",
+        "create": "Ngày nhập",
+        "isactive": "Trạng thái"
     }
 
 }

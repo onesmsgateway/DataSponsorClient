@@ -14,6 +14,7 @@ import { AuthGuard } from 'src/app/core/guards/auth.guard';
 import { SenderGroupComponent } from './sender-group/sender-group.component';
 import { GroupsComponent } from './groups/groups.component';
 import { MemberComponent } from './member/member.component';
+import { DataCodeComponent } from './data-code/data-code.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
@@ -23,7 +24,8 @@ export const managerRoutes: Routes = [{
     { path: 'sender', component: SenderComponent, data: { MENU_CODE: 'SENDER' }, canActivate: [AuthGuard] },
     { path: 'sender-group', component: SenderGroupComponent, data: { MENU_CODE: 'SENDER-GROUP' }, canActivate: [AuthGuard] },
     { path: 'group', component: GroupsComponent, data: { MENU_CODE: 'GROUP' }, canActivate: [AuthGuard] },
-    { path: 'member', component: MemberComponent, data: { MENU_CODE: 'MEMBER' }, canActivate: [AuthGuard] }
+    { path: 'member', component: MemberComponent, data: { MENU_CODE: 'MEMBER' }, canActivate: [AuthGuard] },
+    { path: 'data-code', component: DataCodeComponent, data: { MENU_CODE: 'DATA-CODE' }, canActivate: [AuthGuard] }
   ]
 }];
 
@@ -33,7 +35,8 @@ export const managerRoutes: Routes = [{
     SenderComponent,
     SenderGroupComponent,
     GroupsComponent,
-    MemberComponent],
+    MemberComponent,
+    DataCodeComponent],
   imports: [
     FormsModule,
     ReactiveFormsModule,

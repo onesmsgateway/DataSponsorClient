@@ -1,10 +1,14 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
-import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
+import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UrlConst } from '../core/common/url.constants';
+import { AuthService } from '../core/services/auth.service';
+import { SocialUser } from "angularx-social-login";
 
 @Component({
   selector: 'app-popup',
@@ -13,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
 })
 
 export class PopupComponent implements OnInit {
+  public user: SocialUser;
 
   public ipAddress = '';
   public city = '';
@@ -28,23 +33,26 @@ export class PopupComponent implements OnInit {
   public ids: string = '';
   public isActive = true;
   public issuccess = false;
+  public isImg = true;
   public scenario_id: number;
   mobNumberPattern = "^((\\84-?)|0)?[0-9]{9}$";
   isValidFormSubmitted = false;
 
+
   constructor(private dataService: DataService,
     private notificationService: NotificationService,
-    private utilityService: UtilityService,
-    private http: HttpClient
+    private authService: AuthService,
+    private utilityService: UtilityService
   ) {
+   
   }
   ngOnInit() {
-     this.subaccountID();
-     this.getIpLocation();
- 
+    this.subaccountID();
+    this.getIpLocation();
+   
   }
 
-// lay gia tri ip click vao link tang data
+  // lay gia tri ip click vao link tang data
   async getIpLocation() {
 
     let response: any = await this.dataService.getAsync('/api/Popup/GetIPAddress');
@@ -52,23 +60,32 @@ export class PopupComponent implements OnInit {
       this.ipAddress = response.query;
       this.city = response.city;
       if (this.ipAddress != null && this.ipAddress != "") {
-        this.createChartPopupView();
+        setTimeout(() => {
+          this.createChartPopupView(); 
+        }, 2000);
+       
       }
     }
   }
 
   async subaccountID() {
-
-    this.linkinput = window.location.href;
-    var rlink = this.linkinput.split(/[=\-&]/);
-    for (var i = 0; i < rlink.length; i++) {
-      this.scenarioCode = (rlink[1]);
-      this.account_Id = parseInt(rlink[3]);
+    if (this.linkinput == null || this.linkinput == "") {
+      this.linkinput = window.location.href;
+      var rlink = this.linkinput.split(/[=\-&]/);
+      for (var i = 0; i < rlink.length; i++) {
+        this.scenarioCode = (rlink[1]);
+        this.account_Id = parseInt(rlink[3]);
+      }
+    }else{
+      return;
     }
     if (this.scenarioCode != null && this.scenarioCode != "") {
       this.loadAcount();
-      this.loadscenario();
+      setTimeout(() => {
+        this.loadscenario();
+      }, 1000);
     }
+   
   }
 
   async loadscenario() {
@@ -79,7 +96,7 @@ export class PopupComponent implements OnInit {
         '&account_id=' + account_id);
       if (response) {
         if (response.data[0] == null || response.data[0] == "") {
-          alert('Kịch bản không tồn tại!');
+          alert('Kịch bản không tồn tại hoặc đã hết hạn!');
           this.posterImage = this.avartaName;
           this.contentsc = 'Chào mừng bạn đến với chương trình tặng Data';
           this.ngForm.disable();
@@ -92,10 +109,13 @@ export class PopupComponent implements OnInit {
             this.posterImage = this.avartaName;
             this.contentsc = 'Chào mừng bạn đến với chương trình tặng Data';
           }
-        
         }
       }
     }
+
+    setTimeout(() => {
+      this.getAccountLink();
+    }, 3000);
 
   }
   //#region create new
@@ -112,6 +132,7 @@ export class PopupComponent implements OnInit {
         this.avartaName = response.data[0].AVATAR;
         if (this.avartaName == null || this.avartaName == '') {
           this.avartaName = '../../assets/img/logo-login.png';
+          this.isImg = false;
         }
       }
     }
@@ -152,6 +173,10 @@ export class PopupComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-119"));
       this.issuccess = false;
       return
+    } else if (response.err_code == -500) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-205"));
+      this.issuccess = false;
+      return
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
@@ -183,8 +208,6 @@ export class PopupComponent implements OnInit {
           this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
           return;
         }
-
-
       } else {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
         return;
@@ -193,5 +216,8 @@ export class PopupComponent implements OnInit {
 
   }
   //#endregion
-
+async getAccountLink(){
+  let ACCOUNT_ID = this.account_Id;
+  let response: any = await this.authService.getAccountLink(ACCOUNT_ID);
+}
 }

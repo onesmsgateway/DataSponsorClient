@@ -41,6 +41,7 @@
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
                                     <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="openFormData()">{{'data_cimast.provide_amt' | translate}}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="openFormDataFree()">{{'data_cimast.provide_data' | translate}}</button>
                                 </div>
                             </div>
                         </form>
@@ -56,6 +57,8 @@
                                                     {{'data_cimast.account' | translate}}</th>
                                                 <th class="text-center">{{'data_cimast.total_amt' | translate}} (VNĐ)
                                                 </th>
+                                                <th class="text-center">{{'data_cimast.total_data_vol' | translate}} (MB)
+                                                </th>
                                                 <th class="text-center">{{'data_cimast.type' | translate}}</th>
                                                 <th class="text-center">{{'data_cimast.create_date' | translate}}</th>
                                                 <th class="text-center">{{'data_cimast.create_user' | translate}}</th>
@@ -68,6 +71,7 @@
                                                 <td class="text-center">{{i + 1}}</td>
                                                 <td>{{item.USER_NAME}}</td>
                                                 <td>{{item.TOTAL_AMT | number:'.0'}}</td>
+                                                <td>{{item.TOTAL_DATA_VOL | number:'.0'}}</td>
                                                 <td>{{item.TYPE}}</td>
                                                 <td>{{item.CREATE_DATE}}</td>
                                                 <td>{{item.CREATE_USER}}</td>
@@ -119,6 +123,7 @@
                             <input type="number" class="form-control" name="totalAmt" [(ngModel)]="totalAmt">
                         </div>
                     </div>
+
                     <div class="row" style="margin-top: 10px;">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <label>{{'data_cimast.description' | translate}}</label>
@@ -134,6 +139,58 @@
         </div>
     </div>
 </div>
+<!-- modal cấp data mien phi-->
+<div class="modal fade" bsModal #createDataCimastFreeModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">
+                    {{'data_cimast.add_data' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="createDataCimastFreeModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form #transFree="ngForm" (ngSubmit)="createDataCimastFree(transFree.value)">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <label>{{'data_cimast.account' | translate}}<span style="color:red;">
+                                    (*)</span></label>
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountCreate" [settings]="settingsFilterAccount" name="accountID" (onSelect)="onItemSelectCreate()" (onDeSelect)="onItemSelectCreate()">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <label>{{'data_cimast.total_data_viettel' | translate}}</label>
+                            <input type="number" class="form-control" name="totalVol_Vt" [(ngModel)]="totalVol_Vt">
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <label>{{'data_cimast.total_data_gpc' | translate}}</label>
+                            <input type="number" class="form-control" name="totalVol_Gpc" [(ngModel)]="totalVol_Gpc">
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <label>{{'data_cimast.total_data_vms' | translate}}</label>
+                            <input type="number" class="form-control" name="totalVol_Vms" [(ngModel)]="totalVol_Vms">
+                        </div>
+                    </div>
+                    <div class="row">
+
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <label>{{'data_cimast.description' | translate}}</label>
+                            <input type="text" class="form-control" placeholder="{{'data_cimast.description' | translate}}" name="description" [(ngModel)]="description" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" (click)="createDataCimastModal.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="submit" class="btn btn-success btn-sm" *ngIf="isAdmin">{{ 'global.confirm' | translate }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <!-- modal Xem lich su cap data-->
 <div class="modal fade" bsModal #viewDataAccountCimastTransModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
@@ -157,6 +214,8 @@
                                         <th class="text-center" style="width: 60px">STT</th>
                                         <th class="text-center">{{'data_cimast.account' | translate}}</th>
                                         <th class="text-center">{{'data_cimast.total_amt' | translate}} (VNĐ)</th>
+                                        <th class="text-center">{{'data_cimast.total_data_vol' | translate}} (MB)
+                                        </th>
                                         <th class="text-center">{{'data_cimast.create_date' | translate}}</th>
                                         <th class="text-center">{{'data_cimast.create_user' | translate}}</th>
                                         <th class="text-center">{{'data_cimast.description' | translate}}</th>
@@ -166,7 +225,8 @@
                                     <tr *ngFor="let item of dataQuotaHistory; let i = index" [attr.data-index]="i">
                                         <td class="text-center">{{i + 1}}</td>
                                         <td>{{item.USER_NAME}}</td>
-                                        <td>{{item.TOTAL_AMT}}</td>
+                                        <td>{{item.TOTAL_AMT | number:'.0'}}</td>
+                                        <td>{{item.DATA_PROVIDED_FREE | number:'.0'}}</td>
                                         <td>{{item.CREATE_DATE}}</td>
                                         <td>{{item.CREATE_USER}}</td>
                                         <td>{{item.DESCRIPTION}}</td>

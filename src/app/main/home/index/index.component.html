@@ -1,7 +1,59 @@
 <article>
     <div class="row top_tiles">
         <section>
-            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12">
+            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="!isAdmin">
+                <a [routerLink]="['../../data-sponsor/scenarios']" [queryParams]="{status: '1'}">
+                    <div class="tile-stats" style="cursor: pointer">
+                        <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
+                        <div class="count">{{scenario_ran}}</div>
+                        <h4 style="margin-bottom: 7px;">{{ 'global.total_scenario' | translate }}</h4>
+                        <h6 style="margin-left: 3px;">{{ 'global.total_scenario_ran' | translate }}</h6>
+                    </div>
+
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="!isAdmin">
+                <a [routerLink]="[]" [queryParams]="{ }">
+                    <div class="tile-stats" style="cursor: pointer">
+                        <div class="icon"><i class="glyphicon glyphicon-list-alt"></i></div>
+                        <div class="count">{{campaign}}</div>
+                        <h4 style="margin-bottom: 7px;">{{ 'global.total_campaign' | translate }}</h4>
+                        <h6 style="margin-left: 3px;">{{ 'global.total_campaign_end' | translate }}</h6>
+                    </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="!isAdmin">
+                <a [routerLink]="['../../data-sponsor/scenarios']" [queryParams]="{statusold: 0 }">
+                    <div class="tile-stats" style="cursor: pointer">
+                        <div class="icon"><i class="glyphicon glyphicon-list-alt"></i></div>
+                        <div class="count">{{scenario_end}}</div>
+                        <h4 style="margin-bottom: 7px;">{{ 'global.total_scenario' | translate }}</h4>
+                        <h6 style="margin-left: 3px;">{{ 'global.total_scenario_end' | translate }}</h6>
+                    </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="!isAdmin">
+                <a [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ statusdata: '1'}">
+                    <div class="tile-stats" style="cursor: pointer">
+                        <div class="icon"><i class="fa fa-check-square-o"></i></div>
+                        <div class="count">{{total_data_sent}}</div>
+                        <h4 style="margin-bottom: 7px;">{{ 'global.total_data_sent' | translate }}</h4>
+                        <h6 style="margin-left: 3px;">{{ 'global.total_data_sent_end' | translate }}</h6>
+                    </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="!isAdmin">
+                <a [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ statusdata: '1'}">
+                    <div class="tile-stats" style="cursor: pointer">
+                        <div class="icon"><i class="fa fa-check-square-o"></i></div>
+                        <div class="count">{{total_money_sent}}</div>
+                        <h4 style="margin-bottom: 7px;">{{ 'global.total_money_sent_end' | translate }}</h4>
+                        <h6 style="margin-left: 3px;">{{ 'global.total_money_sent' | translate }}</h6>
+                    </div>
+                </a>
+            </div>
+            <!-- //admin -->
+            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="isAdmin">
                 <a [routerLink]="['../../statistic/sms-error']" [queryParams]="{redirectTo: 'smsErrByMonth'}">
                     <div class="tile-stats" style="cursor: pointer">
                         <div class="icon"><i class="fa fa-bar-chart-o"></i></div>
@@ -11,7 +63,7 @@
                     </div>
                 </a>
             </div>
-            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="!isCustomer">
+            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="isAdmin">
                 <a [routerLink]="['../../sms/campaign']" [queryParams]="{ redirectFrom: 'home', currentDate: currentDate }">
                     <div class="tile-stats" style="cursor: pointer">
                         <div class="icon"><i class="fa fa-check-square-o"></i></div>
@@ -54,7 +106,7 @@
         </section>
     </div>
     <!-- loc gia tri theo tieu chi thong ke khach hang ngay/goi -->
-    <section style="margin-top: 30px;">
+    <section style="margin-top: 30px;" *ngIf="isCheckUser">
         <div class="x_panel portlet">
             <div class="row" style="margin-top: 20px">
                 <h3 style="text-align: center; margin-bottom: 20px; color: black;">{{ 'index.title_statistics' | translate }}</h3>
@@ -316,7 +368,7 @@
         </div>
     </section>
     <!-- tong hop so luong khach hang theo thang/nam -->
-    <section style="margin-top: 30px;">
+    <section style="margin-top: 30px;" *ngIf="isCheckUser">
         <div class="x_panel portlet">
             <div class="row" style="margin-top: 20px">
                 <h3 style="text-align: center; margin-bottom: 20px; color: black;">{{ 'index.title_total' | translate }}</h3>

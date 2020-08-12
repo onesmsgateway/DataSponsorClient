@@ -309,6 +309,7 @@ export class SendDataComponent implements OnInit {
     }
     this.getDataAccount();
     this.getDataSmsTemp();
+    
   }
 
   //#region view quy data
@@ -624,6 +625,7 @@ export class SendDataComponent implements OnInit {
       else
         this.selectedItemComboboxAccount.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_account') });
     }
+    this.createCodeNameCampaing();
   }
 
   changeAccount() {
@@ -738,7 +740,6 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageGPC() {
-
     this.packGPC = "0";
     if (this.selectedPackageGPC.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageGPC[0].id);
@@ -1271,6 +1272,9 @@ export class SendDataComponent implements OnInit {
     this.packVMS = "0";
     this.totalNumber = 0;
     this.totalNumberSendSms = 0;
+    this.programCode = "";
+    this.selectedOptionTempSms = [];
+    this.selectedOptionTempSms.push({"id": "" , "itemName":this.utilityService.translate('send_data.optionSms')});
   }
 
   // export template excel

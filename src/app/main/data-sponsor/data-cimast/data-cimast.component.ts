@@ -16,14 +16,22 @@ import { Pagination } from 'src/app/core/models/pagination';
 export class DataCimastComponent implements OnInit {
 
   @ViewChild('createDataCimastModal', { static: false }) public createDataCimastModal: ModalDirective;
+  @ViewChild('createDataCimastFreeModal', { static: false }) public createDataCimastFreeModal: ModalDirective;
   @ViewChild('viewDataAccountCimastTransModal', { static: false }) public viewDataAccountCimastTransModal: ModalDirective;
 
   public dataAccountCimast;
   public dataQuotaHistory = [];
   public total_amt_telco = 0;
+  public total_vol_telco = 0;
+  public total_data_vol_telco = 0;
   public total_amt_system = 0;
   public total_amt_system_remain = 0;
-  public totalAmt = 0;
+  public total_vol_system = 0;
+  public total_vol_system_remain = 0;
+  public totalAmt = 0; 
+  public totalVol_Vt = 0;
+  public totalVol_Gpc = 0;
+  public totalVol_Vms = 0;
   public description = "";
   public isAdmin: boolean = false;
   public checkUserLogin: boolean = false;
@@ -91,9 +99,13 @@ export class DataCimastComponent implements OnInit {
     if (response != null && response.data.length > 0) {
       this.total_amt_system = Math.round(response.data[0].TOTAL_AMT);
       this.total_amt_system_remain = Math.round(response.data[0].TOTAL_REMAIN);
+      this.total_vol_system = Math.round(response.data[0].TOTAL_DATA_VOL);
+      this.total_vol_system_remain = Math.round(response.data[0].TOTAL_DATA_REMAIN);
     }else{
       this.total_amt_system = 0;
       this.total_amt_system_remain = 0;
+      this.total_vol_system = 0;
+      this.total_vol_system_remain = 0;
     }
   }
 
@@ -101,7 +113,8 @@ export class DataCimastComponent implements OnInit {
   public async bindDataAccount() {
     let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
     let roleAccess = result.data[0].ROLE_ACCESS;
-    if (roleAccess == 50) {
+    let isCheckAdmin = result.data[0].IS_ADMIN;
+    if (isCheckAdmin == 1) {
       let response: any = await this.dataService.getAsync('/api/account');
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
@@ -191,17 +204,13 @@ export class DataCimastComponent implements OnInit {
     let account: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' + ACCOUNT_ID);
     if (account != null && account.data.length > 0) {
       // update data account cimast
-      if (account.data[0].USER_NAME != "admin") {
+      if (!this.isAdmin) {
         //so data cap khong duoc lon hon data tong
         if (TOTAL_AMT > this.total_amt_system_remain) {
-          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (this.total_amt_telco - this.total_amt_system));
+          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (TOTAL_AMT - this.total_amt_system));
           return;
         }
       }
-      // else if (TOTAL_AMT + this.total_amt_system_remain > this.total_amt_telco) {
-      //   this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (this.total_amt_telco - this.total_amt_system));
-      //   return;
-      // }
       let TOTAL_USE = account.data[0].TOTAL_USE;
       let TOTAL_REMAIN = TOTAL_AMT;
       let TOTAL_DATA = 0;
@@ -228,12 +237,12 @@ export class DataCimastComponent implements OnInit {
       if (data.accountID[0].itemName != "admin") {
         // so data cap khong duoc lon hon data tong
         if (TOTAL_AMT > this.total_amt_system_remain) {
-          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (this.total_amt_telco - this.total_amt_system));
+          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (TOTAL_AMT - this.total_amt_system));
           return;
         }
       }
       else if (TOTAL_AMT + this.total_amt_system_remain > this.total_amt_telco) {
-        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (this.total_amt_telco - this.total_amt_system));
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (TOTAL_AMT - this.total_amt_system));
         return;
       }
 
@@ -253,7 +262,91 @@ export class DataCimastComponent implements OnInit {
     }
   }
   //#endregion
+//cap dât mien phi
 
+openFormDataFree() {
+  this.clearBox();
+  this.createDataCimastFreeModal.show();
+}
+
+public async createDataCimastFree(resData) {
+  let ACCOUNT_ID = resData.accountID.length > 0 ? resData.accountID[0].id : "";
+    let TYPE = "DATA_SPONSOR";
+    let TOTAL_DATA_VIETTEL = resData.totalVol_Vt;
+    let TOTAL_DATA_GPC = resData.totalVol_Gpc;
+    let TOTAl_DATA_VMS = resData.totalVol_Vms;
+    let TOTAL_DATA_VOL = TOTAL_DATA_VIETTEL + TOTAL_DATA_GPC + TOTAl_DATA_VMS;
+    let DESCRIPTION = resData.description;
+   
+    if (ACCOUNT_ID == "") {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
+      return;
+    }
+  if(TOTAL_DATA_VOL == 0 || TOTAL_DATA_VOL ==""){
+    this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-204"));
+    return;
+  }
+    let account: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' + ACCOUNT_ID);
+    if (account != null && account.data.length > 0) {
+      // update data account cimast
+       if (!this.isAdmin) {
+        //so data cap khong duoc lon hon data tong
+         if (TOTAL_DATA_VOL > this.total_vol_system_remain) {
+         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-203") + (TOTAL_DATA_VOL - this.total_vol_system));
+          return;
+         }
+       }
+     
+      let TOTAL_DATA_USE = account.data[0].TOTAL_DATA_USE;
+      let TOTAL_DATA_REMAIN = TOTAL_DATA_VOL;
+      let TOTAL_DATA = 0;
+
+      let response = await this.dataService.putAsync('/api/DataCimast/PutFree', {
+        ACCOUNT_ID, TYPE, DESCRIPTION, TOTAL_DATA, TOTAL_DATA_USE, TOTAL_DATA_REMAIN, TOTAL_DATA_VOL, TOTAL_DATA_VIETTEL, TOTAL_DATA_GPC, TOTAl_DATA_VMS
+      });
+      if (response.err_code == 0) {
+        this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("100"));
+        this.getDataAccountCimast();
+        this.getDataTotal();
+        this.createDataCimastFreeModal.hide();
+      }
+      else {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+        return;
+      }
+    }
+    else {
+      // insert data account cimast
+      let TOTAL_DATA_USE = 0;
+      let TOTAL_DATA_REMAIN = TOTAL_DATA_VOL;
+      let TOTAL_DATA = 0;
+      if (!this.isAdmin) {
+        // so data cap khong duoc lon hon data tong
+        if (TOTAL_DATA_VOL > this.total_vol_system_remain) {
+          this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-203") +(TOTAL_DATA_VOL - this.total_vol_system));
+          return;
+        }
+      }
+      else if (TOTAL_DATA_VOL + this.total_vol_system_remain > this.total_vol_system) {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-203") + (TOTAL_DATA_VOL - this.total_vol_system));
+        return;
+      }
+
+      let response = await this.dataService.postAsync('/api/DataCimast/PostFree', {
+        ACCOUNT_ID, TYPE, DESCRIPTION, TOTAL_DATA, TOTAL_DATA_USE, TOTAL_DATA_REMAIN, TOTAL_DATA_VOL, TOTAL_DATA_VIETTEL, TOTAL_DATA_GPC, TOTAl_DATA_VMS
+      });
+      if (response.err_code == 0) {
+        this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
+        this.getDataAccountCimast();
+        this.getDataTotal();
+        this.createDataCimastModal.hide();
+      }
+      else {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+        return;
+      }
+    }
+}
   // clear box
   clearBox() {
     this.selectedAccountCreate = [];
@@ -269,7 +362,10 @@ export class DataCimastComponent implements OnInit {
     if (response.err_code == 0) {
       this.dataQuotaHistory = response.data;
     }
+    console.log(this.dataQuotaHistory[0].DATA_PROVIDED_FREE);
     this.viewDataAccountCimastTransModal.show();
+
   }
+  
   //#endregion
 }
