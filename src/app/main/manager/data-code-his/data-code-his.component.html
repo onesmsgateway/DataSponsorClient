@@ -1,0 +1,103 @@
+<article>
+    <section>
+        <div class="page-title clearfix">
+            <div class="title_left">
+                <h3>{{ 'data_code.hisdatacode' | translate }}</h3>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <form class="row form-horizontal form-label-left input_mask" (ngSubmit)="searchForm()">
+                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
+                                <angular2-multiselect [data]="dataMoney" [(ngModel)]="selectedItemMoney" [settings]="settingsFilterMoney" name="slMoney" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                                <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
+                            </div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                                <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <button type="submit" style="float: right;" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 form-group has-feedback">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered clear-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width:5%">STT</th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'data_code.account' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'data_code.quantities' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;width:15%">
+                                                    {{ 'data_code.money' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'data_code.create_date' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'data_code.Description' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'data_code.create_user' | translate }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of dataCodeHis; let i = index" [attr.data-index]="i">
+                                                <td class="text-center" scope="row">{{i+1}}</td>
+                                                <td>{{item.USER_NAME}}</td>
+                                                <td>{{item.TOTAL_CODES}}</td>
+                                                <td>{{item.AMT}}</td>
+                                                <td>{{item.CREATE_DATE}}</td>
+                                                <td>{{item.DESCRIPTION}}</td>
+                                                <td>{{item.CREATE_USER}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
+                                        <select (change)="changePageSize($event.target.value)">
+                                                    <option value="20" selected="">20</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="99999999">Tất cả</option>
+                                                </select> bản ghi.
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 minibox" style="margin-bottom:10px">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        </pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>

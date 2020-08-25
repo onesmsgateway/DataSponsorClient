@@ -1,0 +1,6 @@
+label:hover,
+label:active,
+input:hover+label,
+input:active+label {
+    background: white;
+}

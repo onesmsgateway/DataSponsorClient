@@ -34,6 +34,7 @@ export class DataCampaignComponent implements OnInit {
   public toDate: string = '';
   public roleAccess = 0;
   public checkShowDetail: boolean = false;
+  public checkDataCode = 0;
   public pagination: Pagination = new Pagination();
   public pageIndex: number;
   public pageSize;
@@ -491,7 +492,7 @@ export class DataCampaignComponent implements OnInit {
   // get data package viettel
   async getDataPackageVTL() {
     this.dataPackageVTL = [];
-    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL')
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
       this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
     }
@@ -541,7 +542,7 @@ export class DataCampaignComponent implements OnInit {
   
   async getDataPackageGPC() {
     this.dataPackageGPC = [];
-    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC')
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
       this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
     }
@@ -589,7 +590,7 @@ export class DataCampaignComponent implements OnInit {
   // get data package mobi
   async getDataPackageVMS() {
     this.dataPackageVMS = [];
-    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS')
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
       this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
     }

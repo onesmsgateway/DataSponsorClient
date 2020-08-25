@@ -43,6 +43,9 @@
         "choose_scenarios_type": "Chọn loại kịch bản",
         "choose_package": "Chọn gói cước",
         "choose_status": "Chọn trạng thái",
+        "choose_senddata": "Chọn hình thức gửi data",
+        "send_data_code": "Gửi data code",
+        "send_money": "Gửi bằng tiền",
         "choose_scenario": "Chọn kịch bản",
         "choose_group": "Chọn nhóm",
         "no_data": "Không có dữ liệu",
@@ -368,9 +371,9 @@
         "total_amt": "Tổng tiền",
         "total_data_amt": "Tổng tiền",
         "total_data_vol": "Tổng data khuyến mại",
-        "total_data_viettel": "Tổng data Viettel",
-        "total_data_gpc": "Tổng data Vinaphone",
-        "total_data_vms": "Tổng data Mobifone",
+        "total_data_viettel": "Tổng data Viettel(MB)",
+        "total_data_gpc": "Tổng data Vinaphone(MB)",
+        "total_data_vms": "Tổng data Mobifone(MB)",
         "supplier": "Nhà cung cấp",
         "type": "Loại",
         "create_date": "Ngày cấp",
@@ -385,6 +388,7 @@
         "tittle_upload": "Chọn danh sách khách hàng",
         "tittle_package": "Chọn gói data",
         "label_total": "Số tiền còn lại: ",
+        "code_total": "Tổng mã code VMS còn lại: ",
         "quota": "Quota: ",
         "inAccount": "Chọn tài khoản",
         "phone_list": "Chọn DS nhóm có sẵn",
@@ -460,7 +464,8 @@
         "sendto": "Gửi lại OTP",
         "totalMoney": "Tổng tiền đã sử dụng(đ)",
         "limitUse": "Hạn mức sử dụng(đ)",
-        "sendinputOtp": "Thời gian nhập otp còn lại"
+        "sendinputOtp": "Thời gian nhập otp còn lại",
+        "checkdatacode": "Hoặc chọn gói data code"
     },
     "package": {
         "title": "Quản lý gói cước One",
@@ -487,7 +492,8 @@
         "choose_package": "Chọn gói cước",
         "send_from_sys": "Gửi từ danh sách trên hệ thống",
         "send_from_excel": "Gửi từ file excel",
-        "send_from_group": "Gửi từ nhóm"
+        "send_from_group": "Gửi từ nhóm",
+        "edit_package": "Sửa gói cước"
     },
     "package_telco": {
         "title": "Quản lý gói cước nhà mạng",
@@ -764,7 +770,7 @@
         "edit": "Sửa thành viên",
         "delete_notify": "Bạn có chắc chắn muốn xóa ",
         "group": "Nhóm",
-        "manager_member": "Qản lý danh dách file thành viên",
+        "manager_member": "Qản lý danh sách file thành viên",
         "birthday": "Ngày sinh",
         "inputbirthday": "Chọn ngày sinh"
     },
@@ -813,10 +819,26 @@
         "status_active": "Hiệu lực",
         "status_lock": "Hết hiệu lực",
         "account": "Tài khoản",
-        "code": "Mã data",
-        "money": "Mệnh giá",
+        "code": "Mã data code",
+        "money": "Mệnh giá(vnđ)",
+        "choose_den": "Chọn mệnh giá",
         "create": "Ngày nhập",
-        "isactive": "Trạng thái"
+        "isactive": "Trạng thái",
+        "data": "Dung lượng",
+        "upload_data_code": "Upload data code",
+        "provision_data_code": "Cấp data code",
+        "manage_datacode": "Quản lý danh sách file data code",
+        "totaldatacode": "Tổng data code",
+        "denominations": "Mệnh giá: ",
+        "hisdatacode": "Lịch sử cấp data code",
+        "quantities": "Số lượng",
+        "create_date": "Ngày cấp",
+        "Description": "Mô tả",
+        "create_user": "Tài khoản cấp",
+        "managerpro_data_code": "Quản lý cấp data code",
+        "input_quan": "Nhập số lượng",
+        "add": "Thêm data code",
+        "upload_txt": "Chọn file cần Upload"
     }
 
 }

@@ -185,7 +185,8 @@ a:hover {
 }
 
 .left_col {
-    background: #145D6C
+    background: rgba(14, 78, 113);
+    /* sua day */
 }
 
 .nav-sm .container.body .col-md-3.left_col {
@@ -446,7 +447,8 @@ body .container.body .right_col {
 .nav_title {
     width: 230px;
     float: left;
-    background: #145D6C;
+    background: rgba(14, 78, 113);
+    /* sua day */
     border-radius: 0;
     height: 57px
 }
@@ -1983,7 +1985,8 @@ span.right {
     padding: 5px 0 0;
     position: fixed;
     width: 230px;
-    background: #145D6C;
+    background: rgba(14, 78, 113);
+    /* sua day */
     z-index: 999
 }
 
@@ -4878,7 +4881,8 @@ ul.notifications {
 }
 
 .main_container {
-    background: #145D6C;
+    background: rgba(14, 78, 113);
+    /* sua day */
 }
 
 @media (max-width:460px) {

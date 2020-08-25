@@ -38,6 +38,9 @@
         "choose_account": "Select account",
         "choose_package": "Select package",
         "choose_status": "Select status",
+        "choose_senddata": "Select send data",
+        "send_data_code": "Send data code",
+        "send_money": "Send by money",
         "choose_scenario": "Select scenario",
         "choose_group": "Select group",
         "no_data": "No data",
@@ -333,10 +336,10 @@
         "total_remain": "total remain",
         "total_amt": "total amount",
         "total_data_vol": "Total data",
-        "total_data_viettel": "Total data VT",
+        "total_data_viettel": "Total data VIETTEL(MB)",
         "total_money": "Total money",
-        "total_data_gpc": "Total data GPC",
-        "total_data_vms": "Total data VMS",
+        "total_data_gpc": "Total data GPC(MB)",
+        "total_data_vms": "Total data VMS(MB)",
         "supplier": "Supplier",
         "type": "Type",
         "create_date": "Create date",
@@ -351,6 +354,7 @@
         "tittle_upload": "Choose list customer",
         "tittle_package": "Choose package data",
         "label_total": "Total money: ",
+        "code_total": "Total VMS code: ",
         "inAccount": "Choose account",
         "add_data": "Input data >= 300",
         "phone_list": "Choose list group",
@@ -423,7 +427,8 @@
         "sendto": "Send to OTP",
         "totalMoney": "Total money used(vnd)",
         "limitUse": "Limit Use(vnd)",
-        "sendinputOtp": "Import time remaining"
+        "sendinputOtp": "Import time remaining",
+        "checkdatacode": "Or choose data code"
     },
     "scenarios-birthday": {
         "title-birthday": "Manager birthday scripts",
@@ -479,7 +484,8 @@
         "choose_package": "Choose package",
         "send_from_sys": "Send list from system",
         "send_from_excel": "Send from excel",
-        "send_from_group": "Send from group"
+        "send_from_group": "Send from group",
+        "edit_package": "Edit package"
     },
     "package_telco": {
         "title": "Package manager telco",
@@ -746,8 +752,23 @@
         "status_lock": "Data code lock",
         "account": "Account",
         "code": "Data code",
-        "money": "Denomination",
+        "money": "Denomination(vnđ)",
+        "choose_den": "Choose denominations",
         "create": "Create date",
-        "isactive": "Status"
+        "isactive": "Status",
+        "data": "Data",
+        "upload_data_code": "Upload data code file excel",
+        "manage_datacode": "Manage the list file data code",
+        "totaldatacode": "Sum data code",
+        "denominations": "Denominations: ",
+        "quantities": "Quantities",
+        "create_date": "Create date",
+        "Description": "Description",
+        "create_user": "Create user",
+        "provision_data_code": "Provision data code",
+        "managerpro_data_code": "Manager Provision data code",
+        "input_quan": "Input quantities",
+        "add": "Add data code",
+        "upload_txt": "Choose file Upload"
     }
 }

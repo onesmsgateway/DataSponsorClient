@@ -32,12 +32,14 @@ export class SendDataComponent implements OnInit {
   public cpm1 = '1';
   public timer = '1';
   public dataPhoneTamp = [];
+  public dataCodeTamp = [];
   public dataPhoneAddNew = [];
   public dataAccount = [];
   public dataSenderName = [];
   public dataPackageVTL = [];
   public dataPackageGPC = [];
   public dataPackageVMS = [];
+  public dataPackageVMSDataCode = [];
   public dataPhonePaging = [];
   public dataGroup = [];
   public dataCampaign = [];
@@ -48,6 +50,7 @@ export class SendDataComponent implements OnInit {
   public settingsFilterPackageVTL = {};
   public settingsFilterPackageGPC = {};
   public settingsFilterPackageVMS = {};
+  public settingsFilterPackageVMSDataCode = {};
   public settingsFilterGroup = {};
   public settingsFilterCampaign = {};
   public settingsFilterGroupUpload = {};
@@ -61,42 +64,52 @@ export class SendDataComponent implements OnInit {
   public selectedPackageVTL = [];
   public selectedPackageGPC = [];
   public selectedPackageVMS = [];
+  public selectedPackageVMSDataCode = [];
   public selectedOptionInsert = [];
   public selectedOptionTempSms = [];
   public lstChecked = [];
   public lstCheckedName = [];
   public phone;
+  public code;
   public lstId;
   public isShowDateTime;
   public effectiveDateVTL;
   public effectiveDateGPC;
   public effectiveDateVMS;
+  public effectiveDateVMSDataCode;
   public packageAmtVTL = 0;
   public packageAmtGPC = 0;
   public packageAmtVMS = 0;
+  public packageAmtVMSDataCode = 0;
   public groupCode = "";
   public groupName = "";
   public packCountVTL = 1;
   public packCountGPC = 1;
   public packCountVMS = 1;
+  public packCountVMSDataCode = 1;
   public totalPackVTL = 0;
   public totalPackGPC = 0;
   public totalPackVMS = 0;
+  public totalPackVMSDataCode = 0;
   public totalAmtVTL = 0;
   public totalAmtGPC = 0;
   public totalAmtVMS = 0;
+  public totalAmtVMSDataCode = 0;
   public cntVTL = 0;
   public cntGPC = 0;
   public cntVMS = 0;
+  public cntVMSDataCode = 0;
   public countVTL = 0;
   public countGPC = 0;
   public countVMS = 0;
+  public countVMSDataCode = 0;
   public totalAmt = 0;
   public timeDonateCreate = 0;
   public NumberRewardTimesInDay = 0;
   public NumberRewardTimesInDayOld = 0;
   public timeDonateOld = 0;
   public isSendSMS: boolean = true;
+  public checkdatacode: boolean = false;
   public chkcampaign: boolean = true;
   public chkOnlyOneCreate: boolean = false;
   public disable_resend_otp: boolean = false;
@@ -137,6 +150,8 @@ export class SendDataComponent implements OnInit {
   public numberChar = 0;
   public numberSMS = 0;
   public dataViettel = 0;
+  public dataGPC = 0;
+  public dataVMS = 0;
   public smsContent: string = '';
   public minDate: Date;
   public pagination: Pagination = new Pagination();
@@ -149,10 +164,12 @@ export class SendDataComponent implements OnInit {
   public limit_time: string = '';
 
   public total_amt = 0;
+  public total_code = 0;
   public quota = 0;
   public role: Role = new Role();
   public loading: boolean = false;
   public isAdmin: boolean = false;
+  public enablePackageDataCode: boolean = true;
 
   // get data insert dataOtp
   public phoneDataOtp: string = '';
@@ -224,6 +241,16 @@ export class SendDataComponent implements OnInit {
       searchPlaceholderText: this.utilityService.translate('global.search'),
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
+    };
+    this.settingsFilterPackageVMSDataCode = {
+      text: this.utilityService.translate('global.choose_package'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false,
+      disabled: true
     };
 
     this.settingsFilterSender = {
@@ -309,9 +336,33 @@ export class SendDataComponent implements OnInit {
     }
     this.getDataAccount();
     this.getDataSmsTemp();
-    
+
   }
 
+  //view data code
+  public async viewQuyDataCode(accountID) {
+    debugger
+    if (accountID != undefined && accountID != "") {
+      // get money by account
+      let resCountCode: any = await this.dataService.getAsync('/api/datacode/CountDatacode?account_id=' +
+        accountID);
+      if (resCountCode != null && resCountCode.data.length > 0) {
+        this.total_code = resCountCode.data[0].COUNT_CODE;
+        if( this.total_code!= 0)
+        this.enablePackageDataCode = true;
+        else this.enablePackageDataCode = false;
+      }
+      else {
+        this.total_code = 0;
+        this.enablePackageDataCode = false;
+      }
+    }
+    else {
+      this.total_code = 0;
+      this.enablePackageDataCode = false;
+    }
+  }
+  //#endregion
   //#region view quy data
   public async viewQuyData(accountID) {
     if (accountID != undefined && accountID != "") {
@@ -425,10 +476,12 @@ export class SendDataComponent implements OnInit {
       this.countVTL = 0;
       this.countGPC = 0;
       this.countVMS = 0;
+      this.countVMSDataCode = 0;
       this.totalNumber = 0;
       this.totalPackVTL = 0;
       this.totalPackGPC = 0;
       this.totalPackVMS = 0;
+      this.totalPackVMSDataCode = 0;
       return;
     }
     let response: any = await this.dataService.getAsync('/api/Person/GetPersonByGroupIds?groupIds=' + ids)
@@ -441,6 +494,7 @@ export class SendDataComponent implements OnInit {
       }
       this.countVTL = data.countVIETTEL;
       this.countGPC = data.countVINAPHONE;
+      this.countVMSDataCode = data.countMOBIFONE;
       this.countVMS = data.countMOBIFONE;
       this.totalNumber = this.dataPhoneTamp.length;
       this.totalNumberSendSms = this.dataPhoneTamp.length + this.numberPhone;
@@ -457,19 +511,32 @@ export class SendDataComponent implements OnInit {
         this.totalPackGPC = (this.packCountGPC * this.countGPC) + (this.packCountGPC * this.cntGPC);
         this.totalAmtGPC = this.packageAmtGPC * this.totalPackGPC;
       }
-      if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
-        this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
-        this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
+      if (this.checkdatacode == true) {
+        if (this.packCountVMSDataCode != null && this.packCountVMSDataCode > 0 && this.packageAmtVMSDataCode > 0) {
+          this.totalPackVMSDataCode = (this.packCountVMSDataCode * this.countVMSDataCode) + (this.packCountVMSDataCode * this.cntVMSDataCode);
+          this.totalAmtVMSDataCode = this.packageAmtVMSDataCode * this.totalPackVMSDataCode;
+        }
+      } else {
+        if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
+          this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
+          this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
+        }
       }
-      this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
+      this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS + this.totalAmtVMSDataCode;
       if (this.selectedPackageVTL.length > 0) this.packViettel = this.selectedPackageVTL[0].itemName + " x " + this.totalPackVTL;
       if (this.selectedPackageGPC.length > 0) this.packGPC = this.selectedPackageGPC[0].itemName + " x " + this.totalPackGPC;
-      if (this.selectedPackageVMS.length > 0) this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+      if (this.checkdatacode == true) {
+        if (this.selectedPackageVMSDataCode.length > 0) this.packVMS = this.selectedPackageVMSDataCode[0].itemName + " x " + this.totalPackVMSDataCode;
+      } else {
+        if (this.selectedPackageVMS.length > 0) this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+      }
+
       this.phonePaging(response.data);
     } else {
       this.totalAmtVTL = 0;
       this.totalAmtGPC = 0;
       this.totalAmtVMS = 0;
+      this.totalAmtVMSDataCode = 0;
       this.totalAmt = 0;
     }
     //this.GetPackage();
@@ -480,6 +547,7 @@ export class SendDataComponent implements OnInit {
     this.cntVTL = 0;
     this.cntGPC = 0;
     this.cntVMS = 0;
+    this.cntVMSDataCode = 0;
     let phoneList: any = [];
     this.dataPhoneAddNew = [];
     phoneList = this.checkPhone(phone);
@@ -502,10 +570,9 @@ export class SendDataComponent implements OnInit {
               this.cntGPC++;
             }
             else if (telco == "VMS") {
+              this.cntVMSDataCode++;
               this.cntVMS++;
             }
-
-
           }
         }
 
@@ -526,16 +593,21 @@ export class SendDataComponent implements OnInit {
       this.totalAmtGPC = this.packageAmtGPC * this.totalPackGPC;
       this.packGPC = this.selectedPackageGPC[0].itemName + " x " + this.totalPackGPC;
     }
-    if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
-      this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
-      this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
-      this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+    if (this.checkdatacode == true) {
+      if (this.packCountVMSDataCode != null && this.packCountVMSDataCode > 0 && this.packageAmtVMSDataCode > 0) {
+        this.totalPackVMSDataCode = (this.packCountVMSDataCode * this.countVMSDataCode) + (this.packCountVMSDataCode * this.cntVMSDataCode);
+        this.totalAmtVMSDataCode = this.packageAmtVMSDataCode * this.totalPackVMSDataCode;
+        this.packVMS = this.selectedPackageVMSDataCode[0].itemName + " x " + this.totalPackVMSDataCode;
+      }
+    } else {
+      if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
+        this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
+        this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
+        this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+      }
     }
-    this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
-
+    this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS + this.totalAmtVMSDataCode;
     this.totalNumberSendSms = this.numberPhone + this.totalNumber;
-
-
   }
 
   // count phone
@@ -578,9 +650,7 @@ export class SendDataComponent implements OnInit {
         lengthsms = lengthsms + 1;
       }
     }
-
     this.numberChar = lengthsms;
-
     if (lengthsms == 0) {
       this.numberSMS = 0;
     }
@@ -595,7 +665,6 @@ export class SendDataComponent implements OnInit {
     }
     else {
       this.numberSMS = 4;
-
       if (lengthsms > 612)
         this.smsContent = this.smsContent.substr(0, 612);
     }
@@ -621,6 +690,7 @@ export class SendDataComponent implements OnInit {
         this.getDataSenderName(this.dataAccount[0].id);
         this.getDataGroup();
         this.viewQuyData(this.selectedItemComboboxAccount[0].id);
+        this.viewQuyDataCode(this.selectedItemComboboxAccount[0].id);
       }
       else
         this.selectedItemComboboxAccount.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_account') });
@@ -635,6 +705,7 @@ export class SendDataComponent implements OnInit {
     this.getDataGroup();
     this.getCampaign();
     this.viewQuyData(this.selectedItemComboboxAccount[0].id);
+    this.viewQuyDataCode(this.selectedItemComboboxAccount[0].id);
     this.createCodeNameCampaing();
     this.createCodeGroup();
   }
@@ -682,8 +753,9 @@ export class SendDataComponent implements OnInit {
   }
   // get data package viettel
   async getDataPackageVTL() {
+    let ismoneydatacode = 0;
     this.dataPackageVTL = [];
-    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL')
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL' + '&ismoneydatacode=' + ismoneydatacode)
     for (let index in response.data) {
       this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
@@ -692,6 +764,7 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageVTL() {
+    debugger
     this.packViettel = "0";
     if (this.selectedPackageVTL.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
@@ -730,8 +803,9 @@ export class SendDataComponent implements OnInit {
 
   // get data package vina
   async getDataPackageGPC() {
+    let ismoneydatacode = 0;
     this.dataPackageGPC = [];
-    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC')
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC' + '&ismoneydatacode=' + ismoneydatacode)
     for (let index in response.data) {
       this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
@@ -751,6 +825,7 @@ export class SendDataComponent implements OnInit {
           this.totalAmtGPC = this.packageAmtGPC * this.totalPackGPC;
           this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
           this.packGPC = this.selectedPackageGPC[0].itemName + " x " + this.totalPackGPC;
+          this.dataGPC = response.data[0].DATA;
           this.isSendGPC = true;
         }
       }
@@ -777,48 +852,100 @@ export class SendDataComponent implements OnInit {
 
   // get data package mobi
   async getDataPackageVMS() {
-    this.dataPackageVMS = [];
-    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS')
-    for (let index in response.data) {
-      this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+    let ismoneydatacode = 0;
+    if (this.checkdatacode == true) {
+      ismoneydatacode = 1;
+      this.dataPackageVMSDataCode = [];
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS' + '&ismoneydatacode=' + ismoneydatacode)
+      for (let index in response.data) {
+        this.dataPackageVMSDataCode.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+      }
+      if (this.dataPackageVMSDataCode.length == 1)
+        this.selectedPackageVMSDataCode.push({ "id": this.dataPackageVMSDataCode[0].id, "itemName": this.dataPackageVMSDataCode[0].itemName });
+    } else {
+      ismoneydatacode = 0;
+      this.dataPackageVMS = [];
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS' + '&ismoneydatacode=' + ismoneydatacode)
+      for (let index in response.data) {
+        this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+      }
+      if (this.dataPackageVMS.length == 1)
+        this.selectedPackageVMS.push({ "id": this.dataPackageVMS[0].id, "itemName": this.dataPackageVMS[0].itemName });
     }
-    if (this.dataPackageVMS.length == 1)
-      this.selectedPackageVMS.push({ "id": this.dataPackageVMS[0].id, "itemName": this.dataPackageVMS[0].itemName });
+
   }
 
   async changePackageVMS() {
+    debugger
     this.packVMS = "0";
-    if (this.selectedPackageVMS.length > 0) {
-      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);
-      if (response != null && response.err_code == 0) {
-        this.effectiveDateVMS = response.data[0].DATE_USE + " ngày";
-        this.packageAmtVMS = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
-        if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
-          this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
-          this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
-          this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
-          this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
-          this.isSendVMS = true;
+    if (this.checkdatacode == true) {
+      if (this.selectedPackageVMSDataCode.length > 0) {
+        let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMSDataCode[0].id);
+        if (response != null && response.err_code == 0) {
+          this.effectiveDateVMSDataCode = response.data[0].DATE_USE + " ngày";
+          this.packageAmtVMSDataCode = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+          if (this.packCountVMSDataCode != null && this.packCountVMSDataCode > 0 && this.packageAmtVMSDataCode > 0) {
+            this.totalPackVMSDataCode = (this.packCountVMSDataCode * this.countVMSDataCode) + (this.packCountVMSDataCode * this.cntVMSDataCode);
+            this.totalAmtVMSDataCode = this.packageAmtVMSDataCode * this.totalPackVMSDataCode;
+            this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMSDataCode;
+            this.packVMS = this.selectedPackageVMSDataCode[0].itemName + " x " + this.totalPackVMSDataCode;
+            this.dataVMS = response.data[0].DATA;
+            this.isSendVMS = true;
+          }
         }
       }
+      else {
+        this.effectiveDateVMSDataCode = "0";
+        this.packCountVMSDataCode = 1;
+        this.packageAmtVMSDataCode = 0;
+        this.totalPackVMSDataCode = 0;
+        this.totalAmt = this.totalAmt - this.totalAmtVMSDataCode;
+        this.totalAmtVMSDataCode = 0;
+      }
+    } else {
+      if (this.selectedPackageVMS.length > 0) {
+        let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);
+        if (response != null && response.err_code == 0) {
+          this.effectiveDateVMS = response.data[0].DATE_USE + " ngày";
+          this.packageAmtVMS = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
+          if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
+            this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
+            this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
+            this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
+            this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+            this.dataVMS = response.data[0].DATA;
+            this.isSendVMS = true;
+          }
+        }
+      }
+      else {
+        this.effectiveDateVMS = "0";
+        this.packCountVMS = 1;
+        this.packageAmtVMS = 0;
+        this.totalPackVMS = 0;
+        this.totalAmt = this.totalAmt - this.totalAmtVMS;
+        this.totalAmtVMS = 0;
+      }
     }
-    else {
-      this.effectiveDateVMS = "0";
-      this.packCountVMS = 1;
-      this.packageAmtVMS = 0;
-      this.totalPackVMS = 0;
-      this.totalAmt = this.totalAmt - this.totalAmtVMS;
-      this.totalAmtVMS = 0;
-    }
+
   }
 
   changeCountVMS() {
     this.packVMS = "0";
-    if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
-      this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
-      this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
-      this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
-      this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+    if (this.checkdatacode == true) {
+      if (this.packCountVMSDataCode != null && this.packCountVMSDataCode > 0 && this.packageAmtVMSDataCode > 0) {
+        this.totalPackVMSDataCode = (this.packCountVMSDataCode * this.countVMSDataCode) + (this.packCountVMSDataCode * this.cntVMSDataCode);
+        this.totalAmtVMSDataCode = this.packageAmtVMSDataCode * this.totalPackVMSDataCode;
+        this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMSDataCode;
+        this.packVMS = this.selectedPackageVMSDataCode[0].itemName + " x " + this.totalPackVMSDataCode;
+      }
+    } else {
+      if (this.packCountVMS != null && this.packCountVMS > 0 && this.packageAmtVMS > 0) {
+        this.totalPackVMS = (this.packCountVMS * this.countVMS) + (this.packCountVMS * this.cntVMS);
+        this.totalAmtVMS = this.packageAmtVMS * this.totalPackVMS;
+        this.totalAmt = this.totalAmtVTL + this.totalAmtGPC + this.totalAmtVMS;
+        this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
+      }
     }
   }
 
@@ -1044,7 +1171,7 @@ export class SendDataComponent implements OnInit {
       }
     }
     // check package
-    if (this.selectedPackageVTL.length == 0 && this.selectedPackageGPC.length == 0 && this.selectedPackageVMS.length == 0) {
+    if (this.selectedPackageVTL.length == 0 && this.selectedPackageGPC.length == 0 && this.selectedPackageVMS.length == 0 && this.selectedPackageVMSDataCode.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
       this.loading = false;
       this.confirmSendDataSMSModal.hide();
@@ -1090,18 +1217,41 @@ export class SendDataComponent implements OnInit {
     let PACKAGE_ID_GPC = null;
     let PACKAGE_NAME_GPC = "";
     let DATA_GPC = 0;
+
     if (this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != "") {
       PACKAGE_ID_GPC = this.selectedPackageGPC[0].id;
       PACKAGE_NAME_GPC = this.selectedPackageGPC[0].itemName.substr(0, this.selectedPackageGPC[0].itemName.indexOf('-') - 1).trim();
-      DATA_GPC = this.dataViettel;
+      DATA_GPC = this.dataGPC;
     }
     let PACKAGE_ID_VMS = null;
     let PACKAGE_NAME_VMS = "";
     let DATA_VMS = 0;
+    let IS_MONEY_DATA_CODE = 0;
     if (this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != "") {
       PACKAGE_ID_VMS = this.selectedPackageVMS[0].id;
       PACKAGE_NAME_VMS = this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim();
-      DATA_VMS = this.dataViettel;
+      DATA_VMS = this.dataVMS;
+      IS_MONEY_DATA_CODE = 0;
+    } else if (this.selectedPackageVMSDataCode.length > 0 && this.selectedPackageVMSDataCode[0].id != "") {
+      PACKAGE_ID_VMS = this.selectedPackageVMSDataCode[0].id;
+      PACKAGE_NAME_VMS = this.selectedPackageVMSDataCode[0].itemName.substr(0, this.selectedPackageVMSDataCode[0].itemName.indexOf('-') - 1).trim();
+      DATA_VMS = this.dataVMS;
+
+      let res: any = await this.dataService.getAsync('/api/datacode/GetDatacodeCampaign?package_id=' + PACKAGE_ID_VMS + '&count_code=' + this.totalPackVMSDataCode);
+      if (res) {
+        if (res.err_code == 0) {
+          for (let i = 0; i < res.data.length; i++) {
+            this.dataCodeTamp.push(res.data[i].ENCRYPTED_CODE);
+          }
+          IS_MONEY_DATA_CODE = 1;
+        } else if (res.err_code == -206) {
+          this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-206"));
+          return;
+        }else{
+          this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("110"));
+          return;
+        }
+      }
     }
     let REWARD_NUMBER = this.NumberRewardTimesInDay;
     let REWARD_NUMBER_TIME_IN_DAYS = this.timeDonateCreate;
@@ -1112,6 +1262,7 @@ export class SendDataComponent implements OnInit {
     if (this.isSendSMS) {
       for (let i = 0; i < this.dataPhoneTamp.length; i++) {
         let phone = this.dataPhoneTamp[i].PHONE;
+        let code = this.dataCodeTamp[i];
         if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "VIETTEL") {
           let SMS_CONTENT = this.SMS_TEMPLATE.replace(this.utilityService.translate('send_data.inPack'), PACKAGE_NAME_VTL).replace(this.utilityService.translate('send_data.inPhone'), phone)
             .replace(this.utilityService.translate('send_data.inData'), DATA_VTL).replace(this.utilityService.translate('send_data.inDateUse'), this.effectiveDateVTL.replace("ngày", "").trim());
@@ -1133,11 +1284,20 @@ export class SendDataComponent implements OnInit {
         else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
           let SMS_CONTENT = this.SMS_TEMPLATE.replace(this.utilityService.translate('send_data.inPack'), PACKAGE_NAME_VMS).replace(this.utilityService.translate('send_data.inPhone'), phone)
             .replace(this.utilityService.translate('send_data.inData'), DATA_VMS).replace(this.utilityService.translate('send_data.inDateUse'), this.effectiveDateVMS.replace("ngày", "").trim());
-          listSmsSend.push({
-            ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
-            , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS
-            , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS
-          });
+          if(this.checkdatacode == true){
+            listSmsSend.push({
+              ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMSDataCode, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
+              , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS
+              , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: code, IS_MONEY_DATA_CODE: IS_MONEY_DATA_CODE
+            });
+          }else{
+            listSmsSend.push({
+              ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
+              , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS
+              , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: code, IS_MONEY_DATA_CODE: IS_MONEY_DATA_CODE
+            });
+          }
+           
         }
       }
     }
@@ -1159,7 +1319,7 @@ export class SendDataComponent implements OnInit {
         else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
           listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
-            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS, REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS
+            , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS, REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: this.code, IS_MONEY_DATA_CODE: IS_MONEY_DATA_CODE
           });
         }
       }
@@ -1171,8 +1331,8 @@ export class SendDataComponent implements OnInit {
       this.confirmAfterSuccessModal.show();
     }
     else this.notificationService.displayErrorMessage(insertSms.err_message);
-
     this.viewQuyData(this.ACCOUNT_ID);
+    this.viewQuyDataCode(this.ACCOUNT_ID);
     this.confirmSendDataSMSModal.hide();
     this.loading = false;
   }
@@ -1185,6 +1345,71 @@ export class SendDataComponent implements OnInit {
     }
     else {
       this.contentSMS.nativeElement.readOnly = true;
+    }
+  }
+  enableSendDataCode(event) {
+    if (event) {
+      this.checkdatacode = true;
+      this.getDataPackageVMS();
+      this.totalAmt = this.totalAmt - this.totalAmtVMS;
+      this.selectedPackageVMS = [];
+      this.effectiveDateVMS = "";
+      this.packageAmtVMS = 0;
+      this.packCountVMS = 1;
+      this.totalPackVMS = 0;
+      this.totalAmtVMS = 0;
+      this.settingsFilterPackageVMSDataCode = {
+        text: this.utilityService.translate('global.choose_package'),
+        singleSelection: true,
+        enableSearchFilter: true,
+        enableFilterSelectAll: true,
+        searchPlaceholderText: this.utilityService.translate('global.search'),
+        noDataLabel: this.utilityService.translate('global.no_data'),
+        showCheckbox: false,
+        disabled: false
+      };
+
+      this.settingsFilterPackageVMS = {
+        text: this.utilityService.translate('global.choose_package'),
+        singleSelection: true,
+        enableSearchFilter: true,
+        enableFilterSelectAll: true,
+        searchPlaceholderText: this.utilityService.translate('global.search'),
+        noDataLabel: this.utilityService.translate('global.no_data'),
+        showCheckbox: false,
+        disabled: true
+      };
+    }
+    else {
+      this.checkdatacode = false;
+      this.getDataPackageVMS();
+      this.totalAmt = this.totalAmt - this.totalAmtVMSDataCode;
+      this.selectedPackageVMSDataCode = [];
+      this.effectiveDateVMSDataCode = "";
+      this.packageAmtVMSDataCode = 0;
+      this.packCountVMSDataCode = 1;
+      this.totalPackVMSDataCode = 0;
+      this.totalAmtVMSDataCode = 0;
+      this.settingsFilterPackageVMSDataCode = {
+        text: this.utilityService.translate('global.choose_package'),
+        singleSelection: true,
+        enableSearchFilter: true,
+        enableFilterSelectAll: true,
+        searchPlaceholderText: this.utilityService.translate('global.search'),
+        noDataLabel: this.utilityService.translate('global.no_data'),
+        showCheckbox: false,
+        disabled: true
+      };
+      this.settingsFilterPackageVMS = {
+        text: this.utilityService.translate('global.choose_package'),
+        singleSelection: true,
+        enableSearchFilter: true,
+        enableFilterSelectAll: true,
+        searchPlaceholderText: this.utilityService.translate('global.search'),
+        noDataLabel: this.utilityService.translate('global.no_data'),
+        showCheckbox: false,
+        disabled: false
+      };
     }
   }
 
@@ -1236,21 +1461,27 @@ export class SendDataComponent implements OnInit {
     this.selectedPackageVTL = [];
     this.selectedPackageGPC = [];
     this.selectedPackageVMS = [];
+    this.selectedPackageVMSDataCode = [];
     this.effectiveDateVTL = "";
     this.effectiveDateGPC = "";
     this.effectiveDateVMS = "";
+    this.effectiveDateVMSDataCode = "";
     this.packageAmtVTL = 0;
     this.packageAmtGPC = 0;
     this.packageAmtVMS = 0;
+    this.packageAmtVMSDataCode = 0;
     this.packCountVTL = 1;
     this.packCountGPC = 1;
     this.packCountVMS = 1;
+    this.packCountVMSDataCode = 1;
     this.totalPackVTL = 0;
     this.totalPackGPC = 0;
     this.totalPackVMS = 0;
+    this.totalPackVMSDataCode = 0;
     this.totalAmtVTL = 0;
     this.totalAmtGPC = 0;
     this.totalAmtVMS = 0;
+    this.totalAmtVMSDataCode = 0;
     this.totalAmt = 0;
     this.lstChecked = [];
     this.smsContent = "";
@@ -1264,9 +1495,11 @@ export class SendDataComponent implements OnInit {
     this.cntVTL = 0;
     this.cntGPC = 0;
     this.cntVMS = 0;
+    this.cntVMSDataCode = 0;
     this.countVTL = 0;
     this.countGPC = 0;
     this.countVMS = 0;
+    this.countVMSDataCode = 0;
     this.totalAmt = 0;
     this.packGPC = "0";
     this.packVMS = "0";
@@ -1274,7 +1507,7 @@ export class SendDataComponent implements OnInit {
     this.totalNumberSendSms = 0;
     this.programCode = "";
     this.selectedOptionTempSms = [];
-    this.selectedOptionTempSms.push({"id": "" , "itemName":this.utilityService.translate('send_data.optionSms')});
+    this.selectedOptionTempSms.push({ "id": "", "itemName": this.utilityService.translate('send_data.optionSms') });
   }
 
   // export template excel
@@ -1327,6 +1560,7 @@ export class SendDataComponent implements OnInit {
 
   }
   async createCodeNameCampaing() {
+    debugger
     let USER_NAME;
     if (this.isAdmin) {
       USER_NAME = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].itemName : this.authService.currentUserValue.USER_NAME;

@@ -16,13 +16,13 @@
                                 <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
-                            <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group has-feedback">
                                 <input type="text" class="form-control" name="groupCode" [(ngModel)]="groupCode" placeholder="{{ 'group.inGroup_code' | translate }}">
                             </div>
-                            <div class="col-md-2 col-sm-3 col-xs-6">
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group has-feedback">
                                 <input type="text" class="form-control" name="groupName" [(ngModel)]="groupName" placeholder="{{ 'group.inGroup_name' | translate }}">
                             </div>
-                            <div class="col-md-6 col-sm-4 col-xs-6">
+                            <div class="col-md-6 col-sm-4 col-xs-12 form-group has-feedback">
                                 <button type="submit" style="float: right;" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
                             </div>
                         </form>
@@ -89,7 +89,7 @@
                                     </table>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="margin: 25px 0 0 0">
                                         Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)">
                                             <option value="20" selected="">20</option>
@@ -98,7 +98,7 @@
                                             <option value="99999999">Tất cả</option>
                                         </select> bản ghi.
                                     </div>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 minibox" style="margin-bottom:10px">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 minibox" style="margin-bottom:10px">
                                         <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
                                             class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
                                         </pagination>

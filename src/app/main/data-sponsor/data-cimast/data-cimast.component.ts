@@ -187,7 +187,6 @@ export class DataCimastComponent implements OnInit {
     let TYPE = data.type.length > 0 ? data.type[0].id : "";
     let DESCRIPTION = data.description;
     let TOTAL_AMT = data.totalAmt;
-
     if (ACCOUNT_ID == "") {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;

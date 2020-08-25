@@ -47,9 +47,22 @@
                     <div class="x_content">
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
-                                <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="uploadExcelModal.show()">{{ 'send_data.up_load' | translate }}</button>
-                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-12 col-xs-12">
+                                        <label for="a"> 
+                                            <span> {{ 'data_code.totaldatacode' | translate }}: {{countAll}}
+                                               </span>
+                                               <span *ngIf="checkcount" title="MG: Mệnh giá nghìn đồng(MG1: mệnh giá 1000,...)"> (MG1: {{count1}}, MG2: {{count2}}, MG3: {{count3}}, MG5: {{count5}}, MG10: {{count10}},
+                                                MG14: {{count14}}, MG20: {{count20}}, MG28: {{count28}}, MG42: {{count42}}, MG56: {{count56}}, MG84: {{count84}}, MG300: {{count300}}, MG500: {{count500}}
+                                                )</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group has-feedback content-end">
+                                            <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="uploadExcelModal.show()">{{ 'data_code.upload_data_code' | translate }}</button>
+                                            <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="provisionDataCodeModal.show()">{{ 'data_code.provision_data_code' | translate }}</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -65,6 +78,8 @@
                                                 <th class="text-center" style="white-space: nowrap;">
                                                     {{ 'data_code.code' | translate }}</th>
                                                 <th class="text-center" style="white-space: nowrap;width:15%">
+                                                    {{ 'data_code.data' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;width:15%">
                                                     {{ 'data_code.money' | translate }}</th>
                                                 <th class="text-center" style="white-space: nowrap;">
                                                     {{ 'data_code.create' | translate }}
@@ -75,25 +90,15 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- <tr *ngFor="let item of dataMember; let i = index" [attr.data-index]="i">
+                                            <tr *ngFor="let item of dataCode; let i = index" [attr.data-index]="i">
                                                 <td class="text-center" scope="row">{{i+1}}</td>
                                                 <td>{{item.USER_NAME}}</td>
-                                                <td>{{item.PERSON_CODE}}</td>
-                                                <td>{{item.PERSON_FULLNAME}}</td>
-                                                <td>{{item.PHONE_NUMBER}}</td>
-                                                <td>{{item.EMAIL}}</td>
-                                                <td>{{item.ADDRESS}}</td>
-                                                <td class="box-checkbox-table"><input type="checkbox" [checked]="item.ACCUMULATED_POINTS == 1 ? true : false" class="checkbox" disabled></td>
-                                                <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox" disabled></td>
-                                                <td>{{item.CREATED_TIME}}</td>
-                                                <td>{{item.GROUP_NAME}}</td>
-                                                <td class="text-center">
-                                                    <div class="tool">
-                                                        <button type="submit" (click)="confirmUpdateModal(item.PERSON_ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                        <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(item.PERSON_ID, item.PERSON_FULLNAME)">{{ 'global.delete' | translate }}</button>
-                                                    </div>
-                                                </td>
-                                            </tr> -->
+                                                <td>{{item.ENCRYPTED_CODE}}</td>
+                                                <td>{{item.PACKAGE_NAME_DISPLAY}}</td>
+                                                <td>{{item.AMT}}</td>
+                                                <td>{{item.CREATE_DATE}}</td>
+                                                <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_USED == 1 ? true : false" class="checkbox" disabled></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -120,4 +125,111 @@
             </div>
         </div>
     </section>
+    <!-- upload excel data code -->
+    <div class="modal fade" bsModal #uploadExcelModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+        <div class="modal-dialog modal-lg">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                    <div class="x_panel portlet">
+                        <div class="x_title clearfix">
+                            <h2 style="display: inline-block;margin:0">{{ 'data_code.manage_datacode' | translate }}
+                            </h2>
+                            <button type="button" class="close pull-right" aria-label="Close" (click)="uploadExcelModal.hide()" style="opacity: 0.6 !important;"> 
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="x_content">
+                            <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>{{'member.account' | translate}}</label>
+                                        <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountMember" [settings]="settingsFilterAccount" name="slAccountMember">
+                                        </angular2-multiselect>
+                                    </div>
+                                    <div class="col-md-9 col-sm-9 col-xs-12 form-group">
+                                        <label>{{'data_code.upload_txt' | translate}}</label>
+                                        <div class="input-group">
+                                            <input type="file" #uploadFile name="uploadFile" class="form-control">
+                                            <div class="input-group-btn" style="padding:0">
+                                                <button type="button" title="Loại bỏ các tệp đã chọn" (click)="clearData()" class="btn btn-default fileinput-remove fileinput-remove-button" style="background-color:rgba(128, 128, 128, 0.10);">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </button>
+                                                <!-- <button type="button" class="btn btn-link" (click)="excelTemplateMember()">{{'send_data.export_template' | translate}}</button> -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group text-right" style="padding:0">
+                                    <img *ngIf="loading" class="pl-2" style="margin-right: 10px" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                                    />
+                                    <button type="button" class="btn btn-default" (click)="uploadExcelModal.hide()">{{'global.cancel' | translate}}</button>
+                                    <button type="submit" class="btn btn-success" (click)="submitUploadFile()" [disabled]="loading">{{'global.confirm' | translate}}</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- cap data code cho dai ly khach hang -->
+    <div class="modal fade" bsModal #provisionDataCodeModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="dialog-static-name" class="modal-title pull-left">
+                        {{'data_code.managerpro_data_code' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="provisionDataCodeModal.hide()">
+                            <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form #trans="ngForm" (ngSubmit)="sendDataCode(trans.value)">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    <label>{{'data_code.account' | translate}}<span style="color:red;">
+                                                (*)</span></label>
+                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountCreate" [settings]="settingsFilterAccount" name="accountID">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <label>{{'data_cimast.description' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="{{'data_cimast.description' | translate}}" name="description" [(ngModel)]="description" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 10px;" *ngFor="let obj of DataArrayList; let i = index">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    <label>{{'data_code.money' | translate}}</label>
+                                    <!-- <input type="number" class="form-control" name="slMoney{{i}}" [(ngModel)]="obj.slMoney" placeholder="{{ 'data_code.choose_den' | translate }}" (keyup)="onItemSelectamt(i)" (keydown)="onItemSelectamt(i)"> -->
+                                    <angular2-multiselect [data]="dataMoneyPro" [(ngModel)]="obj.selectedItemMoneyPro" [settings]="settingsFilterMoney" name="slMoney{{i}}">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    <label>{{'data_code.quantities' | translate}}</label>
+                                    <input type="number" class="form-control" name="quan{{i}}" [(ngModel)]="obj.quan" placeholder="{{ 'data_code.input_quan' | translate }}">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-2">
+                                    <span style="margin-top: 24px;" (click)="remoFor(i)" class="btn btn-danger">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button style="float: left;" type="button" class="btn btn-primary btn-sm" (click)="addFrom()">{{ 'data_code.add' | translate }}</button>
+                        <button type="button" class="btn btn-default btn-sm" (click)="provisionDataCodeModal.hide()">{{ 'global.cancel' | translate }}</button>
+                        <button type="submit" class="btn btn-success btn-sm" *ngIf="isAdmin">{{ 'global.confirm' | translate }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </article>

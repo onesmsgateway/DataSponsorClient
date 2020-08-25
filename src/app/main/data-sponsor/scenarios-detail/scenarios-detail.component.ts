@@ -35,7 +35,7 @@ export class ScenariosDetailComponent implements OnInit {
   public packageAmtVTL = 0;
   public packageAmtGPC = 0;
   public packageAmtVMS = 0;
-
+  public checkDataCode = 0;
   public dataPackageVTL = [];
   public settingsFilterPackageVTL = {};
   public selectedPackageVTL = [];
@@ -48,7 +48,7 @@ export class ScenariosDetailComponent implements OnInit {
   public scenario_type: string = "";
   public isScenarioType: boolean = false;
   public isScPopup: boolean = false;
-  
+
 
   constructor(
     private dataService: DataService,
@@ -114,7 +114,7 @@ export class ScenariosDetailComponent implements OnInit {
     this.getDataPackageVTL();
     this.getDataPackageGPC();
     this.getDataPackageVMS();
-   
+
     //this.getData();
   }
 
@@ -122,7 +122,7 @@ export class ScenariosDetailComponent implements OnInit {
   async getDataPackageVTL() {
     this.dataPackageVTL = [];
     this.selectedPackageVTL = [];
-    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL')
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
       this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
     }
@@ -133,7 +133,7 @@ export class ScenariosDetailComponent implements OnInit {
   // get data package vina
   async getDataPackageGPC() {
     this.dataPackageGPC = [];
-    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC')
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
       this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
     }
@@ -144,7 +144,7 @@ export class ScenariosDetailComponent implements OnInit {
   // get data package mobi
   async getDataPackageVMS() {
     this.dataPackageVMS = [];
-    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS')
+    let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
       this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
     }
@@ -158,20 +158,20 @@ export class ScenariosDetailComponent implements OnInit {
       "&pageSize=" + this.pagination.pageSize + "&scenario_id=" + this.scenarioId)
     this.loadData(response);
     this.getDataScenario();
-   
+
   }
   //loaddataScenario
   async getDataScenario() {
     let response: any = await this.dataService.getAsync('/api/Scenarios/' + this.scenarioId)
-   this.scenario_type = response.data[0].SCENARIO_TYPE;
-   if(this.scenario_type!=this.utilityService.translate('scenarios.scenariosDetailTwo')){
-     this.isScenarioType = true;
-     this.isScPopup = false;
-   }
-   else{
-    this.isScenarioType = false;
-    this.isScPopup = true;
-   }
+    this.scenario_type = response.data[0].SCENARIO_TYPE;
+    if (this.scenario_type != this.utilityService.translate('scenarios.scenariosDetailTwo')) {
+      this.isScenarioType = true;
+      this.isScPopup = false;
+    }
+    else {
+      this.isScenarioType = false;
+      this.isScPopup = true;
+    }
   }
 
   loadData(response?: any) {
@@ -202,17 +202,17 @@ export class ScenariosDetailComponent implements OnInit {
 
   //#region create new
   async createScenariosDetail(item) {
- 
+
     let scenar = item.value;
     let combobox = item.controls;
     let SCENARIO_ID = this.scenarioId;
     let VALUE = scenar.valueScenar;
-    if(this.scenario_type!=this.utilityService.translate('scenarios.scenariosDetailTwo')){
+    if (this.scenario_type != this.utilityService.translate('scenarios.scenariosDetailTwo')) {
       if (VALUE == "" || VALUE == null) {
-    this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
-    return;
-  }
- }
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
+        return;
+      }
+    }
     if (combobox.packageVTL.value.length == 0 && combobox.packageGPC.value.length == 0 && combobox.packageVMS.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
       return;
@@ -227,7 +227,7 @@ export class ScenariosDetailComponent implements OnInit {
     let response: any = await this.dataService.postAsync('/api/ScenariosDetail', {
       SCENARIO_ID, VALUE, PACKAGE_ID_VIETTEL, PACKAGE_ID_VINAPHONE, PACKAGE_ID_MOBIFONE, PACKAGE_QUANTITY_VIETTEL, PACKAGE_QUANTITY_VINAPHONE, PACKAGE_QUANTITY_MOBIFONE
     })
-   
+
     if (response.err_code == 0) {
       item.reset();
       this.getData();
@@ -267,13 +267,13 @@ export class ScenariosDetailComponent implements OnInit {
         packageAmtGPC: new FormControl(dataDetail.AMT_VINAPHONE),
         packageAmtVMS: new FormControl(dataDetail.AMT_MOBIFONE)
       });
-     
+
       this.showModalUpdate.show();
     } else {
       this.notificationService.displayErrorMessage(response.err_message);
     }
-    
-    
+
+
   }
 
   // update chi tiet kich ban
@@ -282,13 +282,13 @@ export class ScenariosDetailComponent implements OnInit {
     let ID = formData.id.value;
     let SCENARIO_ID = this.scenarioId;
     let VALUE = formData.valueScenar.value.toString();
-    if(this.scenario_type!=this.utilityService.translate('scenarios.scenariosDetailTwo')){
+    if (this.scenario_type != this.utilityService.translate('scenarios.scenariosDetailTwo')) {
       if (VALUE == "" || VALUE == null) {
-    this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
-    return;
-  }
- }
-   
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-94"));
+        return;
+      }
+    }
+
     if (formData.packageVTL.value.length == 0 && formData.packageGPC.value.length == 0 && formData.packageVMS.value.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-34"));
       return;
@@ -314,7 +314,7 @@ export class ScenariosDetailComponent implements OnInit {
     else if (response.err_code == -19) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-19"));
     }
-    
+
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
     }

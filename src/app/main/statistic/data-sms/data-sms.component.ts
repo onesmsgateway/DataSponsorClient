@@ -15,7 +15,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class DataSmsComponent implements OnInit {
 
-
   public dataSms = [];
   public dataScenario = [];
   public dataAccount = [];
@@ -25,9 +24,11 @@ export class DataSmsComponent implements OnInit {
   public dataPackageGPC = [];
   public dataPackageVMS = [];
   public dataStatus = [];
+  public dataSendData = [];
   public dataTelco = [];
   public checkMonney: boolean = false;
   public statusdata;
+  public checkDataCode = 0;
 
   public pagination: Pagination = new Pagination();
   public smsContent: string = "";
@@ -76,7 +77,9 @@ export class DataSmsComponent implements OnInit {
   public settingsFilterPackageVMS = {};
   public selectedPackageVMS = [];
   public settingsFilterStatus = {};
+  public settingsFilterSendData = {};
   public selectedStatus = [];
+  public selectedSendData = [];
   public selectedPkNameDisplay = [];
 
   constructor(private authService: AuthService,
@@ -173,6 +176,15 @@ export class DataSmsComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
+    this.settingsFilterSendData = {
+      text: this.utilityService.translate('global.choose_senddata'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
   }
 
   ngOnInit() {
@@ -224,6 +236,7 @@ export class DataSmsComponent implements OnInit {
     this.getDataPackageGPC();
     this.getDataPackageVMS();
     this.bindDataStatus();
+    this.bindDataSendData();
     this.getListDataSms();
     setTimeout(() => {
       this.getPackageNameDisplay();
@@ -239,7 +252,6 @@ export class DataSmsComponent implements OnInit {
 
   //#region account
   public async bindDataAccount() {
-
     if (this.isAdmin) {
       let response: any = await this.dataService.getAsync('/api/account');
       for (let index in response.data) {
@@ -254,9 +266,7 @@ export class DataSmsComponent implements OnInit {
       }
       if (this.dataAccount.length == 1)
         this.selectedAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
-
     }
-
   }
   //#endregion
 
@@ -291,7 +301,6 @@ export class DataSmsComponent implements OnInit {
 
   //get data scenario
   async getScenario() {
-
     this.dataScenario = [];
     this.selectedScenario = [];
     let account = "";
@@ -336,7 +345,7 @@ export class DataSmsComponent implements OnInit {
   //#region package
   // viettel
   async getDataPackageVTL() {
-    let response: any = await this.dataService.getAsync('/api/packagetelco/GetPackageByTelco?telco=VIETTEL')
+    let response: any = await this.dataService.getAsync('/api/packagetelco/GetPackageByTelco?telco=VIETTEL' + '&ismoneydatacode=' + this.checkDataCode)
     if (response) {
       for (let index in response.data) {
         this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
@@ -349,7 +358,7 @@ export class DataSmsComponent implements OnInit {
 
   // vina
   async getDataPackageGPC() {
-    let response: any = await this.dataService.getAsync('/api/packagetelco/GetPackageByTelco?telco=GPC')
+    let response: any = await this.dataService.getAsync('/api/packagetelco/GetPackageByTelco?telco=GPC' + '&ismoneydatacode=' + this.checkDataCode)
     if (response) {
       for (let index in response.data) {
         this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
@@ -362,7 +371,7 @@ export class DataSmsComponent implements OnInit {
 
   // mobi
   async getDataPackageVMS() {
-    let response: any = await this.dataService.getAsync('/api/packagetelco/GetPackageByTelco?telco=VMS')
+    let response: any = await this.dataService.getAsync('/api/packagetelco/GetPackageByTelco?telco=VMS' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
       this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
@@ -377,6 +386,11 @@ export class DataSmsComponent implements OnInit {
     this.dataStatus.push({ "id": "1", "itemName": this.utilityService.translate('global.success') });
     this.dataStatus.push({ "id": "0", "itemName": this.utilityService.translate('global.fail') });
   }
+  public async bindDataSendData() {
+    this.dataSendData = [];
+    this.dataSendData.push({ "id": "0", "itemName": this.utilityService.translate('global.send_money')});
+    this.dataSendData.push({ "id": "1", "itemName": this.utilityService.translate('global.send_data_code')});
+  }
   //#endregion
 
   //#region load data and paging
@@ -390,6 +404,7 @@ export class DataSmsComponent implements OnInit {
     let packVMS = this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != "" ? this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim() : "";
     let package_name_display = this.selectedPkNameDisplay.length > 0 && this.selectedPkNameDisplay[0].itemName != "" ? this.selectedPkNameDisplay[0].itemName : "";
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : this.statusdata;
+    let issenddata = this.selectedSendData.length > 0 ? this.selectedSendData[0].id : "";
     if (status == '1') {
       this.checkMonney = true;
     } else {
@@ -407,24 +422,23 @@ export class DataSmsComponent implements OnInit {
       }
       scenario_id = this.selectedScenario.length > 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
     }
+   
     let response = await this.dataService.getAsync('/api/datasms/GetDataSmsPaging?pageIndex=' + this.pagination.pageIndex +
       '&pageSize=' + this.pagination.pageSize + '&account_id=' + account_id + '&campaign_id=' + campaign_id + '&scenario_id=' + scenario_id +
       '&package_name_display=' + package_name_display + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate +
-      '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
-    if (response) {
+      '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS + '&ismoneydatacode=' + issenddata); 
+      if (response) {
       if (response.err_code == 0) {
         this.dataSms = response.data;
         if ('pagination' in response) {
           this.pagination.pageSize = response.pagination.PageSize;
           this.pagination.totalRow = response.pagination.TotalRows;
         }
-
         let sumSms = response.pagination.TotalRows;
         if (sumSms > 0) {
           let responseCountSms = await this.dataService.getAsync('/api/datasms/CountPhoneFilterByTelco?account_id=' + account_id +
             '&packageVTL=' + packVTL + '&packageGPC=' + packGPC + '&packageVMS=' + packVMS + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate +
-            '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
-
+            '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS + '&ismoneydatacode='+issenddata);
           if (responseCountSms != null && responseCountSms.data != null && responseCountSms.data.length > 0) {
             this.countVTL = responseCountSms.data[0].COUNT_VIETTEL;
             this.countGPC = responseCountSms.data[0].COUNT_VINAPHONE;
@@ -433,7 +447,7 @@ export class DataSmsComponent implements OnInit {
           }
           let responseSumMoney: any = await this.dataService.getAsync('/api/datasms/SumMoneyFilterByTelco?account_id=' + account_id +
             '&packageVTL=' + packVTL + '&packageGPC=' + packGPC + '&packageVMS=' + packVMS + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate +
-            '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
+            '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS + '&ismoneydatacode='+issenddata);
           if (responseSumMoney != null && responseSumMoney.data != null && responseSumMoney.data.length > 0) {
             this.sumVTL = Math.round(responseSumMoney.data[0].SUM_VIETTEL);
             this.sumGPC = Math.round(responseSumMoney.data[0].SUM_GPC);
@@ -442,7 +456,7 @@ export class DataSmsComponent implements OnInit {
           }
           let responseSumData = await this.dataService.getAsync('/api/datasms/SumDataFilterByTelco?account_id=' + account_id +
             '&packageVTL=' + packVTL + '&packageGPC=' + packGPC + '&packageVMS=' + packVMS + '&status=' + status + '&from_date=' + this.fromDate + '&to_date=' + this.toDate +
-            '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS);
+            '&content=' + this.smsContent + '&phone=' + this.phone + '&viettel=' + this.stringVTL + '&vina=' + this.stringGPC + '&mobi=' + this.stringVMS + '&ismoneydatacode='+issenddata);
           if (responseSumData != null && responseSumData.data != null && responseSumData.data.length > 0) {
             this.sumDataVTL = Math.round(responseSumData.data[0].SUM_DATA_VIETTEL);
             this.sumDataGPC = Math.round(responseSumData.data[0].SUM_DATA_GPC);

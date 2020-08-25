@@ -8,7 +8,7 @@
             <button type="submit" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="sendDataSMS()">{{ 'send_data.send' | translate }}</button>
         </div>
         <div class="radio">
-            <div class="col-md-1 col-sm-2 col-xs-4 form-group pull-right text-right">
+            <div class="col-md-1 col-sm-2 col-xs-4 form-group pull-right text-right bottom">
                 <label class="radio-inline"><input class="form-check-input" type="radio" value="0" name="sendData" [(ngModel)] = "sendNow" checked
                         (click)="checkTimeSchedule('0')">{{ 'send_data.sendNow' | translate }}</label>
             </div>
@@ -28,10 +28,11 @@
                             <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                 <div *ngIf="isAdmin">
                                     <label style="color: red;">{{ 'send_data.label_total' | translate }}
-                                        {{ total_amt | number: '.0' }} VNĐ</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                            {{ total_amt | number: '.0' }} VNĐ &nbsp;&nbsp;&nbsp;&nbsp; {{ 'send_data.code_total' | translate }}
+                                            {{ total_code | number: '.0' }}</label> &nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                     <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="changeAccount()" (onDeSelect)="deSelectAccount()">
                                     </angular2-multiselect>
@@ -47,7 +48,7 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <div class="row">
                                 <div class="radio">
-                                    <label class="radio-inline" style="text-transform: uppercase; padding-right: 30px;"><input
+                                    <label class="radio-inline cmargin" style="text-transform: uppercase; padding-right: 30px;"><input
                                             class="form-check-input" type="radio" value="0" name="campaign" [(ngModel)] = "cpm" checked
                                             (click)="checkCampaign('0')">{{ 'send_data.campaign_new' | translate }}</label>
                                     <label class="radio-inline" style="text-transform: uppercase;"><input class="form-check-input"
@@ -63,19 +64,19 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group">
                                     <input type="text" class="form-control" name="programCode" [(ngModel)]="programCode" placeholder="{{ 'send_data.inProgram_code' | translate }}">
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-6" style="padding: 0;">
-                                    <div class="col-md-6 col-sm-6 col-xs-6 form-group text-right">
+                                <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 form-group text-right">
                                         <label>{{ 'send_data.number_reward' | translate }}</label>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 form-group">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
                                         <input type="number" class="form-control" name="NumberRewardTimesInDay" [(ngModel)]="NumberRewardTimesInDay">
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-6 pull-right" style="padding: 0;">
-                                    <div class="col-md-8 col-sm-6 col-xs-6 form-group text-right">
+                                <div class="col-md-6 col-sm-6 col-xs-12 pull-right" style="padding: 0;">
+                                    <div class="col-md-8 col-sm-6 col-xs-12 form-group text-right">
                                         <label>{{ 'send_data.time_donate' | translate }}</label>
                                     </div>
-                                    <div class="col-md-4 col-sm-6 col-xs-6 form-group">
+                                    <div class="col-md-4 col-sm-6 col-xs-12 form-group">
                                         <input type="number" class="form-control" name="timeDonateCreate" [(ngModel)]="timeDonateCreate">
                                     </div>
                                 </div>
@@ -92,7 +93,7 @@
                                     <div class="col-md-6 col-sm-6 col-xs-12 form-group text-right">
                                         <label>{{ 'send_data.number_reward' | translate }}</label>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 form-group">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 form-group">
                                         <input type="number" class="form-control" name="NumberRewardTimesInDayOld" [(ngModel)]="NumberRewardTimesInDayOld" readonly>
                                     </div>
                                 </div>
@@ -104,16 +105,13 @@
                                         <input type="number" class="form-control" name="timeDonateOld" [(ngModel)]="timeDonateOld" readonly>
                                     </div>
                                 </div>
-
                             </div>
-
-
                         </div>
                     </div>
                 </div>
 
                 <!-- upload and chon group -->
-                <div class="x_panel portlet" style="width:49.5%;">
+                <div class="x_panel portlet stywid">
                     <div class="x_title clearfix">
                         <h2>{{ 'send_data.tittle_upload' | translate }}</h2>
                         <ul class="nav navbar-right panel_toolbox">
@@ -141,7 +139,7 @@
                 </div>
 
                 <!-- sms content -->
-                <div class="x_panel portlet pull-right" style="width:49.5%">
+                <div class="x_panel portlet pull-right stywid">
                     <div class="x_title clearfix">
                         <h2>{{ 'send_data.tittle_sms' | translate }}</h2>
                         <ul class="nav navbar-right panel_toolbox">
@@ -170,19 +168,17 @@
                                 <angular2-multiselect [data]="dataOptionInsert" [(ngModel)]="selectedOptionInsert" [settings]="settingsFilterOptionInsert" name="slOptionInsert" (onSelect)="changeOptionInsert()">
                                 </angular2-multiselect>
                             </div>
-                            <div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback" style="padding-left: 10px;">
+                            <div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback smspad">
                                 <angular2-multiselect [data]="dataOptionInsertSms" [(ngModel)]="selectedOptionTempSms" [settings]="settingsFilterOptionTempSms" name="slOptionTempSms" (onSelect)="changeOptionInsertSms()">
                                 </angular2-multiselect>
                             </div>
                         </div>
-                        <div class="row" style="margin-left: 5px;">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 margintop">
                                 <textarea type="text" class="form-control has-feedback-left modal-popup" #contentSMS name="smsContent" rows="3" maxlength="459" placeholder="{{ 'data-sms.iSms_content' | translate }}" [(ngModel)]="smsContent" (change)="countSMS($event.target.value)" (keyup)="countSMS($event.target.value)"
                                     (keydow)="countSMS($event.target.value)"></textarea>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
 
@@ -475,6 +471,43 @@
                                     <input type="text" class="form-control" name="totalAmtVMS" [(ngModel)]="totalAmtVMS" readonly>
                                 </div>
                             </div>
+                            <!-- chon data code -->
+                            <div class="row" *ngIf="enablePackageDataCode">
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <div class="checkbox" style="margin-top: 25px;float: right;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="checkdatacode"
+                                                [(ngModel)]="checkdatacode" (click)="enableSendDataCode($event.currentTarget.checked)">
+                                            <span>{{ 'send_data.checkdatacode' | translate }}</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.inPackage' | translate}}</label>
+                                    <angular2-multiselect [data]="dataPackageVMSDataCode" [(ngModel)]="selectedPackageVMSDataCode" [settings]="settingsFilterPackageVMSDataCode" name="slPackageVMSDataCode" (onSelect)="changePackageVMS()" (onDeSelect)="changePackageVMS()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <label>{{'send_data.effective' | translate}}</label>
+                                    <input type="text" class="form-control" name="effectiveDateVMSDataCode" readonly [(ngModel)]="effectiveDateVMSDataCode">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.packageAmt' | translate}}</label>
+                                    <input type="text" class="form-control" name="packageAmtVMSDataCode" readonly [(ngModel)]="packageAmtVMSDataCode">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.amount' | translate}}</label>
+                                    <input type="number" class="form-control" name="packCountVMSDataCode" [(ngModel)]="packCountVMSDataCode" (change)="changeCountVMS()" (keyup)="changeCountVMS()" (keydown)="changeCountVMS()">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12 text-center">
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <label>{{'send_data.total_package' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalPackVMSDataCode" [(ngModel)]="totalPackVMSDataCode" readonly>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <label>{{'send_data.amt_expected' | translate}}</label>
+                                    <input type="text" class="form-control" name="totalAmtVMSDataCode" [(ngModel)]="totalAmtVMSDataCode" readonly>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-1 col-sm-1 col-xs-12 col-md-offset-9 text-center" style="padding-top: 5px;">
                                     <label>{{'send_data.total_amt' | translate}}</label>
@@ -618,7 +651,8 @@
                 />
                 <button type="button" class="btn btn-default" (click)="confirmSendDataSMSModal.hide()">{{'global.cancel' | translate}}</button>
                 <!-- <button type="submit" class="btn btn-success" (click)="confirmSendSMS()">{{'global.confirm' | translate}}</button> -->
-                <button type="submit" class="btn btn-success" (click)="createDataOtp()">{{'global.confirm' | translate}}</button>
+                <!-- <button type="submit" class="btn btn-success" (click)="createDataOtp()">{{'global.confirm' | translate}}</button> -->
+                <button type="submit" class="btn btn-success" (click)="confirmSendSMS()">{{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>
@@ -650,8 +684,10 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-sm pull-left" (click)="resendOtp()" [disabled]="!disable_resend_otp">{{'send_data.sendto' | translate}}</button>
                 <button type="button" class="btn btn-default btn-sm" (click)="confirmOtphide()">{{'global.cancel' | translate}}</button>
-                <button type="button" class="btn btn-success btn-sm" (click)="confirmSendDataOtp()">
-                    {{'global.confirm' | translate}}</button>
+                <!-- <button type="button" class="btn btn-success btn-sm" (click)="confirmSendDataOtp()">
+                    {{'global.confirm' | translate}}</button> -->
+                <button type="button" class="btn btn-success btn-sm" (click)="confirmSendSMS()">
+                        {{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>

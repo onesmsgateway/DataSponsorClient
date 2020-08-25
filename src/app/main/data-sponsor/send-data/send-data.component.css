@@ -1,8 +1,29 @@
+@media (min-width: 1270px) {
+    .stywid {
+        width: 49.5%;
+    }
+    .smspad {
+        padding-left: 10px;
+    }
+    .margintop {
+        margin-top: 10px;
+    }
+}
+
 @media (max-width: 1269px) {
     .col-md-9 {
         margin-left: 10px;
         padding-right: 10px !important;
         width: 70%;
+    }
+    .stywid {
+        width: 49.5%;
+    }
+    .smspad {
+        padding-left: 10px;
+    }
+    .margintop {
+        margin-top: 10px;
     }
 }
 
@@ -13,17 +34,79 @@
         margin-bottom: 10px;
         width: 100%;
     }
+    .stywid {
+        width: 49.5%;
+    }
+    .smspad {
+        padding-left: 10px;
+    }
+    .margintop {
+        margin-top: 10px;
+    }
 }
 
 @media (min-width: 1200px) {
     textarea.form-control {
         height: 57px;
     }
+    .stywid {
+        width: 49.5%;
+    }
+    .smspad {
+        padding-left: 10px;
+    }
+    .margintop {
+        margin-top: 10px;
+    }
 }
 
 @media (max-width: 1190px) {
     textarea.form-control {
         height: 92px;
+    }
+    .stywid {
+        width: 49.5%;
+    }
+    .smspad {
+        padding-left: 10px;
+    }
+    .margintop {
+        margin-top: 10px;
+    }
+}
+
+@media only screen and (min-width: 361px) and (max-width: 414px) {
+    .bottom {
+        margin-top: 5px;
+        margin-bottom: 0px !important;
+    }
+    .stywid {
+        width: 100%;
+    }
+    .margintop {
+        margin-top: 0px;
+    }
+}
+
+@media (max-width: 360px) {
+    .bottom {
+        margin-top: 5px;
+        margin-bottom: 0px !important;
+    }
+    .cmargin {
+        margin-left: 10px;
+    }
+    .stywid {
+        width: 100%;
+    }
+    .has-feedback .form-control {
+        padding-right: 0px !important;
+    }
+    .smspad {
+        padding-left: 0px;
+    }
+    .margintop {
+        margin-top: 0px;
     }
 }
 
