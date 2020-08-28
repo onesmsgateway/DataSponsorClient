@@ -5,9 +5,9 @@
                 <a [routerLink]="['../../data-sponsor/scenarios']" [queryParams]="{status: '1'}">
                     <div class="tile-stats" style="cursor: pointer">
                         <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
-                        <div class="count">{{scenario_ran}}</div>
-                        <h4 style="margin-bottom: 7px;">{{ 'global.total_scenario' | translate }}</h4>
-                        <h6 style="margin-left: 3px;">{{ 'global.total_scenario_ran' | translate }}</h6>
+                        <div class="count">{{scenario_ran | number : '0.'}}</div>
+                        <h5 class="styleh5">{{ 'global.total_scenario' | translate }}</h5>
+                        <h6 class="styleh6">{{ 'global.total_scenario_ran' | translate }}</h6>
                     </div>
 
                 </a>
@@ -16,9 +16,9 @@
                 <a [routerLink]="[]" [queryParams]="{ }">
                     <div class="tile-stats" style="cursor: pointer">
                         <div class="icon"><i class="glyphicon glyphicon-list-alt"></i></div>
-                        <div class="count">{{campaign}}</div>
-                        <h4 style="margin-bottom: 7px;">{{ 'global.total_campaign' | translate }}</h4>
-                        <h6 style="margin-left: 3px;">{{ 'global.total_campaign_end' | translate }}</h6>
+                        <div class="count">{{campaign | number : '0.'}}</div>
+                        <h5 class="styleh5">{{ 'global.total_campaign' | translate }}</h5>
+                        <h6 class="styleh6">{{ 'global.total_campaign_end' | translate }}</h6>
                     </div>
                 </a>
             </div>
@@ -26,9 +26,9 @@
                 <a [routerLink]="['../../data-sponsor/scenarios']" [queryParams]="{statusold: 0 }">
                     <div class="tile-stats" style="cursor: pointer">
                         <div class="icon"><i class="glyphicon glyphicon-list-alt"></i></div>
-                        <div class="count">{{scenario_end}}</div>
-                        <h4 style="margin-bottom: 7px;">{{ 'global.total_scenario' | translate }}</h4>
-                        <h6 style="margin-left: 3px;">{{ 'global.total_scenario_end' | translate }}</h6>
+                        <div class="count">{{scenario_end | number : '0.'}}</div>
+                        <h5 class="styleh5">{{ 'global.total_scenario' | translate }}</h5>
+                        <h6 class="styleh6">{{ 'global.total_scenario_end' | translate }}</h6>
                     </div>
                 </a>
             </div>
@@ -36,9 +36,9 @@
                 <a [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ statusdata: '1'}">
                     <div class="tile-stats" style="cursor: pointer">
                         <div class="icon"><i class="fa fa-check-square-o"></i></div>
-                        <div class="count">{{total_data_sent}}</div>
-                        <h4 style="margin-bottom: 7px;">{{ 'global.total_data_sent' | translate }}</h4>
-                        <h6 style="margin-left: 3px;">{{ 'global.total_data_sent_end' | translate }}</h6>
+                        <div class="count">{{total_data_sent | number : '0.'}}</div>
+                        <h5 class="styleh5">{{ 'global.total_data_sent' | translate }}</h5>
+                        <h6 class="styleh6">{{ 'global.total_data_sent_end' | translate }}</h6>
                     </div>
                 </a>
             </div>
@@ -46,63 +46,64 @@
                 <a [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ statusdata: '1'}">
                     <div class="tile-stats" style="cursor: pointer">
                         <div class="icon"><i class="fa fa-check-square-o"></i></div>
-                        <div class="count">{{total_money_sent}}</div>
-                        <h4 style="margin-bottom: 7px;">{{ 'global.total_money_sent_end' | translate }}</h4>
-                        <h6 style="margin-left: 3px;">{{ 'global.total_money_sent' | translate }}</h6>
+                        <div class="count">{{total_money_sent | number : '0.'}}</div>
+                        <h5 class="styleh5">{{ 'global.total_money_sent_end' | translate }}</h5>
+                        <h6 class="styleh6">{{ 'global.total_money_sent' | translate }}</h6>
+                    </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="!isAdmin">
+                <a [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ statusdata: '1'}">
+                    <div class="tile-stats" style="cursor: pointer">
+                        <div class="icon"><i class="fa fa-check-square-o"></i></div>
+                        <div class="count">{{total_datacode_sent | number : '0.'}}</div>
+                        <h5 class="styleh5">{{ 'global.total_datacode_sent_end' | translate }}</h5>
+                        <h6 class="styleh6">{{ 'global.total_datacode_sent' | translate }}</h6>
                     </div>
                 </a>
             </div>
             <!-- //admin -->
-            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="isAdmin">
-                <a [routerLink]="['../../statistic/sms-error']" [queryParams]="{redirectTo: 'smsErrByMonth'}">
+            <div class="animated flipInY col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="isAdmin">
+                <a>
                     <div class="tile-stats" style="cursor: pointer">
-                        <div class="icon"><i class="fa fa-bar-chart-o"></i></div>
-                        <div class="count">{{smsErr}}</div>
-                        <h4>Tin lỗi trong tháng</h4>
-                        <p>&nbsp;</p>
+                        <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
+                        <div class="count">{{total_account | number : '0.'}}</div>
+                        <h4 class="styleh5">{{ 'global.account' | translate }}</h4>
+                        <h6 class="styleh6">{{ 'global.total_account' | translate }}</h6>
                     </div>
                 </a>
             </div>
-            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="isAdmin">
-                <a [routerLink]="['../../sms/campaign']" [queryParams]="{ redirectFrom: 'home', currentDate: currentDate }">
+            <div class="animated flipInY col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="isAdmin">
+                <a>
                     <div class="tile-stats" style="cursor: pointer">
-                        <div class="icon"><i class="fa fa-check-square-o"></i></div>
-                        <div class="count">{{totalSmsWaitApprove}}</div>
-                        <h4>Đơn chờ duyệt</h4>
-                        <p>&nbsp;</p>
+                        <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
+                        <div class="count">{{total_account_new | number : '0.'}}</div>
+                        <h4 class="styleh5">{{ 'global.account_new' | translate }}</h4>
+                        <h6 class="styleh6">{{ 'global.total_account_new' | translate }}</h6>
                     </div>
                 </a>
             </div>
-            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="isAdmin">
-                <a [routerLink]="['../../system/account']" [queryParams]="{ redirectFrom: 'home' }">
+            <div class="animated flipInY col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="isAdmin">
+                <a [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ statusdata: '0'}">
                     <div class="tile-stats" style="cursor: pointer">
-                        <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
-                        <div class="count">{{newCustomer}}</div>
-                        <h4>{{ 'home.new_customer' | translate }}</h4>
-                        <p>&nbsp;</p>
+                        <div class="icon"><i class="glyphicon glyphicon-list-alt"></i></div>
+                        <div class="count">{{total_data_error | number : '0.'}}</div>
+                        <h4 class="styleh5">{{ 'global.error_data' | translate }}</h4>
+                        <h6 class="styleh6">{{ 'global.total_error_data' | translate }}</h6>
                     </div>
                 </a>
             </div>
-            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="isAdmin">
-                <a [routerLink]="['../../system/account']" [queryParams]="{ redirectFrom: 'quota_expired' }">
+            <div class="animated flipInY col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="isAdmin">
+                <a [routerLink]="['../../data-sponsor/data-cimast']" [queryParams]="{ }">
                     <div class="tile-stats" style="cursor: pointer">
-                        <div class="icon"><i class="fa fa-edit"></i></div>
-                        <div class="count">{{accountExpiredQuota}}</div>
-                        <h4>{{ 'home.sender_expired_account' | translate }}</h4>
-                        <p>&nbsp;</p>
+                        <div class="icon"><i class="glyphicon glyphicon-list-alt"></i></div>
+                        <div class="count">{{total_money_out | number : '0.'}}</div>
+                        <h4 class="styleh5">{{ 'global.warning' | translate }}</h4>
+                        <h6 class="styleh6">{{ 'global.out_of_money' | translate }}</h6>
                     </div>
                 </a>
             </div>
-            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="isAdmin">
-                <a [routerLink]="['../../manager/sender']" [queryParams]="{ redirectTo: 'sender_expired' }">
-                    <div class="tile-stats" style="cursor: pointer">
-                        <div class="icon"><i class="fa fa-edit"></i></div>
-                        <div class="count">{{totalSenderExpired}}</div>
-                        <h4>{{ 'home.sender_expired' | translate }}</h4>
-                        <p>&nbsp;</p>
-                    </div>
-                </a>
-            </div>
+
         </section>
     </div>
     <!-- loc gia tri theo tieu chi thong ke khach hang ngay/goi -->
@@ -480,5 +481,168 @@
             </div>
         </div>
     </section>
-
+    <!-- bieu do admin -->
+    <!-- loc gia tri theo tieu chi san luong gui data -->
+    <section style="margin-top: 30px;" *ngIf="isAdmin">
+        <div class="x_panel portlet">
+            <div class="row" style="margin-top: 20px">
+                <h3 style="text-align: center; margin-bottom: 20px; color: black;">{{ 'index.statistics_data' | translate }}</h3>
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount" [settings]="settingsFilterAccount" name="account" (onSelect)="ChangeDropdownListAccount()" (onDeSelect)="ChangeDropdownListAccount()">
+                    </angular2-multiselect>
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                    <angular2-multiselect [data]="dataCampaign" [(ngModel)]="selectedCampaign" [settings]="settingsFilterCampaign" name="campaign" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                    </angular2-multiselect>
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                    <angular2-multiselect [data]="dataScenario" [(ngModel)]="selectedScenario" [settings]="settingsFilterScenario" name="scenario" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                    </angular2-multiselect>
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                    <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                    <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
+                </div>
+                <div class="col-md-2 col-sm-3 col-xs-12 form-group" style="margin-top: 5px;">
+                    <label><i class="fa fa-calendar" aria-hidden="true"></i> Thống kê 30 ngày gần đây</label>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <!--Biểu đồ Thống kê gui data thanh cong-->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2>{{'index.sent_success' | translate}}</h2>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12" style="padding-top: 5px; font-size: 13px !important;">
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block">
+                                        <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                                    checked="isCheckVTL" (change)="onChangeVTLData($event.currentTarget.checked)">
+                                                <span>Viettel</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                                    checked="isCheckGPC" (change)="onChangeGPCData($event.currentTarget.checked)">
+                                                <span>Vinaphone</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                                    checked="isCheckVMS" (change)="onChangeVMSData($event.currentTarget.checked)">
+                                                <span>Mobiphone</span> </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_content">
+                        <div id="chartSlSuccess">
+                            <apx-chart [series]="chartOptionsChart.series" [chart]="chartOptionsChart.chart" [dataLabels]="chartOptionsChart.dataLabels" [plotOptions]="chartOptionsChart.plotOptions" [responsive]="chartOptionsChart.responsive" [xaxis]="chartOptionsChart.xaxis" [legend]="chartOptionsChart.legend"
+                                [fill]="chartOptionsChart.fill"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Thong ke gui data that bai-->
+            <div class="col-md-6 col-sm-12 col-xs-12" *ngIf="isAdmin">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2>{{'index.sent_fail' | translate}}</h2>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12" style="padding-top: 5px; font-size: 13px !important;">
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block">
+                                        <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
+                                                    checked="isCheckVTL" (change)="onChangeVTLDataF($event.currentTarget.checked)">
+                                                <span>Viettel</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="vinaphone" required=""
+                                                    checked="isCheckGPC" (change)="onChangeGPCDataF($event.currentTarget.checked)">
+                                                <span>Vinaphone</span> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-2 col-xs-12">
+                                    <div class="checkbox" style="display: inline-block;">
+                                        <label><input type="checkbox" value="" class="checkbox" name="mobiphone" required=""
+                                                    checked="isCheckVMS" (change)="onChangeVMSDataF($event.currentTarget.checked)">
+                                                <span>Mobiphone</span> </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_content">
+                        <div id="chartSlFail">
+                            <apx-chart [series]="chartOptionsChartFail.series" [chart]="chartOptionsChartFail.chart" [dataLabels]="chartOptionsChartFail.dataLabels" [plotOptions]="chartOptionsChartFail.plotOptions" [responsive]="chartOptionsChartFail.responsive" [xaxis]="chartOptionsChartFail.xaxis"
+                                [legend]="chartOptionsChartFail.legend" [fill]="chartOptionsChartFail.fill"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section style="margin-top: 20px" *ngIf="isAdmin">
+        <div class="x_panel portlet">
+            <div class="row" style="margin-top: 20px">
+                <h3 style="text-align: center; margin-bottom: 20px; color: black;">{{ 'index.statistics_account' | translate }}</h3>
+                <!-- tim kiem theo thang -->
+                <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 20px;">
+                    <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                    </div>
+                    <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                        <form class="container">
+                            <input style="border-radius: 10px" [(ngModel)]="timeMonthFromadmin" autocomplete="off" class="form-control" name="fromMonthadmin" bsDatepicker [bsConfig]="{dateInputFormat: 'MM/YYYY'}" (onShown)="onOpenCalendar($event)" (ngModelChange)="onChangeFromMonthYearAdmin($event)"
+                                placeholder="Từ tháng">
+                        </form>
+                    </div>
+                    <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                        <form class="container">
+                            <input style="border-radius: 10px" [(ngModel)]="timeToadmin" autocomplete="off" class="form-control" name="toMonthadmin" bsDatepicker [bsConfig]="{dateInputFormat: 'MM/YYYY'}" (onShown)="onOpenCalendar($event)" (ngModelChange)="onChangeToMonthYearAdmin($event)"
+                                placeholder="Đến tháng">
+                        </form>
+                    </div>
+                    <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                        <button style="border-radius: 10px" type="button" class="btn btn-primary" (click)="filterByMonthAdmin()">{{ 'index.filter_month' | translate }}</button>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section style="margin-top: 30px; margin-bottom: 50px;" *ngIf="isAdmin">
+        <div class="row">
+            <!--Biểu đồ Thống kê khach hang dang ky hang thang-->
+            <div class="col-md-2 col-sm-12 col-xs-12">
+            </div>
+            <div class="col-md-8 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <div id="chartline">
+                            <apx-chart [series]="chartOptionsLine.series" [chart]="chartOptionsLine.chart" [xaxis]="chartOptionsLine.xaxis" [stroke]="chartOptionsLine.stroke" [colors]="chartOptionsLine.colors" [dataLabels]="chartOptionsLine.dataLabels" [legend]="chartOptionsLine.legend"
+                                [markers]="chartOptionsLine.markers" [grid]="chartOptionsLine.grid" [yaxis]="chartOptionsLine.yaxis"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-12 col-xs-12">
+            </div>
+        </div>
+    </section>
 </article>

@@ -7,7 +7,36 @@ import { ChartType, ChartOptions } from 'chart.js';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { ChartComponent } from "ng-apexcharts";
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
-import { timeout } from 'rxjs/operators';
+import { timeout, max } from 'rxjs/operators';
+import {
+  ApexAxisChartSeries,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexXAxis,
+  ApexLegend,
+  ApexFill
+} from "ng-apexcharts";
+import {
+  ApexStroke,
+  ApexMarkers,
+  ApexYAxis,
+  ApexGrid,
+  ApexTitleSubtitle,
+} from "ng-apexcharts";
+
+export type ChartOptionsLine = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  markers: ApexMarkers;
+  colors: string[];
+  yaxis: ApexYAxis;
+  grid: ApexGrid;
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;
+};
 
 export type ChartOptionsOne = {
   series: ApexNonAxisChartSeries;
@@ -16,12 +45,31 @@ export type ChartOptionsOne = {
   labels: any;
 };
 
+export type ChartOptionsChart = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  responsive: ApexResponsive[];
+  xaxis: ApexXAxis;
+  legend: ApexLegend;
+  fill: ApexFill;
+};
+
+
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.css']
 })
 export class IndexComponent implements OnInit {
+  @ViewChild('chartline', { static: false }) public chartline: ChartComponent;
+  @ViewChild('chartSlFail', { static: false }) public chartSlFail: ChartComponent;
+  @ViewChild('chartSlSuccess', { static: false }) public chartSlSuccess: ChartComponent;
+  public chartOptionsLine: Partial<ChartOptionsLine>;
+  public chartOptionsChart: Partial<ChartOptionsChart>;
+  public chartOptionsChartFail: Partial<ChartOptionsChart>;
+
   //bieu do nam 
   @ViewChild('chart', { static: false }) public chart: ChartComponent;
   public chartOptions: Partial<ChartOptionsOne>;
@@ -35,7 +83,9 @@ export class IndexComponent implements OnInit {
   public modelFromDate = new Date();
   public modelToDate = new Date();
   public fromMonth: string = "";
+  public fromMonthadmin: string = "";
   public toMonth: string = "";
+  public toMonthadmin: string = "";
 
   public chartLabels: any;
   public pieChartType: ChartType;
@@ -43,11 +93,13 @@ export class IndexComponent implements OnInit {
   public pieChartPlugins = [];
   public dataVT = [];
   public showOverlay = true;
+  public showdate = true;
   public smsErr = 0;
   public scenario_ran = 0;
   public scenario_end = 0;
   public campaign = 0;
   public total_money_sent = 0;
+  public total_datacode_sent = 0;
   public total_data_sent = 0;
   public newCustomer = 0;
   public accountExpiredQuota = 0;
@@ -81,9 +133,12 @@ export class IndexComponent implements OnInit {
   public fromhour: string = '';
   public tohour: string = '';
   public timeTo = new Date();
+  public timeToadmin = new Date();
 
   public timeFrom = new Date(this.timeTo.getTime() - (30 * 24 * 60 * 60 * 1000));
   public timeMonthFrom = new Date(this.timeTo.getTime() - (180 * 24 * 60 * 60 * 1000));
+  public timeMonthFromadmin = new Date(this.timeToadmin.getTime() - (365 * 24 * 60 * 60 * 1000));
+
 
   public fromDate: string = "";
   public toDate: string = "";
@@ -189,7 +244,7 @@ export class IndexComponent implements OnInit {
   public isHour: boolean = false;
   public isDay: boolean = true;
   public isDayCheck: boolean = false;
-
+  public dataStatus: any = [];
 
   public grossSmsTelco: any = [];
   public grossSmsGroupSender: any = [];
@@ -203,9 +258,14 @@ export class IndexComponent implements OnInit {
   public isCustomer: boolean = false;
   public isCheckUser: boolean = false;
   public checkdataMax: boolean = false;
-
+  public total_account = 0;
+  public total_account_new = 0;
+  public total_money_out = 0;
+  public total_data_error = 0;
 
   public settingsFilterSender = {};
+  public settingsFilterStatus = {};
+  public selectedStatus = [];
   public selectedSenderID = [];
   public dataSender = [];
   public dataSmsByPhone = [];
@@ -241,6 +301,177 @@ export class IndexComponent implements OnInit {
         }
       ]
     };
+    //bieu do hang ngay admin
+    this.chartOptionsChart = {
+      series: [
+        {
+          name: "Viettel",
+          data: []
+        },
+        {
+          name: "Vinaphone",
+          data: []
+        },
+        {
+          name: "Mobifone",
+          data: []
+        },
+      ],
+      chart: {
+        type: "bar",
+        height: 350,
+        stacked: true,
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: "bottom",
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }
+      ],
+      plotOptions: {
+        bar: {
+          horizontal: false
+        }
+      },
+      xaxis: {
+        type: "category",
+        categories: [
+
+        ]
+      },
+      legend: {
+        position: "top",
+      },
+      fill: {
+        opacity: 1
+      }
+    };
+
+    this.chartOptionsChartFail = {
+      series: [
+        {
+          name: "Viettel",
+          data: []
+        },
+        {
+          name: "Vinaphone",
+          data: []
+        },
+        {
+          name: "Mobifone",
+          data: []
+        },
+      ],
+      chart: {
+        type: "bar",
+        height: 350,
+        stacked: true,
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: "bottom",
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }
+      ],
+      plotOptions: {
+        bar: {
+          horizontal: false
+        }
+      },
+      xaxis: {
+        type: "category",
+        categories: []
+      },
+      legend: {
+        markers: {
+          fillColors: ["#2471A3", "#76D7C4", "#FFAB91"],
+        },
+        position: "top"
+      },
+      fill: {
+        colors: ["#2471A3", "#76D7C4", "#FFAB91"],
+        opacity: 1
+      }
+    };
+
+    //line
+    this.chartOptionsLine = {
+      series: [
+        {
+          name: "Low - 2013",
+          data: [12, 11, 14, 18, 17, 13, 13]
+        }
+      ],
+      chart: {
+        height: 350,
+        type: "line",
+        dropShadow: {
+          enabled: true,
+          color: "#000",
+          top: 18,
+          left: 7,
+          blur: 10,
+          opacity: 0.2
+        },
+        toolbar: {
+          show: false
+        }
+      },
+      colors: ["#77B6EA", "#545454"],
+      dataLabels: {
+        enabled: true
+      },
+      stroke: {
+        curve: "smooth"
+      },
+      title: {
+        text: "Average High & Low Temperature",
+        align: "left"
+      },
+      grid: {
+        borderColor: "#e7e7e7",
+        row: {
+          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+          opacity: 0.5
+        }
+      },
+      markers: {
+        size: 1
+      },
+      xaxis: {
+        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+        title: {
+          text: "Month"
+        }
+      },
+      yaxis: {
+        title: {
+          text: "Temperature"
+        },
+        min: 5,
+        max: 40
+      },
+      legend: {
+        position: "top",
+        horizontalAlign: "right",
+        floating: true,
+        offsetY: -25,
+        offsetX: -5
+      }
+    };
+
     this.settingsFilterSender = {
       text: "Chọn thương hiệu",
       singleSelection: true,
@@ -286,6 +517,15 @@ export class IndexComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
+    this.settingsFilterStatus = {
+      text: this.utilityService.translate('global.choose_status'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
   }
 
   ngOnInit() {
@@ -296,6 +536,8 @@ export class IndexComponent implements OnInit {
     this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd");
     this.toMonth = this.utilityService.formatDateToString(this.timeTo, "yyyyMM");
     this.fromMonth = this.utilityService.formatDateToString(this.timeMonthFrom, "yyyyMM");
+    this.toMonthadmin = this.utilityService.formatDateToString(this.timeToadmin, "yyyyMM");
+    this.fromMonthadmin = this.utilityService.formatDateToString(this.timeMonthFromadmin, "yyyyMM");
     for (let hourList = 1; hourList < 25; hourList++) {
       this.dataHour.push(hourList < 10 ? { "id": '0' + hourList.toString(), "itemName": '0' + hourList.toString() + 'h' } : { "id": hourList.toString(), "itemName": hourList.toString() + 'h' });
     }
@@ -305,6 +547,39 @@ export class IndexComponent implements OnInit {
     setTimeout(() => {
       this.getAccountLogin();
     }, 1000);
+    this.bindDataStatus();
+    setTimeout(() => {
+      this.bindDataFailByDay();
+    }, 500);
+    setTimeout(() => {
+      this.GetCheckMoneyDataCimast();
+    }, 500);
+  }
+  public async bindDataStatus() {
+    this.dataStatus = [];
+    this.dataStatus.push({ "id": "1", "itemName": this.utilityService.translate('global.success') });
+    this.dataStatus.push({ "id": "0", "itemName": this.utilityService.translate('global.fail') });
+  }
+  public async bindDataFailByDay() {
+    let resDataFail: any = await this.dataService.getAsync('/api/datasms/GetCountDataFailByDay');
+    if (resDataFail) {
+      if (resDataFail.err_code == 0) {
+        for (let i = 0; i < resDataFail.data.length; i++) {
+          this.total_data_error += resDataFail.data[i].COUNT_DATA_FAIL;
+        }
+      }
+    }
+  }
+  public async GetCheckMoneyDataCimast() {
+    debugger
+    let resDataCimast: any = await this.dataService.getAsync('/api/datacimast/GetCheckMoneyDataCimast');
+    if (resDataCimast) {
+      if (resDataCimast.err_code == 0) {
+        for (let i = 0; i < resDataCimast.data.length; i++) {
+          this.total_money_out += resDataCimast.data[i].TOTAL_CIMAST;
+        }
+      }
+    }
   }
   async getAccountLogin() {
     let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
@@ -324,7 +599,7 @@ export class IndexComponent implements OnInit {
       this.isCustomer = true;
     }
     let checkUser = result.data[0].USER_NAME;
-    if (checkUser == "admin" || checkUser == "demo") {
+    if (checkUser == "demo") {
       this.isCheckUser = true;
     }
     setTimeout(() => {
@@ -340,39 +615,83 @@ export class IndexComponent implements OnInit {
     setTimeout(() => {
       this.getScenario();
     }, 1000);
-    for (let i = 0; i < 8; i++) {
-      switch (i) {
-        case 0: {
+    setTimeout(() => {
+      this.GetCountCampaign();
+    }, 500);
+    setTimeout(() => {
+      this.GetCountDataSms();
+    }, 500);
+    setTimeout(() => {
+      this.GetCountAccount();
+    }, 500);
+    setTimeout(() => {
+      this.GetCountAccountNew();
+    }, 500);
+    if(!this.isAdmin){
+      for (let i = 0; i < 8; i++) {
+        switch (i) {
+          case 0: {
             this.getChartClickDayHour();
-          break;
+            break;
+          }
+          case 1: {
+            this.getChartRegisterDayHour();
+            break;
+          }
+          case 2: {
+            this.getChartRegisterDayHourOld();
+            break;
+          } case 3: {
+            this.getChartRegisterDayHourNew();
+            break;
+          } case 4: {
+            this.getChartReceivedDayHour();
+            break;
+          } case 5: {
+            this.getProportionBuyDayRegisterDayHour();
+            break;
+          } case 6: {
+            this.getChartReceivedMonth();
+            break;
+          } case 7: {
+            this.getdataChartPieWithYear();
+            break;
+          }
+          default: {
+            alert('da hoan thien');
+            break;
+          }
         }
-        case 1: {
-          this.getChartRegisterDayHour();
-          break;
-        }
-        case 2: {
-          this.getChartRegisterDayHourOld();
-          break;
-        } case 3: {
-          this.getChartRegisterDayHourNew();
-          break;
-        } case 4: {
-          this.getChartReceivedDayHour();
-          break;
-        } case 5: {
-          this.getProportionBuyDayRegisterDayHour();
-          break;
-        } case 6: {
-          this.getChartReceivedMonth();
-          break;
-        } case 7: {
-          this.getdataChartPieWithYear();
-          break;
-        }
-        default: {
-          alert('da hoan thien');
-          break;
-        }
+      }
+    }
+    setTimeout(() => {
+      this.getchartChartFail();
+    }, 500);
+    setTimeout(() => {
+      this.getchartChartSuccess();
+    }, 500);
+    setTimeout(() => {
+      this.getCustomerMonth();
+    }, 500);
+
+  }
+  //count account
+  async GetCountAccount() {
+    let account_id = this.authService.currentUserValue.ACCOUNT_ID;
+    let res: any = await this.dataService.getAsync('/api/account/GetCountAccount?account_id=' + account_id)
+    if (res) {
+      if (res.err_code == 0) {
+        this.total_account = res.data.COUNT_ACCOUNT;
+      }
+    }
+  }
+  //count account new
+  async GetCountAccountNew() {
+    let account_id = this.authService.currentUserValue.ACCOUNT_ID;
+    let res: any = await this.dataService.getAsync('/api/account/GetCountAccountNew?account_id=' + account_id)
+    if (res) {
+      if (res.err_code == 0) {
+        this.total_account_new = res.data.COUNT_ACCOUNT_NEW;
       }
     }
   }
@@ -394,6 +713,67 @@ export class IndexComponent implements OnInit {
     }
   }
 
+  //dem so luong campaign 
+  async GetCountCampaign() {
+    let account;
+    if (this.isAdmin) {
+      account = "";
+    } else {
+      account = this.authService.currentUserValue.ACCOUNT_ID;
+    }
+    let resCampaign: any = await this.dataService.getAsync('/api/DataCampaign/GetCountDataCampaign?account_id=' + account);
+    if (resCampaign) {
+      if (resCampaign.err_code == 0 && resCampaign.data.length > 0) {
+        this.campaign = Math.round(resCampaign.data[0].COUNT_CAMPAIGN);
+      } else {
+        this.campaign = 0;
+      }
+    }
+  }
+
+
+  //dem amt vol code
+  //dem so luong campaign 
+  async GetCountDataSms() {
+    let account;
+    if (this.isAdmin) {
+      account = "";
+    } else {
+      account = this.authService.currentUserValue.ACCOUNT_ID;
+    }
+    let resDataSms: any = await this.dataService.getAsync('/api/datasms/GetCountDataSms?account_id=' + account);
+    if (resDataSms) {
+      if (resDataSms.err_code == 0 && resDataSms.data.length > 0) {
+        if (resDataSms.data.length == 1) {
+          if (resDataSms.data[0].IS_MONEY_DATA_CODE == 0) {
+            this.total_money_sent = Math.round(resDataSms.data[0].COUNT_AMT);
+            this.total_data_sent = Math.round(resDataSms.data[0].COUNT_VOL);
+            this.total_datacode_sent = 0;
+          } else {
+            this.total_datacode_sent = Math.round(resDataSms.data[0].COUNT_CODE);
+            this.total_money_sent = 0;
+            this.total_data_sent = 0;
+          }
+        } else {
+          for (let i = 0; i < resDataSms.data.length; i++) {
+            if (resDataSms.data[i].IS_MONEY_DATA_CODE == 0) {
+              this.total_money_sent = Math.round(resDataSms.data[i].COUNT_AMT);
+              this.total_data_sent = Math.round(resDataSms.data[i].COUNT_VOL);
+              this.total_datacode_sent = 0;
+            } else {
+              this.total_datacode_sent = Math.round(resDataSms.data[i].COUNT_CODE);
+              this.total_money_sent = 0;
+              this.total_data_sent = 0;
+            }
+          }
+        }
+      } else {
+        this.total_datacode_sent = 0;
+        this.total_money_sent = 0;
+        this.total_data_sent = 0;
+      }
+    }
+  }
   //dem so luong kich ban dang chay va da chay
   async GetCountScenario() {
     let account;
@@ -404,9 +784,13 @@ export class IndexComponent implements OnInit {
     }
     let resScenario: any = await this.dataService.getAsync('/api/scenarios/GetCountScenario?account_id=' + account);
     if (resScenario) {
-      if (resScenario.err_code == 0) {
-        this.scenario_ran = resScenario.data[1].COUNT_SCENARIO;
-        this.scenario_end = resScenario.data[0].COUNT_SCENARIO
+      if (resScenario.err_code == 0 && resScenario.data.length > 0) {
+        if (resScenario.data.length == 1) {
+          this.scenario_end = Math.round(resScenario.data[0].COUNT_SCENARIO);
+        } else if (resScenario.data.length > 1) {
+          this.scenario_ran = Math.round(resScenario.data[1].COUNT_SCENARIO);
+          this.scenario_end = Math.round(resScenario.data[0].COUNT_SCENARIO);
+        }
       } else {
         this.scenario_ran = 0;
         this.scenario_end = 0;
@@ -1064,7 +1448,8 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
     this.getProportionBuyDayRegisterDayHour();
-
+    this.getchartChartSuccess();
+    this.getchartChartFail();
   }
   ChangeAccount() {
     this.getChartReceivedMonth();
@@ -1078,6 +1463,8 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
     this.getProportionBuyDayRegisterDayHour();
+    this.getchartChartSuccess();
+    this.getchartChartFail();
 
   }
   ChangeList() {
@@ -1122,6 +1509,8 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
     this.getProportionBuyDayRegisterDayHour();
+    this.getchartChartSuccess();
+    this.getchartChartFail();
 
   }
 
@@ -1143,6 +1532,8 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
     this.getProportionBuyDayRegisterDayHour();
+    this.getchartChartSuccess();
+    this.getchartChartFail();
   }
   //#region check telco
   onChangeVTL(isChecked) {
@@ -1158,6 +1549,7 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHourNew();
     this.getChartRegisterDayHourOld();
     this.getProportionBuyDayRegisterDayHour();
+
   }
 
   onChangeVTLMonthYear(isChecked) {
@@ -1243,5 +1635,329 @@ export class IndexComponent implements OnInit {
       }
     }
     this.getChartReceivedMonth();
+  }
+
+  async getchartChartSuccess() {
+    let arrayDayMonth = [];
+    let arrayDataVT = [];
+    let arrayDataGPC = [];
+    let arrayDataVMS = [];
+    let ACCOUNT_ID;
+    let SCENARIO_ID;
+    let CAMPAIGN_ID;
+    let FROM_DATE = this.fromDate;
+    let TO_DATE = this.toDate;
+    if (this.isAdmin) {
+      ACCOUNT_ID = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    } else {
+      ACCOUNT_ID = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+    }
+    SCENARIO_ID = this.selectedScenario.length != 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
+    CAMPAIGN_ID = this.selectedCampaign.length != 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
+    this.dataService.getData('/api/datasms/GetCountDataSmsSuccess?account_id=' + ACCOUNT_ID + '&campaign_id=' + CAMPAIGN_ID
+    + '&scenario_id=' + SCENARIO_ID + '&from_date=' + FROM_DATE + '&to_date=' + TO_DATE +
+    '&viettel=' + this.stringVTL + '&gpc=' + this.stringGPC + '&vms=' + this.stringVMS)
+    .subscribe(res => {
+      if (res) {
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.err_code == 0) {
+            arrayDayMonth.push(res.data[i].DAY_MONTH);
+            arrayDataVT.push(res.data[i].COUNT_DATA_VT);
+            arrayDataGPC.push(res.data[i].COUNT_DATA_GPC);
+            arrayDataVMS.push(res.data[i].COUNT_DATA_VMS);
+          }
+        }
+        this.chartOptionsChart = {
+          series: [
+            {
+              name: "Viettel",
+              data: arrayDataVT
+            },
+            {
+              name: "Vinaphone",
+              data: arrayDataGPC
+            },
+            {
+              name: "Mobifone",
+              data: arrayDataVMS
+            },
+          ],
+          chart: {
+            type: "bar",
+            height: 350,
+            stacked: true,
+          },
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                legend: {
+                  position: "bottom",
+                  offsetX: -10,
+                  offsetY: 0
+                }
+              }
+            }
+          ],
+          plotOptions: {
+            bar: {
+              horizontal: false
+            }
+          },
+          xaxis: {
+            type: "category",
+            categories: arrayDayMonth
+          },
+          legend: {
+            position: "top",
+          },
+          fill: {
+            opacity: 1
+          }
+        };
+      }
+    });
+  }
+   getchartChartFail() {
+    let arrayDayMonthF = [];
+    let arrayDataVTF = [];
+    let arrayDataGPCF = [];
+    let arrayDataVMSF = [];
+    let ACCOUNT_ID;
+    let SCENARIO_ID;
+    let CAMPAIGN_ID;
+    let FROM_DATE = this.fromDate;
+    let TO_DATE = this.toDate;
+    if (this.isAdmin) {
+      ACCOUNT_ID = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    } else {
+      ACCOUNT_ID = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+    }
+    SCENARIO_ID = this.selectedScenario.length != 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
+    CAMPAIGN_ID = this.selectedCampaign.length != 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
+    this.dataService.getData('/api/datasms/GetCountDataSmsFail?account_id=' + ACCOUNT_ID + '&campaign_id=' + CAMPAIGN_ID
+    + '&scenario_id=' + SCENARIO_ID + '&from_date=' + FROM_DATE + '&to_date=' + TO_DATE +
+    '&viettel=' + this.stringVTL + '&gpc=' + this.stringGPC + '&vms=' + this.stringVMS)
+    .subscribe(res => {
+      if (res) {
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.err_code == 0) {
+            arrayDayMonthF.push(res.data[i].DAY_MONTH_FAIL);
+            arrayDataVTF.push(res.data[i].COUNT_DATA_VT_FAIL);
+            arrayDataGPCF.push(res.data[i].COUNT_DATA_GPC_FAIL);
+            arrayDataVMSF.push(res.data[i].COUNT_DATA_VMS_FAIL);
+          }
+        }
+        this.chartOptionsChartFail = {
+          series: [
+            {
+              name: "Viettel",
+              data: arrayDataVTF
+            },
+            {
+              name: "Vinaphone",
+              data: arrayDataGPCF
+            },
+            {
+              name: "Mobifone",
+              data: arrayDataVMSF
+            },
+          ],
+          chart: {
+            type: "bar",
+            height: 350,
+            stacked: true,
+          },
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                legend: {
+                  position: "bottom",
+                  offsetX: -10,
+                  offsetY: 0
+                }
+              }
+            }
+          ],
+          plotOptions: {
+            bar: {
+              horizontal: false
+            }
+          },
+          xaxis: {
+            type: "category",
+            categories: arrayDayMonthF
+          },
+          legend: {
+            markers: {
+              fillColors: ["#2471A3", "#76D7C4", "#FFAB91"],
+            },
+            position: "top"
+          },
+          fill: {
+            colors: ["#2471A3", "#76D7C4", "#FFAB91"],
+            opacity: 1
+          }
+        };
+      }
+    });
+  }
+  onChangeVTLData(ischeck) {
+    debugger
+    if (ischeck) {
+      this.stringVTL = "VIETTEL"
+    }
+    else {
+      this.stringVTL = "";
+    }
+    this.getchartChartSuccess();
+  }
+  onChangeGPCData(ischeck) {
+    if (ischeck) {
+      this.stringGPC = "GPC"
+    }
+    else {
+      this.stringGPC = "";
+    }
+    this.getchartChartSuccess();
+  }
+  onChangeVMSData(ischeck) {
+    if (ischeck) {
+      this.stringVMS = "VMS"
+    }
+    else {
+      this.stringVMS = "";
+    }
+    this.getchartChartSuccess();
+  }
+  onChangeVTLDataF(ischeck) {
+    if (ischeck) {
+      this.stringVTL = "VIETTEL"
+    }
+    else {
+      this.stringVTL = "";
+    }
+    this.getchartChartFail();
+  }
+  onChangeGPCDataF(ischeck) {
+    if (ischeck) {
+      this.stringGPC = "GPC"
+    }
+    else {
+      this.stringGPC = "";
+    }
+    this.getchartChartFail();
+  }
+  onChangeVMSDataF(ischeck) {
+    if (ischeck) {
+      this.stringVMS = "VMS"
+    }
+    else {
+      this.stringVMS = "";
+    }
+    this.getchartChartFail();
+  }
+  //thong ke khach hang dang ky hang thang
+   getCustomerMonth() {
+    let arrayDataMonth = [];
+    let arrayDataAcount = [];
+    let maxVl = 0;
+    let FROM_MONTH = this.fromMonthadmin;
+    let TO_MONTH = this.toMonthadmin;
+    this.dataService.getData('/api/account/GetCountAccountByMonth?from_month=' + FROM_MONTH + '&to_month=' + TO_MONTH)
+    .subscribe(res => {
+      if (res) {
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.err_code == 0) {
+            arrayDataMonth.push(res.data[i].MONTH_ACCOUNT);
+            arrayDataAcount.push(res.data[i].COUNT_ACCOUNT_MONTH);
+          }
+        }
+        console.log(arrayDataMonth);
+        console.log(arrayDataAcount);
+        maxVl =Math.max.apply(Math, arrayDataAcount);
+        console.log(maxVl);
+        this.chartOptionsLine = {
+          series: [
+            {
+              name: "",
+              data: arrayDataAcount
+            }
+          ],
+          chart: {
+            height: 350,
+            type: "line",
+            dropShadow: {
+              enabled: true,
+              color: "#000",
+              top: 18,
+              left: 7,
+              blur: 10,
+              opacity: 0.2
+            },
+            toolbar: {
+              show: false
+            }
+          },
+          colors: ["#77B6EA", "#545454"],
+          dataLabels: {
+            enabled: true
+          },
+          stroke: {
+            curve: "smooth"
+          },
+          title: {
+            align: "left"
+          },
+          grid: {
+            borderColor: "#e7e7e7",
+            row: {
+              colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+              opacity: 0.5
+            }
+          },
+          markers: {
+            size: 1
+          },
+          xaxis: {
+            categories: arrayDataMonth
+          },
+          yaxis: {
+            min: 0,
+            max: maxVl
+          },
+          legend: {
+            position: "top",
+            horizontalAlign: "right",
+            floating: true,
+            offsetY: -25,
+            offsetX: -5
+          }
+        };
+      }
+    });
+    
+      
+    
+    
+  }
+  onChangeFromMonthYearAdmin(event) {
+    this.fromMonthadmin = this.utilityService.formatDateToString(event, "yyyyMM");
+  }
+  onChangeToMonthYearAdmin(event) {
+    this.toMonthadmin = this.utilityService.formatDateToString(event, "yyyyMM");
+  }
+  filterByMonthAdmin() {
+    if (this.toMonthadmin == '197001') {
+      this.toMonthadmin = '';
+    }
+    if (this.fromMonthadmin !== '' && this.toMonthadmin !== '') {
+      if (this.fromMonthadmin > this.toMonthadmin) {
+        this.notificationService.displayWarnMessage("Tháng lọc chưa thỏa mãn");
+        return;
+      }
+    }
+    this.getCustomerMonth();
   }
 }

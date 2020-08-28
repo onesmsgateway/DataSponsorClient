@@ -21,11 +21,15 @@ export class MainComponent {
   public dataMenu: any = [];
   public viewQuyTinCSKH = 0;
   public viewQuyTien = 0;
-  public viewData = 0;
+  public viewDataViettel = 0;
+  public viewDataGPC = 0;
+  public viewDataVMS = 0;
   public viewQuyViettel = 0;
   public viewQuyVina = 0;
   public viewQuyMobi = 0;
   public isAdmin: boolean = false;
+  public viewQuyDataCodeMobi = 0;
+  public enablePackageDataCode = false;
 
   constructor(private authService: AuthService, private utilityService: UtilityService, private dataService: DataService) {
     this.loadMenuIndex();
@@ -84,7 +88,10 @@ export class MainComponent {
     setTimeout(() => {
       this.getBalance();
     }, 1000);
-    
+    setTimeout(() => {
+      this.viewQuyDataCode();
+    }, 500);
+
   }
 
   //#region view quy tin
@@ -96,27 +103,35 @@ export class MainComponent {
           accountID);
         if (getDataAccount != null && getDataAccount.data.length > 0) {
           this.viewQuyTien = getDataAccount.data[0].TOTAL_REMAIN;
-          this.viewData = getDataAccount.data[0].TOTAL_DATA_REMAIN != null? getDataAccount.data[0].TOTAL_DATA_REMAIN:0;
+          this.viewDataViettel = getDataAccount.data[0].TOTAL_DATA_VIETTEL != null ? getDataAccount.data[0].TOTAL_DATA_VIETTEL : 0;
+          this.viewDataGPC = getDataAccount.data[0].TOTAL_DATA_GPC != null ? getDataAccount.data[0].TOTAL_DATA_GPC : 0;
+          this.viewDataVMS = getDataAccount.data[0].TOTAL_DATA_VMS != null ? getDataAccount.data[0].TOTAL_DATA_VMS : 0;
         }
         else {
           this.viewQuyTien = 0;
-          this.viewData = 0;
+          this.viewDataViettel = 0;
+          this.viewDataGPC = 0;
+          this.viewDataVMS = 0;
         }
       }
       else {
         this.viewQuyTinCSKH = this.authService.viewQuyTinCSKH = 0;
         this.viewQuyTien = this.authService.viewQuyTinQC = 0;
-        this.viewData = 0;
+        this.viewDataViettel = 0;
+        this.viewDataGPC = 0;
+        this.viewDataVMS = 0;
       }
     }
     else {
       this.viewQuyTinCSKH = this.authService.viewQuyTinCSKH;
       this.viewQuyTien = this.authService.viewQuyTinQC;
-      this.viewData = 0;
+      this.viewDataViettel = 0;
+      this.viewDataGPC = 0;
+      this.viewDataVMS = 0;
     }
   }
   //#endregion
-  
+
   // get total data
   async getBalance() {
     // viettel
@@ -135,6 +150,29 @@ export class MainComponent {
     let resultMobi: any = await this.dataService.getAsync('/api/DataSponsor/GetDataSponsorBalanceMobi');
     if (resultMobi != null && resultMobi.data.length > 0) {
       this.viewQuyMobi = Math.round(resultMobi.data[0].TOTAL_REMAIN);
+    }
+  }
+  //view data code
+  public async viewQuyDataCode() {
+    let account = this.authService.currentUserValue.ACCOUNT_ID;
+    if (account != undefined && account != "") {
+      // get money by account
+      let resCountCode: any = await this.dataService.getAsync('/api/datacode/CountDatacode?account_id=' +
+      account);
+      if (resCountCode != null && resCountCode.data.length > 0) {
+        this.viewQuyDataCodeMobi = resCountCode.data[0].COUNT_CODE;
+        if( this.viewQuyDataCodeMobi!= 0)
+        this.enablePackageDataCode = true;
+        else this.enablePackageDataCode = false;
+      }
+      else {
+        this.viewQuyDataCodeMobi = 0;
+        this.enablePackageDataCode = false;
+      }
+    }
+    else {
+      this.viewQuyDataCodeMobi = 0;
+      this.enablePackageDataCode = false;
     }
   }
 }

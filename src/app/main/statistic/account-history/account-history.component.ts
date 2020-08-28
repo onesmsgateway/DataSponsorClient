@@ -21,11 +21,9 @@ export class AccountHistoryComponent implements OnInit {
   public ip: string = "";
   public fromDate: string = "";
   public toDate: string = "";
-  public timeFrom: Date = new Date();
   public timeTo: Date = new Date();
-
+  public timeFrom = new Date(this.timeTo.getTime() - (30 * 24 * 60 * 60 * 1000));
   public isAdmin = false;
-
   public settingsFilterAccount = {};
   public selectedAccount = [];
   public settingsFilterCampaign = {};

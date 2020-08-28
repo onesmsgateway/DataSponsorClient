@@ -4,6 +4,8 @@ import { AppConst } from '../common/app.constants';
 import { map } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { UtilityService } from './utility.service';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +31,15 @@ export class DataService {
           return response;
         })
       );
+  }
+
+  public getData(url: string): Observable<any> {
+    try {
+      return this.http.get(AppConst.DATA_SPONSOR_API + url)
+    }
+    catch (error) {
+      return null;
+    }
   }
 
   public put(uri: string, data?: any): any {
@@ -58,7 +69,7 @@ export class DataService {
       return null;
     }
   }
- 
+
   public async postAsync(uri: string, data?: any): Promise<any> {
     try {
       const response = await this.http.post(AppConst.DATA_SPONSOR_API + uri, data).toPromise();
@@ -142,7 +153,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-   
+
       return null;
     }
   }
@@ -162,14 +173,14 @@ export class DataService {
       return response;
     }
     catch (error) {
-     
+
       return null;
     }
   }
 
   public async importExcelAndSavePhoneListDataAsync(postData: any, files: File[], groupId: any, groupCode: any, groupName: any, accountID: any) {
     try {
-     
+
       let formData: FormData = new FormData();
       formData.append('files', files[0], files[0].name);
       if (postData !== "" && postData !== undefined && postData !== null) {
@@ -183,11 +194,11 @@ export class DataService {
       return response;
     }
     catch (error) {
-     
+
       return null;
     }
   }
-  public async importExcelAndSaveMemberListDataAsync(postData: any, files: File[],accountId: any, groupId: any, groupCode: any, groupName: any) {
+  public async importExcelAndSaveMemberListDataAsync(postData: any, files: File[], accountId: any, groupId: any, groupCode: any, groupName: any) {
     try {
       let formData: FormData = new FormData();
       formData.append('files', files[0], files[0].name);
@@ -198,17 +209,17 @@ export class DataService {
           }
         }
       }
-      const response = await this.postAsync("/api/FileExtention/ImportExcelAndSaveMemberList?accountId="+ accountId+ "&groupId=" + groupId + "&groupCode=" + groupCode + "&groupName=" + groupName, formData);
+      const response = await this.postAsync("/api/FileExtention/ImportExcelAndSaveMemberList?accountId=" + accountId + "&groupId=" + groupId + "&groupCode=" + groupCode + "&groupName=" + groupName, formData);
       return response;
     }
     catch (error) {
-     
+
       return null;
     }
   }
 
   //upload data code
-  public async importExcelDataCodeVMSAsync(postData: any, files: File[],accountId: any) {
+  public async importExcelDataCodeVMSAsync(postData: any, files: File[], accountId: any) {
     try {
       let formData: FormData = new FormData();
       formData.append('files', files[0], files[0].name);
@@ -219,11 +230,11 @@ export class DataService {
           }
         }
       }
-      const response = await this.postAsync("/api/FileExtention/ImportExcelDataCodeVMS?accountId="+ accountId, formData);
+      const response = await this.postAsync("/api/FileExtention/ImportExcelDataCodeVMS?accountId=" + accountId, formData);
       return response;
     }
     catch (error) {
-     
+
       return null;
     }
   }
@@ -244,7 +255,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-     
+
       return null;
     }
   }
@@ -264,7 +275,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-      
+
       return null;
     }
   }
@@ -426,23 +437,23 @@ export class DataService {
           result = true;
         }
         else {
-          
+
           result = false;
         }
       })
       .catch((err) => {
-       
+
         result = false;
       });
     return result;
   }
 
   public async getFileExtentionDataSmsStatisticAsync(uri: string, accountId: any, pack: string, status: string, fromDate: string, toDate: string, content: string
-    , phone: string, viettel: string, vina: string, mobi: string, fileName: string): Promise<boolean> {
+    , phone: string, viettel: string, vina: string, mobi: string, ismoney_datacode: number, fileName: string): Promise<boolean> {
     let result: boolean = false;
     let url = AppConst.DATA_SPONSOR_API + uri + '?account_id=' + accountId + '&package=' + pack + '&status=' + status +
-      '&from_date=' + fromDate + + '&to_date=' + toDate + '&content=' + content + '&phone=' + phone +
-      "&viettel=" + viettel + '&vina=' + vina + '&mobi=' + mobi + '&fileName=' + fileName;
+      '&from_date=' + fromDate + '&to_date=' + toDate + '&content=' + content + '&phone=' + phone +
+      "&viettel=" + viettel + '&vina=' + vina + '&mobi=' + mobi + '&ismoney_datacode=' + ismoney_datacode + '&fileName=' + fileName;
     let response = await this.http.get(url, { responseType: 'arraybuffer' }).toPromise();
     if (response) {
       let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -490,7 +501,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-     
+
       return null;
     }
   }
@@ -510,7 +521,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-     
+
       return null;
     }
   }
@@ -530,7 +541,7 @@ export class DataService {
       return response;
     }
     catch (error) {
-      
+
       return null;
     }
   }

@@ -70,58 +70,72 @@
         <div class="top_nav">
             <div class="nav_menu">
                 <nav class="" role="navigation">
-                    <div class="nav toggle">
-                        <a id="menu_toggle" onclick="toggleNavBar()"><i class="fa fa-bars"></i></a>
-                    </div>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="">
-                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <img src="{{ user.AVATAR }}" alt="">{{ user.USER_NAME }}
-                                <span class=" fa fa-angle-down"></span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                <li><a (click)="showModalAccountInfo()">Thông tin</a></li>
-                                <li><a (click)="showModalChangePass()">Đổi mật khẩu</a></li>
-                                <li class="hidden-desktop">
-                                    <div class="language-box">
+                    <div class="row">
+                        <div class="col-md-1 col-sm-1 col-xs-2 form-group">
+                            <div class="nav toggle">
+                                <a id="menu_toggle" onclick="toggleNavBar()"><i class="fa fa-bars"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-md-11 col-sm-11 col-xs-12 form-group">
+                            <ul class="nav navbar-nav navbar-right" style="width: 100%;">
+                                <li class="">
+                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <img src="{{ user.AVATAR }}" alt="">{{ user.USER_NAME }}
+                                        <span class=" fa fa-angle-down"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                        <li><a (click)="showModalAccountInfo()">Thông tin</a></li>
+                                        <li><a (click)="showModalChangePass()">Đổi mật khẩu</a></li>
+                                        <li class="hidden-desktop">
+                                            <div class="language-box">
+                                                <a (click)="changeLanguage('vi')" style="cursor: pointer;">
+                                                    <img src="../../assets/img/vn.png"></a> |
+                                                <a (click)="changeLanguage('en')" style="cursor: pointer;">
+                                                    <img src="../../assets/img/en.png"></a>
+                                            </div>
+                                        </li>
+                                        <li><a (click)="logout()"><i
+                                                        class="fa fa-sign-out pull-right"></i>{{ 'login.submit_logout' | translate }}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="hidden-mobile">
+                                    <div class="total">
                                         <a (click)="changeLanguage('vi')" style="cursor: pointer;">
                                             <img src="../../assets/img/vn.png"></a> |
                                         <a (click)="changeLanguage('en')" style="cursor: pointer;">
                                             <img src="../../assets/img/en.png"></a>
                                     </div>
                                 </li>
-                                <li><a (click)="logout()"><i
-                                            class="fa fa-sign-out pull-right"></i>{{ 'login.submit_logout' | translate }}</a>
+                                <li class="" *ngIf="isAdmin">
+                                    <div class="total">
+                                        <label style="color: red;" name="balanceVTL">{{'global.balanceViettel' | translate}}:
+                                                {{ viewQuyViettel | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;" name="balanceGPC">{{'global.balanceVina' | translate}}:
+                                                {{ viewQuyVina | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;" name="balanceVMS">{{'global.balanceMobi' | translate}}:
+                                                {{ viewQuyMobi | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;" name="balanceVMS">{{'global.dataCodeMobi' | translate}}:
+                                                    {{ viewQuyDataCodeMobi | number : '0.' }}</label>
+                                    </div>
+                                </li>
+                                <li class="" *ngIf="!isAdmin">
+                                    <div class="total">
+                                        <label style="color: red;" name="lbQuyTien">{{'global.money_remain' | translate}}:
+                                                        {{ viewQuyTien | number : '0.' }} VNĐ</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;" name="lbdata">{{'global.data_VT' | translate}}:
+                                                                {{ viewDataViettel | number : '0.' }} MB;</label>&nbsp;
+                                        <label style="color: red;" name="lbdata">{{'global.data_GPC' | translate}}:
+                                                                    {{ viewDataGPC | number : '0.' }} MB;</label>&nbsp;
+                                        <label style="color: red;" name="lbdata">{{'global.data_VMS' | translate}}:
+                                                                        {{ viewDataVMS | number : '0.' }} MB</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;" name="balanceVMS">{{'global.dataCodeMobi' | translate}}:
+                                                                            {{ viewQuyDataCodeMobi | number : '0.' }}</label>
+                                    </div>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="hidden-mobile">
-                            <div style="padding: 17px 15px 12px;">
-                                <a (click)="changeLanguage('vi')" style="cursor: pointer;">
-                                    <img src="../../assets/img/vn.png"></a> |
-                                <a (click)="changeLanguage('en')" style="cursor: pointer;">
-                                    <img src="../../assets/img/en.png"></a>
-                            </div>
-                        </li>
-                        <li class="" *ngIf="isAdmin">
-                            <div style="padding: 17px 15px 12px;">
-                                <label style="color: red;" name="balanceVTL">{{'global.balanceViettel' | translate}}:
-                                    {{ viewQuyViettel | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <label style="color: red;" name="balanceGPC">{{'global.balanceVina' | translate}}:
-                                    {{ viewQuyVina | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <label style="color: red;" name="balanceVMS">{{'global.balanceMobi' | translate}}:
-                                    {{ viewQuyMobi | number : '0.' }} VNĐ</label>
-                            </div>
-                        </li>
-                        <li class="" *ngIf="!isAdmin">
-                            <div style="padding: 17px 15px 12px;">
-                                <label style="color: red;" name="lbQuyTien">{{'global.money_remain' | translate}}:
-                                            {{ viewQuyTien | number : '0.' }} VNĐ</label> &nbsp;&nbsp;&nbsp;&nbsp;
-                                <label style="color: red;" name="lbdata">{{'global.data_remain' | translate}}:
-                                                {{ viewData | number : '0.' }} MB</label>
-                            </div>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </nav>
             </div>
         </div>

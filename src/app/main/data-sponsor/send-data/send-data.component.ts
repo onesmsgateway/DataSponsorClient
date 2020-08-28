@@ -341,7 +341,6 @@ export class SendDataComponent implements OnInit {
 
   //view data code
   public async viewQuyDataCode(accountID) {
-    debugger
     if (accountID != undefined && accountID != "") {
       // get money by account
       let resCountCode: any = await this.dataService.getAsync('/api/datacode/CountDatacode?account_id=' +
@@ -764,7 +763,6 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageVTL() {
-    debugger
     this.packViettel = "0";
     if (this.selectedPackageVTL.length > 0) {
       let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
@@ -876,7 +874,6 @@ export class SendDataComponent implements OnInit {
   }
 
   async changePackageVMS() {
-    debugger
     this.packVMS = "0";
     if (this.checkdatacode == true) {
       if (this.selectedPackageVMSDataCode.length > 0) {
@@ -1560,7 +1557,6 @@ export class SendDataComponent implements OnInit {
 
   }
   async createCodeNameCampaing() {
-    debugger
     let USER_NAME;
     if (this.isAdmin) {
       USER_NAME = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].itemName : this.authService.currentUserValue.USER_NAME;

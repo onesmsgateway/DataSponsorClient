@@ -269,6 +269,7 @@ openFormDataFree() {
 }
 
 public async createDataCimastFree(resData) {
+  debugger
   let ACCOUNT_ID = resData.accountID.length > 0 ? resData.accountID[0].id : "";
     let TYPE = "DATA_SPONSOR";
     let TOTAL_DATA_VIETTEL = resData.totalVol_Vt;

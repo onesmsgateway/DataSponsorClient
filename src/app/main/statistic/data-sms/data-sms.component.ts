@@ -216,6 +216,9 @@ export class DataSmsComponent implements OnInit {
     }
     if (this.activatedRoute.snapshot.queryParamMap.get('statusdata') != null && this.activatedRoute.snapshot.queryParamMap.get('statusdata') != "") {
       this.statusdata = this.activatedRoute.snapshot.queryParamMap.get('statusdata');
+      if(this.statusdata == 0){
+        this.fromDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd") + "000000";
+      }
     }else{
       this.statusdata = "";
     }
@@ -403,6 +406,7 @@ export class DataSmsComponent implements OnInit {
     let packGPC = this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != "" ? this.selectedPackageGPC[0].itemName.substr(0, this.selectedPackageGPC[0].itemName.indexOf('-') - 1).trim() : "";
     let packVMS = this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != "" ? this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim() : "";
     let package_name_display = this.selectedPkNameDisplay.length > 0 && this.selectedPkNameDisplay[0].itemName != "" ? this.selectedPkNameDisplay[0].itemName : "";
+    debugger
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : this.statusdata;
     let issenddata = this.selectedSendData.length > 0 ? this.selectedSendData[0].id : "";
     if (status == '1') {
@@ -587,9 +591,10 @@ export class DataSmsComponent implements OnInit {
     else accountID = this.selectedAccount[0].id;
     let pack = this.selectedPackageVTL.length > 0 ? this.selectedPackageVTL[0].id : "";
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : "";
+    let issenddata = this.selectedSendData.length > 0 ? this.selectedSendData[0].id : "";
 
     let result: boolean = await this.dataService.getFileExtentionDataSmsStatisticAsync("/api/FileExtention/ExportExcelDataSmsStatistic",
-      accountID, pack, status, this.fromDate, this.toDate, this.smsContent, this.phone, this.stringVTL, this.stringGPC, this.stringVMS, "DataList");
+      accountID, pack, status, this.fromDate, this.toDate, this.smsContent, this.phone, this.stringVTL, this.stringGPC, this.stringVMS,issenddata, "DataList");
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
     }

@@ -106,7 +106,6 @@ export class DataCodeHisComponent implements OnInit {
     this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd") + "000000";
     this.getAccountLogin();
     this.bindDataAmt();
-
   }
 
   async getAccountLogin() {
@@ -177,7 +176,6 @@ export class DataCodeHisComponent implements OnInit {
     let amt = this.selectedItemMoney.length != 0 && this.selectedItemMoney[0].id != "" ? this.selectedItemMoney[0].itemName: "";
     let from_date = this.fromDate;
     let to_date = this.toDate;
-    debugger
       let response: any = await this.dataService.getAsync('/api/datacodetran/GetFilterPagingDataCodeTran?page_index=' + this.pagination.pageIndex +
         "&page_size=" + this.pagination.pageSize + "&account_id=" + account + "&amt=" + amt + "&from_date="+ from_date + "&to_date="+ to_date);
     this.loadData(response);
