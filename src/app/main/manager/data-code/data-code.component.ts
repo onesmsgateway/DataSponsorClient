@@ -36,6 +36,7 @@ export class DataCodeComponent implements OnInit {
   public dataObj = [];
   public dataCode = [];
   public dataAccount = [];
+  public dataAccountAdd = [];
   public dataStatus = [];
   public pagination: Pagination = new Pagination();
   public role: Role = new Role();
@@ -52,9 +53,11 @@ export class DataCodeComponent implements OnInit {
   public timeFrom = new Date(this.timeTo.getTime() - (30 * 24 * 60 * 60 * 1000));
 
   public settingsFilterAccount = {};
+  public settingsFilterAccountAdd = {};
   public settingsFilterMoney = {};
   public settingsFilterAccountEdit = {};
   public selectedItemComboboxAccount = [];
+  public selectedAccountAdd =[];
   public selectedItemMoney = [];
   public selectedItemMoneyPro = [];
   public selectedAccountCreate=[];
@@ -80,6 +83,15 @@ export class DataCodeComponent implements OnInit {
     });
 
     this.settingsFilterAccount = {
+      text: this.utilityService.translate('global.choose_account'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+    this.settingsFilterAccountAdd = {
       text: this.utilityService.translate('global.choose_account'),
       singleSelection: true,
       enableSearchFilter: true,
@@ -263,6 +275,7 @@ export class DataCodeComponent implements OnInit {
       let response: any = await this.dataService.getAsync('/api/account')
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+        this.dataAccountAdd.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
       }
     }
     else {
@@ -270,13 +283,16 @@ export class DataCodeComponent implements OnInit {
         this.authService.currentUserValue.ACCOUNT_ID);
       for (let index in response.data) {
         this.dataAccount.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
+        this.dataAccountAdd.push({ "id": response.data[index].ACCOUNT_ID, "itemName": response.data[index].USER_NAME });
       }
       if (this.dataAccount.length == 1) {
         this.selectedItemComboboxAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
+        this.selectedAccountAdd.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
         this.selectedItemComboboxAccountMember.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
       }
       else
         this.selectedItemComboboxAccount.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
+        this.selectedAccountAdd.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
       this.selectedItemComboboxAccountMember.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
     }
   }
@@ -409,7 +425,6 @@ export class DataCodeComponent implements OnInit {
     this.CountDataCodeByAmt();
   }
   addFrom() {
-
     this.manager = new manager();
     if (this.DataArrayList.length < 14) {
       this.payLoad = JSON.stringify(this.DataArrayList);
@@ -430,12 +445,17 @@ export class DataCodeComponent implements OnInit {
     this.DataArrayList.splice(index, 1);
   }
 
- async sendDataCode(item) {
-    if (item.accountID.length == 0) {
+ async sendDataCodeChild(item) {
+  let ACCOUNT_ID = "";
+  let ACCOUNT_AD ="";
+  this.dataQuan = [];
+  this.dataAmt = []
+    if (item.accountAdd.length == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-68"));
       return;
     }
-    let ACCOUNT_ID = item.accountID[0].id;
+     ACCOUNT_ID = item.accountAdd[0].id;
+     ACCOUNT_AD = this.authService.currentUserValue.ACCOUNT_ID;
     let DESCRIPTION = item.description;
     let dataArray = JSON.stringify(this.DataArrayList);
     let resJSON = JSON.parse(dataArray);
@@ -446,13 +466,14 @@ export class DataCodeComponent implements OnInit {
     }
     let dataquan = this.dataQuan.toString();
     let dataamt=this.dataAmt.toString();
-    let res: any = await this.dataService.getAsync('/api/datacode/EditDataCodeChild?account_id=' + ACCOUNT_ID + '&data_amt='+dataamt+'&data_quan=' +dataquan+'&description='+ DESCRIPTION);
+    let res: any = await this.dataService.getAsync('/api/datacode/EditDataCodeChild?account_ad=' + ACCOUNT_AD + '&account_id=' + ACCOUNT_ID + '&data_amt='+ dataamt +'&data_quan=' + dataquan +'&description='+ DESCRIPTION);
     if (res) {
       if (res.err_code == 0) {
         this.selectedStatus = [];
         this.provisionDataCodeModal.hide();
         this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
         this.getData();
+        this.CountDataCodeByAmt();
       } else if(res.err_code == -206){
         this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-206"));
         return;

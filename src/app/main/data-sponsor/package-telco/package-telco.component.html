@@ -92,8 +92,8 @@
                                                 <td class="text-center">{{item.CREATE_USER}}</td>
                                                 <td class="text-center">
                                                     <div class="tool">
-                                                        <button type="submit" (click)="confirmUpdateModal(item.ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                        <button type="button" class="btn btn-danger btn-sm" (click)="showConfirmDelete(item.ID, item.PACKAGE_NAME)">{{ 'global.delete' | translate }}</button>
+                                                        <button type="submit" *ngIf="role.IS_EDIT" (click)="confirmUpdateModal(item.ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                        <button type="button" *ngIf="role.IS_DELETE" class="btn btn-danger btn-sm" (click)="showConfirmDelete(item.ID, item.PACKAGE_NAME)">{{ 'global.delete' | translate }}</button>
                                                     </div>
                                                 </td>
                                             </tr>

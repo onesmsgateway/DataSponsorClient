@@ -32,7 +32,7 @@ export class AuthGuard implements CanActivate {
     if(urlCurent.length == 4) urlMini = urlCurent[2] + '/' + urlCurent[3];
     else if (urlCurent.length == 3) urlMini = urlCurent[2];
 
-    if (['home/index', 'system/account', 'sms/campaign', 'manager/sender', 'statistic/sms-error','statistic/statistic-data', 'data-sponsor/scenarios'].indexOf(urlMini.split('?')[0]) < 0) {
+    if (['home/index', 'system/account', 'sms/campaign', 'manager/sender', 'statistic/sms-error','statistic/statistic-data', 'data-sponsor/scenarios','system/account'].indexOf(urlMini.split('?')[0]) < 0) {
       let data: any = await this.authenticationService.getMenuAccess();
       if (data.indexOf(urlMini) == -1) {
         result = false;

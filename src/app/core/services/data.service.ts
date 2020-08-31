@@ -35,7 +35,10 @@ export class DataService {
 
   public getData(url: string): Observable<any> {
     try {
-      return this.http.get(AppConst.DATA_SPONSOR_API + url)
+      const headers = new HttpHeaders({'Content-Type':'application/json; charset=utf-8'});
+      // let headers = new HttpHeaders();
+      // headers = headers.set('Authorization', 'Basic xzeydyt==');
+      return this.http.get(AppConst.DATA_SPONSOR_API + url, { headers: headers })
     }
     catch (error) {
       return null;

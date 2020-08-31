@@ -650,9 +650,9 @@
                 <img *ngIf="loading" class="pl-2" style="margin-right: 10px" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
                 />
                 <button type="button" class="btn btn-default" (click)="confirmSendDataSMSModal.hide()">{{'global.cancel' | translate}}</button>
-                <!-- <button type="submit" class="btn btn-success" (click)="confirmSendSMS()">{{'global.confirm' | translate}}</button> -->
                 <!-- <button type="submit" class="btn btn-success" (click)="createDataOtp()">{{'global.confirm' | translate}}</button> -->
                 <button type="submit" class="btn btn-success" (click)="confirmSendSMS()">{{'global.confirm' | translate}}</button>
+
             </div>
         </div>
     </div>
@@ -684,10 +684,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-sm pull-left" (click)="resendOtp()" [disabled]="!disable_resend_otp">{{'send_data.sendto' | translate}}</button>
                 <button type="button" class="btn btn-default btn-sm" (click)="confirmOtphide()">{{'global.cancel' | translate}}</button>
-                <!-- <button type="button" class="btn btn-success btn-sm" (click)="confirmSendDataOtp()">
-                    {{'global.confirm' | translate}}</button> -->
-                <button type="button" class="btn btn-success btn-sm" (click)="confirmSendSMS()">
-                        {{'global.confirm' | translate}}</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="confirmSendDataOtp()">
+                    {{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>

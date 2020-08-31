@@ -78,20 +78,21 @@ export class MainComponent {
 
   async getAccountLogin() {
     let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
-    let roleAccess = result.data[0].ROLE_ACCESS;
-    if (roleAccess != null && roleAccess == 50) {
-      this.isAdmin = true;
-    } else {
-      this.isAdmin = false;
+    if(result){
+      let roleAccess = result.data[0].ROLE_ACCESS;
+      if (roleAccess != null && roleAccess == 50) {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+      this.viewQuyTin(false);
+      if(this.isAdmin == true){
+          this.getBalance();
+      }
+      setTimeout(() => {
+        this.viewQuyDataCode();
+      }, 500);
     }
-    this.viewQuyTin(false);
-    setTimeout(() => {
-      this.getBalance();
-    }, 1000);
-    setTimeout(() => {
-      this.viewQuyDataCode();
-    }, 500);
-
   }
 
   //#region view quy tin

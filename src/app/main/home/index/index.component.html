@@ -42,29 +42,20 @@
                     </div>
                 </a>
             </div>
-            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="!isAdmin">
-                <a [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ statusdata: '1'}">
+            <div class="animated flipInY col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="!isAdmin">
+                <a [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ statusdata: '0'}">
                     <div class="tile-stats" style="cursor: pointer">
-                        <div class="icon"><i class="fa fa-check-square-o"></i></div>
-                        <div class="count">{{total_money_sent | number : '0.'}}</div>
-                        <h5 class="styleh5">{{ 'global.total_money_sent_end' | translate }}</h5>
-                        <h6 class="styleh6">{{ 'global.total_money_sent' | translate }}</h6>
+                        <div class="icon"><i class="glyphicon glyphicon-list-alt"></i></div>
+                        <div class="count">{{total_data_error | number : '0.'}}</div>
+                        <h4 class="styleh5">{{ 'global.error_data' | translate }}</h4>
+                        <h6 class="styleh6">{{ 'global.total_error_data' | translate }}</h6>
                     </div>
                 </a>
             </div>
-            <div class="animated flipInY col-lg-2 col-md-3 col-sm-6 col-xs-12" *ngIf="!isAdmin">
-                <a [routerLink]="['../../statistic/statistic-data']" [queryParams]="{ statusdata: '1'}">
-                    <div class="tile-stats" style="cursor: pointer">
-                        <div class="icon"><i class="fa fa-check-square-o"></i></div>
-                        <div class="count">{{total_datacode_sent | number : '0.'}}</div>
-                        <h5 class="styleh5">{{ 'global.total_datacode_sent_end' | translate }}</h5>
-                        <h6 class="styleh6">{{ 'global.total_datacode_sent' | translate }}</h6>
-                    </div>
-                </a>
-            </div>
+
             <!-- //admin -->
             <div class="animated flipInY col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="isAdmin">
-                <a>
+                <a [routerLink]="['../../system/account']" [queryParams]="{ }">
                     <div class="tile-stats" style="cursor: pointer">
                         <div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
                         <div class="count">{{total_account | number : '0.'}}</div>

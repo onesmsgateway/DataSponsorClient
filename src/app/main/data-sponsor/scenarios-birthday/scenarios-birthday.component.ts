@@ -555,7 +555,6 @@ export class ScenariosBirthdayComponent implements OnInit {
       else {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
         return;
-
       }
     }
   }
@@ -571,7 +570,6 @@ export class ScenariosBirthdayComponent implements OnInit {
     let groupId = 0;
     let groupName = "";
     let sender_name = "";
-
     this.selectedComboboxGroupEdit = [];
     this.selectedItemComboboxSenderEdit = [];
     let response: any = await this.dataService.getAsync('/api/BirthdayScenario/' + id);
@@ -671,9 +669,7 @@ export class ScenariosBirthdayComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
       return;
     }
-
     let IS_ACTIVE = formData.isActiveEdit.value == true ? 1 : 0;
-
     let response: any = await this.dataService.putAsync('/api/BirthdayScenario/' + ID, {
       ACCOUNT_ID, GROUP_ID, SCENARIO_NAME, SEND_AT_TIME, IS_ACTIVE, SEND_BEFORE_DAYS,
       PACKAGE_ID_VTL, PACKAGE_ID_GPC, PACKAGE_ID_VMS, SENDER_NAME, SMS_CONTENT,
@@ -827,7 +823,5 @@ export class ScenariosBirthdayComponent implements OnInit {
     for (let index in response.data) {
       this.dataSenderNameEdit.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
     }
-
   }
-
 }

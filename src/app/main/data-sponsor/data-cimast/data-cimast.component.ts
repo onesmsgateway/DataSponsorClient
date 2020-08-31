@@ -269,7 +269,6 @@ openFormDataFree() {
 }
 
 public async createDataCimastFree(resData) {
-  debugger
   let ACCOUNT_ID = resData.accountID.length > 0 ? resData.accountID[0].id : "";
     let TYPE = "DATA_SPONSOR";
     let TOTAL_DATA_VIETTEL = resData.totalVol_Vt;
@@ -327,11 +326,6 @@ public async createDataCimastFree(resData) {
           return;
         }
       }
-      else if (TOTAL_DATA_VOL + this.total_vol_system_remain > this.total_vol_system) {
-        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-203") + (TOTAL_DATA_VOL - this.total_vol_system));
-        return;
-      }
-
       let response = await this.dataService.postAsync('/api/DataCimast/PostFree', {
         ACCOUNT_ID, TYPE, DESCRIPTION, TOTAL_DATA, TOTAL_DATA_USE, TOTAL_DATA_REMAIN, TOTAL_DATA_VOL, TOTAL_DATA_VIETTEL, TOTAL_DATA_GPC, TOTAl_DATA_VMS
       });
@@ -339,7 +333,7 @@ public async createDataCimastFree(resData) {
         this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("300"));
         this.getDataAccountCimast();
         this.getDataTotal();
-        this.createDataCimastModal.hide();
+        this.createDataCimastFreeModal.hide();
       }
       else {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
@@ -366,6 +360,5 @@ public async createDataCimastFree(resData) {
     this.viewDataAccountCimastTransModal.show();
 
   }
-  
   //#endregion
 }

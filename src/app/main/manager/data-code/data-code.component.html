@@ -189,14 +189,14 @@
                             <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form #trans="ngForm" (ngSubmit)="sendDataCode(trans.value)">
+                <form #trans="ngForm" (ngSubmit)="sendDataCodeChild(trans.value)">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                     <label>{{'data_code.account' | translate}}<span style="color:red;">
                                                 (*)</span></label>
-                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountCreate" [settings]="settingsFilterAccount" name="accountID">
+                                    <angular2-multiselect [data]="dataAccountAdd" [(ngModel)]="selectedAccountAdd" [settings]="settingsFilterAccountAdd" name="accountAdd">
                                     </angular2-multiselect>
                                 </div>
                                 <div class="col-md-8 col-sm-8 col-xs-12">

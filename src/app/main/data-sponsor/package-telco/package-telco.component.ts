@@ -7,6 +7,7 @@ import { NotificationService } from 'src/app/core/services/notification.service'
 import { UtilityService } from 'src/app/core/services/utility.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { Role } from 'src/app/core/models/role';
 
 @Component({
   selector: 'app-package-telco',
@@ -37,6 +38,7 @@ export class PackageTelcoComponent implements OnInit {
   public formEditPackage: FormGroup;
   public settingsFilterTelco = {};
   public selectedTelco = [];
+  public role: Role = new Role();
 
   constructor(
     private dataService: DataService,
@@ -47,6 +49,11 @@ export class PackageTelcoComponent implements OnInit {
     private activatedRoute: ActivatedRoute) {
     modalService.config.backdrop = 'static';
 
+    this.activatedRoute.data.subscribe(data => {
+      this.utilityService.getRole(data.MENU_CODE).then((response) => {
+        if (response) this.role = response;
+      })
+    });
     this.settingsFilterTelco = {
       text: this.utilityService.translate('package_telco.inTelco'),
       singleSelection: true,

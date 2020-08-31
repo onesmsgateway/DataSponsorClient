@@ -405,13 +405,12 @@ export class IndexComponent implements OnInit {
         opacity: 1
       }
     };
-
     //line
     this.chartOptionsLine = {
       series: [
         {
           name: "Low - 2013",
-          data: [12, 11, 14, 18, 17, 13, 13]
+          data: []
         }
       ],
       chart: {
@@ -437,7 +436,7 @@ export class IndexComponent implements OnInit {
         curve: "smooth"
       },
       title: {
-        text: "Average High & Low Temperature",
+        text: "",
         align: "left"
       },
       grid: {
@@ -451,14 +450,14 @@ export class IndexComponent implements OnInit {
         size: 1
       },
       xaxis: {
-        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+        categories: [],
         title: {
-          text: "Month"
+          text: ""
         }
       },
       yaxis: {
         title: {
-          text: "Temperature"
+          text: ""
         },
         min: 5,
         max: 40
@@ -561,7 +560,12 @@ export class IndexComponent implements OnInit {
     this.dataStatus.push({ "id": "0", "itemName": this.utilityService.translate('global.fail') });
   }
   public async bindDataFailByDay() {
-    let resDataFail: any = await this.dataService.getAsync('/api/datasms/GetCountDataFailByDay');
+    let account = "";
+    if (this.isAdmin)
+    account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    else
+    account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+    let resDataFail: any = await this.dataService.getAsync('/api/datasms/GetCountDataFailByDay?account_id=' + account);
     if (resDataFail) {
       if (resDataFail.err_code == 0) {
         for (let i = 0; i < resDataFail.data.length; i++) {
@@ -571,7 +575,6 @@ export class IndexComponent implements OnInit {
     }
   }
   public async GetCheckMoneyDataCimast() {
-    debugger
     let resDataCimast: any = await this.dataService.getAsync('/api/datacimast/GetCheckMoneyDataCimast');
     if (resDataCimast) {
       if (resDataCimast.err_code == 0) {
@@ -599,7 +602,9 @@ export class IndexComponent implements OnInit {
       this.isCustomer = true;
     }
     let checkUser = result.data[0].USER_NAME;
-    if (checkUser == "demo") {
+    if (this.isAdmin == true) {
+      this.isCheckUser = false;
+    }else{
       this.isCheckUser = true;
     }
     setTimeout(() => {
@@ -627,7 +632,7 @@ export class IndexComponent implements OnInit {
     setTimeout(() => {
       this.GetCountAccountNew();
     }, 500);
-    if(!this.isAdmin){
+    if(this.isCheckUser == true){
       for (let i = 0; i < 8; i++) {
         switch (i) {
           case 0: {
@@ -664,16 +669,17 @@ export class IndexComponent implements OnInit {
         }
       }
     }
-    setTimeout(() => {
-      this.getchartChartFail();
-    }, 500);
-    setTimeout(() => {
-      this.getchartChartSuccess();
-    }, 500);
-    setTimeout(() => {
-      this.getCustomerMonth();
-    }, 500);
-
+    if(this.isAdmin == true){
+      setTimeout(() => {
+        this.getchartChartFail();
+      }, 500);
+      setTimeout(() => {
+        this.getchartChartSuccess();
+      }, 500);
+      setTimeout(() => {
+        this.getCustomerMonth();
+      }, 500);
+    }
   }
   //count account
   async GetCountAccount() {
@@ -731,7 +737,6 @@ export class IndexComponent implements OnInit {
     }
   }
 
-
   //dem amt vol code
   //dem so luong campaign 
   async GetCountDataSms() {
@@ -746,12 +751,10 @@ export class IndexComponent implements OnInit {
       if (resDataSms.err_code == 0 && resDataSms.data.length > 0) {
         if (resDataSms.data.length == 1) {
           if (resDataSms.data[0].IS_MONEY_DATA_CODE == 0) {
-            this.total_money_sent = Math.round(resDataSms.data[0].COUNT_AMT);
-            this.total_data_sent = Math.round(resDataSms.data[0].COUNT_VOL);
+            this.total_data_sent += Math.round(resDataSms.data[0].COUNT_VOL);
             this.total_datacode_sent = 0;
           } else {
             this.total_datacode_sent = Math.round(resDataSms.data[0].COUNT_CODE);
-            this.total_money_sent = 0;
             this.total_data_sent = 0;
           }
         } else {
@@ -840,8 +843,6 @@ export class IndexComponent implements OnInit {
       }
     }
   }
-
-
   // Thống kê lượt KH click vào link truy cập hàng ngày
   async getChartClickDayHour() {
     this.barChartLabelsClick = [];
@@ -1637,7 +1638,7 @@ export class IndexComponent implements OnInit {
     this.getChartReceivedMonth();
   }
 
-  async getchartChartSuccess() {
+   getchartChartSuccess() {
     let arrayDayMonth = [];
     let arrayDataVT = [];
     let arrayDataGPC = [];
@@ -1804,7 +1805,6 @@ export class IndexComponent implements OnInit {
     });
   }
   onChangeVTLData(ischeck) {
-    debugger
     if (ischeck) {
       this.stringVTL = "VIETTEL"
     }

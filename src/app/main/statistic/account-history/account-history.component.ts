@@ -122,7 +122,13 @@ export class AccountHistoryComponent implements OnInit {
   //#region load data and paging
   public async getListDataSms() {
     this.dataHistory = [];
-    let account_id = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    let account_id;
+    if(this.isAdmin){
+      account_id = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+    }else{
+      account_id = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+    }
+    
     let campaign_id = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     let response = await this.dataService.getAsync('/api/AccountHistory/GetAccountHistoryPaging?pageIndex=' + this.pagination.pageIndex +
       '&pageSize=' + this.pagination.pageSize + '&account_id=' + account_id + '&campaign_id=' + campaign_id + '&content=' + this.smsContent + '&ip=' + this.ip +

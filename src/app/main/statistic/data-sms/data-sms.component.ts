@@ -406,7 +406,6 @@ export class DataSmsComponent implements OnInit {
     let packGPC = this.selectedPackageGPC.length > 0 && this.selectedPackageGPC[0].id != "" ? this.selectedPackageGPC[0].itemName.substr(0, this.selectedPackageGPC[0].itemName.indexOf('-') - 1).trim() : "";
     let packVMS = this.selectedPackageVMS.length > 0 && this.selectedPackageVMS[0].id != "" ? this.selectedPackageVMS[0].itemName.substr(0, this.selectedPackageVMS[0].itemName.indexOf('-') - 1).trim() : "";
     let package_name_display = this.selectedPkNameDisplay.length > 0 && this.selectedPkNameDisplay[0].itemName != "" ? this.selectedPkNameDisplay[0].itemName : "";
-    debugger
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : this.statusdata;
     let issenddata = this.selectedSendData.length > 0 ? this.selectedSendData[0].id : "";
     if (status == '1') {
