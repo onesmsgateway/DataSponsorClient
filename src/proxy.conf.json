@@ -1,0 +1,7 @@
+{
+    "/api/*": {
+        "target": "http://sponsorapi.conekdata.com",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}

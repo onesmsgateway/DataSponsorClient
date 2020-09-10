@@ -71,7 +71,8 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "gw-client:build"
+                        "browserTarget": "gw-client:build",
+                        "proxyConfig": "src/proxy.conf.json"
 
                     },
                     "configurations": {

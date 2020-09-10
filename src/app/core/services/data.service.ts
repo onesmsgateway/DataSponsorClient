@@ -12,9 +12,9 @@ import { Observable } from 'rxjs';
 })
 
 export class DataService {
+  public token: string;
   constructor(private http: HttpClient,
     private utilityService: UtilityService) { }
-
   public get(uri: string): any {
     return this.http.get(AppConst.DATA_SPONSOR_API + uri)
       .pipe(
@@ -35,9 +35,7 @@ export class DataService {
 
   public getData(url: string): Observable<any> {
     try {
-      const headers = new HttpHeaders({'Content-Type':'application/json; charset=utf-8'});
-      // let headers = new HttpHeaders();
-      // headers = headers.set('Authorization', 'Basic xzeydyt==');
+      const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
       return this.http.get(AppConst.DATA_SPONSOR_API + url, { headers: headers })
     }
     catch (error) {

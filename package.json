@@ -29,6 +29,7 @@
         "angularx-social-login": "^1.2.7",
         "apexcharts": "^3.19.3",
         "chart.js": "^2.9.3",
+        "chartjs-plugin-labels": "^1.1.0",
         "core-js": "^3.2.1",
         "cors": "^2.8.5",
         "devextreme": "^19.1.6",

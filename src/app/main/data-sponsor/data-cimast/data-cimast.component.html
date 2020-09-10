@@ -15,10 +15,14 @@
                             <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountID" [settings]="settingsFilterAccount" (onSelect)="onItemSelect()" (onDeSelect)="OnItemDeSelect()" name="accountID">
                             </angular2-multiselect>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                            <angular2-multiselect [data]="dataType" [(ngModel)]="selectedType" [settings]="settingsFilterType" (onSelect)="onItemSelect()" (onDeSelect)="OnItemDeSelect()" name="type">
-                            </angular2-multiselect>
+                        <!-- tim kiem theo ngay -->
+                        <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                            <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
                         </div>
+                        <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                            <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
+                        </div>
+
                         <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback content-end">
                             <p style="font-weight:bold;color:blue">
                                 {{'data_cimast.label_system' | translate}}{{total_amt_system_remain | number: '.0'}} / {{total_amt_system | number: '.0'}}
@@ -136,6 +140,27 @@
         </div>
     </div>
 </div>
+<!-- modal thong bao gia tri cap data-->
+<div class="modal fade" bsModal #createDataCimastModalDetail="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">
+                    {{'data_cimast.add_data' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="createDataCimastModalDetail.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label> {{'data_cimast.ok' | translate}} {{ TOTAL_AMT | number : '0.' }} VNĐ {{'data_cimast.okaccount' | translate}} {{account_name}}</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" (click)="createDataCimastModalDetail.hide()">{{ 'global.cancel' | translate }}</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="confirmInsertDataCimast()" *ngIf="isAdmin">{{ 'global.confirm' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- modal cấp data mien phi-->
 <div class="modal fade" bsModal #createDataCimastFreeModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
@@ -187,7 +212,27 @@
         </div>
     </div>
 </div>
-
+<!-- modal thong bao gia tri cap data free-->
+<div class="modal fade" bsModal #createDataCimastFreeModalDetail="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">
+                    {{'data_cimast.add_data' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="createDataCimastFreeModalDetail.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label> {{'data_cimast.ok' | translate}} {{ TOTAL_DATA_VOL_FREE | number : '0.' }} MB {{'data_cimast.okaccount' | translate}} {{account_name_free}}</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" (click)="createDataCimastFreeModalDetail.hide()">{{ 'global.cancel' | translate }}</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="confirmInsertDataCimastFree()" *ngIf="isAdmin">{{ 'global.confirm' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- modal Xem lich su cap data-->
 <div class="modal fade" bsModal #viewDataAccountCimastTransModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">

@@ -3,11 +3,9 @@ import { DataService } from 'src/app/core/services/data.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UtilityService } from 'src/app/core/services/utility.service';
 import { Pagination } from 'src/app/core/models/pagination';
-import { ChartType, ChartOptions } from 'chart.js';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { ChartComponent } from "ng-apexcharts";
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
-import { timeout, max } from 'rxjs/operators';
 import {
   ApexAxisChartSeries,
   ApexDataLabels,
@@ -24,6 +22,7 @@ import {
   ApexTitleSubtitle,
 } from "ng-apexcharts";
 
+
 export type ChartOptionsLine = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -38,13 +37,12 @@ export type ChartOptionsLine = {
   title: ApexTitleSubtitle;
 };
 
-export type ChartOptionsOne = {
+export type ChartOptionsPie = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
   labels: any;
 };
-
 export type ChartOptionsChart = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -55,7 +53,6 @@ export type ChartOptionsChart = {
   legend: ApexLegend;
   fill: ApexFill;
 };
-
 
 @Component({
   selector: 'app-index',
@@ -71,8 +68,9 @@ export class IndexComponent implements OnInit {
   public chartOptionsChartFail: Partial<ChartOptionsChart>;
 
   //bieu do nam 
-  @ViewChild('chart', { static: false }) public chart: ChartComponent;
-  public chartOptions: Partial<ChartOptionsOne>;
+  @ViewChild('chartpie', { static: false }) public chartpie: ChartComponent;
+  public chartOptionsPie: Partial<ChartOptionsPie>;
+
   //check radio
   public valueRadio: any;
   public withDay = '0';
@@ -88,29 +86,18 @@ export class IndexComponent implements OnInit {
   public toMonthadmin: string = "";
 
   public chartLabels: any;
-  public pieChartType: ChartType;
-  public pieChartLegend: boolean;
-  public pieChartPlugins = [];
   public dataVT = [];
   public showOverlay = true;
   public showdate = true;
   public smsErr = 0;
+  public total_customer = 0;
   public scenario_ran = 0;
   public scenario_end = 0;
   public campaign = 0;
-  public total_money_sent = 0;
-  public total_datacode_sent = 0;
   public total_data_sent = 0;
   public newCustomer = 0;
   public accountExpiredQuota = 0;
   public senderExpired = 0;
-  // public currentDate = this.utilityService.formatDateToString(new Date, "dd/MM/yyyy");
-  public currentDate = "01/09/2019";
-
-  public grossProductData: any = [];
-  public month_now;
-  public month_old1;
-  public month_old2;
 
   //thong ke click
   public barChartLabelsClick: any = [];
@@ -245,6 +232,7 @@ export class IndexComponent implements OnInit {
   public isDay: boolean = true;
   public isDayCheck: boolean = false;
   public dataStatus: any = [];
+  public dataAcountOuntMoney = '';
 
   public grossSmsTelco: any = [];
   public grossSmsGroupSender: any = [];
@@ -253,10 +241,7 @@ export class IndexComponent implements OnInit {
   public totalSenderExpired = 0;
   public totalSmsWaitApprove = 0;
   public thisAccount;
-  public isAdmin: boolean = false;
-  public isAdminBranch: boolean = false;
-  public isCustomer: boolean = false;
-  public isCheckUser: boolean = false;
+  public isAdmin: boolean = true;
   public checkdataMax: boolean = false;
   public total_account = 0;
   public total_account_new = 0;
@@ -280,10 +265,10 @@ export class IndexComponent implements OnInit {
     private utilityService: UtilityService) {
 
     //bieu do hinh tron
-    this.chartOptions = {
-      series: [0, 0, 0],
+    this.chartOptionsPie = {
+      series: [44, 55, 13],
       chart: {
-        width: 500,
+        width: 380,
         type: "pie"
       },
       labels: ["Khách hàng Viettel", "Khách hàng Vinaphone", "Khách hàng Mobifone"],
@@ -301,6 +286,7 @@ export class IndexComponent implements OnInit {
         }
       ]
     };
+
     //bieu do hang ngay admin
     this.chartOptionsChart = {
       series: [
@@ -540,31 +526,77 @@ export class IndexComponent implements OnInit {
     for (let hourList = 1; hourList < 25; hourList++) {
       this.dataHour.push(hourList < 10 ? { "id": '0' + hourList.toString(), "itemName": '0' + hourList.toString() + 'h' } : { "id": hourList.toString(), "itemName": hourList.toString() + 'h' });
     }
-    for (let monthList = 1; monthList < 13; monthList++) {
-      this.dataMonth.push(monthList < 10 ? { "id": '0' + monthList.toString(), "itemName": '0' + 'Tháng' + monthList.toString() } : { "id": monthList.toString(), "itemName": 'Tháng' + monthList.toString() });
+    this.getAccountLogin();
+    this.GetCheckMoneyDataCimast();
+  }
+
+  public async GetCheckMoneyDataCimast() {
+    let arr = [];
+    let resDataCimast: any = await this.dataService.getAsync('/api/datacimast/GetCheckMoneyDataCimast');
+    if (resDataCimast) {
+      if (resDataCimast.err_code == 0) {
+        for (let i = 0; i < resDataCimast.data.length; i++) {
+          this.total_money_out += resDataCimast.data[i].TOTAL_CIMAST;
+          arr.push(resDataCimast.data[i].ACCOUNT_ID)
+        }
+        this.dataAcountOuntMoney = arr.toString();
+      }
     }
-    setTimeout(() => {
-      this.getAccountLogin();
-    }, 1000);
-    this.bindDataStatus();
-    setTimeout(() => {
-      this.bindDataFailByDay();
-    }, 500);
-    setTimeout(() => {
-      this.GetCheckMoneyDataCimast();
-    }, 500);
   }
-  public async bindDataStatus() {
-    this.dataStatus = [];
-    this.dataStatus.push({ "id": "1", "itemName": this.utilityService.translate('global.success') });
-    this.dataStatus.push({ "id": "0", "itemName": this.utilityService.translate('global.fail') });
+
+  async getAccountLogin() {
+    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
+    let roleAccess = result.data[0].ROLE_ACCESS;
+    if (roleAccess != null && roleAccess == 50) {
+      this.isAdmin = true;
+    }else {
+      this.isAdmin = false;
+    }
+    this.getDataAccount();
+    this.getCampaign();
+    this.getScenario();
+    this.bindDataFailByDay();
+    if (!this.isAdmin) {
+      this.GetCoutMember();
+      this.GetCountDataSms();
+      this.GetCountCampaign();
+      this.GetCountScenario();
+      this.getChartClickDayHour();
+      this.getChartRegisterDayHour();
+      this.getChartRegisterDayHourOld();
+      this.getChartRegisterDayHourNew();
+      this.getChartReceivedDayHour();
+      this.getChartReceivedMonth();
+      this.getdataChartPieWithYear();
+    }
+    if (this.isAdmin) {
+      this.GetCountAccountNew();
+      this.GetCountAccount();
+      this.getchartChartFail();
+      this.getchartChartSuccess();
+      this.getCustomerMonth();
+    }
   }
+
+  //count member_person
+  async GetCoutMember(){
+    let account = this.authService.currentUserValue.ACCOUNT_ID;
+    let res: any = await this.dataService.getAsync('/api/person/GetCoutMember?account_id=' + account);
+    if(res){
+      if (res.err_code == 0) {
+        for (let i = 0; i < res.data.length; i++) {
+          this.total_customer += res.data[i].COUNT_PERSON;
+        }
+      }
+    }
+  }
+//count data loi
   public async bindDataFailByDay() {
     let account = "";
     if (this.isAdmin)
-    account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
+      account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
     else
-    account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
+      account = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     let resDataFail: any = await this.dataService.getAsync('/api/datasms/GetCountDataFailByDay?account_id=' + account);
     if (resDataFail) {
       if (resDataFail.err_code == 0) {
@@ -572,113 +604,6 @@ export class IndexComponent implements OnInit {
           this.total_data_error += resDataFail.data[i].COUNT_DATA_FAIL;
         }
       }
-    }
-  }
-  public async GetCheckMoneyDataCimast() {
-    let resDataCimast: any = await this.dataService.getAsync('/api/datacimast/GetCheckMoneyDataCimast');
-    if (resDataCimast) {
-      if (resDataCimast.err_code == 0) {
-        for (let i = 0; i < resDataCimast.data.length; i++) {
-          this.total_money_out += resDataCimast.data[i].TOTAL_CIMAST;
-        }
-      }
-    }
-  }
-  async getAccountLogin() {
-    let result = await this.dataService.getAsync('/api/account/GetInfoAccountLogin');
-    let roleAccess = result.data[0].ROLE_ACCESS;
-    if (roleAccess != null && roleAccess == 50) {
-      this.isAdmin = true;
-      this.isAdminBranch = false;
-      this.isCustomer = false;
-    } else if (roleAccess == 53) {
-      this.isAdmin = false;
-      this.isAdminBranch = true;
-      this.isCustomer = false;
-    }
-    else {
-      this.isAdmin = false;
-      this.isAdminBranch = false;
-      this.isCustomer = true;
-    }
-    let checkUser = result.data[0].USER_NAME;
-    if (this.isAdmin == true) {
-      this.isCheckUser = false;
-    }else{
-      this.isCheckUser = true;
-    }
-    setTimeout(() => {
-      this.GetCountScenario();
-    }, 1000);
-    setTimeout(() => {
-      this.getDataAccount();
-    }, 1000);
-    setTimeout(() => {
-      this.getCampaign();
-    }, 1000);
-
-    setTimeout(() => {
-      this.getScenario();
-    }, 1000);
-    setTimeout(() => {
-      this.GetCountCampaign();
-    }, 500);
-    setTimeout(() => {
-      this.GetCountDataSms();
-    }, 500);
-    setTimeout(() => {
-      this.GetCountAccount();
-    }, 500);
-    setTimeout(() => {
-      this.GetCountAccountNew();
-    }, 500);
-    if(this.isCheckUser == true){
-      for (let i = 0; i < 8; i++) {
-        switch (i) {
-          case 0: {
-            this.getChartClickDayHour();
-            break;
-          }
-          case 1: {
-            this.getChartRegisterDayHour();
-            break;
-          }
-          case 2: {
-            this.getChartRegisterDayHourOld();
-            break;
-          } case 3: {
-            this.getChartRegisterDayHourNew();
-            break;
-          } case 4: {
-            this.getChartReceivedDayHour();
-            break;
-          } case 5: {
-            this.getProportionBuyDayRegisterDayHour();
-            break;
-          } case 6: {
-            this.getChartReceivedMonth();
-            break;
-          } case 7: {
-            this.getdataChartPieWithYear();
-            break;
-          }
-          default: {
-            alert('da hoan thien');
-            break;
-          }
-        }
-      }
-    }
-    if(this.isAdmin == true){
-      setTimeout(() => {
-        this.getchartChartFail();
-      }, 500);
-      setTimeout(() => {
-        this.getchartChartSuccess();
-      }, 500);
-      setTimeout(() => {
-        this.getCustomerMonth();
-      }, 500);
     }
   }
   //count account
@@ -721,12 +646,7 @@ export class IndexComponent implements OnInit {
 
   //dem so luong campaign 
   async GetCountCampaign() {
-    let account;
-    if (this.isAdmin) {
-      account = "";
-    } else {
-      account = this.authService.currentUserValue.ACCOUNT_ID;
-    }
+    let account = this.authService.currentUserValue.ACCOUNT_ID;
     let resCampaign: any = await this.dataService.getAsync('/api/DataCampaign/GetCountDataCampaign?account_id=' + account);
     if (resCampaign) {
       if (resCampaign.err_code == 0 && resCampaign.data.length > 0) {
@@ -740,63 +660,34 @@ export class IndexComponent implements OnInit {
   //dem amt vol code
   //dem so luong campaign 
   async GetCountDataSms() {
-    let account;
-    if (this.isAdmin) {
-      account = "";
-    } else {
-      account = this.authService.currentUserValue.ACCOUNT_ID;
-    }
+    let account = this.authService.currentUserValue.ACCOUNT_ID;
     let resDataSms: any = await this.dataService.getAsync('/api/datasms/GetCountDataSms?account_id=' + account);
     if (resDataSms) {
       if (resDataSms.err_code == 0 && resDataSms.data.length > 0) {
-        if (resDataSms.data.length == 1) {
-          if (resDataSms.data[0].IS_MONEY_DATA_CODE == 0) {
-            this.total_data_sent += Math.round(resDataSms.data[0].COUNT_VOL);
-            this.total_datacode_sent = 0;
-          } else {
-            this.total_datacode_sent = Math.round(resDataSms.data[0].COUNT_CODE);
-            this.total_data_sent = 0;
-          }
-        } else {
-          for (let i = 0; i < resDataSms.data.length; i++) {
-            if (resDataSms.data[i].IS_MONEY_DATA_CODE == 0) {
-              this.total_money_sent = Math.round(resDataSms.data[i].COUNT_AMT);
-              this.total_data_sent = Math.round(resDataSms.data[i].COUNT_VOL);
-              this.total_datacode_sent = 0;
-            } else {
-              this.total_datacode_sent = Math.round(resDataSms.data[i].COUNT_CODE);
-              this.total_money_sent = 0;
-              this.total_data_sent = 0;
-            }
-          }
+        for (let i = 0; i < resDataSms.data.length; i++) {
+          this.total_data_sent += resDataSms.data[i].COUNT_VOL;
         }
       } else {
-        this.total_datacode_sent = 0;
-        this.total_money_sent = 0;
         this.total_data_sent = 0;
       }
     }
   }
   //dem so luong kich ban dang chay va da chay
   async GetCountScenario() {
-    let account;
-    if (this.isAdmin) {
-      account = "";
-    } else {
-      account = this.authService.currentUserValue.ACCOUNT_ID;
-    }
+    let account = this.authService.currentUserValue.ACCOUNT_ID;
     let resScenario: any = await this.dataService.getAsync('/api/scenarios/GetCountScenario?account_id=' + account);
     if (resScenario) {
       if (resScenario.err_code == 0 && resScenario.data.length > 0) {
-        if (resScenario.data.length == 1) {
-          this.scenario_end = Math.round(resScenario.data[0].COUNT_SCENARIO);
-        } else if (resScenario.data.length > 1) {
-          this.scenario_ran = Math.round(resScenario.data[1].COUNT_SCENARIO);
-          this.scenario_end = Math.round(resScenario.data[0].COUNT_SCENARIO);
+        for (let i = 0; i < resScenario.data.length; i++) {
+          if (resScenario.data[i].IS_ACTIVE == 1) {
+            this.scenario_ran += Math.round(resScenario.data[i].COUNT_SCENARIO);
+          } else if (resScenario.data[i].IS_ACTIVE == 0) {
+            this.scenario_end += Math.round(resScenario.data[i].COUNT_SCENARIO);
+          } else {
+            this.scenario_ran = 0;
+            this.scenario_end = 0;
+          }
         }
-      } else {
-        this.scenario_ran = 0;
-        this.scenario_end = 0;
       }
     }
   }
@@ -907,7 +798,7 @@ export class IndexComponent implements OnInit {
     }
 
   }
-  // Thống kê KH đăng ký nhận data theo ngay/gio
+  // Thống kê KH đăng ký nhận data theo ngay/gio theo 3 nha mang
   async getChartRegisterDayHour() {
     this.labelsChartRegisterDay = [];
     this.dataSetViettel = [];
@@ -936,7 +827,7 @@ export class IndexComponent implements OnInit {
     SCENARIO_ID = this.selectedScenario.length != 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
     CAMPAIGN_ID = this.selectedCampaign.length != 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     if (this.isHour == false && this.isDay == true) {
-      let responsecrd: any = await this.dataService.getAsync('/api/chartpopupregisterday/GetFilterPopupRegisterDay?account_id=' + ACCOUNT_ID +
+      let responsecrd: any = await this.dataService.getAsync('/api/chartpopupregister/GetChartPopupRegisterDays?account_id=' + ACCOUNT_ID +
         '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&from_day=' + FROM_DATE + '&to_day=' + TO_DATE +
         '&telco_viettel=' + this.stringVTL + '&telco_gpc=' + this.stringGPC + '&telco_vms=' + this.stringVMS)
       if (responsecrd) {
@@ -955,7 +846,7 @@ export class IndexComponent implements OnInit {
         }
       }
     } else {
-      let responsecph: any = await this.dataService.getAsync('/api/chartpopupregisterhour/GetFilterPopupRegisterHour?account_id=' + ACCOUNT_ID +
+      let responsecph: any = await this.dataService.getAsync('/api/chartpopupregisterhour/GetChartPopupRegisterHourFilter?account_id=' + ACCOUNT_ID +
         '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&day_of_month=' + DAY_MONTH + '&from_hour=' + FROM_HOUR + '&to_hour=' + TO_HOUR +
         '&telco_viettel=' + this.stringVTL + '&telco_gpc=' + this.stringGPC + '&telco_vms=' + this.stringVMS)
       if (responsecph) {
@@ -1004,7 +895,7 @@ export class IndexComponent implements OnInit {
     SCENARIO_ID = this.selectedScenario.length != 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
     CAMPAIGN_ID = this.selectedCampaign.length != 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     if (this.isHour == false && this.isDay == true) {
-      let responsecrdo: any = await this.dataService.getAsync('/api/chartpopupregisterday/GetFilterPopupRegisterDayOld?account_id=' + ACCOUNT_ID +
+      let responsecrdo: any = await this.dataService.getAsync('/api/chartpopupregister/GetChartPopupRegisterDayOldFilter?account_id=' + ACCOUNT_ID +
         '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&from_day=' + FROM_DATE + '&to_day=' + TO_DATE +
         '&telco_viettel=' + this.stringVTL + '&telco_gpc=' + this.stringGPC + '&telco_vms=' + this.stringVMS)
       if (responsecrdo) {
@@ -1023,7 +914,7 @@ export class IndexComponent implements OnInit {
         }
       }
     } else {
-      let responsecrdoh: any = await this.dataService.getAsync('/api/chartpopupregisterhour/GetFilterPopupRegisterHourOld?account_id=' + ACCOUNT_ID +
+      let responsecrdoh: any = await this.dataService.getAsync('/api/chartpopupregister/GetChartPopupRegisterHourOldFilter?account_id=' + ACCOUNT_ID +
         '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&day_of_month=' + DAY_MONTH + '&from_hour=' + FROM_HOUR + '&to_hour=' + TO_HOUR +
         '&telco_viettel=' + this.stringVTL + '&telco_gpc=' + this.stringGPC + '&telco_vms=' + this.stringVMS)
       if (responsecrdoh) {
@@ -1043,7 +934,7 @@ export class IndexComponent implements OnInit {
       }
     }
   }
-  // Thống kê KH đăng ký nhận data theo ngay khach hang cu
+  // Thống kê KH đăng ký nhận data theo ngay khach hang cmoi
   async getChartRegisterDayHourNew() {
     this.dataSetViettelNew = [];
     this.dataSetVinaNew = [];
@@ -1073,7 +964,7 @@ export class IndexComponent implements OnInit {
     SCENARIO_ID = this.selectedScenario.length != 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
     CAMPAIGN_ID = this.selectedCampaign.length != 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     if (this.isHour == false && this.isDay == true) {
-      let responsecrpnd: any = await this.dataService.getAsync('/api/chartpopupregisterday/GetFilterPopupRegisterDayNew?account_id=' + ACCOUNT_ID +
+      let responsecrpnd: any = await this.dataService.getAsync('/api/chartpopupregister/GetChartPopupRegisterDayNewFilter?account_id=' + ACCOUNT_ID +
         '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&from_day=' + FROM_DATE + '&to_day=' + TO_DATE +
         '&telco_viettel=' + this.stringVTL + '&telco_gpc=' + this.stringGPC + '&telco_vms=' + this.stringVMS)
       if (responsecrpnd) {
@@ -1092,7 +983,7 @@ export class IndexComponent implements OnInit {
         }
       }
     } else {
-      let responsecrpnh: any = await this.dataService.getAsync('/api/chartpopupregisterhour/GetFilterPopupRegisterHourNew?account_id=' + ACCOUNT_ID +
+      let responsecrpnh: any = await this.dataService.getAsync('/api/chartpopupregister/GetFilterPopupRegisterHourNew?account_id=' + ACCOUNT_ID +
         '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&day_of_month=' + DAY_MONTH + '&from_hour=' + FROM_HOUR + '&to_hour=' + TO_HOUR +
         '&telco_viettel=' + this.stringVTL + '&telco_gpc=' + this.stringGPC + '&telco_vms=' + this.stringVMS)
       if (responsecrpnh) {
@@ -1142,7 +1033,7 @@ export class IndexComponent implements OnInit {
     SCENARIO_ID = this.selectedScenario.length != 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
     CAMPAIGN_ID = this.selectedCampaign.length != 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     if (this.isHour == false && this.isDay == true) {
-      let responsecrd: any = await this.dataService.getAsync('/api/chartpopupregisterday/GetChartPopupRegisterDayReceived?account_id=' + ACCOUNT_ID +
+      let responsecrd: any = await this.dataService.getAsync('/api/chartpopupregister/GetChartPopupDayReceivedFilter?account_id=' + ACCOUNT_ID +
         '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&from_day=' + FROM_DATE + '&to_day=' + TO_DATE +
         '&telco_viettel=' + this.stringVTL + '&telco_gpc=' + this.stringGPC + '&telco_vms=' + this.stringVMS)
       if (responsecrd) {
@@ -1165,7 +1056,7 @@ export class IndexComponent implements OnInit {
       }
 
     } else {
-      let responsecrdh: any = await this.dataService.getAsync('/api/chartpopupregisterhour/GetFilterPopupRegisterHour?account_id=' + ACCOUNT_ID +
+      let responsecrdh: any = await this.dataService.getAsync('/api/chartpopupregister/GetChartPopupRegisterHourReceivedFilter?account_id=' + ACCOUNT_ID +
         '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&day_of_month=' + DAY_MONTH + '&from_hour=' + FROM_HOUR + '&to_hour=' + TO_HOUR +
         '&telco_viettel=' + this.stringVTL + '&telco_gpc=' + this.stringGPC + '&telco_vms=' + this.stringVMS)
       if (responsecrdh) {
@@ -1185,118 +1076,7 @@ export class IndexComponent implements OnInit {
       }
     }
   }
-  //ty le mua hang tren ty le dang ky
-  async getProportionBuyDayRegisterDayHour() {
-    this.barChartLabelsBuyDayRGTDay = [];
-    this.dataBuyDay = [];
-    this.dataRGTDay = [];
-    this.dataRGTHour = [];
-    this.dataBuyHour = [];
-
-    this.barChartDataBuyDayRGTDay = [
-      { data: [], label: '', stack: '' },
-    ];
-    this.barChartTypeBuyDayRGTDay = 'bar';
-    this.barChartLegendBuyDayRGTDay = true;
-
-    let ACCOUNT_ID;
-    let SCENARIO_ID;
-    let CAMPAIGN_ID;
-
-    let FROM_DAY = this.fromDate;
-    let TO_DAY = this.toDate;
-    let DAY_MONTH = this.chosseDate;
-    let FROM_HOUR = this.fromhour;
-    let TO_HOUR = this.tohour;
-
-
-    if (this.isAdmin) {
-      ACCOUNT_ID = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
-    } else {
-      ACCOUNT_ID = this.selectedAccount.length != 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
-    }
-    SCENARIO_ID = this.selectedScenario.length != 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
-    CAMPAIGN_ID = this.selectedCampaign.length != 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
-    //get du lieu theo ngay
-    if (this.isHour == false && this.isDay == true) {
-
-      let responseBuyDay: any = await this.dataService.getAsync('/api/accountphonelist/GetAccountPhoneListBuyDay?account_id=' + ACCOUNT_ID +
-        '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&from_day=' + FROM_DAY + '&to_day=' + TO_DAY)
-
-      let responseRGTDay: any = await this.dataService.getAsync('/api/chartpopupregisterday/GetChartPopupRegisterDayss?account_id=' + ACCOUNT_ID +
-        '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&from_day=' + FROM_DAY + '&to_day=' + TO_DAY)
-      if (responseBuyDay) {
-        for (let i = 0; i < responseBuyDay.data.length; i++) {
-          let checkArray = this.barChartLabelsBuyDayRGTDay.includes(responseBuyDay.data[i].DAY_TIME);
-          if (checkArray == false) {
-            this.barChartLabelsBuyDayRGTDay.push(responseBuyDay.data[i].DAY_TIME);
-          }
-        }
-      }
-      if (responseRGTDay) {
-        for (let i = 0; i < responseRGTDay.data.length; i++) {
-          let checkTwoArray = this.barChartLabelsBuyDayRGTDay.includes(responseRGTDay.data[i].DAY_OF_MONTH);
-          if (checkTwoArray == false) {
-            this.barChartLabelsBuyDayRGTDay.push(responseRGTDay.data[i].DAY_OF_MONTH);
-          }
-        }
-      }
-      if (responseBuyDay) {
-        for (let i = 0; i < this.barChartLabelsBuyDayRGTDay.length; i++) {
-          this.dataBuyDay.push(responseBuyDay.data[i] != "" && responseBuyDay.data[i] != null ? responseBuyDay.data[i].DAY_SUM : 0);
-        }
-      }
-      if (responseRGTDay) {
-        for (let i = 0; i < this.barChartLabelsBuyDayRGTDay.length; i++) {
-          this.dataRGTDay.push(responseRGTDay.data[i] != "" && responseRGTDay.data[i] != null ? responseRGTDay.data[i].DAY_SUM : 0);
-        }
-      }
-      this.barChartDataBuyDayRGTDay = [
-        { data: this.dataBuyDay, label: 'Khách mua hàng', stack: '1', backgroundColor: '#E67E22', borderColor: '#73C6B6', hoverBackgroundColor: '#E67E22' },
-        { data: this.dataRGTDay, label: 'Khách đăng ký', stack: '2', backgroundColor: '#FFCCBC', borderColor: '#73C6B6', hoverBackgroundColor: '#FFCCBC' }
-      ];
-      //get du lieu theo gio
-    } else {
-      let responseBuyHour: any = await this.dataService.getAsync('/api/accountphonelist/GetAccountPhoneListBuyHour?account_id=' + ACCOUNT_ID +
-        '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&choose_day=' + DAY_MONTH + '&from_hour=' + FROM_HOUR + '&to_hour=' + TO_HOUR)
-      let responseRGTHour: any = await this.dataService.getAsync('/api/ChartPopupRegisterHour/GetFilterPopupRGTHour?account_id=' + ACCOUNT_ID +
-        '&scenario_id=' + SCENARIO_ID + '&campaign_id=' + CAMPAIGN_ID + '&choose_day=' + DAY_MONTH + '&from_hour=' + FROM_HOUR + '&to_hour=' + TO_HOUR)
-      if (responseBuyHour) {
-        for (let i = 0; i < responseBuyHour.data.length; i++) {
-          let checkArray = this.barChartLabelsBuyDayRGTDay.includes(responseBuyHour.data[i].HOUR_TIME.slice(-2));
-          if (checkArray == false) {
-            this.barChartLabelsBuyDayRGTDay.push(responseBuyHour.data[i].HOUR_TIME.slice(-2));
-          }
-        }
-
-      }
-      if (responseRGTHour) {
-        for (let i = 0; i < responseRGTHour.data.length; i++) {
-          let checkTwoArray = this.barChartLabelsBuyDayRGTDay.includes(responseRGTHour.data[i].HOUR_IN_DAY.slice(-2));
-          if (checkTwoArray == false) {
-            this.barChartLabelsBuyDayRGTDay.push(responseRGTHour.data[i].HOUR_IN_DAY.slice(-2));
-          }
-        }
-      }
-      if (responseBuyHour) {
-        for (let i = 0; i < this.barChartLabelsBuyDayRGTDay.length; i++) {
-          this.dataBuyHour.push(responseBuyHour.data[i] != "" && responseBuyHour.data[i] != null ? responseBuyHour.data[i].HOUR_SUM : 0);
-          this.dataRGTHour.push(responseRGTHour.data[i] != "" && responseRGTHour.data[i] != null ? responseRGTHour.data[i].HOUR_SUM : 0);
-        }
-      }
-      if (responseRGTHour) {
-        for (let i = 0; i < this.barChartLabelsBuyDayRGTDay.length; i++) {
-          this.dataRGTHour.push(responseRGTHour.data[i] != "" && responseRGTHour.data[i] != null ? responseRGTHour.data[i].HOUR_SUM : 0);
-        }
-      }
-      this.barChartDataBuyDayRGTDay = [
-        { data: this.dataBuyHour, label: 'Khách mua hàng', stack: '1', backgroundColor: '#E67E22', borderColor: '#73C6B6', hoverBackgroundColor: '#E67E22' },
-        { data: this.dataRGTHour, label: 'Khách đăng ký', stack: '2', backgroundColor: '#FFCCBC', borderColor: '#73C6B6', hoverBackgroundColor: '#FFCCBC' }
-      ];
-    }
-
-  }
-
+  
   // thong ke kh nhan data theo nha mang hang thang
   public async getChartReceivedMonth() {
     this.barLabelsChartReceivedMonth = [];
@@ -1370,14 +1150,13 @@ export class IndexComponent implements OnInit {
         }
       }
     }
-
     //bieu do hinh tron
-    this.chartOptions = {
+    this.chartOptionsPie = {
       series: datapie,
       chart: {
         width: 500,
-        type: "pie",
-        height: 313
+        height: 300,
+        type: "pie"
       },
       labels: ["Khách hàng Viettel", "Khách hàng Vinaphone", "Khách hàng Mobifone"],
       responsive: [
@@ -1385,10 +1164,10 @@ export class IndexComponent implements OnInit {
           breakpoint: 480,
           options: {
             chart: {
-              width: 200
+              width: 350
             },
             legend: {
-              position: "bottom"
+              position: "top"
             }
           }
         }
@@ -1406,8 +1185,6 @@ export class IndexComponent implements OnInit {
       this.getChartRegisterDayHour();
       this.getChartRegisterDayHourOld();
       this.getChartRegisterDayHourNew();
-      this.getProportionBuyDayRegisterDayHour();
-
     }
     else {
       this.checkDayhour = false;
@@ -1421,8 +1198,6 @@ export class IndexComponent implements OnInit {
       this.getChartReceivedDayHour();
       this.getChartRegisterDayHourOld();
       this.getChartRegisterDayHourNew();
-      this.getProportionBuyDayRegisterDayHour();
-
     }
   }
   onChangeChooseDate(event) {
@@ -1437,8 +1212,6 @@ export class IndexComponent implements OnInit {
     this.getChartReceivedDayHour();
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
-    this.getProportionBuyDayRegisterDayHour();
-
   }
   ChangeDropdownListAccount() {
     this.getCampaign();
@@ -1448,7 +1221,6 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHour();
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
-    this.getProportionBuyDayRegisterDayHour();
     this.getchartChartSuccess();
     this.getchartChartFail();
   }
@@ -1463,10 +1235,8 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHour();
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
-    this.getProportionBuyDayRegisterDayHour();
     this.getchartChartSuccess();
     this.getchartChartFail();
-
   }
   ChangeList() {
     this.getChartReceivedMonth();
@@ -1486,8 +1256,6 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHour();
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
-    this.getProportionBuyDayRegisterDayHour();
-
   }
 
   //#region search
@@ -1509,7 +1277,6 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHour();
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
-    this.getProportionBuyDayRegisterDayHour();
     this.getchartChartSuccess();
     this.getchartChartFail();
 
@@ -1532,7 +1299,6 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHour();
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
-    this.getProportionBuyDayRegisterDayHour();
     this.getchartChartSuccess();
     this.getchartChartFail();
   }
@@ -1549,8 +1315,6 @@ export class IndexComponent implements OnInit {
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
     this.getChartRegisterDayHourOld();
-    this.getProportionBuyDayRegisterDayHour();
-
   }
 
   onChangeVTLMonthYear(isChecked) {
@@ -1574,7 +1338,6 @@ export class IndexComponent implements OnInit {
     this.getChartReceivedDayHour();
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
-    this.getProportionBuyDayRegisterDayHour();
   }
 
   onChangeVMSMonthYear(isChecked) {
@@ -1598,7 +1361,6 @@ export class IndexComponent implements OnInit {
     this.getChartReceivedDayHour();
     this.getChartRegisterDayHourOld();
     this.getChartRegisterDayHourNew();
-    this.getProportionBuyDayRegisterDayHour();
   }
 
   onChangeGPCMonthYear(isChecked) {
@@ -1638,7 +1400,7 @@ export class IndexComponent implements OnInit {
     this.getChartReceivedMonth();
   }
 
-   getchartChartSuccess() {
+  getchartChartSuccess() {
     let arrayDayMonth = [];
     let arrayDataVT = [];
     let arrayDataGPC = [];
@@ -1656,70 +1418,70 @@ export class IndexComponent implements OnInit {
     SCENARIO_ID = this.selectedScenario.length != 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
     CAMPAIGN_ID = this.selectedCampaign.length != 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     this.dataService.getData('/api/datasms/GetCountDataSmsSuccess?account_id=' + ACCOUNT_ID + '&campaign_id=' + CAMPAIGN_ID
-    + '&scenario_id=' + SCENARIO_ID + '&from_date=' + FROM_DATE + '&to_date=' + TO_DATE +
-    '&viettel=' + this.stringVTL + '&gpc=' + this.stringGPC + '&vms=' + this.stringVMS)
-    .subscribe(res => {
-      if (res) {
-        for (let i = 0; i < res.data.length; i++) {
-          if (res.err_code == 0) {
-            arrayDayMonth.push(res.data[i].DAY_MONTH);
-            arrayDataVT.push(res.data[i].COUNT_DATA_VT);
-            arrayDataGPC.push(res.data[i].COUNT_DATA_GPC);
-            arrayDataVMS.push(res.data[i].COUNT_DATA_VMS);
+      + '&scenario_id=' + SCENARIO_ID + '&from_date=' + FROM_DATE + '&to_date=' + TO_DATE +
+      '&viettel=' + this.stringVTL + '&gpc=' + this.stringGPC + '&vms=' + this.stringVMS)
+      .subscribe(res => {
+        if (res) {
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.err_code == 0) {
+              arrayDayMonth.push(res.data[i].DAY_MONTH);
+              arrayDataVT.push(res.data[i].COUNT_DATA_VT);
+              arrayDataGPC.push(res.data[i].COUNT_DATA_GPC);
+              arrayDataVMS.push(res.data[i].COUNT_DATA_VMS);
+            }
           }
-        }
-        this.chartOptionsChart = {
-          series: [
-            {
-              name: "Viettel",
-              data: arrayDataVT
+          this.chartOptionsChart = {
+            series: [
+              {
+                name: "Viettel",
+                data: arrayDataVT
+              },
+              {
+                name: "Vinaphone",
+                data: arrayDataGPC
+              },
+              {
+                name: "Mobifone",
+                data: arrayDataVMS
+              },
+            ],
+            chart: {
+              type: "bar",
+              height: 350,
+              stacked: true,
             },
-            {
-              name: "Vinaphone",
-              data: arrayDataGPC
-            },
-            {
-              name: "Mobifone",
-              data: arrayDataVMS
-            },
-          ],
-          chart: {
-            type: "bar",
-            height: 350,
-            stacked: true,
-          },
-          responsive: [
-            {
-              breakpoint: 480,
-              options: {
-                legend: {
-                  position: "bottom",
-                  offsetX: -10,
-                  offsetY: 0
+            responsive: [
+              {
+                breakpoint: 480,
+                options: {
+                  legend: {
+                    position: "bottom",
+                    offsetX: -10,
+                    offsetY: 0
+                  }
                 }
               }
+            ],
+            plotOptions: {
+              bar: {
+                horizontal: false
+              }
+            },
+            xaxis: {
+              type: "category",
+              categories: arrayDayMonth
+            },
+            legend: {
+              position: "top",
+            },
+            fill: {
+              opacity: 1
             }
-          ],
-          plotOptions: {
-            bar: {
-              horizontal: false
-            }
-          },
-          xaxis: {
-            type: "category",
-            categories: arrayDayMonth
-          },
-          legend: {
-            position: "top",
-          },
-          fill: {
-            opacity: 1
-          }
-        };
-      }
-    });
+          };
+        }
+      });
   }
-   getchartChartFail() {
+  getchartChartFail() {
     let arrayDayMonthF = [];
     let arrayDataVTF = [];
     let arrayDataGPCF = [];
@@ -1737,72 +1499,72 @@ export class IndexComponent implements OnInit {
     SCENARIO_ID = this.selectedScenario.length != 0 && this.selectedScenario[0].id != "" ? this.selectedScenario[0].id : "";
     CAMPAIGN_ID = this.selectedCampaign.length != 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     this.dataService.getData('/api/datasms/GetCountDataSmsFail?account_id=' + ACCOUNT_ID + '&campaign_id=' + CAMPAIGN_ID
-    + '&scenario_id=' + SCENARIO_ID + '&from_date=' + FROM_DATE + '&to_date=' + TO_DATE +
-    '&viettel=' + this.stringVTL + '&gpc=' + this.stringGPC + '&vms=' + this.stringVMS)
-    .subscribe(res => {
-      if (res) {
-        for (let i = 0; i < res.data.length; i++) {
-          if (res.err_code == 0) {
-            arrayDayMonthF.push(res.data[i].DAY_MONTH_FAIL);
-            arrayDataVTF.push(res.data[i].COUNT_DATA_VT_FAIL);
-            arrayDataGPCF.push(res.data[i].COUNT_DATA_GPC_FAIL);
-            arrayDataVMSF.push(res.data[i].COUNT_DATA_VMS_FAIL);
+      + '&scenario_id=' + SCENARIO_ID + '&from_date=' + FROM_DATE + '&to_date=' + TO_DATE +
+      '&viettel=' + this.stringVTL + '&gpc=' + this.stringGPC + '&vms=' + this.stringVMS)
+      .subscribe(res => {
+        if (res) {
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.err_code == 0) {
+              arrayDayMonthF.push(res.data[i].DAY_MONTH_FAIL);
+              arrayDataVTF.push(res.data[i].COUNT_DATA_VT_FAIL);
+              arrayDataGPCF.push(res.data[i].COUNT_DATA_GPC_FAIL);
+              arrayDataVMSF.push(res.data[i].COUNT_DATA_VMS_FAIL);
+            }
           }
-        }
-        this.chartOptionsChartFail = {
-          series: [
-            {
-              name: "Viettel",
-              data: arrayDataVTF
+          this.chartOptionsChartFail = {
+            series: [
+              {
+                name: "Viettel",
+                data: arrayDataVTF
+              },
+              {
+                name: "Vinaphone",
+                data: arrayDataGPCF
+              },
+              {
+                name: "Mobifone",
+                data: arrayDataVMSF
+              },
+            ],
+            chart: {
+              type: "bar",
+              height: 350,
+              stacked: true,
             },
-            {
-              name: "Vinaphone",
-              data: arrayDataGPCF
-            },
-            {
-              name: "Mobifone",
-              data: arrayDataVMSF
-            },
-          ],
-          chart: {
-            type: "bar",
-            height: 350,
-            stacked: true,
-          },
-          responsive: [
-            {
-              breakpoint: 480,
-              options: {
-                legend: {
-                  position: "bottom",
-                  offsetX: -10,
-                  offsetY: 0
+            responsive: [
+              {
+                breakpoint: 480,
+                options: {
+                  legend: {
+                    position: "bottom",
+                    offsetX: -10,
+                    offsetY: 0
+                  }
                 }
               }
-            }
-          ],
-          plotOptions: {
-            bar: {
-              horizontal: false
-            }
-          },
-          xaxis: {
-            type: "category",
-            categories: arrayDayMonthF
-          },
-          legend: {
-            markers: {
-              fillColors: ["#2471A3", "#76D7C4", "#FFAB91"],
+            ],
+            plotOptions: {
+              bar: {
+                horizontal: false
+              }
             },
-            position: "top"
-          },
-          fill: {
-            colors: ["#2471A3", "#76D7C4", "#FFAB91"],
-            opacity: 1
-          }
-        };
-      }
-    });
+            xaxis: {
+              type: "category",
+              categories: arrayDayMonthF
+            },
+            legend: {
+              markers: {
+                fillColors: ["#2471A3", "#76D7C4", "#FFAB91"],
+              },
+              position: "top"
+            },
+            fill: {
+              colors: ["#2471A3", "#76D7C4", "#FFAB91"],
+              opacity: 1
+            }
+          };
+        }
+      });
   }
   onChangeVTLData(ischeck) {
     if (ischeck) {
@@ -1859,88 +1621,81 @@ export class IndexComponent implements OnInit {
     this.getchartChartFail();
   }
   //thong ke khach hang dang ky hang thang
-   getCustomerMonth() {
+  async getCustomerMonth() {
     let arrayDataMonth = [];
     let arrayDataAcount = [];
     let maxVl = 0;
     let FROM_MONTH = this.fromMonthadmin;
     let TO_MONTH = this.toMonthadmin;
-    this.dataService.getData('/api/account/GetCountAccountByMonth?from_month=' + FROM_MONTH + '&to_month=' + TO_MONTH)
-    .subscribe(res => {
-      if (res) {
-        for (let i = 0; i < res.data.length; i++) {
-          if (res.err_code == 0) {
-            arrayDataMonth.push(res.data[i].MONTH_ACCOUNT);
-            arrayDataAcount.push(res.data[i].COUNT_ACCOUNT_MONTH);
-          }
+    let res: any = await this.dataService.postAsync('/api/account/GetCountAccountByMonth', {
+      FROM_MONTH, TO_MONTH
+    })
+    if (res) {
+      for (let i = 0; i < res.data.length; i++) {
+        if (res.err_code == 0) {
+          arrayDataMonth.push(res.data[i].MONTH_ACCOUNT);
+          arrayDataAcount.push(res.data[i].COUNT_ACCOUNT_MONTH);
         }
-        console.log(arrayDataMonth);
-        console.log(arrayDataAcount);
-        maxVl =Math.max.apply(Math, arrayDataAcount);
-        console.log(maxVl);
-        this.chartOptionsLine = {
-          series: [
-            {
-              name: "",
-              data: arrayDataAcount
-            }
-          ],
-          chart: {
-            height: 350,
-            type: "line",
-            dropShadow: {
-              enabled: true,
-              color: "#000",
-              top: 18,
-              left: 7,
-              blur: 10,
-              opacity: 0.2
-            },
-            toolbar: {
-              show: false
-            }
-          },
-          colors: ["#77B6EA", "#545454"],
-          dataLabels: {
-            enabled: true
-          },
-          stroke: {
-            curve: "smooth"
-          },
-          title: {
-            align: "left"
-          },
-          grid: {
-            borderColor: "#e7e7e7",
-            row: {
-              colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-              opacity: 0.5
-            }
-          },
-          markers: {
-            size: 1
-          },
-          xaxis: {
-            categories: arrayDataMonth
-          },
-          yaxis: {
-            min: 0,
-            max: maxVl
-          },
-          legend: {
-            position: "top",
-            horizontalAlign: "right",
-            floating: true,
-            offsetY: -25,
-            offsetX: -5
-          }
-        };
       }
-    });
-    
-      
-    
-    
+      maxVl = Math.max.apply(Math, arrayDataAcount);
+      this.chartOptionsLine = {
+        series: [
+          {
+            name: "",
+            data: arrayDataAcount
+          }
+        ],
+        chart: {
+          height: 350,
+          type: "line",
+          dropShadow: {
+            enabled: true,
+            color: "#000",
+            top: 18,
+            left: 7,
+            blur: 10,
+            opacity: 0.2
+          },
+          toolbar: {
+            show: false
+          }
+        },
+        colors: ["#77B6EA", "#545454"],
+        dataLabels: {
+          enabled: true
+        },
+        stroke: {
+          curve: "smooth"
+        },
+        title: {
+          align: "left"
+        },
+        grid: {
+          borderColor: "#e7e7e7",
+          row: {
+            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+            opacity: 0.5
+          }
+        },
+        markers: {
+          size: 1
+        },
+        xaxis: {
+          categories: arrayDataMonth
+        },
+        yaxis: {
+          min: 0,
+          max: maxVl
+        },
+        legend: {
+          position: "top",
+          horizontalAlign: "right",
+          floating: true,
+          offsetY: -25,
+          offsetX: -5
+        }
+      };
+    }
   }
   onChangeFromMonthYearAdmin(event) {
     this.fromMonthadmin = this.utilityService.formatDateToString(event, "yyyyMM");

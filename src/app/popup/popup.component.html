@@ -1,44 +1,51 @@
 <div class="containerImg" [ngStyle]="{'display':(issuccess == true) ? 'none' : 'block'}">
     <section>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-4 col-sm-4 col-xs-12 form-group"></div>
             <div class="col-md-4 col-sm-4 col-xs-12 form-group" style="margin-top: 20px;">
                 <div class="img">
                     <img src="{{posterImage}}" style="width: 350px; height: 180px; margin-top: 6px; margin-right: 6px;" />
                 </div>
             </div>
-            <div class="col-md-4 col-sm-4 col-xs-12 form-group"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 col-sm-4 col-xs-12 form-group"></div>
-            <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+            <div class="col-md-3 col-sm-3 col-xs-12 form-group"></div>
+        </div> -->
+        <div class="row" style="margin-top: 30px ;">
+            <div class="col-md-2 col-sm-2 form-group"></div>
+            <div class="col-md-8 col-sm-8 col-xs-12 form-group">
                 <form #formAdd="ngForm" (ngSubmit)="createMember(formAdd)" class="container">
-                    <div>
-                        <h3 style="font-size: 18px; text-align: center;">Đăng ký nhận data miễn phí</h3>
-                    </div>
-                    <div>
-                        <div class="input-group" style="margin-top: 5%;">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-user" style="font-size: 20px;"></i></span>
-                            <input type="text" class="form-control" name="fullName" placeholder="{{ 'register.fullName' | translate }} " ngModel>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                            <img src="{{posterImage}}" class="img" />
                         </div>
-                    </div>
-                    <div>
-                        <div class="input-group" style="margin-top: 5%;">
-                            <span class="input-group-addon"><i class="fa fa-phone" style="font-size: 20px;"></i></span>
-                            <input type="text" class="form-control" name="phoneNumber" placeholder="{{ 'register.phoneNumber' | translate }}" ngModel [pattern]="mobNumberPattern" #mobNumber="ngModel">
-                        </div>
-                        <div *ngIf="mobNumber.errors && formAdd.submitted && !isValidFormSubmitted" [ngClass]="'error'">
-                            <div class="errorphone" *ngIf="mobNumber.errors.pattern">
-                                {{'register.validatePhone' | translate}}
+                        <div class="col-md-6 col-sm-6 col-xs-12 form-group mrg_top">
+                            <div>
+                                <h3 style="font-size: 16px; text-align: center; font-weight: bold;">ĐĂNG KÝ NHẬN DATA MIỄN PHÍ</h3>
+                            </div>
+                            <div>
+                                <div class="input-group" style="margin-top: 5%;">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user" style="font-size: 20px;"></i></span>
+                                    <input type="text" class="form-control" name="fullName" placeholder="{{ 'register.fullName' | translate }} " ngModel>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="input-group" style="margin-top: 5%;">
+                                    <span class="input-group-addon"><i class="fa fa-phone" style="font-size: 20px;"></i></span>
+                                    <input type="text" class="form-control" name="phoneNumber" placeholder="{{ 'register.phoneNumber' | translate }}" ngModel [pattern]="mobNumberPattern" #mobNumber="ngModel">
+                                </div>
+                                <div *ngIf="mobNumber.errors && formAdd.submitted && !isValidFormSubmitted" [ngClass]="'error'">
+                                    <div class="errorphone" *ngIf="mobNumber.errors.pattern">
+                                        {{'register.validatePhone' | translate}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button style="margin-top: 5%;" type="submit" class="btn btn btn-primary submit btn_rgt">{{ 'register.submit_register' | translate }}</button>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <button style="margin-top: 5%;" type="submit" class="btn btn btn-primary submit">{{ 'register.submit_register' | translate }}</button>
-                    </div>
                 </form>
             </div>
-            <div class="col-md-4 col-sm-4 col-xs-12 form-group"></div>
+            <div class="col-md-2 col-sm-2 form-group"></div>
         </div>
     </section>
 </div>

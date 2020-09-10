@@ -557,9 +557,13 @@ export class ScenariosComponent implements OnInit {
     let IS_ACTIVE = this.checkActive == true ? 1 : 0;
     let IS_SEND_SMS = this.checkSendSms == true ? 1 : 0;
     let IS_ACCUMULATE_POINT = this.isCheckAccumulatePoint == true ? 1 : 0;
-    let REWARD_NUMBER_ONE_TIME = parseInt(scenar.checkRewardOneTime);
+    let REWARD_NUMBER_ONE_TIME = 0;
+    if(scenar.checkRewardOneTime == null || scenar.checkRewardOneTime == ""){
+      REWARD_NUMBER_ONE_TIME = 1;
+    }else{
+      REWARD_NUMBER_ONE_TIME = Number(scenar.checkRewardOneTime);
+    }
     let REWARD_NUMBER_TIME_IN_DAYS = parseInt(scenar.RewardOneTimeInDay);
-
     if (this.checkSendSms == true) {
       if (combobox.slSenderName.value.length == 0) {
         SENDER_NAME = "";

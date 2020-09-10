@@ -35,35 +35,32 @@ export class PopupComponent implements OnInit {
   public issuccess = false;
   public isImg = true;
   public scenario_id: number;
+
   mobNumberPattern = "^((\\84-?)|0)?[0-9]{9}$";
   isValidFormSubmitted = false;
-
 
   constructor(private dataService: DataService,
     private notificationService: NotificationService,
     private authService: AuthService,
     private utilityService: UtilityService
   ) {
-   
+
   }
   ngOnInit() {
     this.subaccountID();
     this.getIpLocation();
-   
   }
 
   // lay gia tri ip click vao link tang data
   async getIpLocation() {
-
     let response: any = await this.dataService.getAsync('/api/Popup/GetIPAddress');
     if (response) {
       this.ipAddress = response.query;
       this.city = response.city;
       if (this.ipAddress != null && this.ipAddress != "") {
         setTimeout(() => {
-          this.createChartPopupView(); 
+          this.createChartPopupView();
         }, 2000);
-       
       }
     }
   }
@@ -72,11 +69,11 @@ export class PopupComponent implements OnInit {
     if (this.linkinput == null || this.linkinput == "") {
       this.linkinput = window.location.href;
       var rlink = this.linkinput.split(/[=\-&]/);
-      for (var i = 0; i < rlink.length; i++) {
         this.scenarioCode = (rlink[1]);
         this.account_Id = parseInt(rlink[3]);
-      }
-    }else{
+        console.log( this.scenarioCode);
+        console.log( this.account_Id);
+    } else {
       return;
     }
     if (this.scenarioCode != null && this.scenarioCode != "") {
@@ -85,7 +82,7 @@ export class PopupComponent implements OnInit {
         this.loadscenario();
       }, 1000);
     }
-   
+
   }
 
   async loadscenario() {
@@ -112,7 +109,6 @@ export class PopupComponent implements OnInit {
         }
       }
     }
-
     setTimeout(() => {
       this.getAccountLink();
     }, 3000);
@@ -142,13 +138,16 @@ export class PopupComponent implements OnInit {
   async createMember(item) {
     let member = item.value;
     let ACCOUNT_ID = this.account_Id;
+    let SCENARIO_ID = this.scenario_id;
     let SCENARIO_CODE = this.scenarioCode;
     let PERSON_FULLNAME = member.fullName;
+    let REGISTER_FULL_NAME = member.fullName;
     if (PERSON_FULLNAME == "" || PERSON_FULLNAME == null) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-97"));
       return;
     }
     let PHONE_NUMBER = member.phoneNumber;
+    let REGISTER_PHONE= member.phoneNumber;
     if (PHONE_NUMBER == "" || PHONE_NUMBER == null) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-62"));
       return;
@@ -167,34 +166,44 @@ export class PopupComponent implements OnInit {
     } else if (response.err_code == -116) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-116"));
       this.issuccess = false;
-      return
     }
     else if (response.err_code == -119) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-119"));
       this.issuccess = false;
-      return
     } else if (response.err_code == -500) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-205"));
       this.issuccess = false;
-      return
-    }
-    else {
+    } else if (response.err_code == -207) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-207"));
+      this.issuccess = false;
+    } else if (response.err_code == -208) {
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-208"));
+      this.issuccess = false;
+    }else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
       this.issuccess = false;
-      return
+      return;
+    }
+    let res: any = await await this.dataService.postAsync('/api/Popup/AddChartPopupRegister', { REGISTER_PHONE, REGISTER_FULL_NAME, ACCOUNT_ID, SCENARIO_ID })
+    if(res){
+      if (res.err_code != 0) {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+        this.issuccess = false;
+        return;
+      }
+      else{
+        
+      }
     }
   }
-
   //#endregion
-
   //region create chart popup view
-
   async createChartPopupView() {
     let ACCOUNT_ID = this.account_Id;
     let SCENARIO_ID = this.scenario_id;
     let IP_VIEW = this.ipAddress;
     let LOCATION = this.city;
-    let response: any = await this.dataService.postAsync('/api/ChartPopupView', { ACCOUNT_ID, SCENARIO_ID, IP_VIEW, LOCATION }
+    let response: any = await this.dataService.postAsync('/api/ChartPopupView/AddChartPopupView', { ACCOUNT_ID, SCENARIO_ID, IP_VIEW, LOCATION }
     )
     if (response) {
       if (response.err_code == 0) {
@@ -216,8 +225,9 @@ export class PopupComponent implements OnInit {
 
   }
   //#endregion
-async getAccountLink(){
-  let ACCOUNT_ID = this.account_Id;
-  let response: any = await this.authService.getAccountLink(ACCOUNT_ID);
-}
+  async getAccountLink() {
+    let ACCOUNT_ID = this.account_Id;
+    let response: any = await this.authService.getAccountLink(ACCOUNT_ID);
+  }
+
 }

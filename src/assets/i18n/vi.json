@@ -73,7 +73,7 @@
         "balanceViettel": "Số dư Viettel",
         "balanceVina": "Số dư Vinaphone",
         "balanceMobi": "Số dư Mobifone",
-        "dataCodeMobi": "Mã code Mobifone",
+        "dataCodeMobi": "Tổng code Mobifone",
         "total_scenario": "Kịch bản",
         "total_scenario_ran": "Tổng kịch bản đang chạy",
         "total_campaign": "Chiến dịch",
@@ -82,7 +82,7 @@
         "total_data_sent": "Data(MB)",
         "total_money_sent_end": "Tiền(vnđ)",
         "total_money_sent": "Tổng tiền đã gửi đi",
-        "total_data_sent_end": "Tổng Data đã gửi đi",
+        "total_data_sent_end": "Tổng dung lượng gửi thành công",
         "total_datacode_sent_end": "Data code",
         "total_datacode_sent": "Tổng code đã gửi đi",
         "choose_money": "Chọn mệnh giá tiền",
@@ -91,10 +91,15 @@
         "account_new": "Khách hàng mới",
         "total_account_new": "Khách hàng mới trong tháng",
         "error_data": "Data lỗi",
-        "total_error_data": "Tổng số gói cước data gửi lỗi trong ngày",
+        "total_error_data": "Tổng gói data gửi lỗi trong ngày",
         "warning": "Cảnh báo",
-        "out_of_money": "Tổng số KH sắp hết tiền"
-
+        "out_of_money": "Tổng số KH sắp hết tiền",
+        "total_member": "Tổng số khách hàng",
+        "customer": "Thành viên",
+        "title_customer": "Tổng số thành viên",
+        "time": "Thống kê 30 ngày gần đây",
+        "info": "Thông tin",
+        "change_password": "Đổi mật khẩu"
     },
     "home": {
         "sms_error": "Tin lỗi",
@@ -394,7 +399,10 @@
         "create_user": "Người cấp",
         "add_data": "Cấp data cho tài khoản",
         "data_history": "Lịch sử cấp data",
-        "description": "Mô tả"
+        "description": "Mô tả",
+        "ok": "Bạn chắc chắn muốn cấp ",
+        "okaccount": " cho tài khoản "
+
     },
     "send_data": {
         "tittle": "Tạo đơn hàng gửi Data",
@@ -810,7 +818,8 @@
         "title_statistics": "Thống kê số lượng khách hàng theo ngày/giờ",
         "statistics_data": "Thống kê sản lượng gửi data theo ngày",
         "statistics_account": "Thống kê số lượng khách hàng đăng ký theo tháng",
-        "title_total": "Thống kê số lượng khách hàng theo tháng/năm",
+        "title_total_month": "Thống kê số lượng khách hàng nhận data theo tháng",
+        "title_total_year": "Thống kê số lượng khách hàng nhận data theo năm",
         "chart_view_click_day": "Số lượng KH click vào link tặng data",
         "click_day": "Theo ngày",
         "click_hour": "Theo giờ",

@@ -252,6 +252,7 @@ export class MemberComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/Person/GetPersonPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone);
     // + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone
+   
     this.loadData(response);
   }
 
@@ -486,7 +487,7 @@ export class MemberComponent implements OnInit {
   }
   // export template excel
   async excelTemplateMember() {
-    let result: boolean = await this.dataService.getFileExtentionAsync("/api/FileExtention/ExportExcelTemplateMember", "DataSms", "template_member.xlsx");
+    let result: boolean = await this.dataService.getFileExtentionAsync('/api/FileExtention/ExportExcelTemplateMember', 'DataSms', 'template_member.xlsx');
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
     }
