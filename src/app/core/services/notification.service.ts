@@ -28,7 +28,7 @@ export class NotificationService {
       transition: 'pulse',
 
       notifier: {
-        delay: 5,
+        delay: 10,
         position: 'top-right',
         closeButton: false
       },

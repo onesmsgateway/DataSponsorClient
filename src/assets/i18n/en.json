@@ -19,6 +19,7 @@
         "email": "Email",
         "phone": "Phone",
         "name": "Name",
+        "company": "Company",
         "name_short": "Short name",
         "tool": "Tool",
         "no_data_found": "No data found",
@@ -552,7 +553,9 @@
         "amt_telco": "Money by telco",
         "total_amt": "Total money",
         "ask_approve": "Are you sure approve campaign?",
-        "coefficient": "Coefficient"
+        "coefficient": "Coefficient",
+        "phone_sended_exits": "Phone number: ",
+        "phone_exits_1": " has exceeded the number of times receiving data from the campaign: "
     },
     "statistic-data-sms": {
         "title": "Statistic Data",

@@ -123,6 +123,7 @@ export class SenderComponent implements OnInit {
 
     this.settingsFilterSenderGroup = {
       text: this.utilityService.translate("partner_sender.iSender_grroup"),
+      showCheckbox: false,
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -565,14 +566,15 @@ export class SenderComponent implements OnInit {
 
   //#region export excel
   async exportExcel() {
-    let listParameter = "name=" + this.inSenderName + ",senderGroup=" + this.inSenderGroup
-    let result: boolean = await this.dataService.getFileExtentionParameterAsync("/api/FileExtention/ExportExcelParameter",
-      "SenderName", listParameter, "SenderName")
+debugger
+    let result: boolean = await this.dataService.getFileExtentionSenderNameAsync("/api/FileExtention/ExportExcelSenderName" , this.inSenderName , this.inSenderGroup , "SenderName")
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
+
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("125"));
+      return;
     }
   }
   //#endregion

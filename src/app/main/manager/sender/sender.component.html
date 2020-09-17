@@ -17,7 +17,7 @@
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" name="inSenderName" [(ngModel)]="inSenderName" (keyup.enter)="getData()" placeholder="{{ 'sender_name.iSender_name' | translate }}">
+                                <input type="text" class="form-control has-feedback-left" name="inSenderName" [(ngModel)]="inSenderName" placeholder="{{ 'sender_name.iSender_name' | translate }}" (onchage)="ChangeSenderName()" (keyup)="ChangeSenderName()" (keydown)="ChangeSenderName()">
                                 <span class="fa fa-indent form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback"></div>
@@ -40,7 +40,7 @@
                                 <div class="form-group has-feedback content-end">
                                     <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="openCreateForm()">{{ 'global.add_new' | translate }}</button>
                                     <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="confirmDeleteMulti()">{{ 'global.multi_delete' | translate }}</button>
-                                    <button type="submit" class="btn btn-success btn-sm" (click)="exportExcel()">{{ 'global.export_excel' | translate }}</button>
+                                    <button type="submit" class="btn btn-success btn-sm" (click)="exportExcel()">{{textbuttonExcel}}</button>
                                 </div>
                             </div>
                         </form>

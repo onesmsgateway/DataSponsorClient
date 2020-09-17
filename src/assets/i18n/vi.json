@@ -19,9 +19,10 @@
         "export_excel": "Xuất Excel",
         "import_excel": "Import excel",
         "avatar": "Ảnh đại diện",
-        "email": "Thư điện tử",
+        "email": "Email",
         "phone": "Số điện thoại",
         "name": "Tên",
+        "company": "Công ty",
         "name_short": "Tên viết tắt",
         "tool": "Công cụ",
         "no_data_found": "Không có dữ liệu",
@@ -567,7 +568,9 @@
         "total_amt": "Tổng tiền",
         "ask_approve": "Bạn có chắc chắn muốn duyệt đơn hàng?",
         "coefficient": "Hệ số",
-        "data_campaign_confirm": "Xác nhận hủy đơn hàng"
+        "data_campaign_confirm": "Xác nhận hủy đơn hàng",
+        "phone_sended_exits": "Số điện thoại: ",
+        "phone_exits_1": " đã vượt quá số lần nhận data từ chiến dịch: "
     },
     "data_otp": {
         "inputOtp": "Mã otp không được trống"

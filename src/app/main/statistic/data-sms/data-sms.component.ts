@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class DataSmsComponent implements OnInit {
 
   public dataSms = [];
+  public  textButtonExcel = 'Export Excel';
   public dataScenario = [];
   public dataAccount = [];
   public dataCampaign = [];
@@ -505,7 +506,6 @@ export class DataSmsComponent implements OnInit {
 
   //#region search
   onChangeFromDate(event) {
-
     this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "000000";
     if (this.fromDate == '19700101000000') {
       this.fromDate = '';
@@ -583,6 +583,7 @@ export class DataSmsComponent implements OnInit {
 
   public async exportExcel() {
     let accountID = "0";
+    this.textButtonExcel = 'Loading...';
     if (this.isAdmin)
       accountID = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
     else if (!this.isAdmin && this.selectedAccount.length == 0)
@@ -594,7 +595,8 @@ export class DataSmsComponent implements OnInit {
 
     let result: boolean = await this.dataService.getFileExtentionDataSmsStatisticAsync("/api/FileExtention/ExportExcelDataSmsStatistic",
       accountID, pack, status, this.fromDate, this.toDate, this.smsContent, this.phone, this.stringVTL, this.stringGPC, this.stringVMS,issenddata, "DataList");
-    if (result) {
+      this.textButtonExcel = 'Export Excel';
+      if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
     }
     else {

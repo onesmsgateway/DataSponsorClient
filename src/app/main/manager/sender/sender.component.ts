@@ -22,6 +22,7 @@ export class SenderComponent implements OnInit {
   @ViewChild('confirmDeleteModal', { static: false }) public confirmDeleteModal: ModalDirective
 
   public dataSender;
+  public textbuttonExcel = 'Export Excel'
   public dataSenderGroup = [];
   public pagination: Pagination = new Pagination();
   public name;
@@ -127,7 +128,8 @@ export class SenderComponent implements OnInit {
       enableSearchFilter: true,
       enableFilterSelectAll: true,
       searchPlaceholderText: this.utilityService.translate("global.search"),
-      noDataLabel: this.utilityService.translate("global.no_data")
+      noDataLabel: this.utilityService.translate("global.no_data"),
+      showCheckbox: false
     };
 
     this.settingsFilterTelco = {
@@ -147,7 +149,8 @@ export class SenderComponent implements OnInit {
       enableFilterSelectAll: true,
       disabled: false,
       searchPlaceholderText: this.utilityService.translate("global.search"),
-      noDataLabel: this.utilityService.translate("global.no_data")
+      noDataLabel: this.utilityService.translate("global.no_data"),
+      showCheckbox: false
     };
   }
 
@@ -209,7 +212,10 @@ export class SenderComponent implements OnInit {
     this.getData();
   }
   //#endregion
-
+  ChangeSenderName() {
+    debugger
+    this.getData();
+  }
   //#region load group sender
   async getDataSenderGroup() {
     this.selectedItemComboboxSenderGroup.push({ "id": "", "itemName": this.utilityService.translate("partner_sender.iSender_grroup") });
@@ -222,7 +228,7 @@ export class SenderComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/sendergroup')
     if (response)
       for (let index in response.data) {
-       
+
         this.dataSenderGroup.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
       }
   }
@@ -567,14 +573,16 @@ export class SenderComponent implements OnInit {
 
   //#region export excel
   async exportExcel() {
-    let listParameter = "name=" + this.inSenderName + ",senderGroup=" + this.inSenderGroup
-    let result: boolean = await this.dataService.getFileExtentionParameterAsync("/api/FileExtention/ExportExcelParameter",
-      "SenderName", listParameter, "SenderName")
+    debugger
+    this.textbuttonExcel = 'Loading...';
+    let result: boolean = await this.dataService.getFileExtentionSenderNameAsync("/api/FileExtention/ExportExcelSenderName", this.inSenderName, this.inSenderGroup, "SenderName")
+    this.textbuttonExcel = 'Export Excel';
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("125"));
+      return;
     }
   }
   //#endregion

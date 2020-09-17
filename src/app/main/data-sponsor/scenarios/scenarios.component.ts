@@ -78,7 +78,7 @@ export class ScenariosComponent implements OnInit {
   public isAdded: boolean = false;
   public startDate: Date = new Date();
   public endDate: Date = new Date();
-  public checkActive: boolean = false;
+  public checkActive: boolean = true;
   public checkSendSms: boolean = false;
   public checkRewardOneTime: boolean = false;
   public RewardOneTimeInDay = 0;
@@ -778,8 +778,6 @@ export class ScenariosComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
       return;
     }
-
-
     let START_DATE = formData.startDate.value;
     let END_DATE = formData.endDate.value;
     if (START_DATE != '' && START_DATE != null && END_DATE != '' && END_DATE != null) {
@@ -792,7 +790,8 @@ export class ScenariosComponent implements OnInit {
     }
     START_DATE = this.utilityService.formatDateToString(START_DATE, "yyyyMMddHHmmss");
     END_DATE = this.utilityService.formatDateToString(END_DATE, "yyyyMMdd") + "235959";
-    let IS_ACTIVE = this.checkActive == true ? 1 : 0;
+
+    let IS_ACTIVE = formData.isActive.value == true?1:0;
     let IS_ACCUMULATE_POINT = formData.isCheckAccumulatePoint.value == true ? 1 : 0;
     let IS_SEND_SMS = formData.checkSendSms.value == true ? 1 : 0;
     let REWARD_NUMBER_ONE_TIME = parseInt(formData.checkRewardOneTime.value);

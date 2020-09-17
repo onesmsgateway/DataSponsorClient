@@ -181,7 +181,7 @@ export class DataService {
 
   public async importExcelAndSavePhoneListDataAsync(postData: any, files: File[], groupId: any, groupCode: any, groupName: any, accountID: any) {
     try {
-
+      debugger
       let formData: FormData = new FormData();
       formData.append('files', files[0], files[0].name);
       if (postData !== "" && postData !== undefined && postData !== null) {
@@ -192,10 +192,10 @@ export class DataService {
         }
       }
       const response = await this.postAsync("/api/FileExtention/ImportExcelAndSavePhoneList?groupId=" + groupId + "&groupCode=" + groupCode + "&groupName=" + groupName + "&accountID=" + accountID, formData);
+      debugger
       return response;
     }
     catch (error) {
-
       return null;
     }
   }
@@ -466,6 +466,20 @@ export class DataService {
     return result;
   }
 
+  public async getFileExtentionAccountAsync(uri: string, accountId: any, user_name: string, email: string, phone: string,company_name: string, payment_type: any, fromDate: string, toDate: string, fileName: string): Promise<boolean> {
+    let result: boolean = false;
+    let url = AppConst.DATA_SPONSOR_API + uri + '?account_id=' + accountId + '&user_name=' + user_name + '&email=' + email + '&phone=' + phone +  '&company_name=' + company_name + '&payment_type=' + payment_type +
+      '&from_date=' + fromDate + '&to_date=' + toDate + '&fileName=' + fileName;
+    let response = await this.http.get(url, { responseType: 'arraybuffer' }).toPromise();
+    if (response) {
+      let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, fileName);
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }
   public async getFileExtentionAccountHistoryAsync(uri: string, accountId: any, campaignId: string, content: string
     , ip: string, fromDate: string, toDate: string, fileName: string): Promise<boolean> {
     let result: boolean = false;
@@ -496,6 +510,20 @@ export class DataService {
     return result;
   }
 
+  public async getFileExtentionSenderNameAsync(uri: string, name: string, sender_group: string, fileName: string): Promise<boolean> {
+    let result: boolean = false;
+    let url = AppConst.DATA_SPONSOR_API + uri + '?name=' + name + '&sender_group=' + sender_group + '&fileName=' + fileName;
+    let response = await this.http.get(url, { responseType: 'arraybuffer' }).toPromise();
+    if (response) {
+      let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, fileName);
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }
+  
   public async getAccountDetail(): Promise<any> {
     try {
       const response = await this.http.get(AppConst.DATA_SPONSOR_API + '/api/account/GetInfoAccountLogin').toPromise();

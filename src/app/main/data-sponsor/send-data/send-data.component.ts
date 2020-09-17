@@ -116,6 +116,8 @@ export class SendDataComponent implements OnInit {
   public disable_resend_otp: boolean = false;
   public chkOnlyOneOld: boolean = false;
   public campaign: boolean = true;
+  public checkPhoneExit: boolean = true;
+  public PhoneExit: string = "";
   public ischeckgroup: boolean = false;
   public isSendVTL: boolean = false;
   public isSendGPC: boolean = false;
@@ -431,19 +433,17 @@ export class SendDataComponent implements OnInit {
   }
 
   async selectCampaign() {
+    debugger
     let campaignId = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != null ? this.selectedCampaign[0].id : 0;
-    let response: any = await this.dataService.getAsync('/api/DataCampaign/' + campaignId);
+    let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignById?id=' + campaignId);
     if (response.err_code == 0 && response.data.length > 0) {
-      if (response.data[0].REWARD_NUMBER_ONE_TIME == 1)
-        this.chkOnlyOneOld = true;
-      else
-        this.chkOnlyOneOld = false;
+      this.NumberRewardTimesInDayOld = response.data[0].REWARD_NUMBER;
       this.timeDonateOld = response.data[0].REWARD_NUMBER_TIME_IN_DAYS;
     }
   }
 
   deSelectCampaign() {
-    this.chkOnlyOneOld = false;
+    this.NumberRewardTimesInDayOld = 0;
     this.timeDonateOld = 0;
   }
 
@@ -1044,7 +1044,6 @@ export class SendDataComponent implements OnInit {
   // upload file
   public async submitUploadFile() {
     this.loading = true;
-
     if (this.selectedGroupUpload.length == 0 && (this.groupCode == null || this.groupCode == "")) {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-99"));
       this.loading = false;
@@ -1062,6 +1061,7 @@ export class SendDataComponent implements OnInit {
       let groupId = this.selectedGroupUpload.length > 0 && this.selectedGroupUpload[0].id != "" ? this.selectedGroupUpload[0].id : "";
       let groupName = this.selectedGroupUpload.length > 0 && this.selectedGroupUpload[0].itemName != "" ? this.selectedGroupUpload[0].itemName : "";
       let response: any = await this.dataService.importExcelAndSavePhoneListDataAsync(null, file.files, groupId, this.groupCode, this.groupName, this.accountId);
+      debugger
       if (response) {
         if (response.err_code == -100) {
           this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-100"));
@@ -1076,13 +1076,13 @@ export class SendDataComponent implements OnInit {
           this.groupCode = "";
           this.groupName = "";
           this.uploadExcelModal.hide();
+          this.pageRefresh();
           this.getDataGroup();
           if (groupId != null && groupId != "") {
             this.selectedGroup.push({ "id": groupId, "itemName": groupName });
           } else {
             this.selectedGroup.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME })
           }
-
           this.getPhoneNumber(this.selectedGroup[0]);
         }
 
@@ -1123,6 +1123,7 @@ export class SendDataComponent implements OnInit {
 
   //show confirm send data sms
   async sendDataSMS() {
+    debugger
     this.ACCOUNT_ID = this.selectedItemComboboxAccount.length > 0 ? this.selectedItemComboboxAccount[0].id : 0;
     if (this.ACCOUNT_ID == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-21"));
@@ -1255,11 +1256,27 @@ export class SendDataComponent implements OnInit {
         IS_MONEY_DATA_CODE = 0;
       }
     }
+    debugger
+    let REWARD_NUMBER;
+    let REWARD_NUMBER_TIME_IN_DAYS
+    if (this.chkcampaign == false) {
+      REWARD_NUMBER = this.NumberRewardTimesInDayOld;
+      REWARD_NUMBER_TIME_IN_DAYS = this.timeDonateOld;
+    } else {
+      if (this.NumberRewardTimesInDay == null) {
+        REWARD_NUMBER = 0;
+      } else {
+        REWARD_NUMBER = this.NumberRewardTimesInDay;
+      }
+      if (this.timeDonateCreate == null) {
+        REWARD_NUMBER_TIME_IN_DAYS = 0;
+      } else
+        REWARD_NUMBER_TIME_IN_DAYS = this.timeDonateCreate;
+    }
 
-    let REWARD_NUMBER = this.NumberRewardTimesInDay;
-    let REWARD_NUMBER_TIME_IN_DAYS = this.timeDonateCreate;
     let chkCampaign = this.chkcampaign == true ? 0 : 1;
     let DATA_CAMPAIGN_ID = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : null;
+    let j = 0;
     if (this.isSendSMS) {
       for (let i = 0; i < this.dataPhoneTamp.length; i++) {
         let phone = this.dataPhoneTamp[i].PHONE;
@@ -1283,23 +1300,22 @@ export class SendDataComponent implements OnInit {
         }
         else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
           let SMS_CONTENT = this.SMS_TEMPLATE.replace(this.utilityService.translate('send_data.inPack'), PACKAGE_NAME_VMS).replace(this.utilityService.translate('send_data.inPhone'), phone)
-          .replace(this.utilityService.translate('send_data.inData'), DATA_VMS).replace(this.utilityService.translate('send_data.inDateUse'), this.effectiveDateVMS.replace("ngày", "").trim());
-          if(this.checkdatacode == true){
-            for (let j = 0; j < this.dataCodeTamp.length; j++) {
-              let code = this.dataCodeTamp[j].ENCRYPTED_CODE;
-              this.listSmsSend.push({
-                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMSDataCode, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
-                , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_CODE", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS
-                , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: code, IS_MONEY_DATA_CODE: IS_MONEY_DATA_CODE
-              });
-            }
-          }else {
-              this.listSmsSend.push({
-                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
-                , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS
-                , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: "", IS_MONEY_DATA_CODE: 0
-              });
-            }
+            .replace(this.utilityService.translate('send_data.inData'), DATA_VMS).replace(this.utilityService.translate('send_data.inDateUse'), this.effectiveDateVMS.replace("ngày", "").trim());
+          if (this.checkdatacode == true) {
+            let code = this.dataCodeTamp[j].ENCRYPTED_CODE;
+            this.listSmsSend.push({
+              ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMSDataCode, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
+              , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_CODE", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS
+              , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: code, IS_MONEY_DATA_CODE: IS_MONEY_DATA_CODE
+            });
+            j++;
+          } else {
+            this.listSmsSend.push({
+              ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
+              , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS
+              , REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: "", IS_MONEY_DATA_CODE: 0
+            });
+          }
         }
       }
     }
@@ -1319,15 +1335,14 @@ export class SendDataComponent implements OnInit {
           });
         }
         else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
-          if(this.checkdatacode == true){
-            for (let j = 0; j < this.dataCodeTamp.length; j++) {
-              let code = this.dataCodeTamp[j].ENCRYPTED_CODE;
-              this.listSmsSend.push({
-                ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
-                , TYPE: "DATA_CODE", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS, REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: code, IS_MONEY_DATA_CODE: IS_MONEY_DATA_CODE
-              });
-            }
-          }else{
+          if (this.checkdatacode == true) {
+            let code = this.dataCodeTamp[j].ENCRYPTED_CODE;
+            this.listSmsSend.push({
+              ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
+              , TYPE: "DATA_CODE", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS, REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: code, IS_MONEY_DATA_CODE: IS_MONEY_DATA_CODE
+            });
+            j++;
+          } else {
             this.listSmsSend.push({
               ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
               , TYPE: "DATA_SPONSOR", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS, REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: '', IS_MONEY_DATA_CODE: 0
@@ -1338,9 +1353,16 @@ export class SendDataComponent implements OnInit {
     }
 
     let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, this.listSmsSend);
+    debugger
     if (insertSms.err_code == 0) {
       this.messageAfterSend = insertSms.err_message;
       this.confirmAfterSuccessModal.show();
+      this.pageRefresh();
+    } else if (insertSms.err_code == -501) {
+      let phoneexit = this.utilityService.translate('data-campaign.phone_sended_exits');
+      let phoneexit1 = this.utilityService.translate('data-campaign.phone_exits_1');
+      this.checkPhoneExit = true;
+      this.PhoneExit = phoneexit + insertSms.data + phoneexit1 + this.PROGRAM_NAME;
     }
     else this.notificationService.displayErrorMessage(insertSms.err_message);
     this.viewQuyData(this.ACCOUNT_ID);
@@ -1652,5 +1674,8 @@ export class SendDataComponent implements OnInit {
   }
   async resendOtp() {
     this.createDataOtp();
+  }
+  pageRefresh() {
+    location.reload();
   }
 }

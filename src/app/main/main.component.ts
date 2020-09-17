@@ -28,6 +28,7 @@ export class MainComponent {
   public viewQuyVina = 0;
   public viewQuyMobi = 0;
   public isAdmin: boolean = false;
+  public userAdmin: boolean = false;
   public viewQuyDataCodeMobi = 0;
   public enablePackageDataCode = false;
 
@@ -85,6 +86,12 @@ export class MainComponent {
       } else {
         this.isAdmin = false;
       }
+      if(result.data[0].USER_NAME == "admin"){
+        this.userAdmin = true;
+      }else{
+        this.userAdmin = false;
+      }
+
       this.viewQuyTin(false);
       if(this.isAdmin == true){
           this.getBalance();

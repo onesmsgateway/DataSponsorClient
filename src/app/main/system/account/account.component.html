@@ -18,32 +18,36 @@
                     <div class="x_content">
                         <form class="row form-horizontal form-label-left input_mask" #formSearchAccount="ngForm" (ngSubmit)="searchAccount(formSearchAccount.value)">
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" placeholder="{{ 'account_history.account' | translate }}" name="fillterUserName" ngModel>
+                                <input type="text" class="form-control has-feedback-left" placeholder="{{ 'account_history.account' | translate }}" name="user_name" ngModel (onchage)="Changefilter()" (keyup)="Changefilter()" (keydown)="Changefilter()">
                                 <span class="fa fa-list-ul form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" placeholder="{{ 'account_history.email' | translate }}" name="fillterFullName" ngModel>
+                                <input type="text" class="form-control has-feedback-left" placeholder="{{ 'account_history.email' | translate }}" name="email" ngModel (onchage)="Changefilter()" (keyup)="Changefilter()" (keydown)="Changefilter()">
                                 <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" placeholder="{{ 'account_history.Company' | translate }}" name="fillterCompanyName" ngModel>
+                                <input type="text" class="form-control has-feedback-left" placeholder="{{ 'account_history.Company' | translate }}" name="company_name" ngModel (onchage)="Changefilter()" (keyup)="Changefilter()" (keydown)="Changefilter()">
                                 <span class="fa fa-list-ul form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" placeholder="{{ 'global.phone' | translate }}" name="fillterPhone" ngModel>
+                                <input type="text" class="form-control has-feedback-left" placeholder="{{ 'global.phone' | translate }}" name="phone" ngModel (onchage)="Changefilter()" (keyup)="Changefilter()" (keydown)="Changefilter()">
                                 <span class="fa fa-phone form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <select name="fillterPaymentType" class="form-control has-feedback-left" ngModel>
+                                <select name="payment_Type" class="form-control has-feedback-left" ngModel (onchage)="Changefilter()" (keyup)="Changefilter()" (keydown)="Changefilter()">
                   <option value="">{{'account.choose_account_type' | translate}}</option>
                   <option value="1">Trả trước</option>
                   <option value="2">Trả sau</option>
                 </select>
+
                                 <span class="glyphicon glyphicon-lock form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
+                                <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
                             </div>
+
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
+                                <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
                                 <button type="submit" style="float: right; margin-right: 0;" class="btn btn-primary btn-sm">
@@ -64,8 +68,7 @@
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
                                     <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="showCreateAccount()">{{ 'global.add_new' | translate }}</button>
-                                    <!-- <button class="btn btn-primary btn-sm" [routerLink]="['../account-quota']">{{'account.quota_provide' | translate}}</button> -->
-                                    <button type="submit" class="btn btn-primary btn-sm" (click)="exportExcelAccount()">{{ 'global.export_excel' | translate }}</button>
+                                    <button type="submit" class="btn btn-success btn-sm" (click)="exportExcelAccount()">{{ textbuttonExcel }}</button>
                                 </div>
                             </div>
                         </form>
@@ -86,6 +89,10 @@
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'global.phone' | translate}}</th>
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
+                                                    {{'global.email' | translate}}</th>
+                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">
+                                                    {{'global.company' | translate}}</th>
+                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'account.account_type' | translate}}</th>
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'account.account_status' | translate}}</th>
@@ -105,6 +112,8 @@
                                                 <td>{{account.PASSWORD}}</td>
                                                 <td>{{account.FULL_NAME}}</td>
                                                 <td>{{account.PHONE}}</td>
+                                                <td>{{account.EMAIL}}</td>
+                                                <td>{{account.COMPANY_NAME}}</td>
                                                 <td>{{account.PAYMENT_TYPE == 1? 'Trả trước': account.PAYMENT_TYPE == 2?'Trả sau':''}}</td>
                                                 <td>{{account.IS_ACTIVE == 1? 'Hoạt động': 'Dừng hoạt động'}}</td>
                                                 <td>{{convertStringDate(account.CREATE_DATE)}}</td>

@@ -28,18 +28,19 @@ export class AccountComponent implements OnInit {
   @ViewChild('uploadImageEdit', { static: false }) public uploadImageEdit;
 
   public formEditAccount: FormGroup;
+  public  textbuttonExcel = 'Export Excel';
   public dataAccount = [];
   public modalRef: BsModalRef;
   public pagination: Pagination = new Pagination();
   public userNameAcount;
   public AccountId;
   public idDelete: string[] = [];
-  public fillterUserName: string = '';
-  public fillterFullName: string = '';
-  public fillterCompanyName: string = '';
-  public fillterPhone: string = '';
+  public user_name: string = '';
+  public email: string = '';
+  public company_name: string = '';
+  public phone: string = '';
   public codepassword: string = '';
-  public fillterPaymentType: string = '';
+  public payment_Type: string = '';
   public checkSendSmsLoop = false;
   public is_random_pass = false;
   public isDisablePass = false;
@@ -68,6 +69,10 @@ export class AccountComponent implements OnInit {
   public formResetPass: FormGroup;
   public urlImageUpload
   public urlImageUploadEdit
+  public fromDate: string = "";
+  public toDate: string = "";
+  public timeTo: Date = new Date();
+  public timeFrom = new Date(this.timeTo.getTime() - (30 * 24 * 60 * 60 * 1000));
 
   constructor(
     private dataService: DataService,
@@ -147,6 +152,8 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd") + "235959";
+    this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd") + "000000";
     this.loadAccountType();
     if (this.activatedRoute.snapshot.queryParamMap.get('redirectFrom') && this.activatedRoute.snapshot.queryParamMap.get('redirectFrom') == 'home') {
       this.getAccountNew();
@@ -192,12 +199,12 @@ export class AccountComponent implements OnInit {
           this.listRole.push({ "id": result[i].ID, "itemName": result[i].ROLE_NAME });
         }
       }
-    }else{
+    } else {
 
       let account_id = Number(this.authService.currentUserValue.ACCOUNT_ID);
       let response = await this.dataService.getAsync('/api/accessrole/GetRoleByAccountid?account_id=' +
-      account_id);
-  
+        account_id);
+
       if (response.err_code == 0) {
         let result = response.data;
         for (let i in result) {
@@ -205,7 +212,7 @@ export class AccountComponent implements OnInit {
         }
       }
     }
-    
+
   }
   //#endregion
 
@@ -240,8 +247,8 @@ export class AccountComponent implements OnInit {
   //#region get table account
   async getDataAccount() {
     let response = await this.dataService.getAsync('/api/account/GetListFillterPaging?pageIndex=' + this.pagination.pageIndex +
-      '&pageSize=' + this.pagination.pageSize + '&user_name=' + this.fillterUserName + '&full_name=' + this.fillterFullName +
-      '&phone=' + this.fillterPhone + '&company_name=' + this.fillterCompanyName + '&payment_type=' + this.fillterPaymentType)
+      '&pageSize=' + this.pagination.pageSize + '&user_name=' + this.user_name + '&email=' + this.email+
+      '&phone=' + this.phone + '&company_name=' + this.company_name + '&payment_type=' + this.payment_Type +'&from_date=' + this.fromDate +'&to_date=' + this.toDate)
     if (response.err_code == 0) {
       this.loadData(response);
       this.idDelete = [];
@@ -257,7 +264,9 @@ export class AccountComponent implements OnInit {
       }
     }
   }
-
+  Changefilter(){
+    this.getDataAccount();
+  }
   setPageIndex(pageNo: number): void {
     this.pagination.pageIndex = pageNo;
     if (this.activatedRoute.snapshot.queryParamMap.get('redirectFrom') && this.activatedRoute.snapshot.queryParamMap.get('redirectFrom') == 'home') {
@@ -293,11 +302,11 @@ export class AccountComponent implements OnInit {
   //#endregion
 
   searchAccount(fillter) {
-    this.fillterUserName = fillter.fillterUserName;
-    this.fillterFullName = fillter.fillterFullName;
-    this.fillterCompanyName = fillter.fillterCompanyName;
-    this.fillterPhone = fillter.fillterPhone;
-    this.fillterPaymentType = fillter.fillterPaymentType;
+    this.user_name = fillter.user_name;
+    this.email = fillter.email;
+    this.company_name = fillter.company_name;
+    this.phone = fillter.phone;
+    this.payment_Type = fillter.payment_Type;
     if (this.activatedRoute.snapshot.queryParamMap.get('redirectFrom') && this.activatedRoute.snapshot.queryParamMap.get('redirectFrom') == 'home') {
       this.getAccountNew();
     }
@@ -322,7 +331,7 @@ export class AccountComponent implements OnInit {
     this.loadListRole();
   }
 
-  
+
   model: any = {};
   mobNumberPattern = "^(84|0)?[0-9]{9}$"
   async createAccount() {
@@ -333,9 +342,9 @@ export class AccountComponent implements OnInit {
     let ENABLE_SMS_LOOP = this.model.checkSendSmsLoop == true ? 1 : 0;
     let DLVR = this.model.dlvr == true ? 1 : 0;
     let ENABLE_SMS_CSKH = this.model.enableSmsCSKH == true ? 1 : 0;
-    let AVATAR = (this.urlImageUpload != null && this.urlImageUpload != "undefined" && this.urlImageUpload != "") ? 
-    this.urlImageUpload : ""
-    
+    let AVATAR = (this.urlImageUpload != null && this.urlImageUpload != "undefined" && this.urlImageUpload != "") ?
+      this.urlImageUpload : ""
+
     let PASSWORD = this.passRandom;
     let FULL_NAME = this.model.fullName;
     let EMAIL = this.model.email;
@@ -353,13 +362,13 @@ export class AccountComponent implements OnInit {
       this.notificationService.displayErrorMessage(this.utilityService.translate('account.choose_permission'));
       return;
     }
-    let PARENT_ID = this.selectedAccountID.length > 0 ? this.selectedAccountID[0].id.toString(): "";
+    let PARENT_ID = this.selectedAccountID.length > 0 ? this.selectedAccountID[0].id.toString() : "";
     let COMPANY_NAME = this.model.companyName;
     let SKYPE = this.model.skype;
     let CREATE_USER = this.authService.currentUserValue.USER_NAME;
     let DLVR_URL = this.model.dlvrURL;
     let EMAIL_REPORT = this.model.emailReport;
-   
+
     let dataInsert = await this.dataService.postAsync('/api/account', {
       USER_NAME, PASSWORD, FULL_NAME, PHONE, SKYPE, EMAIL,
       COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME,
@@ -406,7 +415,11 @@ export class AccountComponent implements OnInit {
   //#endregion
 
   public async exportExcelAccount() {
-    let result: boolean = await this.dataService.getFileExtentionAsync("/api/FileExtention/ExportExcel", "Account");
+    debugger
+    this.textbuttonExcel = 'Loading...';
+    let account_id = Number(this.authService.currentUserValue.ACCOUNT_ID);
+    let result: boolean = await this.dataService.getFileExtentionAccountAsync("/api/FileExtention/ExportExcelAccount", account_id, this.user_name, this.email, this.phone, this.company_name, this.payment_Type, this.fromDate, this.toDate, "Account");
+    this.textbuttonExcel = 'Export Excel';
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.translate('account.Export_successfully'));
     }
@@ -418,7 +431,6 @@ export class AccountComponent implements OnInit {
   //#region edit account
   async showConfirmEditAccount(accountId) {
     let response = await this.dataService.getAsync('/api/account/' + accountId);
-
     if (response.err_code == 0) {
       let dataAccount = response.data[0];
       this.formEditAccount = new FormGroup({
@@ -445,7 +457,7 @@ export class AccountComponent implements OnInit {
 
         dlvr: new FormControl(dataAccount.DLVR),
         dlvrURL: new FormControl(dataAccount.DLVR_URL),
-       
+
 
         parentID: new FormControl(dataAccount.PARENT_ID != undefined && dataAccount.PARENT_ID != null && dataAccount.PARENT_ID != "" ?
           [{ "id": dataAccount.PARENT_ID, "itemName": dataAccount.PARENT_NAME }] :
@@ -483,13 +495,13 @@ export class AccountComponent implements OnInit {
 
     let DLVR = formData.dlvr.value == true ? 1 : 0;
     let DLVR_URL = formData.dlvrURL.value;
-   
+
 
     let PARENT_ID = formData.parentID.value.length > 0 ? formData.parentID.value[0].id : "";
     let EDIT_USER = this.authService.currentUserValue.USER_NAME;
     let AVATAR = (this.urlImageUploadEdit != null && this.urlImageUploadEdit != "undefined" && this.urlImageUploadEdit != "") ?
       this.urlImageUploadEdit : ""
-      
+
 
     let PAYMENT_TYPE = formData.paymentType.value.length > 0 ? formData.paymentType.value[0].id : "";
     if (PAYMENT_TYPE == "") {
@@ -502,21 +514,20 @@ export class AccountComponent implements OnInit {
       this.notificationService.displayErrorMessage(this.utilityService.translate('account.Account_permission'));
       return;
     }
-
-    let dataEdit = await this.dataService.putAsync('/api/account/' + ACCOUNT_ID, {
-      FULL_NAME, PHONE, SKYPE, EMAIL,
-      COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME,
-      DLVR, DLVR_URL,
-      IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH,
-      PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR
+    debugger
+    let response = await this.dataService.putAsync('/api/account/PutAccount?accountid=' + ACCOUNT_ID, {
+      FULL_NAME, PHONE, SKYPE, EMAIL, COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME, DLVR, DLVR_URL, IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH, PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR
     })
-    if (dataEdit.err_code == 0) {
-      this.getDataAccount();
-      this.editAccountModal.hide();
-      this.notificationService.displaySuccessMessage(this.utilityService.translate('account.Account_Edit_sc'));
-    } else {
-      this.notificationService.displayErrorMessage(this.utilityService.translate('account.Account_Edit_F'));
+    if (response) {
+      if (response.err_code == 0) {
+        this.getDataAccount();
+        this.editAccountModal.hide();
+        this.notificationService.displaySuccessMessage(this.utilityService.translate('account.Account_Edit_sc'));
+      } else {
+        this.notificationService.displayErrorMessage(this.utilityService.translate('account.Account_Edit_F'));
+      }
     }
+
   }
   //#endregion
 
@@ -669,7 +680,7 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  removeImage(){
+  removeImage() {
     this.urlImageUploadEdit = ""
   }
   //#endregion
@@ -685,4 +696,34 @@ export class AccountComponent implements OnInit {
     }
     return value;
   }
+  onChangeFromDate(event) {
+    this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "000000";
+    if (this.fromDate == '19700101000000') {
+      this.fromDate = '';
+    }
+    if (this.fromDate !== '' && this.toDate !== '') {
+      if (this.fromDate > this.toDate) {
+        this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
+        return;
+      }
+    }
+    this.getDataAccount();
+
+  }
+
+  onChangeToDate(event) {
+
+    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "235959";
+    if (this.toDate == '19700101000000') {
+      this.toDate = '';
+    }
+    if (this.fromDate !== '' && this.toDate !== '') {
+      if (this.fromDate > this.toDate) {
+        this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
+        return;
+      }
+    }
+    this.getDataAccount();
+  }
+
 }
