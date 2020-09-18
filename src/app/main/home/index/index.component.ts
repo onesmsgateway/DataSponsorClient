@@ -1260,7 +1260,6 @@ export class IndexComponent implements OnInit {
 
   //#region search
   onChangeFromDate(event) {
-
     this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMdd");
     if (this.fromDate == '19700101') {
       this.fromDate = '';

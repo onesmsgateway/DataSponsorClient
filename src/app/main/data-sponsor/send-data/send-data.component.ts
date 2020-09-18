@@ -449,6 +449,7 @@ export class SendDataComponent implements OnInit {
 
   // get phone by file list 
   async getPhoneNumber(event) {
+    debugger
     this.countPhone(this.phoneList);
     this.dataPhoneTamp = [];
     this.dataPhone = [];
@@ -484,6 +485,7 @@ export class SendDataComponent implements OnInit {
       this.totalPackVMSDataCode = 0;
       return;
     }
+    debugger
     let response: any = await this.dataService.getAsync('/api/Person/GetPersonByGroupIds?groupIds=' + ids)
     if (response) {
       this.dataPhone = response.data.listPhoneTelco;
