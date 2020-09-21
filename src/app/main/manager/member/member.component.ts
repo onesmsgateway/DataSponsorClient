@@ -23,6 +23,8 @@ export class MemberComponent implements OnInit {
   @ViewChild('uploadExcelModal', { static: false }) public uploadExcelModal;
 
   public dataMember = [];
+  public date: Date = new Date();
+  public ischeckgroup = false;
   public dataAccount = [];
   public dataGroup = [];
   public dataGroupEdit = [];
@@ -544,6 +546,53 @@ export class MemberComponent implements OnInit {
     }
     else {
       this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+    }
+  }
+  async checkboxGroup() {
+    debugger
+    this.ischeckgroup = !this.ischeckgroup;
+    this.selectedGroupUpload.push(this.utilityService.translate('send_data.inGroup'));
+    if (this.ischeckgroup == true) {
+      this.settingsFilterGroupUpload = {
+        text: this.utilityService.translate('send_data.inGroup'),
+        singleSelection: true,
+        enableSearchFilter: true,
+        enableFilterSelectAll: true,
+        searchPlaceholderText: this.utilityService.translate('global.search'),
+        noDataLabel: this.utilityService.translate('global.no_data'),
+        showCheckbox: false,
+        disabled: true
+      };
+      this.createCodeGroup();
+    } else {
+      this.settingsFilterGroupUpload = {
+        text: this.utilityService.translate('send_data.inGroup'),
+        singleSelection: true,
+        enableSearchFilter: true,
+        enableFilterSelectAll: true,
+        searchPlaceholderText: this.utilityService.translate('global.search'),
+        noDataLabel: this.utilityService.translate('global.no_data'),
+        showCheckbox: false,
+        disabled: false
+      };
+      this.groupCode = "";
+    }
+  }
+  async createCodeGroup() {
+    let USER_NAME;
+    if (this.isAdmin) {
+      USER_NAME = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].itemName : this.authService.currentUserValue.USER_NAME;
+    } else {
+      USER_NAME = this.authService.currentUserValue.USER_NAME;
+    }
+    if (this.ischeckgroup == true) {
+      if (USER_NAME != null || USER_NAME != "") {
+        let accountName = USER_NAME.substring(0, 3);
+        let codeGroup = (accountName + '_' + 'GRP' + '_' + this.utilityService.formatDateToString(this.date, "yyMMdd") + '_' + this.utilityService.formatDateToString(this.date, "HHmm")).toUpperCase();
+        this.groupCode = codeGroup;
+      }
+    } else {
+      this.groupCode = "";
     }
   }
 }

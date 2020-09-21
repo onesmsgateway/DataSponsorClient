@@ -347,16 +347,20 @@
                                 <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedGroupUpload" [settings]="settingsFilterGroupUpload" name="slGroupUpload">
                                 </angular2-multiselect>
                             </div>
-                            <div class="col-md-1 col-sm-1 col-xs-12 form-group">
+                            <!-- <div class="col-md-1 col-sm-1 col-xs-12 form-group">
                                 <label style="padding-top: 30px;">Hoặc</label>
+                            </div> -->
+                            <div class="col-md-1 col-sm-1 col-xs-12 form-group">
+                                <label style="padding-top: 30px; float: left;">Hoặc&nbsp;</label>
+                                <input style="margin-top: 33px;" type="checkbox" value="" class="checkbox ckmg" name="chkOnlyOneCreateGroup" (click)="checkboxGroup()">
                             </div>
                             <div class="col-md-2 col-sm-3 col-xs-12 form-group">
                                 <label>{{'send_data.group_code' | translate}}</label>
-                                <input style="padding-right:0px !important ;" type="text" class="form-control" name="groupCode" placeholder="{{'send_data.inGroup_code' | translate}}" [(ngModel)]="groupCode">
+                                <input [disabled]="!ischeckgroup" style="padding-right:0px !important ;" type="text" class="form-control" name="groupCode" placeholder="{{'send_data.inGroup_code' | translate}}" [(ngModel)]="groupCode">
                             </div>
                             <div class="col-md-3 col-sm-5 col-xs-12 form-group">
                                 <label>{{'send_data.group_name' | translate}}</label>
-                                <input type="text" class="form-control" name="groupName" placeholder="{{'send_data.inGroup_name' | translate}}" [(ngModel)]="groupName">
+                                <input [disabled]="!ischeckgroup" type="text" class="form-control" name="groupName" placeholder="{{'send_data.inGroup_name' | translate}}" [(ngModel)]="groupName">
                             </div>
                         </div>
                         <div class="row" style="margin-left: 10px; margin-right: 10px;">

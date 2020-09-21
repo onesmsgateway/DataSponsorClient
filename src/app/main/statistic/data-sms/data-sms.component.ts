@@ -317,17 +317,14 @@ export class DataSmsComponent implements OnInit {
       for (let index in response.data) {
         this.dataScenario.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
       }
-      if (this.dataScenario.length == 1) {
-        this.selectedScenario.push({ "id": this.dataScenario[0].id, "itemName": this.dataScenario[0].itemName });
-      } else {
+      if (this.dataScenario.length != 1) {
         this.selectedScenario.push({ "id": this.scenario_id_scenario, "itemName": this.activatedRoute.snapshot.queryParamMap.get('scenario_name') });
         if (this.selectedScenario[0].id == "" && this.selectedScenario[0].itemName == null) {
           this.selectedScenario = [];
           this.selectedScenario.push({ "id": 0, "itemName": this.utilityService.translate('global.choose_scenario') });
         }
-
+      } else {
       }
-
     }
   }
 
