@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  data_sponsor_api: "http://localhost/DataSponsor",
+  data_sponsor_api: "http://localhost:5479",
   google_provider_id: "255956828275-f9328ug1j1srmv61lej8fqr5nk51b7km.apps.googleusercontent.com",
   //facebook_provider_id: "420804301804120"
 };
