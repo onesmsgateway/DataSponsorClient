@@ -1,76 +1,75 @@
 <section>
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-4 well well-sm col-md-offset-4">
-        <legend style="text-align: center;font-weight: bold;"> {{'point.point_data'| translate}}</legend>
-        <form action="" method="post" class="form" role="form">
-          <label>{{'point.select_bank'| translate}}</label>
-          <div class="row">
-            <div style="margin:9px">
-              <select class="form-control">
-                <option value="Day">{{'point.select_bank'|translate}}</option>
-              </select>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-4 well well-sm col-md-offset-4">
+                <legend style="text-align: center;font-weight: bold;"> {{'point.point_data'| translate}}</legend>
+                <form action="" method="post" class="form" role="form">
+                    <label>{{'point.select_bank'| translate}}</label>
+                    <div class="row" style="margin:1px">
+                        <angular2-multiselect [data]="dataBank" [(ngModel)]="selectedItemBank" [settings]="settingsFilterItemBank" (onSelect)="GetAccountByBank()" (onDeSelect)="GetAccountByBank()" name="bank_name">
+                        </angular2-multiselect>
+                    </div>
+                    <label style="margin-top: 3px;">{{'global.choose_account'| translate}}</label>
+                    <div class="row" style="margin:1px">
+                        <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="changeAccount()" (onDeSelect)="deSelectAccount()">
+                        </angular2-multiselect>
+                    </div>
+                    <label style="margin-top: 5px;"> {{'point.phone_number'| translate}}</label>
+                    <input class="form-control " name="yourphone" placeholder="{{'point.phone_number'| translate}}" type="phone">
+                    <label> {{'point.point_number'| translate}}</label>
+                    <input class="form-control" name="yourpoint" placeholder="{{'point.point_number'| translate}}" type="point">
+                    <!--          <button style="background-color: #2e6da4; border-color:#2e6da4 " type="button"-->
+                    <!--                  (click)="confirmModal.show()"-->
+                    <!--                  class="btn btn-info">{{'point.Authentication'| translate}}</button>-->
+                    <br>
+                    <br>
+                    <form class="form-horizontal form-label-left input_mask">
+                        <div class="form-group">
+                            <div class="form-group has-feedback content-end">
+                                <button class="btn btn-lg btn-primary btn-block" (click)="createDataCimastModalDetail2.show()" type="submit">{{'point.Renovated'| translate }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </form>
             </div>
-          </div>
-          <label> {{'point.phone_number'| translate}}</label>
-          <input class="form-control " name="yourphone" placeholder="{{'point.phone_number'| translate}}" type="phone">
-          <label> {{'point.point_number'| translate}}</label>
-          <input class="form-control" name="yourpoint" placeholder="{{'point.point_number'| translate}}" type="point">
-          <!--          <button style="background-color: #2e6da4; border-color:#2e6da4 " type="button"-->
-          <!--                  (click)="confirmModal.show()"-->
-          <!--                  class="btn btn-info">{{'point.Authentication'| translate}}</button>-->
-          <br>
-          <br>
-          <form class="form-horizontal form-label-left input_mask">
-            <div class="form-group">
-              <div class="form-group has-feedback content-end">
-                <button class="btn btn-lg btn-primary btn-block" (click)="createDataCimastModalDetail2.show()"
-                  type="submit">{{'point.Renovated'| translate }}</button>
-              </div>
-            </div>
-          </form>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
 </section>
 <!--Thêm modal chọn data tương ứng với số điểm -->
-<div class="modal fade" bsModal #createDataCimastModalDetail2="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-  role="dialog" aria-labelledby="dialog-static-name">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 id="dialog-static-name" class="modal-title pull-left">{{'point.point_data' | translate}}
-        </h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="createDataCimastModalDetail2.hide()">
+<div class="modal fade" bsModal #createDataCimastModalDetail2="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'point.point_data' | translate}}
+                </h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="createDataCimastModalDetail2.hide()">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-      <form [formGroup]="formEditGroup" (ngSubmit)="editGroup()">
-        <div class="modal-body">
-          <div class="row">
-            <div class="form-group2">
-              <button style="margin-top: 8px; " type="button" class="btn btn-success btn-sm btn-block">ST100M -
-                100MB</button>
-              <button style="margin-top: 8px;" type="button" class="btn btn-primary btn-sm btn-block">ST300M -
-                300MB</button>
-              <button style="margin-top: 8px; " type="button" class="btn btn-success btn-sm btn-block">ST500M -
-                500MB</button>
-              <button style="margin-top: 8px;" type="button" class="btn btn-primary btn-sm btn-block">ST1G -
-                1GB</button>
-              <button style="margin-top: 8px;" type="button" class="btn btn-success btn-sm btn-block">ST3G -
-                5GB</button>
             </div>
-          </div>
+            <form [formGroup]="formEditGroup" (ngSubmit)="editGroup()">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group2">
+                            <button style="margin-top: 8px; " type="button" class="btn btn-success btn-sm btn-block">ST100M -
+                100MB</button>
+                            <button style="margin-top: 8px;" type="button" class="btn btn-primary btn-sm btn-block">ST300M -
+                300MB</button>
+                            <button style="margin-top: 8px; " type="button" class="btn btn-success btn-sm btn-block">ST500M -
+                500MB</button>
+                            <button style="margin-top: 8px;" type="button" class="btn btn-primary btn-sm btn-block">ST1G -
+                1GB</button>
+                            <button style="margin-top: 8px;" type="button" class="btn btn-success btn-sm btn-block">ST3G -
+                5GB</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="createDataCimastModalDetail2.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
+                </div>
+            </form>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default"
-            (click)="createDataCimastModalDetail2.hide()">{{ 'global.cancel' | translate }}</button>
-          <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
 <!-- modal xác nhận điểm khách hàng-->
 <!--<div class="modal fade" bsModal #confirmModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"-->

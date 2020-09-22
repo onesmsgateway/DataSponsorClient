@@ -280,7 +280,9 @@
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.bank_name' | translate}}</label>
-                                    <input type="text" class="form-control" name="bankName" [(ngModel)]="model.bankName" #bankName="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" />
+                                    <angular2-multiselect [data]="dataBank" [(ngModel)]="selectedItemBank" [settings]="settingsFilterBank" name="bankName" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                    </angular2-multiselect>
+                                    <!-- <input type="text" class="form-control" name="bankName" [(ngModel)]="model.bankName" #bankName="ngModel" [ngClass]="{ 'is-invalid': f.submitted}" /> -->
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">
@@ -462,7 +464,13 @@
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.bank_name' | translate}}</label>
-                                    <input type="text" class="form-control" formControlName="bankName" required="" />
+                                    <!-- <angular2-multiselect [data]="dataBank" [(ngModel)]="selectedItemBank" [settings]="settingsFilterBank" formControlName="bankName">
+                                    </angular2-multiselect> -->
+                                    <!-- <angular2-multiselect [data]="dataBank" [settings]="selectedItemBank" formControlName="bankName">
+                                    </angular2-multiselect> -->
+                                    <!-- <input type="text" class="form-control" formControlName="bankName" required="" /> -->
+                                    <angular2-multiselect [data]="dataBank" [settings]="settingsFilterBank" formControlName="bankName">
+                                    </angular2-multiselect>
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 15px;">

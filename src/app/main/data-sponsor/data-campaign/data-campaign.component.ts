@@ -130,7 +130,7 @@ export class DataCampaignComponent implements OnInit {
     };
 
     this.settingsFilterAccount = {
-      text: "Chọn tài khoản",
+      text: this.utilityService.translate('global.choose_account'),
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,

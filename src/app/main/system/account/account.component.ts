@@ -28,7 +28,7 @@ export class AccountComponent implements OnInit {
   @ViewChild('uploadImageEdit', { static: false }) public uploadImageEdit;
 
   public formEditAccount: FormGroup;
-  public  textbuttonExcel = 'Export Excel';
+  public textbuttonExcel = 'Export Excel';
   public dataAccount = [];
   public modalRef: BsModalRef;
   public pagination: Pagination = new Pagination();
@@ -49,11 +49,15 @@ export class AccountComponent implements OnInit {
   public arrIdCheckedDelete: string[] = [];
   public createUserName = "";
 
+  public dataBank = [];
+  public settingsFilterAccount = {};
+  public selectedItemBank = [];
+
   public checkActive = true;
   public checkRandomPass = true;
   public passRandom = "";
 
-  public settingsFilterAccount = {};
+  public settingsFilterBank = {};
   public listAccount = [];
   public selectedAccountID = [];
   public role: Role = new Role();
@@ -103,7 +107,16 @@ export class AccountComponent implements OnInit {
       noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false
     };
-
+    this.settingsFilterBank = {
+      text: this.utilityService.translate('account.chooseBank'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+    };
+    
     this.formEditAccount = new FormGroup({
       accountId: new FormControl(),
       userName: new FormControl(),
@@ -247,11 +260,12 @@ export class AccountComponent implements OnInit {
   //#region get table account
   async getDataAccount() {
     let response = await this.dataService.getAsync('/api/account/GetListFillterPaging?pageIndex=' + this.pagination.pageIndex +
-      '&pageSize=' + this.pagination.pageSize + '&user_name=' + this.user_name + '&email=' + this.email+
-      '&phone=' + this.phone + '&company_name=' + this.company_name + '&payment_type=' + this.payment_Type +'&from_date=' + this.fromDate +'&to_date=' + this.toDate)
+      '&pageSize=' + this.pagination.pageSize + '&user_name=' + this.user_name + '&email=' + this.email +
+      '&phone=' + this.phone + '&company_name=' + this.company_name + '&payment_type=' + this.payment_Type + '&from_date=' + this.fromDate + '&to_date=' + this.toDate)
     if (response.err_code == 0) {
       this.loadData(response);
       this.idDelete = [];
+      this.GetDataBank();
     }
   }
 
@@ -264,7 +278,7 @@ export class AccountComponent implements OnInit {
       }
     }
   }
-  Changefilter(){
+  Changefilter() {
     this.getDataAccount();
   }
   setPageIndex(pageNo: number): void {
@@ -331,10 +345,27 @@ export class AccountComponent implements OnInit {
     this.loadListRole();
   }
 
+  async GetDataBank(){
+      let account = "";
+        if(this.authService.currentUserValue.ACCOUNT_ID == '100000021'){
+          account = ""
+        }else{
+          account = this.authService.currentUserValue.ACCOUNT_ID;
+        }
+      let response: any = await this.dataService.getAsync('/api/BankData/GetBankDataByAccount?&account_id=' + account)
+      if (response) {
+        if (response.err_code == 0) {
+          for (let index in response.data) {
+            this.dataBank.push({ "id": response.data[index].BANK_ID, "itemName": response.data[index].BANK_NAME});
+          }
+          };
+      }
+  }
 
   model: any = {};
   mobNumberPattern = "^(84|0)?[0-9]{9}$"
   async createAccount() {
+    debugger
     let USER_NAME = this.model.userName;
     let PHONE = this.model.phone;
     let IS_ACTIVE = this.checkActive == true ? 1 : 0;
@@ -348,7 +379,9 @@ export class AccountComponent implements OnInit {
     let PASSWORD = this.passRandom;
     let FULL_NAME = this.model.fullName;
     let EMAIL = this.model.email;
-    let BANK_NAME = this.model.bankName;
+    let BANK_NAME =  this.selectedItemBank.length > 0 ? this.selectedItemBank[0].itemName.toString() : "";
+    let BANK_ID =  this.selectedItemBank.length > 0 ? this.selectedItemBank[0].id.toString() : "";;
+
     let BANK_ACCOUNT = this.model.bankAccount;
     let BANK_ACCOUNT_NAME = this.model.bankAccountName;
 
@@ -374,7 +407,7 @@ export class AccountComponent implements OnInit {
       COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME,
       DLVR, DLVR_URL, EMAIL_REPORT,
       IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH,
-      PARENT_ID, ROLE_ACCESS, CREATE_USER, ENABLE_SMS_LOOP, AVATAR
+      PARENT_ID, ROLE_ACCESS, CREATE_USER, ENABLE_SMS_LOOP, AVATAR, BANK_ID
     });
 
     if (dataInsert.err_code == 0) {
@@ -446,7 +479,7 @@ export class AccountComponent implements OnInit {
           "id": dataAccount.PAYMENT_TYPE,
           "itemName": (dataAccount.PAYMENT_TYPE == 1 ? "Trả trước" : dataAccount.PAYMENT_TYPE == 2 ? "Trả sau" : "")
         }]),
-        bankName: new FormControl(dataAccount.BANK_NAME),
+        bankName: new FormControl([dataAccount.BANK_ID != undefined && dataAccount.BANK_ID != null && dataAccount.BANK_ID != "" ?{ "id": dataAccount.BANK_ID, "itemName": dataAccount.BANK_NAME}: {"id": "", "itemName":this.utilityService.translate('account.chooseBank')}]),
         bankAccount: new FormControl(dataAccount.BANK_ACCOUNT),
         bankAccountName: new FormControl(dataAccount.BANK_ACCOUNT_NAME),
 
@@ -457,8 +490,6 @@ export class AccountComponent implements OnInit {
 
         dlvr: new FormControl(dataAccount.DLVR),
         dlvrURL: new FormControl(dataAccount.DLVR_URL),
-
-
         parentID: new FormControl(dataAccount.PARENT_ID != undefined && dataAccount.PARENT_ID != null && dataAccount.PARENT_ID != "" ?
           [{ "id": dataAccount.PARENT_ID, "itemName": dataAccount.PARENT_NAME }] :
           [{ "id": "", "itemName": "Chọn tài khoản cha" }]),
@@ -476,7 +507,7 @@ export class AccountComponent implements OnInit {
   }
 
   async editAccount() {
-
+debugger
     let formData = this.formEditAccount.controls;
     let ACCOUNT_ID = formData.accountId.value;
     let FULL_NAME = formData.fullName.value;
@@ -484,7 +515,8 @@ export class AccountComponent implements OnInit {
     let EMAIL = formData.email.value;
     let SKYPE = formData.skype.value;
     let COMPANY_NAME = formData.companyName.value;
-    let BANK_NAME = formData.bankName.value;
+    let BANK_NAME = formData.bankName.value.length > 0 ? formData.bankName.value[0].itemName : "";
+    let BANK_ID = formData.bankName.value.length > 0 ? formData.bankName.value[0].id : "";
     let BANK_ACCOUNT = formData.bankAccount.value;
     let BANK_ACCOUNT_NAME = formData.bankAccountName.value;
 
@@ -516,7 +548,7 @@ export class AccountComponent implements OnInit {
     }
     debugger
     let response = await this.dataService.putAsync('/api/account/PutAccount?accountid=' + ACCOUNT_ID, {
-      FULL_NAME, PHONE, SKYPE, EMAIL, COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME, DLVR, DLVR_URL, IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH, PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR
+      FULL_NAME, PHONE, SKYPE, EMAIL, COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME, DLVR, DLVR_URL, IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH, PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR, BANK_ID
     })
     if (response) {
       if (response.err_code == 0) {

@@ -171,6 +171,7 @@ export class SendDataComponent implements OnInit {
   public quota = 0;
   public role: Role = new Role();
   public loading: boolean = false;
+  public loadingGroup: boolean = false;
   public isAdmin: boolean = false;
   public enablePackageDataCode: boolean = true;
 
@@ -449,7 +450,6 @@ export class SendDataComponent implements OnInit {
 
   // get phone by file list 
   async getPhoneNumber(event) {
-    debugger
     this.countPhone(this.phoneList);
     this.dataPhoneTamp = [];
     this.dataPhone = [];
@@ -486,7 +486,9 @@ export class SendDataComponent implements OnInit {
       return;
     }
     debugger
+    this.loadingGroup = true;
     let response: any = await this.dataService.getAsync('/api/Person/GetPersonByGroupIds?groupIds=' + ids)
+    this.loadingGroup = false;
     if (response) {
       this.dataPhone = response.data.listPhoneTelco;
       let data = response.data;
