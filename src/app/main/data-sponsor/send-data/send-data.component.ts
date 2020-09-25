@@ -42,7 +42,6 @@ export class SendDataComponent implements OnInit {
   public dataPackageVMS = [];
   public dataPackageVMSDataCode = [];
   public dataPhonePaging = [];
-  public dataGroup = [];
   public dataCampaign = [];
   public dataOptionInsert = [];
   public dataOptionInsertSms = [];
@@ -52,14 +51,15 @@ export class SendDataComponent implements OnInit {
   public settingsFilterPackageGPC = {};
   public settingsFilterPackageVMS = {};
   public settingsFilterPackageVMSDataCode = {};
+  public dataGroup = [];
+  public selectedGroup = [];
   public settingsFilterGroup = {};
-  public settingsFilterCampaign = {};
   public settingsFilterGroupUpload = {};
+  public settingsFilterCampaign = {};
   public settingsFilterOptionInsert = {};
   public settingsFilterOptionTempSms = {};
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxSender = [];
-  public selectedGroup = [];
   public selectedCampaign = [];
   public selectedGroupUpload = [];
   public selectedPackageVTL = [];
@@ -544,7 +544,6 @@ export class SendDataComponent implements OnInit {
       this.totalAmt = 0;
     }
     //this.GetPackage();
-
   }
 
   async countPhone(phone) {
@@ -1014,7 +1013,6 @@ export class SendDataComponent implements OnInit {
   //#region 
   // show modal upload excel
   showModalUpload() {
-
     if (this.isAdmin) {
       this.accountId = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
       if (this.accountId == "") {
@@ -1032,7 +1030,6 @@ export class SendDataComponent implements OnInit {
   }
 
   async getDataGroup() {
-
     this.selectedGroup = [];
     this.dataGroup = [];
     let account = "";
@@ -1080,7 +1077,7 @@ export class SendDataComponent implements OnInit {
           this.groupCode = "";
           this.groupName = "";
           this.uploadExcelModal.hide();
-          this.pageRefresh();
+          //this.pageRefresh();
           this.getDataGroup();
           if (groupId != null && groupId != "") {
             this.selectedGroup.push({ "id": groupId, "itemName": groupName });
@@ -1552,7 +1549,6 @@ export class SendDataComponent implements OnInit {
 
   // export template excel
   async excelTemplate() {
-
     let result: boolean = await this.dataService.getFileExtentionAsync('/api/FileExtention/ExportExcelTemplate', 'DataSms', 'template_phone.xlsx');
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));
@@ -1597,8 +1593,8 @@ export class SendDataComponent implements OnInit {
       };
       this.groupCode = "";
     }
-
   }
+
   async createCodeNameCampaing() {
     let USER_NAME;
     if (this.isAdmin) {
@@ -1631,8 +1627,8 @@ export class SendDataComponent implements OnInit {
     } else {
       this.groupCode = "";
     }
-
   }
+
   public intervalId = null
   async startTimer() {
     if ((Number(this.limit_time) > 0)) {

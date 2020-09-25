@@ -425,6 +425,7 @@
         "iText_add_phone_number": "VD, 0987xxxxxx; 0848xxxxxx (cách nhau bởi dấu ; )",
         "total_num": "Tổng",
         "phone_list_manage": "Quản lý danh sách file số điện thoại",
+        "phone_point": "Quản lý danh sách điểm số",
         "list_group": "Danh sách nhóm",
         "code_name": "Tên chương trình",
         "export_template": "Click vào đây để tải file mẫu",
@@ -869,6 +870,11 @@
         "point_number": "Nhập số điểm cần đổi",
         "Authentication": "Xác thực",
         "Renovated": "Đổi quà ",
-        "confirm": "Xác thực đổi điểm"
+        "confirm": "Xác thực đổi điểm",
+        "choose_package_point": "Chọn gói cước (điểm x dung lượng)",
+        "choose_data": "Chọn gói cước",
+        "choose_data_VTL": "Chọn gói cước Viettel",
+        "choose_data_GPC": "Chọn gói cước GPC",
+        "choose_data_VMS": "Chọn gói cước VMS"
     }
 }

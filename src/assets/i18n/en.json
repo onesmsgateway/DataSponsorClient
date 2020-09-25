@@ -390,7 +390,8 @@
         "text_num": " num",
         "iText_add_phone_number": "input phone number type 01xxxxx or 09xxxxx separated by ; ...",
         "total_num": "Total",
-        "phone_list_manage": "file phone list manager",
+        "phone_list_manage": "Phone list manager",
+        "phone_point": "Manage list of points, phone numbers",
         "list_group": "List group",
         "code_name": "Program name",
         "export_template": "Export template",
@@ -805,6 +806,11 @@
         "point_number": "Enter the score number",
         "Authentication": "Authentication",
         "Renovated": "Renovated",
-        "confirm": "Confirm point"
+        "confirm": "Confirm point",
+        "choose_package_point": "Choose package data",
+        "choose_data": "Choose data",
+        "choose_data_VTL": "Chosse data Viettel",
+        "choose_data_GPC": "Chosse data GPC",
+        "choose_data_VMS": "Chosse data VMS"
     }
 }
