@@ -59,7 +59,8 @@ export class GroupsComponent implements OnInit {
       enableFilterSelectAll: true,
       searchPlaceholderText: this.utilityService.translate('global.search'),
       noDataLabel: this.utilityService.translate('global.no_data'),
-      showCheckbox: false
+      showCheckbox: false,
+        disabled: true
     };
 
     this.formEditGroup = new FormGroup({
