@@ -33,6 +33,7 @@ export class GroupsComponent implements OnInit {
   public isActive: boolean = true;
 
   public settingsFilterAccount = {};
+  public settingsEditGroup={};
   public selectedItemComboboxAccount = [];
   public selectedItemComboboxAccountEdit = [];
   public selectedItemComboboxAccountCreate = [];
@@ -59,8 +60,20 @@ export class GroupsComponent implements OnInit {
       enableFilterSelectAll: true,
       searchPlaceholderText: this.utilityService.translate('global.search'),
       noDataLabel: this.utilityService.translate('global.no_data'),
+      showCheckbox: false
+
+    };
+
+    this.settingsEditGroup = {
+      text: this.utilityService.translate('global.choose_account'),
+      singleSelection: true,
+      enableSearchFilter: true,
+      enableFilterSelectAll: true,
+      searchPlaceholderText: this.utilityService.translate('global.search'),
+      noDataLabel: this.utilityService.translate('global.no_data'),
       showCheckbox: false,
-        disabled: true
+      disabled: true
+      
     };
 
     this.formEditGroup = new FormGroup({
