@@ -504,7 +504,7 @@ export class DataCampaignComponent implements OnInit {
     
     this.packViettel = "0";
     if (this.selectedPackageVTL.length > 0) {
-      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageVTL[0].id);
     
       if (response != null && response.err_code == 0) {
         this.effectiveDateVTL = response.data[0].DATE_USE + " ngày";
@@ -553,7 +553,7 @@ export class DataCampaignComponent implements OnInit {
   async changePackageGPC() {
     this.packGPC = "0";
     if (this.selectedPackageGPC.length > 0) {
-      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageGPC[0].id);
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageGPC[0].id);
   
       if (response != null && response.err_code == 0) {
         this.effectiveDateGPC = response.data[0].DATE_USE + " ngày";
@@ -601,7 +601,7 @@ export class DataCampaignComponent implements OnInit {
   async changePackageVMS() {
     this.packVMS = "0";
     if (this.selectedPackageVMS.length > 0) {
-      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageVMS[0].id);
       if (response != null && response.err_code == 0) {
         this.effectiveDateVMS = response.data[0].DATE_USE + " ngày";
         this.packageAmtVMS = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;

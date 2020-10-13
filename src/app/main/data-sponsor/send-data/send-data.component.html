@@ -425,7 +425,7 @@
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
-                                    <input type="number" class="form-control" name="packCountGPC" [(ngModel)]="packCountGPC" (keyup)="changeCountGPC()" (keydown)="changeCountGPC()">
+                                    <input type="number" class="form-control" name="packCountGPC" [(ngModel)]="packCountGPC" (change)="changeCountGPC()" (keyup)="changeCountGPC()" (keydown)="changeCountGPC()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -459,7 +459,7 @@
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
-                                    <input type="number" class="form-control" name="packCountVMS" [(ngModel)]="packCountVMS" (change)="changeCountVMS()" (keyup)="changeCountVMS()" (keydown)="changeCountVMS()">
+                                    <input type="number" class="form-control" name="packCountVMS" readonly [(ngModel)]="packCountVMS" (change)="changeCountVMS()" (keyup)="changeCountVMS()" (keydown)="changeCountVMS()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
 
@@ -497,7 +497,7 @@
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12">
                                     <label>{{'send_data.amount' | translate}}</label>
-                                    <input type="number" class="form-control" name="packCountVMSDataCode" [(ngModel)]="packCountVMSDataCode" (change)="changeCountVMS()" (keyup)="changeCountVMS()" (keydown)="changeCountVMS()">
+                                    <input type="number" class="form-control" name="packCountVMSDataCode" readonly [(ngModel)]="packCountVMSDataCode" (change)="changeCountVMS()" (keyup)="changeCountVMS()" (keydown)="changeCountVMS()">
                                 </div>
                                 <div class="col-md-1 col-sm-1 col-xs-12 text-center">
                                 </div>
@@ -560,7 +560,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="dialog-static-name" class="modal-title pull-left">{{'send_data.confirm_send_sms' | translate}}
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'send_data.confirm_send_data' | translate}}
                 </h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="confirmSendDataSMSModal.hide()">
                     <span aria-hidden="true">&times;</span>

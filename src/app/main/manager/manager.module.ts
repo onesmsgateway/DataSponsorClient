@@ -16,6 +16,8 @@ import { GroupsComponent } from './groups/groups.component';
 import { MemberComponent } from './member/member.component';
 import { DataCodeComponent } from './data-code/data-code.component';
 import { DataCodeHisComponent } from './data-code-his/data-code-his.component';
+import { BankMemberComponent } from './bank-member/bank-member.component';
+import { GroupMembersComponent } from './group-members/group-members.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
@@ -27,7 +29,9 @@ export const managerRoutes: Routes = [{
     { path: 'group', component: GroupsComponent, data: { MENU_CODE: 'GROUP' }, canActivate: [AuthGuard] },
     { path: 'member', component: MemberComponent, data: { MENU_CODE: 'MEMBER' }, canActivate: [AuthGuard] },
     { path: 'data-code', component: DataCodeComponent, data: { MENU_CODE: 'DATA-CODE' }, canActivate: [AuthGuard] },
-    { path: 'data-code-his', component: DataCodeHisComponent, data: { MENU_CODE: 'DATA-CODE-HIS' }, canActivate: [AuthGuard] }
+    { path: 'data-code-his', component: DataCodeHisComponent, data: { MENU_CODE: 'DATA-CODE-HIS' }, canActivate: [AuthGuard] },
+    { path: 'bank-member', component: BankMemberComponent, data: { MENU_CODE: 'BANK_MEMBER' }, canActivate: [AuthGuard] },
+    { path: 'group-members', component: GroupMembersComponent, data: { MENU_CODE: 'GROUP_MEMBERS' }, canActivate: [AuthGuard] }
   ]
 }];
 
@@ -39,7 +43,9 @@ export const managerRoutes: Routes = [{
     GroupsComponent,
     MemberComponent,
     DataCodeComponent,
-    DataCodeHisComponent],
+    DataCodeHisComponent,
+    BankMemberComponent,
+    GroupMembersComponent],
   imports: [
     FormsModule,
     ReactiveFormsModule,

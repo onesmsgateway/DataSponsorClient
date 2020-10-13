@@ -181,7 +181,6 @@ export class DataService {
 
   public async importExcelAndSavePhoneListDataAsync(postData: any, files: File[], groupId: any, groupCode: any, groupName: any, accountID: any) {
     try {
-      debugger
       let formData: FormData = new FormData();
       formData.append('files', files[0], files[0].name);
       if (postData !== "" && postData !== undefined && postData !== null) {
@@ -192,13 +191,32 @@ export class DataService {
         }
       }
       const response = await this.postAsync("/api/FileExtention/ImportExcelAndSavePhoneList?groupId=" + groupId + "&groupCode=" + groupCode + "&groupName=" + groupName + "&accountID=" + accountID, formData);
-      debugger
       return response;
     }
     catch (error) {
       return null;
     }
   }
+
+  public async importExcelAndSavePhoneListDataPointAsync(postData: any, files: File[], groupId: any, groupCode: any, groupName: any, accountID: any) {
+    try {
+      let formData: FormData = new FormData();
+      formData.append('files', files[0], files[0].name);
+      if (postData !== "" && postData !== undefined && postData !== null) {
+        for (var property in postData) {
+          if (postData.hasOwnProperty(property)) {
+            formData.append(property, postData[property]);
+          }
+        }
+      }
+      const response = await this.postAsync("/api/FileExtention/ImportExcelAndSavePhoneListPoint?groupId=" + groupId + "&groupCode=" + groupCode + "&groupName=" + groupName + "&accountID=" + accountID, formData);
+      return response;
+    }
+    catch (error) {
+      return null;
+    }
+  }
+
   public async importExcelAndSaveMemberListDataAsync(postData: any, files: File[], accountId: any, groupId: any, groupCode: any, groupName: any) {
     try {
       let formData: FormData = new FormData();
@@ -394,7 +412,7 @@ export class DataService {
 
   public async getFileExtentionPhoneListAsync(uri: string, phoneList: any, fileName: string): Promise<boolean> {
     let result: boolean = false;
-    let url = AppConst.DATA_SPONSOR_API + uri + '?phoneList=' + phoneList + '&fileName=' + fileName;
+    let url = AppConst.DATA_SPONSOR_API + uri + '?groupIds=' + phoneList + '&fileName=' + fileName;
     let response = await this.http.get(url, { responseType: 'arraybuffer' }).toPromise();
     if (response) {
       let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });

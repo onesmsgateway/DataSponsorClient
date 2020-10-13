@@ -20,7 +20,7 @@ import { ScenariosComponent } from './scenarios/scenarios.component';
 import { ScenariosDetailComponent } from './scenarios-detail/scenarios-detail.component';
 import { SmsBirthdayComponent } from './sms-birthday/sms-birthday.component';
 import { ScenariosBirthdayComponent } from './scenarios-birthday/scenarios-birthday.component';
-import { PointDataComponent } from './point-data/point-data.component';
+import { DataPointComponent } from './data-point/data-point.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
@@ -29,7 +29,7 @@ export const managerRoutes: Routes = [{
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'data-cimast', component: DataCimastComponent, data: { MENU_CODE: 'DATA-CIMAST' }, canActivate: [AuthGuard] },
     { path: 'send-data', component: SendDataComponent, data: { MENU_CODE: 'SEND-DATA' }, canActivate: [AuthGuard] },
-    { path: 'point-data', component: PointDataComponent, data: { MENU_CODE: 'POINT-DATA' }, canActivate: [AuthGuard] },
+    { path: 'data-point', component: DataPointComponent, data: { MENU_CODE: 'DATA-POINT' }, canActivate: [AuthGuard] },
     { path: 'package', component: PackageComponent, data: { MENU_CODE: 'PACKAGE' }, canActivate: [AuthGuard] },
     { path: 'data-campaign', component: DataCampaignComponent, data: { MENU_CODE: 'DATA-CAMPAIGN' }, canActivate: [AuthGuard] },
     { path: 'package-telco', component: PackageTelcoComponent, data: { MENU_CODE: 'PACKAGE-TELCO' }, canActivate: [AuthGuard] },
@@ -42,7 +42,7 @@ export const managerRoutes: Routes = [{
 }];
 
 @NgModule({
-  declarations: [DataSponsorComponent, DataCimastComponent, SendDataComponent, PackageComponent, DataCampaignComponent, PackageTelcoComponent, ScenariosComponent, ScenariosDetailComponent, SmsBirthdayComponent, ScenariosBirthdayComponent, PointDataComponent],
+  declarations: [DataSponsorComponent, DataCimastComponent, SendDataComponent, PackageComponent, DataCampaignComponent, PackageTelcoComponent, ScenariosComponent, ScenariosDetailComponent, SmsBirthdayComponent, ScenariosBirthdayComponent, DataPointComponent],
   imports: [
     FormsModule,
     ReactiveFormsModule,

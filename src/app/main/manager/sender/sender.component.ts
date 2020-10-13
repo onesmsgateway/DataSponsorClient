@@ -213,7 +213,6 @@ export class SenderComponent implements OnInit {
   }
   //#endregion
   ChangeSenderName() {
-    debugger
     this.getData();
   }
   //#region load group sender
@@ -573,7 +572,6 @@ export class SenderComponent implements OnInit {
 
   //#region export excel
   async exportExcel() {
-    debugger
     this.textbuttonExcel = 'Loading...';
     let result: boolean = await this.dataService.getFileExtentionSenderNameAsync("/api/FileExtention/ExportExcelSenderName", this.inSenderName, this.inSenderGroup, "SenderName")
     this.textbuttonExcel = 'Export Excel';

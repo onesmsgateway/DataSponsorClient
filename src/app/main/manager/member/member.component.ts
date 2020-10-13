@@ -549,10 +549,10 @@ export class MemberComponent implements OnInit {
     }
   }
   async checkboxGroup() {
-    debugger
     this.ischeckgroup = !this.ischeckgroup;
     this.selectedGroupUpload.push(this.utilityService.translate('send_data.inGroup'));
     if (this.ischeckgroup == true) {
+      this.selectedGroupUpload = [];
       this.settingsFilterGroupUpload = {
         text: this.utilityService.translate('send_data.inGroup'),
         singleSelection: true,

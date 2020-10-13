@@ -174,6 +174,7 @@ export class SendDataComponent implements OnInit {
   public loadingGroup: boolean = false;
   public isAdmin: boolean = false;
   public enablePackageDataCode: boolean = true;
+  public upload: boolean = false;
 
   // get data insert dataOtp
   public phoneDataOtp: string = '';
@@ -182,6 +183,17 @@ export class SendDataComponent implements OnInit {
   public otpDataOtp: number;
   public otpSmsDataOtp: string = '';
   public senderNameDataOtp: string = '';
+  public ids;
+  public SMS_CONTENT_VTL: string = '';
+  public SMS_CONTENT_GPC: string = '';
+  public SMS_CONTENT_VMS: string = '';
+  public DATA_AMT_VTL;
+  public DATA_AMT_GPC;
+  public DATA_AMT_VMS;
+  public DATA_VOL_VTL;
+  public DATA_VOL_GPC;
+  public DATA_VOL_VMS;
+
 
 
   constructor(private dataService: DataService,
@@ -434,7 +446,6 @@ export class SendDataComponent implements OnInit {
   }
 
   async selectCampaign() {
-    debugger
     let campaignId = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != null ? this.selectedCampaign[0].id : 0;
     let response: any = await this.dataService.getAsync('/api/DataCampaign/GetDataCampaignById?id=' + campaignId);
     if (response.err_code == 0 && response.data.length > 0) {
@@ -450,23 +461,43 @@ export class SendDataComponent implements OnInit {
 
   // get phone by file list 
   async getPhoneNumber(event) {
-    this.countPhone(this.phoneList);
+    if (this.phoneList != null && this.phoneList != "") {
+      this.countPhone(this.phoneList);
+    }
     this.dataPhoneTamp = [];
     this.dataPhone = [];
-    if (!this.lstChecked.includes(event.id)) {
-      this.lstChecked.push(event.id);
-      this.lstCheckedName.push(event.itemName);
-    }
-    else {
-      let index = this.lstChecked.indexOf(event.id);
-      if (index != -1) {
-        this.lstChecked.splice(index, 1);
-        this.lstCheckedName.splice(index, 1);
+    if (event.length > 0) {
+      this.lstChecked = [];
+      this.lstCheckedName = [];
+      for (let i = 0; i < event.length; i++) {
+        if (!this.lstChecked.includes(event[i].id)) {
+          this.lstChecked.push(event[i].id);
+          this.lstCheckedName.push(event[i].itemName);
+        }
+        else {
+          let index = this.lstChecked.indexOf(event[i].id);
+          if (index != -1) {
+            this.lstChecked.splice(index, 1);
+            this.lstCheckedName.splice(index, 1);
+          }
+        }
+      }
+    } else {
+      if (!this.lstChecked.includes(event.id)) {
+        this.lstChecked.push(event.id);
+        this.lstCheckedName.push(event.itemName);
+      }
+      else {
+        let index = this.lstChecked.indexOf(event.id);
+        if (index != -1) {
+          this.lstChecked.splice(index, 1);
+          this.lstCheckedName.splice(index, 1);
+        }
       }
     }
-    let ids = this.lstChecked.join(",");
+    this.ids = this.lstChecked.join(",");
     this.fileList = this.lstCheckedName.join(",");
-    if (ids == null || ids == "" && this.numberPhone == 0) {
+    if (this.ids == null || this.ids == "" && this.numberPhone == 0) {
       this.totalAmtVTL = 0;
       this.totalAmtGPC = 0;
       this.totalAmtVMS = 0;
@@ -483,16 +514,18 @@ export class SendDataComponent implements OnInit {
       this.totalPackGPC = 0;
       this.totalPackVMS = 0;
       this.totalPackVMSDataCode = 0;
+      this.phonePaging(this.dataPhoneTamp);
       return;
     }
-    debugger
     this.loadingGroup = true;
-    let response: any = await this.dataService.getAsync('/api/Person/GetPersonByGroupIds?groupIds=' + ids)
+    let response: any = await this.dataService.getAsync('/api/Person/GetPersonByGroupIds?groupIds=' + this.ids);
+    debugger
     this.loadingGroup = false;
     if (response) {
       this.dataPhone = response.data.listPhoneTelco;
       let data = response.data;
       response = [];
+      this.dataPhoneTamp = [];
       for (let i in this.dataPhone) {
         this.dataPhoneTamp.push(this.dataPhone[i]);
       }
@@ -534,8 +567,7 @@ export class SendDataComponent implements OnInit {
       } else {
         if (this.selectedPackageVMS.length > 0) this.packVMS = this.selectedPackageVMS[0].itemName + " x " + this.totalPackVMS;
       }
-
-      this.phonePaging(response.data);
+      this.phonePaging(this.dataPhoneTamp);
     } else {
       this.totalAmtVTL = 0;
       this.totalAmtGPC = 0;
@@ -578,7 +610,6 @@ export class SendDataComponent implements OnInit {
             }
           }
         }
-
       }
     }
     else {
@@ -760,7 +791,7 @@ export class SendDataComponent implements OnInit {
     this.dataPackageVTL = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL' + '&ismoneydatacode=' + ismoneydatacode)
     for (let index in response.data) {
-      this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
+        this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
     if (this.dataPackageVTL.length == 1)
       this.selectedPackageVTL.push({ "id": this.dataPackageVTL[0].id, "itemName": this.dataPackageVTL[0].itemName });
@@ -769,7 +800,7 @@ export class SendDataComponent implements OnInit {
   async changePackageVTL() {
     this.packViettel = "0";
     if (this.selectedPackageVTL.length > 0) {
-      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageVTL[0].id);
       if (response != null && response.err_code == 0) {
         this.effectiveDateVTL = response.data[0].DATE_USE + " ngày";
         this.packageAmtVTL = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
@@ -818,7 +849,7 @@ export class SendDataComponent implements OnInit {
   async changePackageGPC() {
     this.packGPC = "0";
     if (this.selectedPackageGPC.length > 0) {
-      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageGPC[0].id);
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageGPC[0].id);
       if (response != null && response.err_code == 0) {
         this.effectiveDateGPC = response.data[0].DATE_USE + " ngày";
         this.packageAmtGPC = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
@@ -877,7 +908,7 @@ export class SendDataComponent implements OnInit {
     this.packVMS = "0";
     if (this.checkdatacode == true) {
       if (this.selectedPackageVMSDataCode.length > 0) {
-        let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMSDataCode[0].id);
+        let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageVMSDataCode[0].id);
         if (response != null && response.err_code == 0) {
           this.effectiveDateVMSDataCode = response.data[0].DATE_USE + " ngày";
           this.packageAmtVMSDataCode = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
@@ -901,7 +932,7 @@ export class SendDataComponent implements OnInit {
       }
     } else {
       if (this.selectedPackageVMS.length > 0) {
-        let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);
+        let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageVMS[0].id);
         if (response != null && response.err_code == 0) {
           this.effectiveDateVMS = response.data[0].DATE_USE + " ngày";
           this.packageAmtVMS = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
@@ -1025,7 +1056,8 @@ export class SendDataComponent implements OnInit {
       this.accountId = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
 
     this.clearData();
-    this.getDataGroup();
+    this.selectedGroupUpload = [];
+    //this.getDataGroup();
     this.uploadExcelModal.show();
   }
 
@@ -1037,7 +1069,7 @@ export class SendDataComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/Group/GetGroupByAccount?account_id=' + account)
     for (let index in response.data) {
       this.dataGroup.push({ "id": response.data[index].GROUP_ID, "itemName": response.data[index].GROUP_NAME });
-      // this.getPhoneNumber(response.data[index].GROUP_ID);
+      //this.getPhoneNumber(response.data[index].GROUP_ID);
     }
 
   }
@@ -1062,7 +1094,6 @@ export class SendDataComponent implements OnInit {
       let groupId = this.selectedGroupUpload.length > 0 && this.selectedGroupUpload[0].id != "" ? this.selectedGroupUpload[0].id : "";
       let groupName = this.selectedGroupUpload.length > 0 && this.selectedGroupUpload[0].itemName != "" ? this.selectedGroupUpload[0].itemName : "";
       let response: any = await this.dataService.importExcelAndSavePhoneListDataAsync(null, file.files, groupId, this.groupCode, this.groupName, this.accountId);
-      debugger
       if (response) {
         if (response.err_code == -100) {
           this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-100"));
@@ -1074,19 +1105,21 @@ export class SendDataComponent implements OnInit {
           return;
         } else {
           this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("130"));
+          this.getDataGroup();
           this.groupCode = "";
           this.groupName = "";
           this.uploadExcelModal.hide();
-          //this.pageRefresh();
-          this.getDataGroup();
-          if (groupId != null && groupId != "") {
-            this.selectedGroup.push({ "id": groupId, "itemName": groupName });
-          } else {
-            this.selectedGroup.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME })
-          }
-          this.getPhoneNumber(this.selectedGroup[0]);
-        }
 
+            let filtered = this.selectedGroup.filter(a => this.selectedGroupUpload.some(b => b.id === a.id));
+            if (filtered.length == 0) {
+              if (groupId != null && groupId != "") {
+                this.selectedGroup.push({ "id": groupId, "itemName": groupName });
+              } else {
+                this.selectedGroup.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME })
+              }
+            }
+            this.getPhoneNumber(this.selectedGroup);
+        }
       }
       else {
         this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
@@ -1124,7 +1157,6 @@ export class SendDataComponent implements OnInit {
 
   //show confirm send data sms
   async sendDataSMS() {
-    debugger
     this.ACCOUNT_ID = this.selectedItemComboboxAccount.length > 0 ? this.selectedItemComboboxAccount[0].id : 0;
     if (this.ACCOUNT_ID == 0) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-21"));
@@ -1257,7 +1289,6 @@ export class SendDataComponent implements OnInit {
         IS_MONEY_DATA_CODE = 0;
       }
     }
-    debugger
     let REWARD_NUMBER;
     let REWARD_NUMBER_TIME_IN_DAYS
     if (this.chkcampaign == false) {
@@ -1276,14 +1307,16 @@ export class SendDataComponent implements OnInit {
     }
 
     let chkCampaign = this.chkcampaign == true ? 0 : 1;
-    let DATA_CAMPAIGN_ID = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : null;
+    let DATA_CAMPAIGN_ID = this.selectedCampaign.length > 0 && this.selectedCampaign[0].id != "" ? this.selectedCampaign[0].id : "";
     let j = 0;
+
     if (this.isSendSMS) {
       for (let i = 0; i < this.dataPhoneTamp.length; i++) {
         let phone = this.dataPhoneTamp[i].PHONE;
         if (this.isSendVTL && this.dataPhoneTamp[i].TELCO == "VIETTEL") {
           let SMS_CONTENT = this.SMS_TEMPLATE.replace(this.utilityService.translate('send_data.inPack'), PACKAGE_NAME_VTL).replace(this.utilityService.translate('send_data.inPhone'), phone)
             .replace(this.utilityService.translate('send_data.inData'), DATA_VTL).replace(this.utilityService.translate('send_data.inDateUse'), this.effectiveDateVTL.replace("ngày", "").trim());
+          this.SMS_CONTENT_VTL = SMS_CONTENT;
           this.listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VTL, DATA_AMT: this.packageAmtVTL, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
             , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: Number(PACKAGE_ID_VTL), PACKAGE_NAME: PACKAGE_NAME_VTL
@@ -1293,6 +1326,7 @@ export class SendDataComponent implements OnInit {
         else if (this.isSendGPC && this.dataPhoneTamp[i].TELCO == "GPC") {
           let SMS_CONTENT = this.SMS_TEMPLATE.replace(this.utilityService.translate('send_data.inPack'), PACKAGE_NAME_GPC).replace(this.utilityService.translate('send_data.inPhone'), phone)
             .replace(this.utilityService.translate('send_data.inData'), DATA_GPC).replace(this.utilityService.translate('send_data.inDateUse'), this.effectiveDateGPC.replace("ngày", "").trim());
+          this.SMS_CONTENT_GPC = SMS_CONTENT;
           this.listSmsSend.push({
             ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_GPC, DATA_AMT: this.packageAmtGPC, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, SMS_CONTENT: SMS_CONTENT
             , SMS_TEMPLATE: this.SMS_TEMPLATE, TIME_SCHEDULE: this.TIMESCHEDULE, TYPE: "DATA_SPONSOR", PROGRAM_NAME: this.PROGRAM_NAME, IS_SEND_SMS: this.IS_SEND_SMS, PACKAGE_ID: PACKAGE_ID_GPC, PACKAGE_NAME: PACKAGE_NAME_GPC
@@ -1302,6 +1336,7 @@ export class SendDataComponent implements OnInit {
         else if (this.isSendVMS && this.dataPhoneTamp[i].TELCO == "VMS") {
           let SMS_CONTENT = this.SMS_TEMPLATE.replace(this.utilityService.translate('send_data.inPack'), PACKAGE_NAME_VMS).replace(this.utilityService.translate('send_data.inPhone'), phone)
             .replace(this.utilityService.translate('send_data.inData'), DATA_VMS).replace(this.utilityService.translate('send_data.inDateUse'), this.effectiveDateVMS.replace("ngày", "").trim());
+          this.SMS_CONTENT_VMS = SMS_CONTENT;
           if (this.checkdatacode == true) {
             let code = this.dataCodeTamp[j].ENCRYPTED_CODE;
             this.listSmsSend.push({
@@ -1339,7 +1374,7 @@ export class SendDataComponent implements OnInit {
           if (this.checkdatacode == true) {
             let code = this.dataCodeTamp[j].ENCRYPTED_CODE;
             this.listSmsSend.push({
-              ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMS, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
+              ACCOUNT_ID: this.ACCOUNT_ID, PHONE: phone, TELCO: this.dataPhoneTamp[i].TELCO, DATA_VOL: DATA_VMS, DATA_AMT: this.packageAmtVMSDataCode, SENDER_ID: this.SENDER_ID, SENDER_NAME: this.senderName, PROGRAM_NAME: this.PROGRAM_NAME, TIME_SCHEDULE: this.TIMESCHEDULE
               , TYPE: "DATA_CODE", IS_READ: 1, PACKAGE_ID: PACKAGE_ID_VMS, PACKAGE_NAME: PACKAGE_NAME_VMS, REWARD_NUMBER, REWARD_NUMBER_TIME_IN_DAYS, COUNT_SEND: this.packCountVMS, DATA_CAMPAIGN_ID, PROGRAM_CODE: this.programCode, TOTAL_PACKAGES: this.totalPackVMS, DATA_CODE: code, IS_MONEY_DATA_CODE: IS_MONEY_DATA_CODE
             });
             j++;
@@ -1352,24 +1387,75 @@ export class SendDataComponent implements OnInit {
         }
       }
     }
-
-    let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, this.listSmsSend);
-    debugger
-    if (insertSms.err_code == 0) {
-      this.messageAfterSend = insertSms.err_message;
-      this.confirmAfterSuccessModal.show();
-      this.pageRefresh();
-    } else if (insertSms.err_code == -501) {
-      let phoneexit = this.utilityService.translate('data-campaign.phone_sended_exits');
-      let phoneexit1 = this.utilityService.translate('data-campaign.phone_exits_1');
-      this.checkPhoneExit = true;
-      this.PhoneExit = phoneexit + insertSms.data + phoneexit1 + this.PROGRAM_NAME;
+    // do whatever
+    if (this.dataPhoneTamp.length < 2000) {
+      let insertSms = await this.dataService.postAsync('/api/DataSMS/InsertListDataCampaign?isSendFromCampaignOld=' + chkCampaign, this.listSmsSend);
+      if (insertSms.err_code == 0) {
+        this.messageAfterSend = insertSms.err_message;
+        this.confirmAfterSuccessModal.show();
+        this.pageRefresh();
+      } else if (insertSms.err_code == -501) {
+        let phoneexit = this.utilityService.translate('data-campaign.phone_sended_exits');
+        let phoneexit1 = this.utilityService.translate('data-campaign.phone_exits_1');
+        this.checkPhoneExit = true;
+        this.PhoneExit = phoneexit + insertSms.data + phoneexit1 + this.PROGRAM_NAME;
+      }
+      else this.notificationService.displayErrorMessage(insertSms.err_message);
+      this.viewQuyData(this.ACCOUNT_ID);
+      this.viewQuyDataCode(this.ACCOUNT_ID);
+      this.confirmSendDataSMSModal.hide();
+      this.loading = false;
     }
-    else this.notificationService.displayErrorMessage(insertSms.err_message);
-    this.viewQuyData(this.ACCOUNT_ID);
-    this.viewQuyDataCode(this.ACCOUNT_ID);
-    this.confirmSendDataSMSModal.hide();
-    this.loading = false;
+    else {
+      let ACCOUNT_ID = this.ACCOUNT_ID;
+      let SENDER_ID = this.SENDER_ID;
+      let SENDER_NAME = this.senderName;
+      let SMS_CONTENT;
+      if (this.isSendSMS) {
+        SMS_CONTENT = this.SMS_TEMPLATE;
+      } else {
+        SMS_CONTENT = "";
+      }
+      let TIME_SCHEDULE = this.TIMESCHEDULE;
+      let TYPE = "DATA_SPONSOR";
+      let PROGRAM_NAME = this.PROGRAM_NAME;
+      let IS_SEND_SMS = this.IS_SEND_SMS;
+      let PACKAGE_ID_VMS = this.selectedPackageVMS.length > 0 ? this.selectedPackageVMS[0].id : "";
+      let PACKAGE_ID_VTL = this.selectedPackageVTL.length > 0 ? this.selectedPackageVTL[0].id : "";
+      let PACKAGE_ID_GPC = this.selectedPackageGPC.length > 0 ? this.selectedPackageGPC[0].id : "";
+      let PROGRAM_CODE = this.programCode;
+      let checkcode = this.checkdatacode == true ? 1 : 0;
+      let GROUP_ID = this.ids;
+      this.DATA_AMT_VTL = this.packageAmtVTL;
+      this.DATA_AMT_GPC = this.packageAmtGPC;
+      this.DATA_AMT_VMS = this.packageAmtVMS;
+      this.DATA_VOL_VTL = DATA_VTL;
+      this.DATA_VOL_GPC = DATA_GPC;
+      this.DATA_VOL_VMS = DATA_VMS;
+      let res: any = await this.dataService.getAsync('/api/DataSMS/InsertListDataCampaignMultiple?isSendFromCampaignOld=' + chkCampaign + '&checkcode=' + checkcode + '&account_id=' + ACCOUNT_ID + '&sender_id=' + SENDER_ID + '&sender_name=' + SENDER_NAME + '&sms_content=' + SMS_CONTENT + '&time_schedule=' + TIME_SCHEDULE + '&type=' + TYPE + '&program_name=' + PROGRAM_NAME + '&package_id_vms=' + PACKAGE_ID_VMS + '&package_id_vtl=' + PACKAGE_ID_VTL + '&package_id_gpc=' + PACKAGE_ID_GPC
+        + '&is_send_sms=' + IS_SEND_SMS + '&reward=' + REWARD_NUMBER + '&reward_number_time_in_days=' + REWARD_NUMBER_TIME_IN_DAYS + '&program_code=' + PROGRAM_CODE + '&count_vtl=' + this.packCountVTL + '&count_gpc=' + this.packCountGPC + '&count_vms=' + this.packCountVMS + '&group_id=' + GROUP_ID + '&total_package_data_code=' + this.countVMSDataCode + '&data_campaign_id=' + DATA_CAMPAIGN_ID + '&phoneList=' + this.phoneList + '&smscontentVTL=' + this.SMS_CONTENT_VTL
+        + '&smscontentGPC=' + this.SMS_CONTENT_GPC + '&smscontentVMS=' + this.SMS_CONTENT_VMS + '&volVTL=' + this.DATA_VOL_VTL + '&volGPC=' + this.DATA_VOL_GPC + '&volVMS=' + this.DATA_VOL_VMS
+        + '&amtVTL=' + this.DATA_AMT_VTL + '&amtGPC=' + this.DATA_AMT_GPC + '&vamtVMS=' + this.DATA_AMT_VMS + '&packVTL=' + PACKAGE_NAME_VTL + '&packGPC=' + PACKAGE_NAME_GPC + '&packVMS=' + PACKAGE_NAME_VMS);
+      if (res) {
+        if (res.err_code == 0) {
+          this.messageAfterSend = res.err_message;
+          this.confirmAfterSuccessModal.show();
+          setTimeout(() => {
+            this.pageRefresh();
+          }, 2000);
+        } else if (res.err_code == -501) {
+          let phoneexit = this.utilityService.translate('data-campaign.phone_sended_exits');
+          let phoneexit1 = this.utilityService.translate('data-campaign.phone_exits_1');
+          this.checkPhoneExit = true;
+          this.PhoneExit = phoneexit + res.data + phoneexit1 + this.PROGRAM_NAME;
+        }
+        else this.notificationService.displayErrorMessage(res.err_message);
+        this.viewQuyData(this.ACCOUNT_ID);
+        this.viewQuyDataCode(this.ACCOUNT_ID);
+        this.confirmSendDataSMSModal.hide();
+        this.loading = false;
+      }
+    }
   }
   //#endregion
 
@@ -1559,7 +1645,7 @@ export class SendDataComponent implements OnInit {
   }
 
   async getTelco(phone: any) {
-    let telco = ""
+    let telco = "";
     let response: any = await this.dataService.getAsync('/api/Person/GetTelco?phone=' + phone);
     if (response != null)
       telco = response;
@@ -1569,6 +1655,7 @@ export class SendDataComponent implements OnInit {
   async checkboxGroup() {
     this.ischeckgroup = !this.ischeckgroup;
     if (this.ischeckgroup == true) {
+      this.selectedGroupUpload=[];
       this.settingsFilterGroupUpload = {
         text: this.utilityService.translate('send_data.inGroup'),
         singleSelection: true,
@@ -1605,10 +1692,9 @@ export class SendDataComponent implements OnInit {
 
     if (USER_NAME != null || USER_NAME != "") {
       let accountName = USER_NAME.substring(0, 3);
-      let codeName = (accountName + this.utilityService.formatDateToString(this.date, "yyMMddHHmm")).toUpperCase();
+      let codeName = (accountName + this.utilityService.formatDateToString(this.date, "yyMMddHHmmss")).toUpperCase();
       this.programCode = codeName;
     }
-
   }
 
   async createCodeGroup() {

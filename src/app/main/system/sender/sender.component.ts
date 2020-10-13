@@ -566,7 +566,7 @@ export class SenderComponent implements OnInit {
 
   //#region export excel
   async exportExcel() {
-debugger
+
     let result: boolean = await this.dataService.getFileExtentionSenderNameAsync("/api/FileExtention/ExportExcelSenderName" , this.inSenderName , this.inSenderGroup , "SenderName")
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("120"));

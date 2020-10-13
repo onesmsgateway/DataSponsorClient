@@ -857,10 +857,9 @@ export class ScenariosComponent implements OnInit {
     this.selectedPackageVTL = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VIETTEL' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
-      this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
+      this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
-    if (this.dataPackageVTL.length == 1)
-      this.selectedPackageVTL.push({ "id": this.dataPackageVTL[0].id, "itemName": this.dataPackageVTL[0].itemName });
+    
   }
 
   // get data package vina
@@ -868,10 +867,9 @@ export class ScenariosComponent implements OnInit {
     this.dataPackageGPC = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=GPC' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
-      this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
+      this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
-    if (this.dataPackageGPC.length == 1)
-      this.selectedPackageGPC.push({ "id": this.dataPackageGPC[0].id, "itemName": this.dataPackageGPC[0].itemName });
+    
   }
 
   // get data package mobi
@@ -879,10 +877,9 @@ export class ScenariosComponent implements OnInit {
     this.dataPackageVMS = [];
     let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageByTelco?telco=VMS' + '&ismoneydatacode=' + this.checkDataCode)
     for (let index in response.data) {
-      this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME_DISPLAY });
+      this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
-    if (this.dataPackageVMS.length == 1)
-      this.selectedPackageVMS.push({ "id": this.dataPackageVMS[0].id, "itemName": this.dataPackageVMS[0].itemName });
+   
   }
 
   //#region load data
@@ -1205,7 +1202,7 @@ export class ScenariosComponent implements OnInit {
   }
   async changePackageVTL() {
     if (this.selectedPackageVTL.length > 0) {
-      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVTL[0].id);
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageVTL[0].id);
       if (response != null && response.err_code == 0) {
         this.packageAmtVTL = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
       }
@@ -1215,7 +1212,7 @@ export class ScenariosComponent implements OnInit {
   }
   async changePackageGPC() {
     if (this.selectedPackageGPC.length > 0) {
-      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageGPC[0].id);
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageGPC[0].id);
       if (response != null && response.err_code == 0) {
         this.packageAmtGPC = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
       }
@@ -1225,7 +1222,7 @@ export class ScenariosComponent implements OnInit {
   }
   async changePackageVMS() {
     if (this.selectedPackageVMS.length > 0) {
-      let response: any = await this.dataService.getAsync('/api/packageTelco/' + this.selectedPackageVMS[0].id);
+      let response: any = await this.dataService.getAsync('/api/packageTelco/GetPackageTelcoById?id=' + this.selectedPackageVMS[0].id);
       if (response != null && response.err_code == 0) {
         this.packageAmtVMS = response.data[0].AMT != null ? Number(response.data[0].AMT) : 0;
       }

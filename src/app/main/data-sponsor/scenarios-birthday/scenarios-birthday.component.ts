@@ -812,7 +812,6 @@ export class ScenariosBirthdayComponent implements OnInit {
     for (let index in response.data) {
       this.dataSenderNameAdd.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
     }
-   
   }
   //get data sender
   async getDataSenderNameEdit(accountID) {

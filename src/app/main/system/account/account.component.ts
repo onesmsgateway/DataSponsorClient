@@ -365,7 +365,6 @@ export class AccountComponent implements OnInit {
   model: any = {};
   mobNumberPattern = "^(84|0)?[0-9]{9}$"
   async createAccount() {
-    debugger
     let USER_NAME = this.model.userName;
     let PHONE = this.model.phone;
     let IS_ACTIVE = this.checkActive == true ? 1 : 0;
@@ -448,7 +447,6 @@ export class AccountComponent implements OnInit {
   //#endregion
 
   public async exportExcelAccount() {
-    debugger
     this.textbuttonExcel = 'Loading...';
     let account_id = Number(this.authService.currentUserValue.ACCOUNT_ID);
     let result: boolean = await this.dataService.getFileExtentionAccountAsync("/api/FileExtention/ExportExcelAccount", account_id, this.user_name, this.email, this.phone, this.company_name, this.payment_Type, this.fromDate, this.toDate, "Account");
@@ -507,7 +505,7 @@ export class AccountComponent implements OnInit {
   }
 
   async editAccount() {
-debugger
+
     let formData = this.formEditAccount.controls;
     let ACCOUNT_ID = formData.accountId.value;
     let FULL_NAME = formData.fullName.value;
@@ -546,7 +544,6 @@ debugger
       this.notificationService.displayErrorMessage(this.utilityService.translate('account.Account_permission'));
       return;
     }
-    debugger
     let response = await this.dataService.putAsync('/api/account/PutAccount?accountid=' + ACCOUNT_ID, {
       FULL_NAME, PHONE, SKYPE, EMAIL, COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME, DLVR, DLVR_URL, IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH, PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR, BANK_ID
     })
