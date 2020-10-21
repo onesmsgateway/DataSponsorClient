@@ -1,0 +1,400 @@
+<article>
+    <section>
+        <div class="clearfix"></div>
+        <div class="col-md-10 col-sm-10 col-xs-10" style="padding:0">
+            <h2> {{'point.point_data'| translate}}</h2>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-2 form-group pull-right text-right" style="padding:0">
+            <button style="float: right;" type="button" class=" btn btn-primary" (click)="confirmSendDataSMS()">{{ 'point.senddata' | translate }}</button>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 form-group" style="margin:0">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0">
+                            <div class="row" style="margin:1px">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label>{{'point.select_bank'| translate}}</label>
+                                    <angular2-multiselect [data]="dataBank" [(ngModel)]="selectedItemBank" [settings]="settingsFilterItemBank" name="bankName" (onSelect)="ChangeAccountBank()" (onDeSelect)="ChangeAccountBank()">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                            <div class="row" style="margin:1px">
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <label style="margin-top: 10px;">{{'global.choose_account'| translate}}</label>
+                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="changeAccount()" (onDeSelect)="deSelectAccount()">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <label style="margin-top: 10px;">{{'global.choose_sender'| translate}}</label>
+                                    <angular2-multiselect [data]="dataSenderName" [(ngModel)]="selectedItemSender" [settings]="settingsFilterSender" name="slSenderName">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                            <div class="row" style="margin:1px">
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <label style="margin-top: 10px;"> {{'point.point_number'| translate}}</label>
+                                    <input [disabled]="!checkUpload" class="form-control" [(ngModel)]="yourPoint" name="yourPoint" placeholder="{{'point.point_number'| translate}}" type="number" (keyup)="getPhoneNumber($event)" (keydow)="getPhoneNumber($event)" (change)="getPhoneNumber($event)">
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <button style="margin-top: 35px;" type="button" class="btn btn-primary btn-sm" (click)="getDataPackagePoint()">{{ 'point.choose_data' | translate }}</button>
+                                </div>
+                            </div>
+                            <div class="row" style="margin:1px;" *ngIf="checkPackagePoint">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <angular2-multiselect [data]="dataPackagePointVTL" [(ngModel)]="selectedItemPackagePointVTL" [settings]="settingsFilterPackagePointVTL" name="packagePointVTL" (onSelect)="ChangePackageVTL()" (onDeSelect)="ChangePackageVTL()">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                            <div class="row" style="margin:1px; margin-top: 5px;" *ngIf="checkPackagePoint">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <angular2-multiselect [data]="dataPackagePointGPC" [(ngModel)]="selectedItemPackagePointGPC" [settings]="settingsFilterPackagePointGPC" name="packagePointGPC" (onSelect)="ChangePackageGPC()" (onDeSelect)="ChangePackageGPC()">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                            <div class="row" style="margin:1px; margin-top: 5px;" *ngIf="checkPackagePoint">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <angular2-multiselect [data]="dataPackagePointVMS" [(ngModel)]="selectedItemPackagePointVMS" [settings]="settingsFilterPackagePointVMS" name="packagePointVMS" (onSelect)="ChangePackageVMS()" (onDeSelect)="ChangePackageVMS()">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- upload file excel -->
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="x_panel portlet">
+                                    <div class="x_title clearfix">
+                                        <h2>{{ 'send_data.tittle_upload' | translate }}</h2>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li><a class="collapse-link" onclick="collapseBox(this)"><i
+                                                            class="fa fa-chevron-up"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="x_content">
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-4 col-xs-12 form-group">
+                                                <button style="margin-left: 10px;" type="button" class="btn btn-primary btn-sm" (click)="showModalUpload()">{{ 'send_data.up_load' | translate }}</button>
+                                            </div>
+                                            <div class="col-md-9 col-sm-8 col-xs-12 form-group has-feedback" style="padding-right: 20px;">
+                                                <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedGroup" [settings]="settingsFilterGroup" name="slGroup" (onSelect)="getPhoneNumber($event)" (onDeSelect)="getPhoneNumber($event)">
+                                                </angular2-multiselect>
+                                                <img *ngIf="loadingGroup" class="pl-2" style="margin-right: 10px" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- sms content -->
+                        <div class="x_panel portlet pull-right stywid">
+                            <div class="x_title clearfix">
+                                <h2>{{ 'send_data.tittle_sms' | translate }}</h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li><a class="collapse-link" onclick="collapseBox(this)"><i
+                                        class="fa fa-chevron-up"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="x_content">
+                                <div class="row" style="padding-left: 10px !important; padding-right: 10px !important;">
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right text-right" style="padding: 0">
+                                        <label style="margin-bottom: 0;">
+                                    (<span style="display:inline-block !important">{{numberChar}}</span>
+                                    {{'data-sms.text_countmes2' | translate}}) (<span
+                                        style="display:inline-block !important">{{numberSMS}}</span>{{'data-sms.text_countmes3' | translate}})
+                                </label>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-12" style="padding:0">
+                                        <div class="checkbox" style="margin: 0;">
+                                            <label><input type="checkbox" value="" class="checkbox" name="isSendSMS"
+                                            [(ngModel)]="isSendSMS" (click)="enableSend($event.currentTarget.checked)">
+                                        <span>{{ 'send_data.is_send_sms' | translate }}</span> </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group has-feedback" style="padding: 0;">
+                                        <angular2-multiselect [data]="dataOptionInsert" [(ngModel)]="selectedOptionInsert" [settings]="settingsFilterOptionInsert" name="slOptionInsert" (onSelect)="changeOptionInsert()">
+                                        </angular2-multiselect>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback smspad">
+                                        <angular2-multiselect [data]="dataOptionInsertSms" [(ngModel)]="selectedOptionTempSms" [settings]="settingsFilterOptionTempSms" name="slOptionTempSms" (onSelect)="changeOptionInsertSms()">
+                                        </angular2-multiselect>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 margintop">
+                                        <textarea type="text" class="form-control has-feedback-left modal-popup" #contentSMS name="smsContent" rows="3" maxlength="459" placeholder="{{ 'data-sms.iSms_content' | translate }}" [(ngModel)]="smsContent" (change)="countSMS($event.target.value)" (keyup)="countSMS($event.target.value)"
+                                            (keydow)="countSMS($event.target.value)"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- confirm send sms -->
+        <div class="modal fade" bsModal #confirmSendDataSMSModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 id="dialog-static-name" class="modal-title pull-left">{{'send_data.confirm_send_data_point' | translate}}
+                        </h4>
+                        <button type="button" class="close pull-right" aria-label="Close" (click)="confirmSendDataSMSModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label>{{'point.select_bank' | translate}}</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label style="font-weight:unset ; color: blue;">{{bankName}}</label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label>{{'data_cimast.account' | translate}}</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label style="font-weight:unset ; color: blue;">{{account}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label>{{'send_data.sender' | translate}}</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label style="font-weight:unset; color: blue;">{{senderName}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label>{{'send_data.total_phone' | translate}}: {{totalNumberSendSms}}</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label style="font-weight: normal;; color: blue;">Viettel: {{countVTL + cntVTL}}</label>
+                                    <br>
+                                    <label style="font-weight: normal; ; color: blue;">VinaPhone: {{countGPC + cntGPC}}</label>
+                                    <br>
+                                    <label style="font-weight: normal; ; color: blue;">MobiPhone: {{countVMS + cntVMS}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label>{{'point.choose_data_point' | translate}}</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label style="font-weight: normal; ; color: blue;">{{packViettel}}</label>
+                                    <br>
+                                    <label style="font-weight: normal; ; color: blue;">{{packGPC}}</label>
+                                    <br>
+                                    <label style="font-weight: normal; ; color: blue;">{{packVMS}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label>{{'sms_list.sent_time' | translate}}</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label style="font-weight:unset; color: blue;">{{timeSend}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0">
+                                    <label style="margin-bottom: 0;">{{'data-sms.text_countmes1' | translate}}</label>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback" style="padding: 0">
+                                    <textarea type="text" class="form-control has-feedback-left modal-popup" name="smsContent" rows="3" placeholder="{{ 'data-sms.iSms_content' | translate }}" [(ngModel)]="smsContent" readonly></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <img *ngIf="loading" class="pl-2" style="margin-right: 10px" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                        />
+                        <button type="button" class="btn btn-default" (click)="confirmSendDataSMSModal.hide()">{{'global.cancel' | translate}}</button>
+                        <button type="submit" class="btn btn-success" (click)="sendDataSMS()">{{'global.confirm' | translate}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal upload excel -->
+        <div class="modal fade" bsModal #uploadExcelModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+            <div class="modal-dialog modal-lg">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                        <div class="x_panel portlet">
+                            <div class="x_title clearfix">
+                                <h2 style="display: inline-block;margin:0">{{ 'send_data.phone_list_manage' | translate }}
+                                </h2>
+                                <button type="button" class="close pull-right" aria-label="Close" (click)="uploadExcelModal.hide()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="x_content">
+                                <div class="row" style="margin-right: 5px; margin-left: 5px;">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <label>{{'send_data.lb_upload' | translate}}</label>
+                                        <div class="input-group">
+                                            <input type="file" #uploadFile name="uploadFile" class="form-control">
+                                            <div class="input-group-btn" style="padding:0">
+                                                <button type="button" title="Loại bỏ các tệp đã chọn" (click)="clearData()" class="btn btn-default fileinput-remove fileinput-remove-button" style="background-color:rgba(128, 128, 128, 0.10);margin-bottom: 10px;">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </button>
+                                                <button type="button" class="btn btn-link" (click)="excelTemplate()">{{'send_data.export_template' | translate}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-right: 5px; margin-left: 5px;">
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>{{'send_data.group' | translate}}</label>
+                                        <angular2-multiselect [data]="dataGroupAdd" [(ngModel)]="selectedGroupUploadAdd" [settings]="settingsFilterGroupUploadAdd" name="slGroupUploadAdd">
+                                        </angular2-multiselect>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-12 form-group">
+                                        <label style="padding-top: 30px; float: left;">Hoặc</label>
+                                        <input type="checkbox" value="" class="checkbox ckmg" name="chkOnlyOneCreateGroup" (click)="checkboxGroup()">
+                                    </div>
+
+                                    <div class="col-md-4 col-sm-3 col-xs-12 form-group">
+                                        <label>{{'send_data.group_code' | translate}}</label>
+                                        <input type="text" [disabled]="!ischeckgroup" class="form-control" name="groupCode" placeholder="{{'send_data.inGroup_code' | translate}}" [(ngModel)]="groupCode">
+                                    </div>
+                                    <div class="col-md-4 col-sm-5 col-xs-12 form-group">
+                                        <label>{{'send_data.group_name' | translate}}</label>
+                                        <input type="text" [disabled]="!ischeckgroup" class="form-control" name="groupName" placeholder="{{'send_data.inGroup_name' | translate}}" [(ngModel)]="groupName">
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group text-right" style="padding:0">
+                                    <img *ngIf="loading" class="pl-2" style="margin-right: 10px" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                                    />
+                                    <button type="button" class="btn btn-default" (click)="uploadExcelModal.hide()">{{'global.cancel' | translate}}</button>
+                                    <button type="submit" class="btn btn-success" (click)="submitUploadFile()" [disabled]="loading">{{'global.confirm' | translate}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <form class="form-horizontal form-label-left input_mask">
+                            <div class="col-md-10 col-sm-12 col-xs-12 form-group has-feedback" style="padding:0">
+                                <div style="display: inline-block; padding-right:25px">
+                                    <label>
+                                        <span
+                                            style="display:inline-block !important">{{ 'send_data.total_num' | translate }}</span>
+                                        (<span
+                                            style="display:inline-block !important">{{totalNumber}}</span>{{ 'data-sms.text_num' | translate }})
+                                    </label>
+                                </div>
+                                <div style="display: inline-block; padding-right:15px">
+                                    <label>
+                                        <span style="display:inline-block !important">Viettel</span>
+                                        (<span
+                                            style="display:inline-block !important">{{countVTL}}</span>{{ 'data-sms.text_num' | translate }})
+                                    </label>
+                                </div>
+                                <div style="display: inline-block; padding-right:15px">
+                                    <label>
+                                        <span style="display:inline-block !important">VinaPhone</span>
+                                        (<span
+                                            style="display:inline-block !important">{{countGPC}}</span>{{ 'data-sms.text_num' | translate }})
+                                    </label>
+                                </div>
+                                <div style="display: inline-block; padding-right:15px">
+                                    <label>
+                                        <span style="display:inline-block !important">MobiPhone</span>
+                                        (<span
+                                            style="display:inline-block !important">{{countVMS}}</span>{{ 'data-sms.text_num' | translate }})
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback content-end" style="padding-right: 0">
+                                <button type="button" class="btn btn-success btn-sm" (click)="exportPhoneNumber()">{{ 'send_data.export' | translate }}</button>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 form-group has-feedback">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered clear-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width:7%">STT</th>
+                                                <th class="text-center">{{ 'send_data.phone' | translate }}</th>
+                                                <th class="text-center">{{ 'send_data.telco' | translate }}</th>
+                                                <th class="text-center">{{ 'point.bankpoint' | translate }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of dataPhone; let i = index" [attr.data-index]="i">
+                                                <td scope="row">{{i+1}}</td>
+                                                <td>{{item.PHONE}}</td>
+                                                <td>{{item.TELCO}}</td>
+                                                <td>{{item.BANK_POINT}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
+                                        <select (change)="changePageSize($event.target.value)">
+                                            <option value="20" selected="">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="99999999">Tất cả</option>
+                                        </select> bản ghi.
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 minibox" style="margin-bottom:10px">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        </pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Confirm after send sms success -->
+    <div class="modal fade" bsModal #confirmAfterSuccessModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="dialog-static-name" class="modal-title pull-left">{{'global.infor' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="confirmAfterSuccessModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <b style="color: red;">{{messageAfterSend}}</b><br />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-sm">
+                    {{'global.ok' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

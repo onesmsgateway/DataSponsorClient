@@ -1,0 +1,332 @@
+<article>
+    <section>
+        <div class="page-title clearfix">
+            <div class="title_left">
+                <h3>{{ 'bankmember.title' | translate }}</h3>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <form class="row form-horizontal form-label-left input_mask" (ngSubmit)="searchForm()">
+                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
+                                <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedItemComboboxGroup" [settings]="settingsFilterGroup" name="slGroup" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group has-feedback">
+                                <input type="text" class="form-control" name="point" [(ngModel)]="point" placeholder="{{ 'bankmember.point' | translate }}" (keyup)="onkeyup()" (keydown)="onkeyup()">
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group has-feedback">
+                                <input type="text" class="form-control" name="name" [(ngModel)]="name" placeholder="{{ 'bankmember.inName' | translate }}">
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group has-feedback">
+                                <input type="text" class="form-control" name="phone" [(ngModel)]="phone" placeholder="{{ 'bankmember.inPhone' | translate }}">
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-xs-12 form-group has-feedback">
+                                <button type="submit" style="float: right;" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <form class="form-horizontal form-label-left input_mask">
+                            <div class="form-group">
+                                <div class="form-group has-feedback content-end">
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="uploadExcelModal.show()">{{ 'send_data.up_load' | translate }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 form-group has-feedback">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered clear-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width:5%">STT</th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'bankmember.account' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;width:15%">
+                                                    {{ 'bankmember.name' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'bankmember.phone' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'bankmember.point' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'bankmember.is_active' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'bankmember.create_date' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'bankmember.group' | translate }}
+                                                </th>
+                                                <th class="text-center" style="width:8%">{{ 'global.tool' | translate }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of dataMember; let i = index" [attr.data-index]="i">
+                                                <td class="text-center" scope="row">{{i+1}}</td>
+                                                <td>{{item.USER_NAME}}</td>
+                                                <td>{{item.PERSON_FULLNAME}}</td>
+                                                <td>{{item.PHONE_NUMBER}}</td>
+                                                <td>{{item.BANK_POINT}}</td>
+                                                <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox" disabled></td>
+                                                <td>{{item.CREATED_TIME}}</td>
+                                                <td>{{item.GROUP_NAME}}</td>
+                                                <td class="text-center">
+                                                    <div class="tool">
+                                                        <button type="submit" (click)="confirmUpdateModal(item.PERSON_ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                        <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(item.PERSON_ID, item.PHONE_NUMBER)">{{ 'global.delete' | translate }}</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-12" style="margin: 25px 0 0 0">
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
+                                        <select (change)="changePageSize($event.target.value)">
+                                                <option value="20" selected="">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="99999999">Tất cả</option>
+                                            </select> bản ghi.
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12 minibox" style="margin-bottom:10px">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        </pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
+
+<!-- Thêm bankmember -->
+<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'bankmember.add' | translate}}
+                </h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="showModalCreate.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <form #formAdd="ngForm" (ngSubmit)="createBankMember(formAdd)">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.account' | translate}} <span style="color: red;">(*)</span></label>
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate" [settings]="settingsFilterAccount" name="slAccountCreate" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.name' | translate}} <span style="color: red;">(*)</span></label>
+                            <input type="text" class="form-control" name="name" placeholder="{{ 'bankmember.inName' | translate }}" ngModel>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.phone' | translate}} <span style="color: red;">(*)</span></label>
+                            <input type="text" class="form-control" name="phone" placeholder="{{ 'bankmember.inPhone' | translate }}" ngModel>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.point' | translate}}<span style="color: red;">(*)</span></label>
+                            <input type="text" class="form-control" name="pointAdd" placeholder="{{ 'bankmember.pointinput' | translate }}" ngModel>
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" class="checkbox" name="isActive" ngModel>
+                                                            <span>{{'bankmember.is_active' | translate}}</span> </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.group' | translate}}</label>
+                            <angular2-multiselect [data]="dataGroupCreate" [(ngModel)]="selectedItemComboboxGroupCreate" [settings]="settingsFilterGroupCreate" name="groupcreate" (onSelect)="getIdGroup($event)" (onDeSelect)="getIdGroup($event)">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.birthday' | translate}}</label>
+                            <input type="text" class="form-control" name="birthday" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="birthday" placeholder="{{ 'bankmember.inputbirthday' | translate }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- modal sửa bankmember-->
+<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'sms_template.edit_person' | translate}}
+                </h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="showModalUpdate.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <form [formGroup]="formEditMember" (ngSubmit)="editMember()">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.account' | translate}} <span style="color: red;">(*)</span></label>
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit" [settings]="settingsFilterAccountEdit" formControlName="account">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.name' | translate}}<span style="color: red;">(*)</span></label>
+                            <input type="text" class="form-control" formControlName="name" placeholder="{{ 'bankmember.inName' | translate }}">
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.phone' | translate}} <span style="color: red;">(*)</span></label>
+                            <input type="text" class="form-control" formControlName="phone" placeholder="{{ 'bankmember.inPhone' | translate }}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.point' | translate}} <span style="color: red;">(*)</span></label>
+                            <input type="text" class="form-control" formControlName="pointEdit" placeholder="{{ 'bankmember.pointinput' | translate }}">
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" class="checkbox" formControlName="isActive">
+                                        <span>{{'bankmember.is_active' | translate}}</span> </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group has-feedback">
+                            <label>{{'bankmember.group' | translate}}</label>
+                            <angular2-multiselect [data]="dataGroupEdit" [(ngModel)]="selectedItemComboboxGroupEdit" [settings]="settingsFilterGroupEdit" formControlName="groupedit" (onSelect)="getIdGroup($event)" (onDeSelect)="getIdGroup($event)">
+                            </angular2-multiselect>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 form-group">
+                            <label>{{'bankmember.birthday' | translate}}</label>
+                            <input type="text" [disabled]="isBirthday" class="form-control" formControlName="birthdayEdit" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'bankmember.inputbirthday' | translate }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- modal xác nhận xóa bankmember-->
+<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'global.delete' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmDeleteModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div>{{'bankmember.delete_notify' | translate}} "<b class="text-success">{{phoneName}}</b>"?</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
+                <button type="submit" class="btn btn-success" (click)="confirmDelete(personId)">{{'global.confirm' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- upload excel bankmember -->
+<div class="modal fade" bsModal #uploadExcelModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2 style="display: inline-block;margin:0">{{ 'bankmember.manager_member' | translate }}
+                        </h2>
+                        <button type="button" class="close pull-right" aria-label="Close" (click)="uploadExcelModal.hide()" style="opacity: 0.6 !important;"> 
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="x_content">
+                        <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <label>{{'send_data.lb_upload' | translate}}</label>
+                                <div class="input-group">
+                                    <input type="file" #uploadFile name="uploadFile" class="form-control">
+                                    <div class="input-group-btn" style="padding:0">
+                                        <button type="button" title="Loại bỏ các tệp đã chọn" (click)="clearData()" class="btn btn-default fileinput-remove fileinput-remove-button" style="background-color:rgba(128, 128, 128, 0.10);">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </button>
+                                        <button type="button" class="btn btn-link" (click)="excelTemplateMember()">{{'send_data.export_template' | translate}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <label>{{'bankmember.account' | translate}}</label>
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountMember" [settings]="settingsFilterAccount" name="slAccountMember">
+                                </angular2-multiselect>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                                <label>{{'send_data.group' | translate}}</label>
+                                <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedGroupUpload" [settings]="settingsFilterGroupUpload" name="slGroupUpload">
+                                </angular2-multiselect>
+                            </div>
+                            <!-- <div class="col-md-1 col-sm-1 col-xs-12 form-group">
+                                    <label style="padding-top: 30px;">Hoặc</label>
+                                </div> -->
+                            <div class="col-md-1 col-sm-1 col-xs-12 form-group">
+                                <label style="padding-top: 30px; float: left;">Hoặc&nbsp;</label>
+                                <input style="margin-top: 33px;" type="checkbox" value="" class="checkbox ckmg" name="chkOnlyOneCreateGroup" (click)="checkboxGroup()">
+                            </div>
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group">
+                                <label>{{'send_data.group_code' | translate}}</label>
+                                <input [disabled]="!ischeckgroup" style="padding-right:0px !important ;" type="text" class="form-control" name="groupCode" placeholder="{{'send_data.inGroup_code' | translate}}" [(ngModel)]="groupCode">
+                            </div>
+                            <div class="col-md-3 col-sm-5 col-xs-12 form-group">
+                                <label>{{'send_data.group_name' | translate}}</label>
+                                <input [disabled]="!ischeckgroup" type="text" class="form-control" name="groupName" placeholder="{{'send_data.inGroup_name' | translate}}" [(ngModel)]="groupName">
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group text-right" style="padding:0">
+                                <img *ngIf="loading" class="pl-2" style="margin-right: 10px" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                                />
+                                <button type="button" class="btn btn-default" (click)="uploadExcelModal.hide()">{{'global.cancel' | translate}}</button>
+                                <button type="submit" class="btn btn-success" (click)="submitUploadFile()" [disabled]="loading">{{'global.confirm' | translate}}</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

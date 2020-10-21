@@ -99,7 +99,8 @@
         "title_customer": "Tổng số thành viên",
         "time": "Thống kê 30 ngày gần đây",
         "info": "Thông tin",
-        "change_password": "Đổi mật khẩu"
+        "change_password": "Đổi mật khẩu",
+        "sms_not_sender": "Tài khoản tạo tin nhắn mẫu đã bị thay đổi, vui lòng xóa tin nhắn và tạo lại."
     },
     "home": {
         "sms_error": "Tin lỗi",

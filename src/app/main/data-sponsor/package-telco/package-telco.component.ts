@@ -181,7 +181,8 @@ export class PackageTelcoComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
-    let response: any = await this.dataService.getAsync('/api/PackageTelco/' + id)
+    debugger
+    let response: any = await this.dataService.getAsync('/api/PackageTelco/GetPackageTelcoById?id=' + id)
     if (response.err_code == 0) {
       let dataSmsTemp = response.data[0];
       this.formEditPackage = new FormGroup({

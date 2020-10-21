@@ -306,6 +306,7 @@ export class SmsTemplateComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
+    debugger
     this.settingsFilterAccountEdit = {
       text: this.utilityService.translate("global.choose_account"),
       singleSelection: true,
@@ -322,19 +323,23 @@ export class SmsTemplateComponent implements OnInit {
     let response: any = await this.dataService.getAsync('/api/smstemplate/' + id)
     if (response.err_code == 0) {
       let dataSmsTemp = response.data[0];
-      sender_id = dataSmsTemp.SENDER_ID;
-      sender_name = dataSmsTemp.SENDER_NAME;
-      this.formEditSmsTemplate = new FormGroup({
-        id: new FormControl(id),
-        slAccountEdit: new FormControl([{ "id": dataSmsTemp.ACCOUNT_ID, "itemName": dataSmsTemp.USER_NAME }]),
-        slSenderEdit: new FormControl([{ "id": dataSmsTemp.SENDER_ID, "itemName": dataSmsTemp.SENDER_NAME }]),
-        tempNameEdit: new FormControl(dataSmsTemp.TEMP_NAME),
-        tempContentEdit: new FormControl(dataSmsTemp.TEMPLATE_CONTENT)
-      });
-      this.getDataSenderNameEdit();
-      if (this.selectedItemComboboxSenderEdit.length == 0)
-        this.selectedItemComboboxSenderEdit.push({ "id": sender_id, "itemName": sender_name });
-      this.showModalUpdate.show();
+      if(response.data.length > 0){
+        sender_id = dataSmsTemp.SENDER_ID;
+        sender_name = dataSmsTemp.SENDER_NAME;
+        this.formEditSmsTemplate = new FormGroup({
+          id: new FormControl(id),
+          slAccountEdit: new FormControl([{ "id": dataSmsTemp.ACCOUNT_ID, "itemName": dataSmsTemp.USER_NAME }]),
+          slSenderEdit: new FormControl([{ "id": dataSmsTemp.SENDER_ID, "itemName": dataSmsTemp.SENDER_NAME }]),
+          tempNameEdit: new FormControl(dataSmsTemp.TEMP_NAME),
+          tempContentEdit: new FormControl(dataSmsTemp.TEMPLATE_CONTENT)
+        });
+        this.getDataSenderNameEdit();
+        if (this.selectedItemComboboxSenderEdit.length == 0)
+          this.selectedItemComboboxSenderEdit.push({ "id": sender_id, "itemName": sender_name });
+        this.showModalUpdate.show();
+      }else{
+        this.notificationService.displayErrorMessage(this.utilityService.translate("global.sms_not_sender"));
+      }
     } else {
       this.notificationService.displayErrorMessage(response.err_message);
     }
