@@ -27,7 +27,7 @@
         "@ngx-translate/core": "^11.0.1",
         "@ngx-translate/http-loader": "^4.0.0",
         "alertifyjs": "^1.11.4",
-        "angular2-multiselect-dropdown": "^4.2.7",
+        "angular2-multiselect-dropdown": "^4.6.3",
         "angularx-social-login": "^1.2.7",
         "apexcharts": "^3.19.3",
         "chart.js": "^2.9.3",

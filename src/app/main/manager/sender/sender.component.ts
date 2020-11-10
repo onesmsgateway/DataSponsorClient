@@ -41,8 +41,6 @@ export class SenderComponent implements OnInit {
   public timeExpiredVTL: Date = new Date();
   public timeExpiredGPC: Date = new Date();
   public timeExpiredVMS: Date = new Date();
-  public timeExpiredVNM: Date = new Date();
-  public timeExpiredGTEL: Date = new Date();
 
   public settingsFilterSenderGroup = {};
   public settingsFilterSenderGroupModal = {};
@@ -50,9 +48,6 @@ export class SenderComponent implements OnInit {
   public selectedItemComboboxSenderGroupVTL = [];
   public selectedItemComboboxSenderGroupGPC = [];
   public selectedItemComboboxSenderGroupVMS = [];
-  public selectedItemComboboxSenderGroupVNM = [];
-  public selectedItemComboboxSenderGroupGTEL = [];
-  public selectedItemComboboxSenderGroupSFONE = [];
   public role: Role = new Role();
 
   public senderThreadID;
@@ -105,21 +100,11 @@ export class SenderComponent implements OnInit {
       description: new FormControl(),
       fillterTemp: new FormControl(),
       tempContent: new FormControl(),
-      senderGrVNM: new FormControl(),
-      senderNameVNM: new FormControl(),
-      senderGrSFONE: new FormControl(),
-      senderNameSFONE: new FormControl(),
-      senderGrDDMBILE: new FormControl(),
-      //senderNameDDMBILE: new FormControl(),
-      senderGrGTEL: new FormControl(),
-      senderNameGTEL: new FormControl(),
       fromDate: new FormControl(),
       expiredDate: new FormControl(),
       expiredDateVIETTEL: new FormControl(),
       expiredDateGPC: new FormControl(),
       expiredDateVMS: new FormControl(),
-      expiredDateVNM: new FormControl(),
-      expiredDateGTEL: new FormControl()
     });
 
     this.settingsFilterSenderGroup = {
@@ -160,8 +145,6 @@ export class SenderComponent implements OnInit {
     this.timeExpiredVTL.setFullYear(this.timeExpiredVTL.getFullYear() + 1)
     this.timeExpiredGPC.setFullYear(this.timeExpiredGPC.getFullYear() + 1)
     this.timeExpiredVMS.setFullYear(this.timeExpiredVMS.getFullYear() + 1)
-    this.timeExpiredVNM.setFullYear(this.timeExpiredVNM.getFullYear() + 1)
-    this.timeExpiredGTEL.setFullYear(this.timeExpiredGTEL.getFullYear() + 1)
     if (this.activatedRoute.snapshot.queryParamMap.get('redirectTo') && this.activatedRoute.snapshot.queryParamMap.get('redirectTo') == 'sender_expired') {
       this.getSenderExpired();
     } else {
@@ -221,9 +204,6 @@ export class SenderComponent implements OnInit {
     this.selectedItemComboboxSenderGroupVTL.push({ "id": null, "itemName": this.utilityService.translate("partner_sender.iSender_grroup") });
     this.selectedItemComboboxSenderGroupGPC.push({ "id": null, "itemName": this.utilityService.translate("partner_sender.iSender_grroup") });
     this.selectedItemComboboxSenderGroupVMS.push({ "id": null, "itemName": this.utilityService.translate("partner_sender.iSender_grroup") });
-    this.selectedItemComboboxSenderGroupVNM.push({ "id": null, "itemName": this.utilityService.translate("partner_sender.iSender_grroup") });
-    this.selectedItemComboboxSenderGroupGTEL.push({ "id": null, "itemName": this.utilityService.translate("partner_sender.iSender_grroup") });
-    this.selectedItemComboboxSenderGroupSFONE.push({ "id": null, "itemName": this.utilityService.translate("partner_sender.iSender_grroup") });
     let response: any = await this.dataService.getAsync('/api/sendergroup')
     if (response)
       for (let index in response.data) {
@@ -242,15 +222,11 @@ export class SenderComponent implements OnInit {
     this.timeExpiredVTL = new Date()
     this.timeExpiredGPC = new Date()
     this.timeExpiredVMS = new Date()
-    this.timeExpiredVNM = new Date()
-    this.timeExpiredGTEL = new Date()
 
     this.timeExpired.setFullYear(this.timeStart.getFullYear() + 1)
     this.timeExpiredVTL = this.timeExpired
     this.timeExpiredGPC = this.timeExpired
     this.timeExpiredVMS = this.timeExpired
-    this.timeExpiredVNM = this.timeExpired
-    this.timeExpiredGTEL = this.timeExpired
     this.showModalCreate.show();
   }
 
@@ -275,28 +251,16 @@ export class SenderComponent implements OnInit {
     let SENDER_GROUP_VMS = (combobox.senderGrVMS.value != undefined &&
       combobox.senderGrVMS.value != null && combobox.senderGrVMS.value != "") ?
       combobox.senderGrVMS.value[0].id : null;
-    let SENDER_GROUP_VNM = (combobox.senderGrVNM.value != undefined &&
-      combobox.senderGrVNM.value != null && combobox.senderGrVNM.value != "") ?
-      combobox.senderGrVNM.value[0].id : null;
-    let SENDER_GROUP_GTEL = (combobox.senderGrGTEL.value != undefined &&
-      combobox.senderGrGTEL.value != null && combobox.senderGrGTEL.value != "") ?
-      combobox.senderGrGTEL.value[0].id : null;
 
     let isFillter = senderName.fillterTemp;
     let FILLTER_TEMPLATE = isFillter ? senderName.tempContent : "";
 
-    let SENDER_NAME_VTL = senderName.senderNameVTL != undefined && senderName.senderNameVTL != "" ?
+    let SENDER_NAME_VIETTEL = senderName.senderNameVTL != undefined && senderName.senderNameVTL != "" ?
       senderName.senderNameVTL : NAME;
-    let SENDER_NAME_GPC = senderName.senderNameGPC != undefined && senderName.senderNameGPC != "" ?
+    let SENDER_NAME_VINAPHONE = senderName.senderNameGPC != undefined && senderName.senderNameGPC != "" ?
       senderName.senderNameGPC : NAME;
-    let SENDER_NAME_VMS = senderName.senderNameVMS != undefined && senderName.senderNameVMS != "" ?
+    let SENDER_NAME_MOBIFONE = senderName.senderNameVMS != undefined && senderName.senderNameVMS != "" ?
       senderName.senderNameVMS : NAME;
-    let SENDER_NAME_VNM = senderName.senderNameVNM != undefined && senderName.senderNameVNM != "" ?
-      senderName.senderNameVNM : NAME;
-    let SENDER_NAME_GTEL = senderName.senderNameGTEL != undefined && senderName.senderNameGTEL != "" ?
-      senderName.senderNameGTEL : NAME;
-    // let SENDER_NAME_SFONE = senderName.senderNameSFONE;
-    // let SENDER_NAME_DDMBILE = senderName.senderNameDDMBILE;
 
     let fromDate = senderName.fromDate;
     let expiredDate = senderName.expiredDate;
@@ -313,22 +277,18 @@ export class SenderComponent implements OnInit {
       return;
     }
 
-    let EXPIRED_TIME_VTL = senderName.expiredDateVTL != undefined ?
+    let EXPIRED_TIME_VIETTEL = senderName.expiredDateVTL != undefined ?
       this.utilityService.formatDateToString(senderName.expiredDateVTL, "yyyyMMdd") : "";
-    let EXPIRED_TIME_GPC = senderName.expiredDateGPC != undefined ?
+    let EXPIRED_TIME_VINAPHONE = senderName.expiredDateGPC != undefined ?
       this.utilityService.formatDateToString(senderName.expiredDateGPC, "yyyyMMdd") : "";
-    let EXPIRED_TIME_VMS = senderName.expiredDateVMS != undefined ?
+    let EXPIRED_TIME_MOBIFONE = senderName.expiredDateVMS != undefined ?
       this.utilityService.formatDateToString(senderName.expiredDateVMS, "yyyyMMdd") : "";
-    let EXPIRED_TIME_VNM = senderName.expiredDateVNM != undefined ?
-      this.utilityService.formatDateToString(senderName.expiredDateVNM, "yyyyMMdd") : "";
-    let EXPIRED_TIME_GTEL = senderName.expiredDateGTEL != undefined ?
-      this.utilityService.formatDateToString(senderName.expiredDateGTEL, "yyyyMMdd") : "";
 
     let response: any = await this.dataService.postAsync('/api/sendername', {
-      NAME, DESCRIPTION, SENDER_GROUP_VTL, SENDER_GROUP_GPC, SENDER_GROUP_VMS, SENDER_GROUP_VNM, SENDER_GROUP_GTEL,
+      NAME, DESCRIPTION, SENDER_GROUP_VTL, SENDER_GROUP_GPC, SENDER_GROUP_VMS,
       FILLTER_TEMPLATE,
-      SENDER_NAME_VTL, SENDER_NAME_GPC, SENDER_NAME_VMS, SENDER_NAME_VNM, SENDER_NAME_GTEL,
-      EXPIRED_TIME, EXPIRED_TIME_VTL, EXPIRED_TIME_GPC, EXPIRED_TIME_VMS, EXPIRED_TIME_VNM, EXPIRED_TIME_GTEL
+      SENDER_NAME_VIETTEL, SENDER_NAME_VINAPHONE, SENDER_NAME_MOBIFONE,
+      EXPIRED_TIME, EXPIRED_TIME_VIETTEL, EXPIRED_TIME_VINAPHONE, EXPIRED_TIME_MOBIFONE
     });
     if (response.err_code == 0) {
       this.getData();
@@ -356,39 +316,25 @@ export class SenderComponent implements OnInit {
         id: new FormControl(id),
         iSenderName: new FormControl(dataSender.NAME),
         description: new FormControl(dataSender.DESCRIPTION),
-        senderGrVTL: new FormControl((dataSender.SENDER_GROUP_VTL != undefined && dataSender.SENDER_GROUP_VTL != "") ?
-          [{ "id": dataSender.SENDER_GROUP_VTL, "itemName": dataSender.SENDER_GROUP_VTL_NAME }] : []),
-        senderGrGPC: new FormControl((dataSender.SENDER_GROUP_GPC != undefined && dataSender.SENDER_GROUP_GPC != "") ?
-          [{ "id": dataSender.SENDER_GROUP_GPC, "itemName": dataSender.SENDER_GROUP_GPC_NAME }] : []),
-        senderGrVMS: new FormControl((dataSender.SENDER_GROUP_VMS != undefined && dataSender.SENDER_GROUP_VMS != "") ?
-          [{ "id": dataSender.SENDER_GROUP_VMS, "itemName": dataSender.SENDER_GROUP_VMS_NAME }] : []),
-        senderGrVNM: new FormControl((dataSender.SENDER_GROUP_VNM != undefined && dataSender.SENDER_GROUP_VNM != "") ?
-          [{ "id": dataSender.SENDER_GROUP_VNM, "itemName": dataSender.SENDER_GROUP_VNM_NAME }] : []),
-        senderGrGTEL: new FormControl((dataSender.SENDER_GROUP_GTEL != undefined && dataSender.SENDER_GROUP_GTEL != "") ?
-          [{ "id": dataSender.SENDER_GROUP_GTEL, "itemName": dataSender.SENDER_GROUP_GTEL_NAME }] : []),
-        // senderGrSFONE: new FormControl([{ "id": dataSender.SENDER_GROUP_SFONE, "itemName": dataSender.SENDER_GROUP_SFONE_NAME }]),
-        // senderGrDDMBILE: new FormControl(dataSender.SENDER_GROUP_DDMBILE),
+        senderGrVTL: new FormControl((dataSender.SENDER_GROUP_VIETTEL != undefined && dataSender.SENDER_GROUP_VIETTEL != "") ?
+          [{ "id": dataSender.SENDER_GROUP_VIETTEL, "itemName": dataSender.SENDER_GROUP_VIETTEL_NAME }] : []),
+        senderGrGPC: new FormControl((dataSender.SENDER_GROUP_VINAPHONE != undefined && dataSender.SENDER_GROUP_VINAPHONE != "") ?
+          [{ "id": dataSender.SENDER_GROUP_VINAPHONE, "itemName": dataSender.SENDER_GROUP_VINAPHONE_NAME }] : []),
+        senderGrVMS: new FormControl((dataSender.SENDER_GROUP_MOBIFONE != undefined && dataSender.SENDER_GROUP_MOBIFONE != "") ?
+          [{ "id": dataSender.SENDER_GROUP_MOBIFONE, "itemName": dataSender.SENDER_GROUP_MOBIFONE_NAME }] : []),
         fillterTemp: new FormControl(!this.isDisableTemp ? 1 : 0),
         tempContent: new FormControl(dataSender.FILLTER_TEMPLATE),
-        senderNameVTL: new FormControl(dataSender.SENDER_NAME_VTL),
-        senderNameGPC: new FormControl(dataSender.SENDER_NAME_GPC),
-        senderNameVMS: new FormControl(dataSender.SENDER_NAME_VMS),
-        senderNameVNM: new FormControl(dataSender.SENDER_NAME_VNM),
-        senderNameSFONE: new FormControl(dataSender.SENDER_NAME_SFONE),
-        senderNameDDMBILE: new FormControl(dataSender.SENDER_NAME_DDMBILE),
-        senderNameGTEL: new FormControl(dataSender.SENDER_NAME_GTEL),
+        senderNameVTL: new FormControl(dataSender.SENDER_NAME_VIETTEL),
+        senderNameGPC: new FormControl(dataSender.SENDER_NAME_VINAPHONE),
+        senderNameVMS: new FormControl(dataSender.SENDER_NAME_MOBIFONE),
         fromDate: new FormControl(this.convertStringDate(dataSender.ACTIVE_DATE).toString()),
         expiredDate: new FormControl(this.convertStringDate(dataSender.EXPIRED_TIME).toString()),
-        expiredDateVIETTEL: new FormControl((dataSender.EXPIRED_TIME_VTL != undefined && dataSender.EXPIRED_TIME_VTL != "") ?
-          this.convertStringDate(dataSender.EXPIRED_TIME_VTL).toString() : ""),
-        expiredDateGPC: new FormControl((dataSender.EXPIRED_TIME_GPC != undefined && dataSender.EXPIRED_TIME_GPC != "") ?
-          this.convertStringDate(dataSender.EXPIRED_TIME_GPC).toString() : ""),
-        expiredDateVMS: new FormControl((dataSender.EXPIRED_TIME_VMS != undefined && dataSender.EXPIRED_TIME_VMS != "") ?
-          this.convertStringDate(dataSender.EXPIRED_TIME_VMS).toString() : ""),
-        expiredDateVNM: new FormControl((dataSender.EXPIRED_TIME_VNM != undefined && dataSender.EXPIRED_TIME_VNM != "") ?
-          this.convertStringDate(dataSender.EXPIRED_TIME_VNM).toString() : ""),
-        expiredDateGTEL: new FormControl((dataSender.EXPIRED_TIME_GTEL != undefined && dataSender.EXPIRED_TIME_GTEL != "") ?
-          this.convertStringDate(dataSender.EXPIRED_TIME_GTEL).toString() : "")
+        expiredDateVIETTEL: new FormControl((dataSender.EXPIRED_TIME_VIETTEL != undefined && dataSender.EXPIRED_TIME_VIETTEL != "") ?
+          this.convertStringDate(dataSender.EXPIRED_TIME_VIETTEL).toString() : ""),
+        expiredDateGPC: new FormControl((dataSender.EXPIRED_TIME_VINAPHONE != undefined && dataSender.EXPIRED_TIME_VINAPHONE != "") ?
+          this.convertStringDate(dataSender.EXPIRED_TIME_VINAPHONE).toString() : ""),
+        expiredDateVMS: new FormControl((dataSender.EXPIRED_TIME_MOBIFONE != undefined && dataSender.EXPIRED_TIME_MOBIFONE != "") ?
+          this.convertStringDate(dataSender.EXPIRED_TIME_MOBIFONE).toString() : "")
       });
       this.showModalUpdate.show();
     } else {
@@ -405,27 +351,19 @@ export class SenderComponent implements OnInit {
       return;
     }
     let DESCRIPTION = formData.description.value;
-    let SENDER_GROUP_VTL = formData.senderGrVTL.value.length > 0 ? formData.senderGrVTL.value[0].id : null;
-    let SENDER_GROUP_GPC = formData.senderGrGPC.value.length > 0 ? formData.senderGrGPC.value[0].id : null;
-    let SENDER_GROUP_VMS = formData.senderGrVMS.value.length > 0 ? formData.senderGrVMS.value[0].id : null;
-    let SENDER_GROUP_VNM = formData.senderGrVNM.value.length > 0 ? formData.senderGrVNM.value[0].id : null;
-    let SENDER_GROUP_GTEL = formData.senderGrGTEL.value.length > 0 ? formData.senderGrGTEL.value[0].id : null;
+    let SENDER_GROUP_VIETTEL = formData.senderGrVTL.value.length > 0 ? formData.senderGrVTL.value[0].id : null;
+    let SENDER_GROUP_VINAPHONE = formData.senderGrGPC.value.length > 0 ? formData.senderGrGPC.value[0].id : null;
+    let SENDER_GROUP_MOBIFONE = formData.senderGrVMS.value.length > 0 ? formData.senderGrVMS.value[0].id : null;
 
     let isFillter = formData.fillterTemp.value;
     let FILLTER_TEMPLATE = isFillter ? formData.tempContent.value : "";
 
-    let SENDER_NAME_VTL = formData.senderNameVTL.value != undefined && formData.senderNameVTL.value != "" ?
+    let SENDER_NAME_VIETTEL = formData.senderNameVTL.value != undefined && formData.senderNameVTL.value != "" ?
       formData.senderNameVTL.value : NAME;
-    let SENDER_NAME_GPC = formData.senderNameGPC.value != undefined && formData.senderNameGPC.value != "" ?
+    let SENDER_NAME_VINAPHONE = formData.senderNameGPC.value != undefined && formData.senderNameGPC.value != "" ?
       formData.senderNameGPC.value : NAME;
-    let SENDER_NAME_VMS = formData.senderNameVMS.value != undefined && formData.senderNameVMS.value != "" ?
+    let SENDER_NAME_MOBIFONE = formData.senderNameVMS.value != undefined && formData.senderNameVMS.value != "" ?
       formData.senderNameVMS.value : NAME;
-    let SENDER_NAME_VNM = formData.senderNameVNM.value != undefined && formData.senderNameVNM.value != "" ?
-      formData.senderNameVNM.value : NAME;
-    let SENDER_NAME_GTEL = formData.senderNameGTEL.value != undefined && formData.senderNameGTEL.value != "" ?
-      formData.senderNameGTEL.value : NAME;
-    // let SENDER_NAME_SFONE = formData.senderNameSFONE.value;
-    // let SENDER_NAME_DDMBILE = formData.senderNameDDMBILE.value;
 
     let fromDate = formData.fromDate.value;
     let expiredDate = formData.expiredDate.value;
@@ -441,26 +379,20 @@ export class SenderComponent implements OnInit {
       return;
     }
 
-    let EXPIRED_TIME_VTL = (formData.expiredDateVIETTEL.value != undefined &&
+    let EXPIRED_TIME_VIETTEL = (formData.expiredDateVIETTEL.value != undefined &&
       formData.expiredDateVIETTEL.value != "" && formData.expiredDateVIETTEL.value != "Invalid Date") ?
       this.utilityService.formatDateToString(formData.expiredDateVIETTEL.value, "yyyyMMdd") : "";
-    let EXPIRED_TIME_GPC = (formData.expiredDateGPC.value != undefined &&
+    let EXPIRED_TIME_VINAPHONE = (formData.expiredDateGPC.value != undefined &&
       formData.expiredDateGPC.value != "" && formData.expiredDateGPC.value != "Invalid Date") ?
       this.utilityService.formatDateToString(formData.expiredDateGPC.value, "yyyyMMdd") : "";
-    let EXPIRED_TIME_VMS = (formData.expiredDateVMS.value != undefined &&
+    let EXPIRED_TIME_MOBIFONE = (formData.expiredDateVMS.value != undefined &&
       formData.expiredDateVMS.value != "" && formData.expiredDateVMS.value != "Invalid Date") ?
       this.utilityService.formatDateToString(formData.expiredDateVMS.value, "yyyyMMdd") : "";
-    let EXPIRED_TIME_VNM = (formData.expiredDateVNM.value != undefined &&
-      formData.expiredDateVNM.value != "" && formData.expiredDateVNM.value != "Invalid Date") ?
-      this.utilityService.formatDateToString(formData.expiredDateVNM.value, "yyyyMMdd") : "";
-    let EXPIRED_TIME_GTEL = (formData.expiredDateGTEL.value != undefined &&
-      formData.expiredDateGTEL.value != "" && formData.expiredDateGTEL.value != "Invalid Date") ?
-      this.utilityService.formatDateToString(formData.expiredDateGTEL.value, "yyyyMMdd") : "";
 
     let response: any = await this.dataService.putAsync('/api/sendername/' + ID, {
-      NAME, DESCRIPTION, SENDER_GROUP_VTL, SENDER_GROUP_GPC, SENDER_GROUP_VMS, SENDER_GROUP_VNM, SENDER_GROUP_GTEL,
-      FILLTER_TEMPLATE, SENDER_NAME_VTL, SENDER_NAME_GPC, SENDER_NAME_VMS, SENDER_NAME_VNM, SENDER_NAME_GTEL,
-      EXPIRED_TIME, EXPIRED_TIME_VTL, EXPIRED_TIME_GPC, EXPIRED_TIME_VMS, EXPIRED_TIME_VNM, EXPIRED_TIME_GTEL
+      NAME, DESCRIPTION, SENDER_GROUP_VIETTEL, SENDER_GROUP_VINAPHONE, SENDER_GROUP_MOBIFONE,
+      FILLTER_TEMPLATE, SENDER_NAME_VIETTEL, SENDER_NAME_VINAPHONE, SENDER_NAME_MOBIFONE,
+      EXPIRED_TIME, EXPIRED_TIME_VIETTEL, EXPIRED_TIME_VINAPHONE, EXPIRED_TIME_MOBIFONE
     });
     if (response.err_code == 0) {
       this.getData();

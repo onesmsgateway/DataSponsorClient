@@ -163,6 +163,12 @@
     border: 1px solid #ccc;
     border-radius: 0!important;
     color: #333;
+    font-size: 14px!important;
+    min-height: 34px!important;
+}
+
+.selected-list .c-btn .clear-all{
+    display: none!important;
 }
 
 .selected-list .c-list .c-token {

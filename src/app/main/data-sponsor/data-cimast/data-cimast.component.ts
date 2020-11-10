@@ -338,6 +338,7 @@ export class DataCimastComponent implements OnInit {
     let TOTAL_AMT = this.TOTAL_AMT;
     let TYPE = this.TYPE;
     let DESCRIPTION = this.DESCRIPTION;
+    debugger
     let account: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' + ACCOUNT_ID);
     if (account != null && account.data.length > 0) {
       // update data account cimast
@@ -378,10 +379,10 @@ export class DataCimastComponent implements OnInit {
           return;
         }
       }
-      else if (this.TOTAL_AMT + this.total_amt_system_remain > this.total_amt_telco) {
-        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (TOTAL_AMT - this.total_amt_system));
-        return;
-      }
+      // else if (this.TOTAL_AMT + this.total_amt_system_remain > this.total_amt_telco) {
+      //   this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (TOTAL_AMT - this.total_amt_system));
+      //   return;
+      // }
       let response = await this.dataService.postAsync('/api/DataCimast', {
         ACCOUNT_ID, TYPE, DESCRIPTION, TOTAL_DATA, TOTAL_USE, TOTAL_REMAIN, TOTAL_AMT
       });

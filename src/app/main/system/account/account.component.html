@@ -83,8 +83,6 @@
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'global.name' | translate}}</th>
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
-                                                    {{'account.account_pass' | translate}}</th>
-                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'account.account_fullname' | translate}}</th>
                                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">
                                                     {{'global.phone' | translate}}</th>
@@ -109,7 +107,6 @@
                                             <tr *ngFor="let account of dataAccount; let i = index" [attr.data-index]="i">
                                                 <td class="text-center">{{account.STT}}</td>
                                                 <td>{{account.USER_NAME}}</td>
-                                                <td>{{account.PASSWORD}}</td>
                                                 <td>{{account.FULL_NAME}}</td>
                                                 <td>{{account.PHONE}}</td>
                                                 <td>{{account.EMAIL}}</td>
