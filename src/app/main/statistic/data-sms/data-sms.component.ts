@@ -242,16 +242,9 @@ export class DataSmsComponent implements OnInit {
     this.bindDataStatus();
     this.bindDataSendData();
     this.getListDataSms();
-    setTimeout(() => {
-      this.getPackageNameDisplay();
-    }, 1500);
-    setTimeout(() => {
-      this.getCampaign();
-    }, 1500);
-    setTimeout(() => {
-      this.getScenario();
-    }, 1500);
-
+    this.getPackageNameDisplay();
+    this.getCampaign();
+    this.getScenario();
   }
 
   //#region account
@@ -583,9 +576,8 @@ export class DataSmsComponent implements OnInit {
     this.textButtonExcel = 'Loading...';
     if (this.isAdmin)
       accountID = this.selectedAccount.length > 0 && this.selectedAccount[0].id != "" ? this.selectedAccount[0].id : "";
-    else if (!this.isAdmin && this.selectedAccount.length == 0)
-      accountID = "0";
-    else accountID = this.selectedAccount[0].id;
+    else
+      accountID = this.selectedAccount.length == 0 ? this.authService.currentUserValue.ACCOUNT_ID : this.selectedAccount[0].id;
     let pack = this.selectedPackageVTL.length > 0 ? this.selectedPackageVTL[0].id : "";
     let status = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : "";
     let issenddata = this.selectedSendData.length > 0 ? this.selectedSendData[0].id : "";

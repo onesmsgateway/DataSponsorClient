@@ -65,6 +65,9 @@
                                                 <th class="text-center" style="white-space: nowrap;width:15%">
                                                     {{ 'member.name' | translate }}</th>
                                                 <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'member.birthday' | translate }}
+                                                </th>
+                                                <th class="text-center" style="white-space: nowrap;">
                                                     {{ 'member.phone' | translate }}
                                                 </th>
                                                 <th class="text-center" style="white-space: nowrap;">
@@ -80,9 +83,6 @@
                                                     {{ 'member.is_active' | translate }}
                                                 </th>
                                                 <th class="text-center" style="white-space: nowrap;">
-                                                    {{ 'member.create_date' | translate }}
-                                                </th>
-                                                <th class="text-center" style="white-space: nowrap;">
                                                     {{ 'member.group' | translate }}
                                                 </th>
                                                 <th class="text-center" style="width:8%">{{ 'global.tool' | translate }}
@@ -95,12 +95,12 @@
                                                 <td>{{item.USER_NAME}}</td>
                                                 <td>{{item.PERSON_CODE}}</td>
                                                 <td>{{item.PERSON_FULLNAME}}</td>
+                                                <td>{{item.BIRTHDAY}}</td>
                                                 <td>{{item.PHONE_NUMBER}}</td>
                                                 <td>{{item.EMAIL}}</td>
                                                 <td>{{item.ADDRESS}}</td>
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.ACCUMULATED_POINTS == 1 ? true : false" class="checkbox" disabled></td>
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_ACTIVE == 1 ? true : false" class="checkbox" disabled></td>
-                                                <td>{{item.CREATED_TIME}}</td>
                                                 <td>{{item.GROUP_NAME}}</td>
                                                 <td class="text-center">
                                                     <div class="tool">
@@ -339,12 +339,13 @@
                         <div class="row" style="margin-left: 10px; margin-right: 10px;">
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                                 <label>{{'member.account' | translate}}</label>
-                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountMember" [settings]="settingsFilterAccount" name="slAccountMember">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountMember" [settings]="settingsFilterAccount" name="slAccountMember"
+                                (onSelect)="SelectMemberUpload()" (onDeSelect)="SelectMemberUpload()">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                                 <label>{{'send_data.group' | translate}}</label>
-                                <angular2-multiselect [data]="dataGroup" [(ngModel)]="selectedGroupUpload" [settings]="settingsFilterGroupUpload" name="slGroupUpload">
+                                <angular2-multiselect [data]="dataGroupUpload" [(ngModel)]="selectedGroupUpload" [settings]="settingsFilterGroup" name="slGroupUpload">
                                 </angular2-multiselect>
                             </div>
                             <!-- <div class="col-md-1 col-sm-1 col-xs-12 form-group">

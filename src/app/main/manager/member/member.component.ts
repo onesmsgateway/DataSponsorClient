@@ -58,9 +58,9 @@ export class MemberComponent implements OnInit {
   public selectedItemComboboxGroup = [];
   public selectedItemComboboxGroupEdit = [];
   public selectedItemComboboxGroupCreate = [];
-  public settingsFilterGroupUpload = {};
   public selectedGroupUpload = [];
   public dataGroupCreate = [];
+  public dataGroupUpload = [];
   public groupCode = "";
   public groupName = "";
 
@@ -90,15 +90,6 @@ export class MemberComponent implements OnInit {
     };
     this.settingsFilterAccountEdit = {
       text: this.utilityService.translate('global.choose_account'),
-      singleSelection: true,
-      enableSearchFilter: true,
-      enableFilterSelectAll: true,
-      searchPlaceholderText: this.utilityService.translate('global.search'),
-      noDataLabel: this.utilityService.translate('global.no_data'),
-      showCheckbox: false
-    };
-    this.settingsFilterGroupUpload = {
-      text: this.utilityService.translate('send_data.inGroup'),
       singleSelection: true,
       enableSearchFilter: true,
       enableFilterSelectAll: true,
@@ -232,6 +223,18 @@ export class MemberComponent implements OnInit {
     if (this.dataGroupCreate.length == 1)
       this.selectedItemComboboxGroupCreate.push({ "id": this.dataGroupCreate[0].id, "itemName": this.dataGroupCreate[0].itemName });
   }
+
+  async getDataGroupUpload(account_id) {
+    this.selectedGroupUpload = [];
+    this.dataGroupUpload = [];
+    let response: any = await this.dataService.getAsync('/api/Group/GetGroupByAccount?account_id=' + account_id)
+    for (let index in response.data) {
+      this.dataGroupUpload.push({ "id": response.data[index].GROUP_ID, "itemName": response.data[index].GROUP_NAME });
+    }
+    if (this.dataGroupUpload.length == 1)
+      this.selectedGroupUpload.push({ "id": this.dataGroupUpload[0].id, "itemName": this.dataGroupUpload[0].itemName });
+  }
+
   ChangeDropdownList() {
     this.getData();
 
@@ -249,11 +252,9 @@ export class MemberComponent implements OnInit {
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
     else
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
-    // this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
     let group = this.selectedItemComboboxGroup.length > 0 && this.selectedItemComboboxGroup[0].id != "" ? this.selectedItemComboboxGroup[0].id : "";
     let response: any = await this.dataService.getAsync('/api/Person/GetPersonPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone);
-    // + "&account_id=" + account + "&group_id=" + group + "&code=" + this.code + "&name=" + this.name + "&phone=" + this.phone
    
     this.loadData(response);
   }
@@ -519,9 +520,9 @@ export class MemberComponent implements OnInit {
           this.loading = false;
           return;
         }
-        this.getDataGroup();
-        this.selectedGroupUpload.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME });
-        this.selectedItemComboboxAccount.push({ "id": response.data[0].ACCOUNT_ID, "itemName": response.data[0].USER_NAME });
+        // this.getDataGroup();
+        // this.selectedGroupUpload.push({ "id": response.data[0].GROUP_ID, "itemName": response.data[0].GROUP_NAME });
+        // this.selectedItemComboboxAccount.push({ "id": response.data[0].ACCOUNT_ID, "itemName": response.data[0].USER_NAME });
         this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("130"));
         this.groupCode = "";
         this.groupName = "";
@@ -550,31 +551,11 @@ export class MemberComponent implements OnInit {
   }
   async checkboxGroup() {
     this.ischeckgroup = !this.ischeckgroup;
-    this.selectedGroupUpload.push(this.utilityService.translate('send_data.inGroup'));
     if (this.ischeckgroup == true) {
       this.selectedGroupUpload = [];
-      this.settingsFilterGroupUpload = {
-        text: this.utilityService.translate('send_data.inGroup'),
-        singleSelection: true,
-        enableSearchFilter: true,
-        enableFilterSelectAll: true,
-        searchPlaceholderText: this.utilityService.translate('global.search'),
-        noDataLabel: this.utilityService.translate('global.no_data'),
-        showCheckbox: false,
-        disabled: true
-      };
+      this.selectedGroupUpload.push({ "id": "", "itemName": this.utilityService.translate('global.choose_group') });
       this.createCodeGroup();
     } else {
-      this.settingsFilterGroupUpload = {
-        text: this.utilityService.translate('send_data.inGroup'),
-        singleSelection: true,
-        enableSearchFilter: true,
-        enableFilterSelectAll: true,
-        searchPlaceholderText: this.utilityService.translate('global.search'),
-        noDataLabel: this.utilityService.translate('global.no_data'),
-        showCheckbox: false,
-        disabled: false
-      };
       this.groupCode = "";
     }
   }
@@ -593,6 +574,16 @@ export class MemberComponent implements OnInit {
       }
     } else {
       this.groupCode = "";
+    }
+  }
+
+  SelectMemberUpload(){
+    if(this.selectedItemComboboxAccountMember.length > 0 && this.selectedItemComboboxAccountMember[0].id != ""){
+      this.getDataGroupUpload(this.selectedItemComboboxAccountMember[0].id);
+    }
+    else{
+      this.dataGroupUpload = [];
+      this.selectedGroupUpload.push({ "id": "", "itemName": this.utilityService.translate('global.choose_group') });
     }
   }
 }
