@@ -387,7 +387,6 @@ export class DataPointComponent implements OnInit {
   }
 
   async getDataGroup() {
-    debugger
     this.selectedGroup = [];
     this.dataGroup = [];
     this.dataGroupAdd = [];
@@ -545,7 +544,6 @@ export class DataPointComponent implements OnInit {
 
   // upload file
   public async submitUploadFile() {
-    debugger
     this.countDup = 0;
     this.loading = true;
     let account = "";
@@ -572,7 +570,6 @@ export class DataPointComponent implements OnInit {
       let groupId = this.selectedGroupUploadAdd.length > 0 && this.selectedGroupUploadAdd[0].id != "" ? this.selectedGroupUploadAdd[0].id : "";
       let groupName = this.selectedGroupUploadAdd.length > 0 && this.selectedGroupUploadAdd[0].itemName != "" ? this.selectedGroupUploadAdd[0].itemName : "";
       let response: any = await this.dataService.importExcelAndSavePhoneListDataPointAsync(null, file.files, groupId, this.groupCode, this.groupName, account);
-      debugger
       if (response) {
         if (response.err_code == -100) {
           this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-100"));
@@ -610,7 +607,6 @@ export class DataPointComponent implements OnInit {
 
   // get phone by file list 
   async getPhoneNumber(event) {
-    debugger
     this.dataPhoneTamp = [];
     this.dataPhone = [];
     if (event.length > 0) {
@@ -659,7 +655,6 @@ export class DataPointComponent implements OnInit {
     }
     let response: any = await this.dataService.getAsync('/api/bankmember/GetBankMemberByGroupIdsPoint?groupIds=' + this.ids + '&point=' + this.yourPoint)
     this.loadingGroup = false;
-    debugger
     if (response) {
       this.dataPhone = response.data.listPhoneTelco;
       let data = response.data;
@@ -850,11 +845,11 @@ export class DataPointComponent implements OnInit {
       return;
     }
     if (this.phoneList == "" && this.ids == "") {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-25"));
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-120"));
       return;
     }
     if (this.dataPhoneTamp.length == 0 && this.phoneList == "") {
-      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-25"));
+      this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-120"));
       return;
     }
     if (this.isSendSMS) {

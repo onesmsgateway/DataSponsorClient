@@ -83,6 +83,7 @@ export class ScenariosComponent implements OnInit {
   public checkRewardOneTime: boolean = false;
   public RewardOneTimeInDay = 0;
   public isCheckAccumulatePoint: boolean = false;
+  public isEdit: boolean = false;
   public dataStatus = [];
   public isCreatelink = [];
   public isCreatelinkfalse = [];
@@ -302,12 +303,12 @@ export class ScenariosComponent implements OnInit {
     this.getAccountLogin();
     if (this.activatedRoute.snapshot.queryParamMap.get('status') != null && this.activatedRoute.snapshot.queryParamMap.get('status') != "") {
       this.active = this.activatedRoute.snapshot.queryParamMap.get('status');
-    }else if(this.activatedRoute.snapshot.queryParamMap.get('statusold') != null && this.activatedRoute.snapshot.queryParamMap.get('statusold') != ""){
+    } else if (this.activatedRoute.snapshot.queryParamMap.get('statusold') != null && this.activatedRoute.snapshot.queryParamMap.get('statusold') != "") {
       this.active = this.activatedRoute.snapshot.queryParamMap.get('statusold');
-    }else{
+    } else {
       this.active = "";
     }
-    
+
   }
   copyInputMessage(inputElement) {
     inputElement.select();
@@ -354,20 +355,14 @@ export class ScenariosComponent implements OnInit {
       }
       if (this.dataAccount.length == 1) {
         this.selectedAccount.push({ "id": this.dataAccount[0].id, "itemName": this.dataAccount[0].itemName });
-        this.getDataSenderName(this.dataAccount[0].id);
-        this.getDataSenderNameEdit(this.dataAccount[0].id);
       }
       else
         this.selectedAccount.push({ "id": "", "itemName": this.utilityService.translate('global.choose_account') });
     }
   }
   changeAccount() {
-    this.getDataSenderName(this.selectedItemComboboxAccountCreate[0].id);
+    this.getDataSenderName();
     this.getDataCimastAdd();
-
-  }
-  changeAccountEdit() {
-    this.getDataSenderNameEdit(this.selectedItemComboboxAccountCreate[0].id);
 
   }
   deSelectAccount() {
@@ -401,8 +396,8 @@ export class ScenariosComponent implements OnInit {
     else
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     // let account = this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
-      let isactive = this.selectedStatus.length > 0 && this.selectedStatus[0].id != "" ? this.selectedStatus[0].id : this.active;
-    
+    let isactive = this.selectedStatus.length > 0 && this.selectedStatus[0].id != "" ? this.selectedStatus[0].id : this.active;
+
     let response: any = await this.dataService.getAsync('/api/Scenarios/GetScenariosPaging?pageIndex=' + this.pagination.pageIndex +
       "&pageSize=" + this.pagination.pageSize + "&account_id=" + account + "&code=" + this.inCodeScenar +
       "&name=" + this.inNameScenar + "&active=" + isactive)
@@ -417,11 +412,9 @@ export class ScenariosComponent implements OnInit {
             this.isCreatelink[response.data[i].ID] = false;
 
           }
-        };
-
+        }
       }
     }
-
   }
 
   loadData(response?: any) {
@@ -460,9 +453,13 @@ export class ScenariosComponent implements OnInit {
 
   confirmShowModalCreate() {
     this.isAdded = false;
+    this.isEdit = false;
     this.getDataPackageVTL();
     this.getDataPackageGPC();
     this.getDataPackageVMS();
+    if (this.checkSendSms) {
+      this.getDataSenderName();
+    }
     this.isHidden = true;
     if (this.authService.currentUserValue.AVATAR == null || this.authService.currentUserValue.AVATAR == "") {
       this.urlImageUpload = "../../assets/img/logo-login.png";
@@ -535,7 +532,7 @@ export class ScenariosComponent implements OnInit {
       return;
     }
     let SMS_CONTENT = ""
-    if ((scenar.contentsms == "" && scenar.contentsms == null) && this.checkSendSms == true) {
+    if ((scenar.contentsms == "" || scenar.contentsms == null) && this.checkSendSms == true) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
       return;
     }
@@ -558,15 +555,16 @@ export class ScenariosComponent implements OnInit {
     let IS_SEND_SMS = this.checkSendSms == true ? 1 : 0;
     let IS_ACCUMULATE_POINT = this.isCheckAccumulatePoint == true ? 1 : 0;
     let REWARD_NUMBER_ONE_TIME = 0;
-    if(scenar.checkRewardOneTime == null || scenar.checkRewardOneTime == ""){
+    if (scenar.checkRewardOneTime == null || scenar.checkRewardOneTime == "") {
       REWARD_NUMBER_ONE_TIME = 1;
-    }else{
+    } else {
       REWARD_NUMBER_ONE_TIME = Number(scenar.checkRewardOneTime);
     }
     let REWARD_NUMBER_TIME_IN_DAYS = parseInt(scenar.RewardOneTimeInDay);
     if (this.checkSendSms == true) {
       if (combobox.slSenderName.value.length == 0) {
-        SENDER_NAME = "";
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-104"));
+        return;
       } else {
         SENDER_NAME = combobox.slSenderName.value[0].itemName;
       }
@@ -678,6 +676,7 @@ export class ScenariosComponent implements OnInit {
       showCheckbox: false,
       disabled: true
     };
+    this.isEdit = true;
     let account_id;
     let checkSendSms;
     let response: any = await this.dataService.getAsync('/api/Scenarios/' + id);
@@ -763,11 +762,17 @@ export class ScenariosComponent implements OnInit {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-93"));
       return;
     }
-    // let SENDER_NAME = formData.slSenderName.value;
-    let SENDER_NAME = formData.slSenderName.value[0].itemName;
-    if (SENDER_NAME == this.utilityService.translate('package.choose_sender')) {
-      SENDER_NAME = "";
+    
+    let SENDER_NAME = "";
+    if(this.checkSendSms){
+      if(formData.slSenderName.value.length > 0){
+        SENDER_NAME = formData.slSenderName.value[0].itemName;
+      }else{
+        this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-104"));
+        return;
+      }
     }
+
     let DESC_CONTENT = formData.content.value;
     if (DESC_CONTENT == "" || DESC_CONTENT == null) {
       this.notificationService.displayWarnMessage(this.utilityService.getErrorMessage("-24"));
@@ -791,7 +796,7 @@ export class ScenariosComponent implements OnInit {
     START_DATE = this.utilityService.formatDateToString(START_DATE, "yyyyMMddHHmmss");
     END_DATE = this.utilityService.formatDateToString(END_DATE, "yyyyMMdd") + "235959";
 
-    let IS_ACTIVE = formData.isActive.value == true?1:0;
+    let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
     let IS_ACCUMULATE_POINT = formData.isCheckAccumulatePoint.value == true ? 1 : 0;
     let IS_SEND_SMS = formData.checkSendSms.value == true ? 1 : 0;
     let REWARD_NUMBER_ONE_TIME = parseInt(formData.checkRewardOneTime.value);
@@ -859,7 +864,7 @@ export class ScenariosComponent implements OnInit {
     for (let index in response.data) {
       this.dataPackageVTL.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
-    
+
   }
 
   // get data package vina
@@ -869,7 +874,7 @@ export class ScenariosComponent implements OnInit {
     for (let index in response.data) {
       this.dataPackageGPC.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
-    
+
   }
 
   // get data package mobi
@@ -879,7 +884,7 @@ export class ScenariosComponent implements OnInit {
     for (let index in response.data) {
       this.dataPackageVMS.push({ "id": response.data[index].ID, "itemName": response.data[index].PACKAGE_NAME + " - " + response.data[index].PACKAGE_NAME_DISPLAY });
     }
-   
+
   }
 
   //#region load data
@@ -1083,22 +1088,20 @@ export class ScenariosComponent implements OnInit {
   oncheckSendSms() {
     if (this.checkSendSms == false) {
       this.checkSendSms = true;
-    } else {
-      this.checkSendSms = false;
-    }
-    if (this.checkSendSms == true) {
       this.isHiddencheckSms = false;
       this.isHiddenSen = false;
       this.checkSendSmsEdit = true;
       this.contentSMS.nativeElement.readOnly = false;
+      this.getDataSenderName();
     } else {
+      this.checkSendSms = false;
       this.isHiddencheckSms = true;
       this.isHiddenSen = true;
       this.checkSendSmsEdit = false;
       this.contentSMS.nativeElement.readOnly = true;
     }
   }
-  //#region upload avatar
+
   //#region upload avatar
   public async submitUploadImage() {
     let file = this.uploadImage.nativeElement;
@@ -1114,30 +1117,34 @@ export class ScenariosComponent implements OnInit {
   }
 
   //get data sender
-  async getDataSenderName(accountID) {
-    this.selectedItemComboboxSender = [];
-    this.dataSenderName = [];
-    let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
-      accountID)
-    for (let index in response.data) {
-      this.dataSenderName.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
-    }
-    if (this.dataSenderName.length == 1)
-      this.selectedItemComboboxSender.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
-  }
-  //get data sender
-  async getDataSenderNameEdit(accountID) {
-    this.selectedItemComboboxSenderEdit = [];
-    this.dataSenderName = [];
-    let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
-      accountID)
-    for (let index in response.data) {
-      this.dataSenderName.push({ "id": response.data[index].ID, "itemName": response.data[index].NAME });
-    }
-    if (this.dataSenderName.length == 1)
-      this.selectedItemComboboxSenderEdit.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
-  }
+  async getDataSenderName() {
+    if (!this.isEdit) {
+      this.selectedItemComboboxSender = [];
+      this.dataSenderName = [];
+      let accountID = this.selectedItemComboboxAccountCreate.length > 0 && this.selectedItemComboboxAccountCreate[0].id != "" ? this.selectedItemComboboxAccountCreate[0].id : "";
+      let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
+        accountID)
+      for (let index in response.data) {
+        this.dataSenderName.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
+      }
+      if (this.dataSenderName.length == 1)
+        this.selectedItemComboboxSender.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
+    } else {
+      this.selectedItemComboboxSenderEdit = [];
+      this.dataSenderName = [];
+      let formData = this.formEditScenarios.controls;
 
+      let accountID = formData.account.value.length > 0 ? formData.account.value[0].id : "";
+      let response: any = await this.dataService.getAsync('/api/AccountSender/GetSenderByAccountId?account_id=' +
+        accountID)
+      for (let index in response.data) {
+        this.dataSenderName.push({ "id": response.data[index].SENDER_ID, "itemName": response.data[index].NAME });
+      }
+      if (this.dataSenderName.length == 1)
+        this.selectedItemComboboxSenderEdit.push({ "id": this.dataSenderName[0].id, "itemName": this.dataSenderName[0].itemName });
+    }
+
+  }
 
   public async submitUploadImageEdit() {
     let file = this.uploadImageEdit.nativeElement;

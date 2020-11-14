@@ -6,6 +6,7 @@ import { AccountInfoComponent } from './home/account-info/account-info.component
 import { ChangePassComponent } from './home/change-pass/change-pass.component';
 import { DataService } from '../core/services/data.service';
 import { AppConst } from '../core/common/app.constants';
+import { ModalDirective } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-main',
@@ -16,9 +17,11 @@ import { AppConst } from '../core/common/app.constants';
 export class MainComponent {
   @ViewChild("componentAccountInfo", { static: false }) public componentAccountInfo: AccountInfoComponent;
   @ViewChild("componentChangePass", { static: false }) public componentChangePass: ChangePassComponent;
+  @ViewChild('showCountPackageModal', { static: false }) public showCountPackageModal: ModalDirective;
 
   public user: User = this.authService.currentUserValue;
   public dataMenu: any = [];
+  public dataPackageCount: any = [];
   public viewQuyTinCSKH = 0;
   public viewQuyTien = 0;
   public viewDataViettel = 0;
@@ -181,6 +184,18 @@ export class MainComponent {
     else {
       this.viewQuyDataCodeMobi = 0;
       this.enablePackageDataCode = false;
+    }
+  }
+
+  confirmShowCountPackageModal(){
+    this.showCountPackageModal.show();
+    this.CountPackage();
+  }
+
+  async CountPackage(){
+    let result: any = await this.dataService.getAsync('/api/datacode/CountDatacodeByAccount');
+    if (result != null && result.data.length > 0) {
+      this.dataPackageCount = result.data;
     }
   }
 }

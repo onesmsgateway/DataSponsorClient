@@ -10,3 +10,7 @@
     float: right;
     padding: 17px 15px 12px;
 }
+
+.total .packCount:hover{
+    cursor: pointer;
+}

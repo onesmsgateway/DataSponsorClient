@@ -20,7 +20,8 @@
                     <div class="profile_info">
                         <div>
                             <span style="font-size: 13px">{{ 'global.welcome' | translate }}, </span>
-                            <label (click)="showModalAccountInfo()" style="color: #92c32d; font-size: 13px; font-weight: bold; cursor: pointer;">{{ user.FULL_NAME }}
+                            <label (click)="showModalAccountInfo()"
+                                style="color: #92c32d; font-size: 13px; font-weight: bold; cursor: pointer;">{{ user.FULL_NAME }}
                                 <i class="fa fa-circle" style="color: #42b72a; margin-left: 10px; font-size: 10px"></i>
                             </label>
                         </div>
@@ -56,10 +57,12 @@
                     <a data-toggle="tooltip" data-placement="top" title="Toàn màn hình" onclick="setFullScreen()">
                         <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                     </a>
-                    <a data-toggle="tooltip" data-placement="top" title="Reset giao diện" onclick="javascript:location.reload()">
+                    <a data-toggle="tooltip" data-placement="top" title="Reset giao diện"
+                        onclick="javascript:location.reload()">
                         <i style="font-size: 20px" class="fa fa-refresh" aria-hidden="true"></i>
                     </a>
-                    <a (click)="logout()" data-toggle="tooltip" data-placement="top" title="{{ 'login.submit_logout' | translate }}">
+                    <a (click)="logout()" data-toggle="tooltip" data-placement="top"
+                        title="{{ 'login.submit_logout' | translate }}">
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                     </a>
                 </div>
@@ -79,13 +82,16 @@
                         <div class="col-md-11 col-sm-11 col-xs-10 form-group">
                             <ul class="nav navbar-nav navbar-right" style="width: 100%;">
                                 <li class="">
-                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
+                                        aria-expanded="false">
                                         <img src="{{ user.AVATAR }}" alt="">{{ user.USER_NAME }}
                                         <span class=" fa fa-angle-down"></span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-usermenu pull-right">
                                         <li><a (click)="showModalAccountInfo()">{{ 'global.info' | translate }}</a></li>
-                                        <li><a (click)="showModalChangePass()">{{ 'global.change_password' | translate }}</a></li>
+                                        <li><a
+                                                (click)="showModalChangePass()">{{ 'global.change_password' | translate }}</a>
+                                        </li>
                                         <li class="hidden-desktop">
                                             <div class="language-box">
                                                 <a (click)="changeLanguage('vi')" style="cursor: pointer;">
@@ -95,7 +101,7 @@
                                             </div>
                                         </li>
                                         <li><a (click)="logout()"><i
-                                                        class="fa fa-sign-out pull-right"></i>{{ 'login.submit_logout' | translate }}</a>
+                                                    class="fa fa-sign-out pull-right"></i>{{ 'login.submit_logout' | translate }}</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -109,34 +115,84 @@
                                 </li>
                                 <li class="" *ngIf="userAdmin">
                                     <div class="total">
-                                        <label style="color: red;" name="balanceVTL">{{'global.balanceViettel' | translate}}:
-                                                {{ viewQuyViettel | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <label style="color: red;" name="balanceGPC">{{'global.balanceVina' | translate}}:
-                                                {{ viewQuyVina | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <label style="color: red;" name="balanceVMS">{{'global.balanceMobi' | translate}}:
-                                                {{ viewQuyMobi | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <label style="color: red;" name="balanceVMS">{{'global.dataCodeMobi' | translate}}:
-                                                    {{ viewQuyDataCodeMobi | number : '0.' }}</label>
+                                        <label style="color: red;"
+                                            name="balanceVTL">{{'global.balanceViettel' | translate}}:
+                                            {{ viewQuyViettel | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;"
+                                            name="balanceGPC">{{'global.balanceVina' | translate}}:
+                                            {{ viewQuyVina | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;"
+                                            name="balanceVMS">{{'global.balanceMobi' | translate}}:
+                                            {{ viewQuyMobi | number : '0.' }} VNĐ</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;" name="balanceVMS" class="packCount"
+                                            (click)="confirmShowCountPackageModal()">{{'global.dataCodeMobi' | translate}}:
+                                            {{ viewQuyDataCodeMobi | number : '0.' }}</label>
                                     </div>
                                 </li>
                                 <li class="" *ngIf="!isAdmin">
                                     <div class="total">
-                                        <label style="color: red;" name="lbQuyTien">{{'global.money_remain' | translate}}:
-                                                        {{ viewQuyTien | number : '0.' }} VNĐ</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;"
+                                            name="lbQuyTien">{{'global.money_remain' | translate}}:
+                                            {{ viewQuyTien | number : '0.' }} VNĐ</label> &nbsp;&nbsp;&nbsp;&nbsp;
                                         <label style="color: red;" name="lbdata">{{'global.data_VT' | translate}}:
-                                                                {{ viewDataViettel | number : '0.' }} MB;</label>&nbsp;
+                                            {{ viewDataViettel | number : '0.' }} MB;</label>&nbsp;
                                         <label style="color: red;" name="lbdata">{{'global.data_GPC' | translate}}:
-                                                                    {{ viewDataGPC | number : '0.' }} MB;</label>&nbsp;
+                                            {{ viewDataGPC | number : '0.' }} MB;</label>&nbsp;
                                         <label style="color: red;" name="lbdata">{{'global.data_VMS' | translate}}:
-                                                                        {{ viewDataVMS | number : '0.' }} MB</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <label style="color: red;" name="balanceVMS">{{'global.dataCodeMobi' | translate}}:
-                                                                            {{ viewQuyDataCodeMobi | number : '0.' }}</label>
+                                            {{ viewDataVMS | number : '0.' }} MB</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label style="color: red;" class="packCount" name="balanceVMS"
+                                            (click)="confirmShowCountPackageModal()">{{'global.dataCodeMobi' | translate}}:
+                                            {{ viewQuyDataCodeMobi | number : '0.' }}</label>
                                     </div>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </nav>
+            </div>
+        </div>
+
+        <!-- show count package -->
+        <div class="modal fade" bsModal #showCountPackageModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+            role="dialog" aria-labelledby="dialog-static-name">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 id="dialog-static-name" class="modal-title pull-left">
+                            {{'data_code.count_pack' | translate}}</h4>
+                        <button type="button" class="close pull-right" aria-label="Close"
+                            (click)="showCountPackageModal.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 form-group has-feedback">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered clear-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width:5%">STT</th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'package.package_name' | translate }}</th>
+                                                <th class="text-center" style="white-space: nowrap;">
+                                                    {{ 'data_code.quantities' | translate }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of dataPackageCount; let i = index"
+                                                [attr.data-index]="i">
+                                                <td class="text-center" scope="row">{{i+1}}</td>
+                                                <td>{{item.PACKAGE_NAME_DISPLAY}}</td>
+                                                <td>{{item.COUNT_CODE}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- /top navigation -->

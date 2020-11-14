@@ -191,7 +191,8 @@
         "pass_empty": "Password can not be blank",
         "update_image": "Upload photo failed",
         "send_sms": "Send sms",
-        "chooseBank": "Chosse bank name"
+        "chooseBank": "Chosse bank name",
+        "inIp": "Input IP"
     },
     "sms_list": {
         "sms_list_title": "Sms list",
@@ -800,7 +801,8 @@
         "managerpro_data_code": "Manager Provision data code",
         "input_quan": "Input quantities",
         "add": "Add data code",
-        "upload_txt": "Choose file Upload"
+        "upload_txt": "Choose file Upload",
+        "count_pack": "Quantity data code by package"
     },
     "point": {
         "point_data": "Point Data",

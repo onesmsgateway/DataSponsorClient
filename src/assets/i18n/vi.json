@@ -224,7 +224,8 @@
         "update_pass": "Cập nhật mật khẩu thành công",
         "pass_empty": "Mật khẩu không được để trống.",
         "update_image": "Upload ảnh không thành công",
-        "chooseBank": "Chọn tên ngân hàng"
+        "chooseBank": "Chọn tên ngân hàng",
+        "inIp": "Nhập địa chỉ IP"
     },
     "sms_list": {
         "sms_list_title": "Danh sách tin nhắn",
@@ -864,7 +865,8 @@
         "managerpro_data_code": "Quản lý cấp data code",
         "input_quan": "Nhập số lượng",
         "add": "Thêm data code",
-        "upload_txt": "Chọn file cần Upload"
+        "upload_txt": "Chọn file cần Upload",
+        "count_pack": "Sản lượng data code theo gói cước"
     },
     "point": {
         "point_data": "Tích điểm đổi quà ",

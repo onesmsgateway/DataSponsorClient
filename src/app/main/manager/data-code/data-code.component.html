@@ -12,26 +12,19 @@
                 <div class="x_panel portlet">
                     <div class="x_content">
                         <form class="row form-horizontal form-label-left input_mask" (ngSubmit)="searchForm()">
-                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group has-feedback">
                                 <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" name="slAccount" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
-                            <div class="col-md-2 col-sm-6 col-xs-12 form-group has-feedback">
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group has-feedback">
                                 <angular2-multiselect [data]="dataMoney" [(ngModel)]="selectedItemMoney" [settings]="settingsFilterMoney" name="slMoney" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
-                            <div class="col-md-2 col-sm-6 col-xs-12 form-group">
+                            <div class="col-md-2 col-sm-3 col-xs-12 form-group">
                                 <angular2-multiselect [data]="dataStatus" [(ngModel)]="selectedStatus" [settings]="settingsFilterStatus" name="status" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                 </angular2-multiselect>
                             </div>
-                            <div class="col-md-2 col-sm-6 col-xs-12 form-group">
-                                <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
-                            </div>
-
-                            <div class="col-md-2 col-sm-6 col-xs-12 form-group">
-                                <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
-                            </div>
-                            <div class="col-md-2 col-sm-4 col-xs-6">
+                            <div class="col-md-6 col-sm-3 col-xs-12">
                                 <button type="submit" style="float: right;" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
                             </div>
                         </form>
@@ -95,7 +88,7 @@
                                                 <td>{{item.USER_NAME}}</td>
                                                 <td>{{item.ENCRYPTED_CODE}}</td>
                                                 <td>{{item.PACKAGE_NAME_DISPLAY}}</td>
-                                                <td>{{item.AMT}}</td>
+                                                <td>{{item.AMT | number: '.0'}}</td>
                                                 <td>{{item.CREATE_DATE}}</td>
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_USED == 1 ? true : false" class="checkbox" disabled></td>
                                             </tr>
@@ -106,7 +99,7 @@
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
                                         Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)">
-                                                <option value="20" selected="">20</option>
+                                                <option value="20" selected="">10</option>
                                                 <option value="50">50</option>
                                                 <option value="100">100</option>
                                                 <option value="99999999">Tất cả</option>

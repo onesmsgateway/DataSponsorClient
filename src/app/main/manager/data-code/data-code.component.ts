@@ -47,11 +47,6 @@ export class DataCodeComponent implements OnInit {
   public resJSON;
   public description;
 
-  public fromDate: string = "";
-  public toDate: string = "";
-  public timeTo: Date = new Date();
-  public timeFrom = new Date(this.timeTo.getTime() - (30 * 24 * 60 * 60 * 1000));
-
   public settingsFilterAccount = {};
   public settingsFilterAccountAdd = {};
   public settingsFilterMoney = {};
@@ -133,8 +128,6 @@ export class DataCodeComponent implements OnInit {
 
     this.DataArrayList.push(this.manager);
     this.dataAccount.push({ "id": "", "itemName": this.utilityService.translate('global.all') });
-    this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd") + "235959";
-    this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd") + "000000";
     this.getAccountLogin();
     this.bindDataStatus();
     this.bindDataAmt();
@@ -157,6 +150,7 @@ export class DataCodeComponent implements OnInit {
   //#region smsType
   public async bindDataStatus() {
     this.dataStatus = [];
+    this.dataStatus.push({ "id": "", "itemName": this.utilityService.translate('global.choose_status') });
     this.dataStatus.push({ "id": "1", "itemName": this.utilityService.translate('data_code.status_active') });
     this.dataStatus.push({ "id": "0", "itemName": this.utilityService.translate('data_code.status_lock') });
   }
@@ -164,6 +158,7 @@ export class DataCodeComponent implements OnInit {
   public async bindDataAmt() {
     this.dataMoney = [];
     this.dataMoneyPro = [];
+    this.dataMoney.push({ id: "", "itemName": this.utilityService.translate('global.all') });
     let response: any = await this.dataService.getAsync('/api/packagetelco/GetPackageAmt')
     if (response) {
       if (response.err_code == 0) {
@@ -190,13 +185,11 @@ export class DataCodeComponent implements OnInit {
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     let amt = this.selectedItemMoney.length != 0 && this.selectedItemMoney[0].id != "" ? this.selectedItemMoney[0].itemName : "";
     let is_used = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : "";
-    let from_date = this.fromDate;
-    let to_date = this.toDate;
     let response: any = await this.dataService.getAsync('/api/datacode/CountDatacodeAmt?account_id=' + account + '&amt=' +
-      amt + '&is_used=' + is_used + '&from_date=' + from_date + '&to_date=' + to_date)
+      amt + '&is_used=' + is_used)
     if (response) {
       if (response.err_code == 0) {
-        if (this.selectedItemMoney.length == 0) {
+        if (this.selectedItemMoney.length == 0 || this.selectedItemMoney[0].id == "") {
           this.checkcount = true;
           for (var i = 0; i < response.data.length; i++) {
             switch (response.data[i].AMT) {
@@ -261,7 +254,7 @@ export class DataCodeComponent implements OnInit {
             this.count28 + this.count42 + this.count56 + this.count84 + this.count300 + this.count500
         }
         else {
-          this.countAll = response.data[0].COUNT_AMT;
+          this.countAll = response.data.length > 0 ? response.data[0].COUNT_AMT : 0;
           this.checkcount = false;
         }
       }
@@ -315,11 +308,8 @@ export class DataCodeComponent implements OnInit {
       account = this.selectedItemComboboxAccount.length != 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : this.authService.currentUserValue.ACCOUNT_ID;
     let amt = this.selectedItemMoney.length != 0 && this.selectedItemMoney[0].id != "" ? this.selectedItemMoney[0].itemName : "";
     let is_used = this.selectedStatus.length > 0 ? this.selectedStatus[0].id : "";
-    let from_date = this.fromDate;
-    let to_date = this.toDate;
-    // this.selectedItemComboboxAccount.length > 0 && this.selectedItemComboboxAccount[0].id != "" ? this.selectedItemComboboxAccount[0].id : "";
     let response: any = await this.dataService.getAsync('/api/datacode/GetDataCodePaging?page_index=' + this.pagination.pageIndex +
-      "&page_size=" + this.pagination.pageSize + "&account_id=" + account + "&amt=" + amt + "&is_used=" + is_used + "&from_date=" + from_date + "&to_date=" + to_date);
+      "&page_size=" + this.pagination.pageSize + "&account_id=" + account + "&amt=" + amt + "&is_used=" + is_used);
     this.loadData(response);
   }
 
@@ -394,36 +384,8 @@ export class DataCodeComponent implements OnInit {
     this.loading = false;
   }
   //#endregion
-  //#region search
-  onChangeFromDate(event) {
-    this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "000000";
-    if (this.fromDate == '19700101000000') {
-      this.fromDate = '';
-    }
-    if (this.fromDate !== '' && this.toDate !== '') {
-      if (this.fromDate > this.toDate) {
-        this.notificationService.displayWarnMessage("Ngày lọc chưa thỏa mãn");
-        return;
-      }
-    }
-    this.getData();
-    this.CountDataCodeByAmt();
-  }
 
-  onChangeToDate(event) {
-    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "235959";
-    if (this.toDate == '19700101000000') {
-      this.toDate = '';
-    }
-    if (this.fromDate !== '' && this.toDate !== '') {
-      if (this.fromDate > this.toDate) {
-        this.notificationService.displayWarnMessage("Ngày lọc chưa thỏa mãn");
-        return;
-      }
-    }
-    this.getData();
-    this.CountDataCodeByAmt();
-  }
+  //#region search
   addFrom() {
     this.manager = new manager();
     if (this.DataArrayList.length < 14) {

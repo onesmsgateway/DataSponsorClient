@@ -33,7 +33,6 @@ export class AccountInfoComponent implements OnInit {
     private dataService: DataService,
     private notificationService: NotificationService) {
     this.formEditInfo = new FormGroup({
-      phone: new FormControl(),
       company: new FormControl(),
       email: new FormControl()
     })
@@ -52,8 +51,8 @@ export class AccountInfoComponent implements OnInit {
     if (dataUser.err_code == 0) {
       let userDetail = dataUser.data
       this.companyName = userDetail[0].COMPANY_NAME
-      this.phone = userDetail[0].PHONE
       this.email = userDetail[0].EMAIL
+      this.phone = userDetail[0].PHONE
       this.user.AVATAR = (userDetail[0].AVATAR != "" && userDetail[0].AVATAR != null && userDetail[0].AVATAR != "undefined") ?
         userDetail[0].AVATAR : "../../assets/img/user_icon.jpg"
     }
@@ -87,7 +86,6 @@ export class AccountInfoComponent implements OnInit {
     if (response.err_code == 0) {
       let dataAccount = response.data[0];
       this.formEditInfo = new FormGroup({
-        phone: new FormControl(dataAccount.PHONE),
         company: new FormControl(dataAccount.COMPANY_NAME),
         email: new FormControl(dataAccount.EMAIL)
       });
@@ -118,14 +116,13 @@ export class AccountInfoComponent implements OnInit {
 
   public async editInforAccount() {
     let formData = this.formEditInfo.controls;
-    let PHONE = formData.phone.value;
     let EMAIL = formData.email.value;
     let COMPANY_NAME = formData.company.value;
     let AVATAR = (this.urlImageUploadEdit != null && this.urlImageUploadEdit != "undefined" && this.urlImageUploadEdit != "") ?
       this.urlImageUploadEdit : "../../assets/img/user_icon.jpg"
 
     let dataEdit = await this.dataService.putAsync('/api/account/UpdateAccountInfo?accountid=' + this.user.ACCOUNT_ID, {
-      PHONE, COMPANY_NAME, EMAIL, AVATAR
+      COMPANY_NAME, EMAIL, AVATAR
     })
     if (dataEdit.err_code == 0) {
       this.loadDataLog()

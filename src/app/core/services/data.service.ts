@@ -484,10 +484,10 @@ export class DataService {
     return result;
   }
 
-  public async getFileExtentionAccountAsync(uri: string, accountId: any, user_name: string, email: string, phone: string,company_name: string, payment_type: any, fromDate: string, toDate: string, fileName: string): Promise<boolean> {
+  public async getFileExtentionAccountAsync(uri: string, accountId: any, user_name: string, email: string, phone: string,company_name: string, payment_type: any, fileName: string): Promise<boolean> {
     let result: boolean = false;
     let url = AppConst.DATA_SPONSOR_API + uri + '?account_id=' + accountId + '&user_name=' + user_name + '&email=' + email + '&phone=' + phone +  '&company_name=' + company_name + '&payment_type=' + payment_type +
-      '&from_date=' + fromDate + '&to_date=' + toDate + '&fileName=' + fileName;
+      '&fileName=' + fileName;
     let response = await this.http.get(url, { responseType: 'arraybuffer' }).toPromise();
     if (response) {
       let blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });

@@ -73,10 +73,6 @@ export class AccountComponent implements OnInit {
   public formResetPass: FormGroup;
   public urlImageUpload
   public urlImageUploadEdit
-  public fromDate: string = "";
-  public toDate: string = "";
-  public timeTo: Date = new Date();
-  public timeFrom = new Date(this.timeTo.getTime() - (30 * 24 * 60 * 60 * 1000));
 
   constructor(
     private dataService: DataService,
@@ -125,6 +121,7 @@ export class AccountComponent implements OnInit {
       phone: new FormControl(),
       email: new FormControl(),
       skype: new FormControl(),
+      inIp: new FormControl(),
       companyName: new FormControl(),
       paymentType: new FormControl(),
       bankName: new FormControl(),
@@ -165,8 +162,6 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd") + "235959";
-    this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd") + "000000";
     this.loadAccountType();
     if (this.activatedRoute.snapshot.queryParamMap.get('redirectFrom') && this.activatedRoute.snapshot.queryParamMap.get('redirectFrom') == 'home') {
       this.getAccountNew();
@@ -261,7 +256,7 @@ export class AccountComponent implements OnInit {
   async getDataAccount() {
     let response = await this.dataService.getAsync('/api/account/GetListFillterPaging?pageIndex=' + this.pagination.pageIndex +
       '&pageSize=' + this.pagination.pageSize + '&user_name=' + this.user_name + '&email=' + this.email +
-      '&phone=' + this.phone + '&company_name=' + this.company_name + '&payment_type=' + this.payment_Type + '&from_date=' + this.fromDate + '&to_date=' + this.toDate)
+      '&phone=' + this.phone + '&company_name=' + this.company_name + '&payment_type=' + this.payment_Type)
     if (response.err_code == 0) {
       this.loadData(response);
       this.idDelete = [];
@@ -341,6 +336,7 @@ export class AccountComponent implements OnInit {
     this.createUserName = "";
     this.urlImageUpload = "../../assets/img/user_icon.jpg";
     this.uploadImage.nativeElement.value = "";
+    this.model.inIp = "No Need IP";
     this.createAccountModal.show();
     this.loadListRole();
   }
@@ -397,6 +393,7 @@ export class AccountComponent implements OnInit {
     let PARENT_ID = this.selectedAccountID.length > 0 ? this.selectedAccountID[0].id.toString() : "";
     let COMPANY_NAME = this.model.companyName;
     let SKYPE = this.model.skype;
+    let CUSTOMER_IP = this.model.inIp;
     let CREATE_USER = this.authService.currentUserValue.USER_NAME;
     let DLVR_URL = this.model.dlvrURL;
     let EMAIL_REPORT = this.model.emailReport;
@@ -404,7 +401,7 @@ export class AccountComponent implements OnInit {
     let dataInsert = await this.dataService.postAsync('/api/account', {
       USER_NAME, PASSWORD, FULL_NAME, PHONE, SKYPE, EMAIL,
       COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME,
-      DLVR, DLVR_URL, EMAIL_REPORT,
+      DLVR, DLVR_URL, EMAIL_REPORT, CUSTOMER_IP,
       IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH,
       PARENT_ID, ROLE_ACCESS, CREATE_USER, ENABLE_SMS_LOOP, AVATAR, BANK_ID
     });
@@ -449,7 +446,7 @@ export class AccountComponent implements OnInit {
   public async exportExcelAccount() {
     this.textbuttonExcel = 'Loading...';
     let account_id = Number(this.authService.currentUserValue.ACCOUNT_ID);
-    let result: boolean = await this.dataService.getFileExtentionAccountAsync("/api/FileExtention/ExportExcelAccount", account_id, this.user_name, this.email, this.phone, this.company_name, this.payment_Type, this.fromDate, this.toDate, "Account");
+    let result: boolean = await this.dataService.getFileExtentionAccountAsync("/api/FileExtention/ExportExcelAccount", account_id, this.user_name, this.email, this.phone, this.company_name, this.payment_Type, "Account");
     this.textbuttonExcel = 'Export Excel';
     if (result) {
       this.notificationService.displaySuccessMessage(this.utilityService.translate('account.Export_successfully'));
@@ -472,6 +469,7 @@ export class AccountComponent implements OnInit {
         phone: new FormControl(dataAccount.PHONE),
         email: new FormControl(dataAccount.EMAIL),
         skype: new FormControl(dataAccount.SKYPE),
+        inIp: new FormControl(dataAccount.CUSTOMER_IP),
         companyName: new FormControl(dataAccount.COMPANY_NAME),
         paymentType: new FormControl([{
           "id": dataAccount.PAYMENT_TYPE,
@@ -512,6 +510,7 @@ export class AccountComponent implements OnInit {
     let PHONE = formData.phone.value;
     let EMAIL = formData.email.value;
     let SKYPE = formData.skype.value;
+    let CUSTOMER_IP = formData.inIp.value;
     let COMPANY_NAME = formData.companyName.value;
     let BANK_NAME = formData.bankName.value.length > 0 ? formData.bankName.value[0].itemName : "";
     let BANK_ID = formData.bankName.value.length > 0 ? formData.bankName.value[0].id : "";
@@ -545,7 +544,7 @@ export class AccountComponent implements OnInit {
       return;
     }
     let response = await this.dataService.putAsync('/api/account/PutAccount?accountid=' + ACCOUNT_ID, {
-      FULL_NAME, PHONE, SKYPE, EMAIL, COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME, DLVR, DLVR_URL, IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH, PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR, BANK_ID
+      FULL_NAME, PHONE, SKYPE, CUSTOMER_IP, EMAIL, COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME, DLVR, DLVR_URL, IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH, PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR, BANK_ID
     })
     if (response) {
       if (response.err_code == 0) {
@@ -725,34 +724,4 @@ export class AccountComponent implements OnInit {
     }
     return value;
   }
-  onChangeFromDate(event) {
-    this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "000000";
-    if (this.fromDate == '19700101000000') {
-      this.fromDate = '';
-    }
-    if (this.fromDate !== '' && this.toDate !== '') {
-      if (this.fromDate > this.toDate) {
-        this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
-        return;
-      }
-    }
-    this.getDataAccount();
-
-  }
-
-  onChangeToDate(event) {
-
-    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd") + "235959";
-    if (this.toDate == '19700101000000') {
-      this.toDate = '';
-    }
-    if (this.fromDate !== '' && this.toDate !== '') {
-      if (this.fromDate > this.toDate) {
-        this.notificationService.displayWarnMessage("Ngày lọc chiến dịch chưa thỏa mãn");
-        return;
-      }
-    }
-    this.getDataAccount();
-  }
-
 }
