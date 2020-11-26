@@ -11,20 +11,27 @@
                     <div class="x_content">
                         <form class="row form-horizontal form-label-left input_mask">
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" name="inVarGroup" [(ngModel)]="inVarGroup" placeholder="{{ 'sys_var.iVar_group' | translate }}" (keyup.enter)="getData()">
+                                <input type="text" class="form-control has-feedback-left" name="inVarGroup"
+                                    [(ngModel)]="inVarGroup" placeholder="{{ 'sys_var.iVar_group' | translate }}"
+                                    (keyup.enter)="getData()">
                                 <span class="fa fa-indent form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" name="inVarName" [(ngModel)]="inVarName" placeholder="{{ 'sys_var.iVar_name' | translate }}" (keyup.enter)="getData()">
+                                <input type="text" class="form-control has-feedback-left" name="inVarName"
+                                    [(ngModel)]="inVarName" placeholder="{{ 'sys_var.iVar_name' | translate }}"
+                                    (keyup.enter)="getData()">
                                 <span class="fa fa-indent form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" name="inVarValue" [(ngModel)]="inVarValue" placeholder="{{ 'sys_var.iVar_value' | translate }}" (keyup.enter)="getData()">
+                                <input type="text" class="form-control has-feedback-left" name="inVarValue"
+                                    [(ngModel)]="inVarValue" placeholder="{{ 'sys_var.iVar_value' | translate }}"
+                                    (keyup.enter)="getData()">
                                 <span class="fa fa-indent form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback"></div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <button type="button" style="float: right; margin-right: 0;" (click)="getData()" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                                <button type="button" style="float: right; margin-right: 0;" (click)="getData()"
+                                    class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
                             </div>
                         </form>
                     </div>
@@ -40,8 +47,10 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
-                                    <button type="submit" class="btn btn-success btn-sm" (click)="exportExcel()">{{ 'global.export_excel' | translate }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
+                                        (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
+                                    <button type="submit" class="btn btn-success btn-sm"
+                                        (click)="exportExcel()">{{ 'global.export_excel' | translate }}</button>
                                 </div>
                             </div>
                         </form>
@@ -54,15 +63,19 @@
                                                 <th class="text-center">{{ 'sys_var.var_group' | translate }}</th>
                                                 <th class="text-center">{{ 'sys_var.var_name' | translate }}</th>
                                                 <th class="text-center">{{ 'sys_var.var_value' | translate }}</th>
-                                                <th class="text-center" style="width:20%">{{ 'sys_var.description' | translate }}</th>
-                                                <th class="text-center" style="width: 5%">{{'global.order' | translate}}</th>
-                                                <th class="text-center" style="width:7%">{{ 'global.tool' | translate }}</th>
+                                                <th class="text-center" style="width:20%">
+                                                    {{ 'sys_var.description' | translate }}</th>
+                                                <th class="text-center" style="width: 5%">{{'global.order' | translate}}
+                                                </th>
+                                                <th class="text-center" style="width:7%">{{ 'global.tool' | translate }}
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <ng-container *ngFor="let data of dataSysVar">
                                                 <tr>
-                                                    <td [attr.rowspan]="data.LIST_SYSVAR.length" style="vertical-align: inherit">
+                                                    <td [attr.rowspan]="data.LIST_SYSVAR.length"
+                                                        style="vertical-align: inherit">
                                                         {{data.VAR_GROUP}}</td>
                                                     <td>{{ data.LIST_SYSVAR[0].VAR_NAME }}</td>
                                                     <td>{{ data.LIST_SYSVAR[0].VAR_VALUE }}</td>
@@ -70,8 +83,12 @@
                                                     <td class="text-center">{{ data.LIST_SYSVAR[0].ORDER_NUM }}</td>
                                                     <td>
                                                         <div class="tool">
-                                                            <button type="submit" *ngIf="role.IS_EDIT" (click)="confirmUpdateModal(data.LIST_SYSVAR[0].ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                            <button type="submit" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(data.LIST_SYSVAR[0].ID,data.LIST_SYSVAR[0].VAR_NAME)" class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
+                                                            <button type="submit" *ngIf="role.IS_EDIT"
+                                                                (click)="confirmUpdateModal(data.LIST_SYSVAR[0].ID)"
+                                                                class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                            <button type="submit" *ngIf="role.IS_DELETE"
+                                                                (click)="showConfirmDelete(data.LIST_SYSVAR[0].ID,data.LIST_SYSVAR[0].VAR_NAME)"
+                                                                class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -83,8 +100,12 @@
                                                         <td class="text-center">{{number.ORDER_NUM}}</td>
                                                         <td>
                                                             <div class="tool">
-                                                                <button type="submit" *ngIf="role.IS_EDIT" (click)="confirmUpdateModal(data.LIST_SYSVAR[i].ID)" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                                <button type="submit" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(data.LIST_SYSVAR[i].ID, data.LIST_SYSVAR[i].VAR_NAME)" class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
+                                                                <button type="submit" *ngIf="role.IS_EDIT"
+                                                                    (click)="confirmUpdateModal(data.LIST_SYSVAR[i].ID)"
+                                                                    class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                                <button type="submit" *ngIf="role.IS_DELETE"
+                                                                    (click)="showConfirmDelete(data.LIST_SYSVAR[i].ID, data.LIST_SYSVAR[i].VAR_NAME)"
+                                                                    class="btn btn-danger btn-sm">{{ 'global.delete' | translate }}</button>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -95,18 +116,26 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
-                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
-                                        <select (change)="changePageSize($event.target.value)" [value]="pagination.pageSize">
-                     
-                      <option value="20">20</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
-                      <option value="99999999">Tất cả</option>
-                    </select> bản ghi.
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }}
+                                        trang. Hiển thị
+                                        <select (change)="changePageSize($event.target.value)"
+                                            [value]="pagination.pageSize">
+
+                                            <option value="10" selected="">10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="99999999">Tất cả</option>
+                                        </select> bản ghi.
                                     </div>
                                     <div class="col-md-6 col-sm-6" style="margin-bottom:10px">
-                                        <pagination [boundaryLinks]="true" [maxSize]="5" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" class="pagination-sm content-end"
-                                            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        <pagination [boundaryLinks]="true" [maxSize]="5"
+                                            [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow"
+                                            (pageChanged)="pageChanged($event)"
+                                            (numPages)="pagination.totalPage = $event"
+                                            [(ngModel)]="pagination.pageIndex" class="pagination-sm content-end"
+                                            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+                                            lastText="&raquo;">
                                         </pagination>
                                     </div>
                                 </div>
@@ -120,47 +149,55 @@
 </article>
 
 <!-- Thêm khai báo hệ thống -->
-<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
+    aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class=" modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'sys_var.add_sysvar' | translate}}
                 </h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="showModalCreate.hide()">
-          <span aria-hidden="true">&times;</span>
-        </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <form #formAdd="ngForm" (ngSubmit)="createSysVar(formAdd)">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 col-sm-12 col-xs-12 form-group">
                             <label>{{'sys_var.var_group' | translate}} <span style="color:red;">(*)</span></label>
-                            <input type="text" class="form-control" name="varGroup" maxlength="25" placeholder="{{ 'sys_var.iVar_group' | translate }}" ngModel>
+                            <input type="text" class="form-control" name="varGroup" maxlength="25"
+                                placeholder="{{ 'sys_var.iVar_group' | translate }}" ngModel>
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12 form-group">
                             <label>{{'sys_var.var_name' | translate}} <span style="color:red;">(*)</span></label>
-                            <input type="text" class="form-control" name="varName" placeholder="{{ 'sys_var.iVar_name' | translate }}" ngModel>
+                            <input type="text" class="form-control" name="varName"
+                                placeholder="{{ 'sys_var.iVar_name' | translate }}" ngModel>
                         </div>
                     </div>
                     <div class="row" style="margin-top: 15px">
                         <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                             <label>{{'sys_var.var_value' | translate}} <span style="color:red;">(*)</span></label>
-                            <textarea type="text" class="form-control" placeholder="{{ 'sys_var.iVar_value' | translate }}" name="varValue" rows="4" ngModel></textarea>
+                            <textarea type="text" class="form-control"
+                                placeholder="{{ 'sys_var.iVar_value' | translate }}" name="varValue" rows="4"
+                                ngModel></textarea>
                         </div>
                     </div>
                     <div class="row" style="margin-top: 15px">
                         <div class="col-md-6 col-sm-12 col-xs-12 form-group">
                             <label>{{'sys_var.description' | translate}}</label>
-                            <input type="text" class="form-control" name="description" placeholder="{{ 'sys_var.iDescription' | translate }}" ngModel>
+                            <input type="text" class="form-control" name="description"
+                                placeholder="{{ 'sys_var.iDescription' | translate }}" ngModel>
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12 form-group">
                             <label>{{'global.order' | translate}}</label>
-                            <input type="text" class="form-control" name="orderNum" placeholder="{{'global.order' | translate}}" ngModel>
+                            <input type="text" class="form-control" name="orderNum"
+                                placeholder="{{'global.order' | translate}}" ngModel>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default"
+                        (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -169,46 +206,54 @@
 </div>
 
 <!-- modal sửa khai báo hệ thống -->
-<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
+    aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'sys_var.edit_sysvar' | translate}}</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="showModalUpdate.hide()">
-          <span aria-hidden="true">&times;</span>
-        </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <form [formGroup]="formEditSysVar" (ngSubmit)="editSysVar()">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <label>{{'sys_var.var_group' | translate}} <span style="color:red;">(*)</span></label>
-                            <input type="text" class="form-control" formControlName="varGroup" placeholder="{{ 'sys_var.iVar_group' | translate }}">
+                            <input type="text" class="form-control" formControlName="varGroup"
+                                placeholder="{{ 'sys_var.iVar_group' | translate }}">
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <label>{{'sys_var.var_name' | translate}} <span style="color:red;">(*)</span></label>
-                            <input type="text" class="form-control" formControlName="varName" placeholder="{{ 'sys_var.iVar_name' | translate }}">
+                            <input type="text" class="form-control" formControlName="varName"
+                                placeholder="{{ 'sys_var.iVar_name' | translate }}">
                         </div>
                     </div>
                     <div class="row" style="margin-top: 15px">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <label>{{'sys_var.var_value' | translate}} <span style="color:red;">(*)</span></label>
-                            <textarea type="text" class="form-control" placeholder="{{ 'sys_var.iVar_value' | translate }}" formControlName="varValue" rows="4"></textarea>
+                            <textarea type="text" class="form-control"
+                                placeholder="{{ 'sys_var.iVar_value' | translate }}" formControlName="varValue"
+                                rows="4"></textarea>
                         </div>
                     </div>
                     <div class="row" style="margin-top: 15px">
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <label>{{'sys_var.description' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="description" placeholder="{{ 'sys_var.iDescription' | translate }}">
+                            <input type="text" class="form-control" formControlName="description"
+                                placeholder="{{ 'sys_var.iDescription' | translate }}">
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12 form-group">
                             <label>{{'global.order' | translate}}</label>
-                            <input type="text" class="form-control" formControlName="orderNum" placeholder="{{'global.order' | translate}}">
+                            <input type="text" class="form-control" formControlName="orderNum"
+                                placeholder="{{'global.order' | translate}}">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default"
+                        (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -217,21 +262,24 @@
 </div>
 
 <!-- modal xác nhận xóa nhiều khai báo hệ thống -->
-<div class="modal fade" bsModal #showModalDelete="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalDelete="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
+    aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{ 'global.confirm' | translate }}</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="showModalDelete.hide()">
-          <span aria-hidden="true">&times;</span>
-        </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div>{{ 'global.ask_delete' | translate }}</div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm" (click)="showModalDelete.hide()">{{ 'global.cancel' | translate }}</button>
-                <button type="submit" class="btn btn-success btn-sm" (click)="confirmDelete(id)">{{ 'global.confirm' | translate }}</button>
+                <button type="button" class="btn btn-default btn-sm"
+                    (click)="showModalDelete.hide()">{{ 'global.cancel' | translate }}</button>
+                <button type="submit" class="btn btn-success btn-sm"
+                    (click)="confirmDelete(id)">{{ 'global.confirm' | translate }}</button>
             </div>
         </div>
     </div>

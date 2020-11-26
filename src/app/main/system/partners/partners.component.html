@@ -13,7 +13,9 @@
                     <div class="x_content">
                         <form class="row form-horizontal form-label-left input_mask">
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" name="txtPrName" [(ngModel)]="txtPrName" placeholder="{{ 'partner.partner_name' | translate }}" (keyup.enter)="getDataPartner()">
+                                <input type="text" class="form-control has-feedback-left" name="txtPrName"
+                                    [(ngModel)]="txtPrName" placeholder="{{ 'partner.partner_name' | translate }}"
+                                    (keyup.enter)="getDataPartner()">
                                 <span class="fa fa-indent form-control-feedback left" aria-hidden="true"></span>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
@@ -21,7 +23,8 @@
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <button type="button" style="float: right; margin-right: 0;" (click)="getDataPartner()" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                                <button type="button" style="float: right; margin-right: 0;" (click)="getDataPartner()"
+                                    class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
                             </div>
                         </form>
                     </div>
@@ -37,9 +40,12 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="createPartnerModal.show()">{{ 'global.add_new' | translate }}</button>
-                                    <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="confirmDeleteMulti()">{{ 'global.multi_delete' | translate }}</button>
-                                    <button type="submit" class="btn btn-success btn-sm" (click)="exportExcel()">{{ 'global.export_excel' | translate }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
+                                        (click)="createPartnerModal.show()">{{ 'global.add_new' | translate }}</button>
+                                    <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE"
+                                        (click)="confirmDeleteMulti()">{{ 'global.multi_delete' | translate }}</button>
+                                    <button type="submit" class="btn btn-success btn-sm"
+                                        (click)="exportExcel()">{{ 'global.export_excel' | translate }}</button>
                                 </div>
                             </div>
                         </form>
@@ -52,7 +58,9 @@
                                                 <th class="text-center">{{'global.order' | translate}}</th>
                                                 <th class="box-checkbox-table">
                                                     <div class="tool tool-check">
-                                                        <input type="checkbox" [checked]="isCheckedDelete" (change)="checkAllDelete($event.currentTarget.checked)" class="checkbox" />
+                                                        <input type="checkbox" [checked]="isCheckedDelete"
+                                                            (change)="checkAllDelete($event.currentTarget.checked)"
+                                                            class="checkbox" />
                                                     </div>
                                                 </th>
                                                 <th class="text-center">{{'partner.name' | translate}}</th>
@@ -67,10 +75,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr [ngClass]="{'row-hidden-delete': arrIdDelete.indexOf(partner.ID) >= 0 }" *ngFor="let partner of dataPartner; let i = index" [attr.data-index]="i">
+                                            <tr [ngClass]="{'row-hidden-delete': arrIdDelete.indexOf(partner.ID) >= 0 }"
+                                                *ngFor="let partner of dataPartner; let i = index"
+                                                [attr.data-index]="i">
                                                 <td class="text-center">{{partner.STT}}</td>
                                                 <td class="box-checkbox-table">
-                                                    <input type="checkbox" [checked]="isCheckedDelete" (change)="checkRowDelete($event.currentTarget.checked, partner.ID, partner.PARTNER_NAME)" value="{{partner.ID}}" id="isAdmin" class="checkbox" />
+                                                    <input type="checkbox" [checked]="isCheckedDelete"
+                                                        (change)="checkRowDelete($event.currentTarget.checked, partner.ID, partner.PARTNER_NAME)"
+                                                        value="{{partner.ID}}" id="isAdmin" class="checkbox" />
                                                 </td>
                                                 <td>{{partner.PARTNER_NAME}}</td>
                                                 <td>{{partner.PARTNER_CODE}}</td>
@@ -82,7 +94,10 @@
                                                 <td>{{partner.CREATE_USER}}</td>
                                                 <td class="text-center">
                                                     <div class="tool">
-                                                        <button type="submit" (click)="showConfirmEditPartner(partner.ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                        <button type="submit"
+                                                            (click)="showConfirmEditPartner(partner.ID)"
+                                                            *ngIf="role.IS_EDIT"
+                                                            class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -91,17 +106,23 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
-                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }}
+                                        trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)">
-                        <option value="20" selected="">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="99999999">Tất cả</option>
-                      </select> bản ghi.
+                                            <option value="10" selected="">10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="99999999">Tất cả</option>
+                                        </select> bản ghi.
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-6 minibox" style="margin-bottom:10px">
-                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
-                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize"
+                                            [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)"
+                                            (numPages)="pagination.totalPage = $event"
+                                            [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;"
+                                            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
                                         </pagination>
                                     </div>
                                 </div>
@@ -115,21 +136,23 @@
 </article>
 
 <!-- modal thêm đối tác-->
-<div class="modal fade" bsModal #createPartnerModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #createPartnerModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+    role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg" style="width: 90%">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'partner.add_partner' | translate}}</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="createPartnerModal.hide()">
-            <span aria-hidden="true">&times;</span>
-          </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <form #partnerForm="ngForm" (ngSubmit)="createPartner(partnerForm)">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>{{'partner.name' | translate}} <label style="color: red;">(*)</label></label>
-                            <input type="text" id="partnerName" class="form-control" name="partnerName" required="" ngModel>
+                            <input type="text" id="partnerName" class="form-control" name="partnerName" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>User API CSKH</label>
@@ -147,31 +170,39 @@
                     <div class="row" style="margin-top: 10px">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="partnerCode">{{'partner.shortName' | translate}} <label
-                    style="color: red;">(*)</label></label>
-                            <input type="text" id="partnerCode" class="form-control" name="partnerCode" required="" ngModel>
+                                    style="color: red;">(*)</label></label>
+                            <input type="text" id="partnerCode" class="form-control" name="partnerCode" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="passwordAPI">Password API CSKH</label>
-                            <input type="text" id="passwordAPI" class="form-control" name="passwordAPI" required="" ngModel>
+                            <input type="text" id="passwordAPI" class="form-control" name="passwordAPI" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="passwordSMPP">Password SMPP</label>
-                            <input type="text" id="passwordSMPP" class="form-control" name="passwordSMPP" required="" ngModel>
+                            <input type="text" id="passwordSMPP" class="form-control" name="passwordSMPP" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="passwordAPIQC">Password API QC</label>
-                            <input type="text" id="passwordAPIQC" class="form-control" name="passwordAPIQC" required="" ngModel>
+                            <input type="text" id="passwordAPIQC" class="form-control" name="passwordAPIQC" required=""
+                                ngModel>
                         </div>
                     </div>
                     <div class="row" style="margin-top: 10px">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>Request HTTP</label>
-                            <input type="tel" value="" id="requestHTTP" class="form-control" name="requestHTTP" (keyup)="valueChangedHTTP($event)" (keydown)="valueChangedHTTP($event)" maxlength="3" required="" [ngModel]="requestHTTP">
-                            <span class="form-control-feedback right" style="margin-top:30px" aria-hidden="true">%</span>
+                            <input type="tel" value="" id="requestHTTP" class="form-control" name="requestHTTP"
+                                (keyup)="valueChangedHTTP($event)" (keydown)="valueChangedHTTP($event)" maxlength="3"
+                                required="" [ngModel]="requestHTTP">
+                            <span class="form-control-feedback right" style="margin-top:30px"
+                                aria-hidden="true">%</span>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="UrlHttpCskh1">URL HTTP CSKH1</label>
-                            <input type="text" id="UrlHttpCskh1" class="form-control" name="UrlHttpCskh1" required="" ngModel>
+                            <input type="text" id="UrlHttpCskh1" class="form-control" name="UrlHttpCskh1" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="smppIp_1">SMPP IP_1</label>
@@ -185,16 +216,21 @@
                     <div class="row" style="margin-top: 10px">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>Request SMPP</label>
-                            <input type="tel" value="" id="requestSMPP" class="form-control" name="requestSMPP" maxlength="3" required="" (keyup)="valueChangedSMPP($event)" (keydown)="valueChangedSMPP($event)" [ngModel]="requestSMPP">
-                            <span class="form-control-feedback right" style="margin-top:30px" aria-hidden="true">%</span>
+                            <input type="tel" value="" id="requestSMPP" class="form-control" name="requestSMPP"
+                                maxlength="3" required="" (keyup)="valueChangedSMPP($event)"
+                                (keydown)="valueChangedSMPP($event)" [ngModel]="requestSMPP">
+                            <span class="form-control-feedback right" style="margin-top:30px"
+                                aria-hidden="true">%</span>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="UrlHttpCskh2">URL HTTP CSKH2</label>
-                            <input type="text" id="UrlHttpCskh2" class="form-control" name="UrlHttpCskh2" required="" ngModel>
+                            <input type="text" id="UrlHttpCskh2" class="form-control" name="UrlHttpCskh2" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="smppPort_1">SMPP Port1</label>
-                            <input type="text" id="smppPort_1" class="form-control" name="smppPort_1" required="" ngModel>
+                            <input type="text" id="smppPort_1" class="form-control" name="smppPort_1" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="APIQC_2">API QC_2</label>
@@ -204,13 +240,14 @@
                     <div class="row" style="margin-top: 10px">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <div class="checkbox">
-                                <label><input type="checkbox" value="" id="endcodeCSKH" class="checkbox" name="endcodeCSKH" required=""
-                      ngModel> <span>Encode CSKH</span> </label>
+                                <label><input type="checkbox" value="" id="endcodeCSKH" class="checkbox"
+                                        name="endcodeCSKH" required="" ngModel> <span>Encode CSKH</span> </label>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="UrlHttpCskh3">URL HTTP CSKH3</label>
-                            <input type="text" id="UrlHttpCskh3" class="form-control" name="UrlHttpCskh3" required="" ngModel>
+                            <input type="text" id="UrlHttpCskh3" class="form-control" name="UrlHttpCskh3" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="smppIp_2">SMPP IP_2</label>
@@ -224,26 +261,30 @@
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <div class="checkbox">
-                                <label><input type="checkbox" value="" id="endcodeQC" class="checkbox" name="endcodeQC" required=""
-                      ngModel> <span>Encode QC</span> </label>
+                                <label><input type="checkbox" value="" id="endcodeQC" class="checkbox" name="endcodeQC"
+                                        required="" ngModel> <span>Encode QC</span> </label>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="emailReceive">Email Receive</label>
-                            <input type="mail" id="emailReceive" class="form-control" name="emailReceive" required="" ngModel>
+                            <input type="mail" id="emailReceive" class="form-control" name="emailReceive" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="smppPort_2">SMPP Port_2</label>
-                            <input type="text" id="smppPort_2" class="form-control" name="smppPort_2" required="" ngModel>
+                            <input type="text" id="smppPort_2" class="form-control" name="smppPort_2" required=""
+                                ngModel>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label for="description">Description</label>
-                            <input type="text" id="description" class="form-control" name="description" required="" ngModel>
+                            <input type="text" id="description" class="form-control" name="description" required=""
+                                ngModel>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="createPartnerModal.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default"
+                        (click)="createPartnerModal.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -252,14 +293,16 @@
 </div>
 
 <!-- modal sửa đối tác-->
-<div class="modal fade" bsModal #confirmUpdatePartnerModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #confirmUpdatePartnerModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+    role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-lg" style="width: 90%">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'partner.edit_partner' | translate}}</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmUpdatePartnerModal.hide()">
-            <span aria-hidden="true">&times;</span>
-          </button>
+                <button type="button" class="close pull-right" aria-label="Close"
+                    (click)="confirmUpdatePartnerModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <form [formGroup]="formEditPartner" (ngSubmit)="editPartnerForm()">
                 <div class="modal-body">
@@ -303,8 +346,10 @@
                     <div class="row" style="margin-top: 10px">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>Request HTTP</label>
-                            <input type="tel" value="" class="form-control" formControlName="requestHTTP" maxlength="3" required="" (keyup)="valueChangedHTTP($event)" (keydown)="valueChangedHTTP($event)">
-                            <span class="form-control-feedback right" style="margin-top:30px" aria-hidden="true">%</span>
+                            <input type="tel" value="" class="form-control" formControlName="requestHTTP" maxlength="3"
+                                required="" (keyup)="valueChangedHTTP($event)" (keydown)="valueChangedHTTP($event)">
+                            <span class="form-control-feedback right" style="margin-top:30px"
+                                aria-hidden="true">%</span>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>URL HTTP CSKH1</label>
@@ -322,8 +367,10 @@
                     <div class="row" style="margin-top: 10px">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>Request SMPP</label>
-                            <input type="tel" value="" class="form-control" formControlName="requestSMPP" maxlength="3" required="" (keyup)="valueChangedSMPP($event)" (keydown)="valueChangedSMPP($event)">
-                            <span class="form-control-feedback right" style="margin-top:30px" aria-hidden="true">%</span>
+                            <input type="tel" value="" class="form-control" formControlName="requestSMPP" maxlength="3"
+                                required="" (keyup)="valueChangedSMPP($event)" (keydown)="valueChangedSMPP($event)">
+                            <span class="form-control-feedback right" style="margin-top:30px"
+                                aria-hidden="true">%</span>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <label>URL HTTP CSKH2</label>
@@ -341,8 +388,9 @@
                     <div class="row" style="margin-top: 10px">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" formControlName="endcodeCSKH" required="">
-                    <span>Encode CSKH</span> </label>
+                                <label><input type="checkbox" value="" class="checkbox" formControlName="endcodeCSKH"
+                                        required="">
+                                    <span>Encode CSKH</span> </label>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
@@ -361,8 +409,9 @@
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <div class="checkbox">
-                                <label><input type="checkbox" value="" class="checkbox" formControlName="endcodeQC" required="">
-                    <span>Encode QC</span> </label>
+                                <label><input type="checkbox" value="" class="checkbox" formControlName="endcodeQC"
+                                        required="">
+                                    <span>Encode QC</span> </label>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
@@ -380,7 +429,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="confirmUpdatePartnerModal.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default"
+                        (click)="confirmUpdatePartnerModal.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -389,21 +439,25 @@
 </div>
 
 <!-- modal xác nhận xóa nhiều partner-->
-<div class="modal fade" bsModal #confirmDeleteMultiModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #confirmDeleteMultiModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+    role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{ 'global.confirm' | translate }}</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmDeleteMultiModal.hide()">
-            <span aria-hidden="true">&times;</span>
-          </button>
+                <button type="button" class="close pull-right" aria-label="Close"
+                    (click)="confirmDeleteMultiModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div>{{'global.ask_delete' | translate}}</div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm" (click)="confirmDeleteMultiModal.hide()">{{ 'global.cancel' | translate }}</button>
-                <button type="submit" class="btn btn-success btn-sm" (click)="deleteMulti()">{{ 'global.confirm' | translate }}</button>
+                <button type="button" class="btn btn-default btn-sm"
+                    (click)="confirmDeleteMultiModal.hide()">{{ 'global.cancel' | translate }}</button>
+                <button type="submit" class="btn btn-success btn-sm"
+                    (click)="deleteMulti()">{{ 'global.confirm' | translate }}</button>
             </div>
         </div>
     </div>

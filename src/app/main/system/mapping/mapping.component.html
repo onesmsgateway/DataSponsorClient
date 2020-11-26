@@ -13,15 +13,20 @@
                     <div class="x_content">
                         <form class="row form-horizontal form-label-left input_mask">
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount" [settings]="settingsFilterAccount" (onSelect)="ChangeDropdownList()" (onDeSelect)="deSelectAccount()" name="accountID">
+                                <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccount"
+                                    [settings]="settingsFilterAccount" (onSelect)="ChangeDropdownList()"
+                                    (onDeSelect)="deSelectAccount()" name="accountID">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback">
-                                <angular2-multiselect [data]="dataSender" [(ngModel)]="selectedItemComboboxSender" [settings]="settingsFilterSender" (onSelect)="ChangeDropdownList()" (onDeSelect)="deSelectAccount()" name="senderID">
+                                <angular2-multiselect [data]="dataSender" [(ngModel)]="selectedItemComboboxSender"
+                                    [settings]="settingsFilterSender" (onSelect)="ChangeDropdownList()"
+                                    (onDeSelect)="deSelectAccount()" name="senderID">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                <button type="button" style="float: right; margin-right: 0;" (click)="getData()" class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
+                                <button type="button" style="float: right; margin-right: 0;" (click)="getData()"
+                                    class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
                             </div>
                         </form>
                     </div>
@@ -37,7 +42,8 @@
                         <form class="form-horizontal form-label-left input_mask">
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
-                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD" (click)="confimShowModalCreate()">{{ 'global.add_new' | translate }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" *ngIf="role.IS_ADD"
+                                        (click)="confimShowModalCreate()">{{ 'global.add_new' | translate }}</button>
                                 </div>
                             </div>
                         </form>
@@ -50,32 +56,48 @@
                                                 <th class="text-center" style="width:5%">STT</th>
                                                 <th class="text-center">{{'mapping.account' | translate}}</th>
                                                 <th class="text-center">{{'mapping.sender_name' | translate}}</th>
-                                                <th class="text-center" style="width:10%">{{ 'global.tool' | translate }}</th>
+                                                <th class="text-center" style="width:10%">
+                                                    {{ 'global.tool' | translate }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <ng-container *ngFor="let item of dataSenderMapping; let i = index" [attr.data-index]="i">
+                                            <ng-container *ngFor="let item of dataSenderMapping; let i = index"
+                                                [attr.data-index]="i">
 
                                                 <tr>
-                                                    <td [attr.rowspan]="item.LIST_ACCOUNT_SENDER.length" style="vertical-align: inherit" class="text-center" scope="row">{{i+1}}</td>
-                                                    <td [attr.rowspan]="item.LIST_ACCOUNT_SENDER.length" style="vertical-align: inherit">
+                                                    <td [attr.rowspan]="item.LIST_ACCOUNT_SENDER.length"
+                                                        style="vertical-align: inherit" class="text-center" scope="row">
+                                                        {{i+1}}</td>
+                                                    <td [attr.rowspan]="item.LIST_ACCOUNT_SENDER.length"
+                                                        style="vertical-align: inherit">
                                                         {{item.USER_NAME}}</td>
                                                     <td>{{item.LIST_ACCOUNT_SENDER[0].NAME}}</td>
                                                     <td class="text-center">
                                                         <div class="tool">
-                                                            <button type="submit" (click)="confirmUpdateModal(item.LIST_ACCOUNT_SENDER[0].ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                            <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(item.LIST_ACCOUNT_SENDER[0].ID)">{{ 'global.delete' | translate }}</button>
+                                                            <button type="submit"
+                                                                (click)="confirmUpdateModal(item.LIST_ACCOUNT_SENDER[0].ID)"
+                                                                *ngIf="role.IS_EDIT"
+                                                                class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                            <button type="button" class="btn btn-danger btn-sm"
+                                                                *ngIf="role.IS_DELETE"
+                                                                (click)="showConfirmDelete(item.LIST_ACCOUNT_SENDER[0].ID)">{{ 'global.delete' | translate }}</button>
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <ng-container *ngFor="let number of item.LIST_ACCOUNT_SENDER; let i= index;">
+                                                <ng-container
+                                                    *ngFor="let number of item.LIST_ACCOUNT_SENDER; let i= index;">
                                                     <tr *ngIf="i!=0">
                                                         <!-- <td class="text-center" scope="row">{{i+2}}</td> -->
                                                         <td>{{number.NAME}}</td>
                                                         <td class="text-center">
                                                             <div class="tool">
-                                                                <button type="submit" (click)="confirmUpdateModal(number.ID, number.SENDER_ID)" *ngIf="role.IS_EDIT" class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
-                                                                <button type="button" class="btn btn-danger btn-sm" *ngIf="role.IS_DELETE" (click)="showConfirmDelete(number.ID)">{{ 'global.delete' | translate }}</button>
+                                                                <button type="submit"
+                                                                    (click)="confirmUpdateModal(number.ID, number.SENDER_ID)"
+                                                                    *ngIf="role.IS_EDIT"
+                                                                    class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
+                                                                <button type="button" class="btn btn-danger btn-sm"
+                                                                    *ngIf="role.IS_DELETE"
+                                                                    (click)="showConfirmDelete(number.ID)">{{ 'global.delete' | translate }}</button>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -86,18 +108,23 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
-                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
+                                        Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }}
+                                        trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)">
-                        <option value="10" selected="">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="99999999">Tất cả</option>
-                      </select> bản ghi.
+                                            <option value="10" selected="">10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="99999999">Tất cả</option>
+                                        </select> bản ghi.
                                     </div>
                                     <div class="col-md-6 col-sm-6" style="margin-bottom:10px">
-                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize" [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)" (numPages)="pagination.totalPage = $event" [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
-                                            class="pagination-sm content-end" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                        <pagination [boundaryLinks]="true" [itemsPerPage]="pagination.pageSize"
+                                            [totalItems]="pagination.totalRow" (pageChanged)="pageChanged($event)"
+                                            (numPages)="pagination.totalPage = $event"
+                                            [(ngModel)]="pagination.pageIndex" [rotate]="true" [maxSize]="5"
+                                            class="pagination-sm content-end" previousText="&lsaquo;"
+                                            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
                                         </pagination>
                                     </div>
                                 </div>
@@ -111,33 +138,37 @@
 </article>
 
 <!-- Thêm accountsender -->
-<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalCreate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
+    aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'mapping.add_mapping' | translate}}
                 </h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="showModalCreate.hide()">
-            <span aria-hidden="true">&times;</span>
-          </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <form #formAdd="ngForm" (ngSubmit)="createMapping(formAdd)">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <label>{{'mapping.account' | translate}} <span style="color:red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountID" [settings]="settingsFilterAccount" name="accountID">
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountID"
+                                [settings]="settingsFilterAccount" name="accountID">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <label>{{'mapping.sender_name' | translate}} <span style="color:red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataSender" [(ngModel)]="selectedItemComboboxSenderCreate" [settings]="settingsFilterSenderCreate" name="senderID">
+                            <angular2-multiselect [data]="dataSender" [(ngModel)]="selectedItemComboboxSenderCreate"
+                                [settings]="settingsFilterSenderCreate" name="senderID">
                             </angular2-multiselect>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-default"
+                        (click)="showModalCreate.hide()">{{ 'global.cancel' | translate }}</button>
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
@@ -146,33 +177,38 @@
 </div>
 
 <!-- modal sửa phân luồng -->
-<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #showModalUpdate="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
+    aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'partner.edit_partner' | translate}}</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="showModalUpdate.hide()">
-            <span aria-hidden="true">&times;</span>
-          </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <form [formGroup]="formEditMapping">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <label>{{'mapping.account' | translate}} <span style="color:red;">(*)</span></label>
-                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountEdit" [settings]="settingsFilterAccountEdit" formControlName="accountIDEdit">
+                            <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountEdit"
+                                [settings]="settingsFilterAccountEdit" formControlName="accountIDEdit">
                             </angular2-multiselect>
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <label>{{'mapping.sender_name' | translate}}</label>
-                            <angular2-multiselect [data]="dataSender" [(ngModel)]="selectedItemComboboxSenderEdit" [settings]="settingsFilterSenderEdit" formControlName="senderIDEdit">
+                            <angular2-multiselect [data]="dataSender" [(ngModel)]="selectedItemComboboxSenderEdit"
+                                [settings]="settingsFilterSenderEdit" formControlName="senderIDEdit">
                             </angular2-multiselect>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
-                    <button type="button" (click)="editMapping()" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
+                    <button type="button" class="btn btn-default"
+                        (click)="showModalUpdate.hide()">{{ 'global.cancel' | translate }}</button>
+                    <button type="button" (click)="editMapping()"
+                        class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
         </div>
@@ -180,14 +216,15 @@
 </div>
 
 <!-- modal xác nhận xóa luồng-->
-<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+<div class="modal fade" bsModal #confirmDeleteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+    role="dialog" aria-labelledby="dialog-static-name">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-static-name" class="modal-title pull-left">{{'mapping.delete_mapping' | translate}}</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="confirmDeleteModal.hide()">
-            <span aria-hidden="true">&times;</span>
-          </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <!-- <div>Bạn có chắc chắn muốn xóa phân luồng của thương hiệu "<b class="text-success">{{senderName}}</b>"
@@ -195,8 +232,10 @@
                 <div>{{'global.ask_delete' | translate}}</div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
-                <button type="submit" class="btn btn-success" (click)="confirmDelete(partnerSenderId)">{{'global.confirm' | translate}}</button>
+                <button type="button" class="btn btn-default"
+                    (click)="confirmDeleteModal.hide()">{{'global.cancel' | translate}}</button>
+                <button type="submit" class="btn btn-success"
+                    (click)="confirmDelete(partnerSenderId)">{{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>

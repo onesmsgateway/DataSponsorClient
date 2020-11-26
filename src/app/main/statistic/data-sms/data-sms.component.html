@@ -165,7 +165,7 @@
                                                 <td class="text-center">{{item.DATA_AMT}}</td>
                                                 <td class="text-center">{{item.PHONE}}</td>
                                                 <td class="text-center">{{item.TELCO}}</td>
-                                                <td>{{item.SMS_CONTENT}}</td>
+                                                <td><textarea class="form-control" rows="1" style="resize: vertical;" readonly>{{item.SMS_CONTENT}}</textarea></td>
                                                 <td class="text-center">{{item.TIME_SCHEDULE}}</td>
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_SEND_SMS == 1 ? true : false" class="checkbox" disabled></td>
                                                 <td class="text-center">{{item.CODE_RECEIVE}}</td>
@@ -177,7 +177,8 @@
                                     <div class="col-md-6 col-sm-6" style="margin: 25px 0 0 0">
                                         Tổng số {{ pagination.totalRow }} bản ghi trong {{ pagination.totalPage }} trang. Hiển thị
                                         <select (change)="changePageSize($event.target.value)" [value]="pagination.pageSize">
-                                                <option value="20" selected="">20</option>
+                                                <option value="10" selected="">10</option>
+                                                <option value="20">20</option>
                                                 <option value="50">50</option>
                                                 <option value="100">100</option>
                                                 
