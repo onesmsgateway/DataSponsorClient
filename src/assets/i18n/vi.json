@@ -916,5 +916,15 @@
         "checkpoint": "Vui lòng nhập điểm số khách hàng",
         "choose_phone_group": "Chọn danh sách khách hàng",
         "count_fail": " số đã tồn tại."
+    },
+    "account_discount": {
+        "title": "Quản lý chiết khấu",
+        "userName": "Tài khoản",
+        "telco": "Nhà mạng",
+        "discount": "Chiết khấu(%)",
+        "date_start": "Ngày hiệu lực",
+        "time_start": "Giờ hiệu lực",
+        "add_discount": "Thêm chiết khấu",
+        "edit_discount": "Sửa chiết khấu"
     }
 }

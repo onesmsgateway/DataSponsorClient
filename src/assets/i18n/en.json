@@ -849,5 +849,15 @@
         "checkpoint": "Please input point customer",
         "choose_phone_group": "Choose customers",
         "count_fail": " number already exists."
+    },
+    "account_discount": {
+        "title": "Discount manager",
+        "userName": "User name",
+        "telco": "Telco",
+        "discount": "Discount(%)",
+        "date_start": "Date start",
+        "time_start": "Time start",
+        "add_discount": "Add discount",
+        "edit_discount": "Edit discount"
     }
 }

@@ -25,6 +25,7 @@ import { SenderComponent } from './sender/sender.component';
 import { SmsTemplateComponent } from './sms-template/sms-template.component';
 import { MappingComponent } from './mapping/mapping.component';
 import { PartnersComponent } from './partners/partners.component';
+import { AccountDiscountComponent } from './account-discount/account-discount.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
@@ -42,6 +43,7 @@ export const systemRoutes: Routes = [{
     { path: 'sms-template', component: SmsTemplateComponent, data: { MENU_CODE: 'SMS_TEMPLATE' }, canActivate: [AuthGuard] },
     { path: 'mapping', component: MappingComponent, data: { MENU_CODE: 'MAPPING' }, canActivate: [AuthGuard] },
     { path: 'partners', component: PartnersComponent, data: { MENU_CODE: 'PARTNERS' }, canActivate: [AuthGuard] },
+    { path: 'account-discount', component: AccountDiscountComponent, data: { MENU_CODE: 'ACCOUNT_DISCOUNT' }, canActivate: [AuthGuard] },
   ]
 }];
 
@@ -59,6 +61,7 @@ export const systemRoutes: Routes = [{
     SmsTemplateComponent,
     MappingComponent,
     PartnersComponent,
+    AccountDiscountComponent,
   ],
   imports: [
     FormsModule,
