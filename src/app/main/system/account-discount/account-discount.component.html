@@ -12,14 +12,15 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel portlet">
                     <div class="x_content">
-                        <form class="row form-horizontal form-label-left input_mask">
+                        <form class="row form-horizontal form-label-left input_mask" #formSearch="ngForm"
+                            (ngSubmit)="getData()">
                             <div class="col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
                                 <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount"
                                     [settings]="settingsFilterAccount" name="account">
                                 </angular2-multiselect>
                             </div>
                             <div class="col-md-9 col-sm-9 col-xs-12 form-group has-feedback">
-                                <button type="submit" style="float: right; margin-right: 0;" (click)="getData()"
+                                <button type="submit" style="float: right; margin-right: 0;"
                                     class="btn btn-primary btn-sm">{{ 'global.search' | translate }}</button>
                             </div>
                         </form>
@@ -37,7 +38,7 @@
                             <div class="form-group">
                                 <div class="form-group has-feedback content-end">
                                     <button type="button" *ngIf="role.IS_ADD" class="btn btn-primary btn-sm"
-                                        (click)="showModalCreate.show()">{{ 'global.add_new' | translate }}</button>
+                                        (click)="confirmShowCreateModal()">{{ 'global.add_new' | translate }}</button>
                                 </div>
                             </div>
                         </form>
@@ -65,12 +66,12 @@
                                                 <td class="text-center">{{i+1}}</td>
                                                 <td>{{item.USER_NAME}}</td>
                                                 <td>{{item.TELCO_CODE}}</td>
-                                                <td>{{item.DISCOUNT_RATE}}</td>
-                                                <td>{{item.DATE_APPLY_START}}</td>
+                                                <td class="text-center">{{item.DISCOUNT_RATE}}</td>
+                                                <td class="text-center">{{item.DATE_APPLY_START}}</td>
                                                 <td class="text-center" *ngIf="role.IS_EDIT">
                                                     <div class="tool">
                                                         <button type="submit" *ngIf="role.IS_EDIT"
-                                                            (click)="confirmUpdateModal(item.ID)"
+                                                            (click)="confirmUpdateModal(item.DISCOUNT_ID)"
                                                             class="btn btn-success btn-sm">{{ 'global.edit' | translate }}</button>
                                                     </div>
                                                 </td>
@@ -126,7 +127,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-12 form-group">
-                            <label>{{'login.account' | translate}}</label>
+                            <label>{{'login.username' | translate}}</label>
                             <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountCreate"
                                 [settings]="settingsFilterAccount" name="slAccountCr">
                             </angular2-multiselect>
@@ -144,16 +145,19 @@
                             <input type="number" class="form-control" name="discount" ngModel
                                 placeholder="{{ 'account_discount.discount' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-7 col-xs-12 form-group">
+                        <div class="col-md-2 col-sm-2 col-xs-12 form-group">
                             <label>{{'account_discount.date_start' | translate}}</label>
                             <input type="text" class="form-control" name="dateStart" bsDatepicker
                                 [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="dateStart"
                                 placeholder="{{ 'account_discount.date_start' | translate }}">
                         </div>
-                        <div class="col-md-2 col-sm-5 col-xs-12 form-group">
-                            <label>{{'account_discount.time_start' | translate}}</label>
-                            <input type="number" class="form-control" name="timeStart" ngModel
-                                placeholder="{{ 'account_discount.time_start' | translate }}">
+                        <div class=" col-md-2 col-sm-2 col-xs-12 form-group">
+                            <label>{{'account_discount.hour_start' | translate}}</label>
+                            <input type="number" class="form-control" name="hourStart" [(ngModel)]="hourStart">
+                        </div>
+                        <div class=" col-md-2 col-sm-2 col-xs-12 form-group">
+                            <label>{{'account_discount.minute_start' | translate}}</label>
+                            <input type="number" class="form-control" name="minuteStart" [(ngModel)]="minuteStart">
                         </div>
                     </div>
                 </div>
@@ -183,7 +187,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-12 form-group">
-                            <label>{{'account_discount.account' | translate}}</label>
+                            <label>{{'login.username' | translate}}</label>
                             <input type="hidden" formControlName="discountId">
                             <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedItemComboboxAccountEdit"
                                 [settings]="settingsFilterAccount" formControlName="slAccount">
@@ -202,16 +206,19 @@
                             <input type="number" class="form-control" formControlName="discount" ngModel
                                 placeholder="{{ 'account_discount.discount' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-7 col-xs-12 form-group">
+                        <div class="col-md-2 col-sm-2 col-xs-12 form-group">
                             <label>{{'account_discount.date_start' | translate}}</label>
                             <input type="text" class="form-control" formControlName="dateStart" bsDatepicker
                                 [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" [(ngModel)]="dateStart"
                                 placeholder="{{ 'account_discount.date_start' | translate }}">
                         </div>
-                        <div class="col-md-2 col-sm-5 col-xs-12 form-group">
-                            <label>{{'account_discount.time_start' | translate}}</label>
-                            <input type="number" class="form-control" formControlName="timeStart" ngModel
-                                placeholder="{{ 'account_discount.time_start' | translate }}">
+                        <div class=" col-md-2 col-sm-2 col-xs-12 form-group">
+                            <label>{{'account_discount.hour_start' | translate}}</label>
+                            <input type="number" class="form-control" formControlName="hourStart" ngModel>
+                        </div>
+                        <div class=" col-md-2 col-sm-2 col-xs-12 form-group">
+                            <label>{{'account_discount.minute_start' | translate}}</label>
+                            <input type="number" class="form-control" formControlName="minuteStart" ngModel>
                         </div>
                     </div>
                 </div>
@@ -221,6 +228,40 @@
                     <button type="submit" class="btn btn-success">{{ 'global.confirm' | translate }}</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- modal gui otp -->
+<div class="modal fade" bsModal #confirmOtp="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'send_data.confirmOtp' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmOtp.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <b class="b-font">{{'send_data.messageOtp' | translate}}</b><br />
+                </div>
+                <div class="row margin-top">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="number" class="form-control" name="numberOtp" [(ngModel)]="numberOtp" placeholder="{{'send_data.inputOtp' | translate}}" (keyup)="checkOtpLength()" (keydown)="checkOtpLength()">
+                    </div>
+                </div>
+                <div class="margin-top">
+                    <label style="font-style: italic; font-size: 12px;">{{'send_data.sendinputOtp' | translate}}&nbsp;
+                       <span style="color: red;">{{countermin}}:{{countersec}}</span>&nbsp;giây</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm pull-left" (click)="resendOtp()" [disabled]="!disable_resend_otp">{{'send_data.sendto' | translate}}</button>
+                <button type="button" class="btn btn-default btn-sm" (click)="confirmOtphide()">{{'global.cancel' | translate}}</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="confirmSendDataOtp()">
+                    {{'global.confirm' | translate}}</button>
+            </div>
         </div>
     </div>
 </div>

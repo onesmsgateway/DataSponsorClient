@@ -856,7 +856,8 @@
         "telco": "Telco",
         "discount": "Discount(%)",
         "date_start": "Date start",
-        "time_start": "Time start",
+        "hour_start": "Hour",
+        "minute_start": "Minute",
         "add_discount": "Add discount",
         "edit_discount": "Edit discount"
     }

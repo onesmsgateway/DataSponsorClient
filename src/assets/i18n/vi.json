@@ -923,7 +923,8 @@
         "telco": "Nhà mạng",
         "discount": "Chiết khấu(%)",
         "date_start": "Ngày hiệu lực",
-        "time_start": "Giờ hiệu lực",
+        "hour_start": "Giờ",
+        "minute_start": "Phút",
         "add_discount": "Thêm chiết khấu",
         "edit_discount": "Sửa chiết khấu"
     }
