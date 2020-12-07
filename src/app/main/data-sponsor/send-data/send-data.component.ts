@@ -137,7 +137,7 @@ export class SendDataComponent implements OnInit {
   public packVMS: string = "0";
   public messageAfterSend: string = "";
   public ACCOUNT_ID: any = null;
-  public SENDER_ID: any = null;
+  public SENDER_ID: any = "";
   public SMS_TEMPLATE: any = null;
   public PROGRAM_NAME: any = null;
   public TIMESCHEDULE: any = null;
@@ -519,7 +519,6 @@ export class SendDataComponent implements OnInit {
     }
     this.loadingGroup = true;
     let response: any = await this.dataService.getAsync('/api/Person/GetPersonByGroupIds?groupIds=' + this.ids);
-    debugger
     this.loadingGroup = false;
     if (response) {
       this.dataPhone = response.data.listPhoneTelco;
@@ -1425,7 +1424,7 @@ export class SendDataComponent implements OnInit {
       let PACKAGE_ID_GPC = this.selectedPackageGPC.length > 0 ? this.selectedPackageGPC[0].id : "";
       let PROGRAM_CODE = this.programCode;
       let checkcode = this.checkdatacode == true ? 1 : 0;
-      let GROUP_ID = this.ids;
+      let GROUP_IDS = this.ids;
       this.DATA_AMT_VTL = this.packageAmtVTL;
       this.DATA_AMT_GPC = this.packageAmtGPC;
       this.DATA_AMT_VMS = this.packageAmtVMS;
@@ -1433,9 +1432,9 @@ export class SendDataComponent implements OnInit {
       this.DATA_VOL_GPC = DATA_GPC;
       this.DATA_VOL_VMS = DATA_VMS;
       let res: any = await this.dataService.getAsync('/api/DataSMS/InsertListDataCampaignMultiple?isSendFromCampaignOld=' + chkCampaign + '&checkcode=' + checkcode + '&account_id=' + ACCOUNT_ID + '&sender_id=' + SENDER_ID + '&sender_name=' + SENDER_NAME + '&sms_content=' + SMS_CONTENT + '&time_schedule=' + TIME_SCHEDULE + '&type=' + TYPE + '&program_name=' + PROGRAM_NAME + '&package_id_vms=' + PACKAGE_ID_VMS + '&package_id_vtl=' + PACKAGE_ID_VTL + '&package_id_gpc=' + PACKAGE_ID_GPC
-        + '&is_send_sms=' + IS_SEND_SMS + '&reward=' + REWARD_NUMBER + '&reward_number_time_in_days=' + REWARD_NUMBER_TIME_IN_DAYS + '&program_code=' + PROGRAM_CODE + '&count_vtl=' + this.packCountVTL + '&count_gpc=' + this.packCountGPC + '&count_vms=' + this.packCountVMS + '&group_id=' + GROUP_ID + '&total_package_data_code=' + this.countVMSDataCode + '&data_campaign_id=' + DATA_CAMPAIGN_ID + '&phoneList=' + this.phoneList + '&smscontentVTL=' + this.SMS_CONTENT_VTL
+        + '&is_send_sms=' + IS_SEND_SMS + '&reward=' + REWARD_NUMBER + '&reward_number_time_in_days=' + REWARD_NUMBER_TIME_IN_DAYS + '&program_code=' + PROGRAM_CODE + '&count_vtl=' + this.packCountVTL + '&count_gpc=' + this.packCountGPC + '&count_vms=' + this.packCountVMS + '&group_ids=' + GROUP_IDS + '&total_package_data_code=' + this.countVMSDataCode + '&data_campaign_id=' + DATA_CAMPAIGN_ID + '&phoneList=' + this.phoneList + '&smscontentVTL=' + this.SMS_CONTENT_VTL
         + '&smscontentGPC=' + this.SMS_CONTENT_GPC + '&smscontentVMS=' + this.SMS_CONTENT_VMS + '&volVTL=' + this.DATA_VOL_VTL + '&volGPC=' + this.DATA_VOL_GPC + '&volVMS=' + this.DATA_VOL_VMS
-        + '&amtVTL=' + this.DATA_AMT_VTL + '&amtGPC=' + this.DATA_AMT_GPC + '&vamtVMS=' + this.DATA_AMT_VMS + '&packVTL=' + PACKAGE_NAME_VTL + '&packGPC=' + PACKAGE_NAME_GPC + '&packVMS=' + PACKAGE_NAME_VMS);
+        + '&amtVTL=' + this.DATA_AMT_VTL + '&amtGPC=' + this.DATA_AMT_GPC + '&amtVMS=' + this.DATA_AMT_VMS + '&packVTL=' + PACKAGE_NAME_VTL + '&packGPC=' + PACKAGE_NAME_GPC + '&packVMS=' + PACKAGE_NAME_VMS);
       if (res) {
         if (res.err_code == 0) {
           this.messageAfterSend = res.err_message;

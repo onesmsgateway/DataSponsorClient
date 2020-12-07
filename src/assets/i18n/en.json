@@ -860,5 +860,16 @@
         "minute_start": "Minute",
         "add_discount": "Add discount",
         "edit_discount": "Edit discount"
+    },
+    "report_quantity": {
+        "title": "Statistic quantity used",
+        "vol": "Capacity",
+        "amt": "Price",
+        "date_use": "Duration",
+        "total": "Total used",
+        "package": "Package",
+        "inDate_use": "Input date use",
+        "from_date": "From date",
+        "to_date": "To date"
     }
 }

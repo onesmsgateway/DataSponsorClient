@@ -927,5 +927,16 @@
         "minute_start": "Phút",
         "add_discount": "Thêm chiết khấu",
         "edit_discount": "Sửa chiết khấu"
+    },
+    "report_quantity": {
+        "title": "Thống kê sản lượng sử dụng",
+        "vol": "Dung lượng",
+        "amt": "Mệnh giá",
+        "date_use": "Thời hạn",
+        "total": "Số lượng sử dụng",
+        "package": "Gói cước",
+        "inDate_use": "Nhập số ngày sử dụng",
+        "from_date": "Từ ngày",
+        "to_date": "Đến ngày"
     }
 }

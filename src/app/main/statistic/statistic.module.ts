@@ -15,6 +15,7 @@ import { defineLocale, viLocale, PaginationModule, ModalModule, TabsModule, BsDa
 import { StatisticComponent } from './statistic.component';
 import { DataSmsComponent } from './data-sms/data-sms.component';
 import { AccountHistoryComponent } from './account-history/account-history.component';
+import { ReportQuantityComponent } from './report-quantity/report-quantity.component';
 
 defineLocale(AppConst.LANGUAGE_VI, viLocale);
 
@@ -22,7 +23,8 @@ export const smsRoutes: Routes = [{
   path: '', component: StatisticComponent, children: [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'statistic-data', component: DataSmsComponent, data: {MENU_CODE: 'STATISTIC-DATA'}, canActivate: [AuthGuard] },
-    { path: 'account-history', component: AccountHistoryComponent, data: {MENU_CODE: 'ACCOUNT-HISTORY'}, canActivate: [AuthGuard] }
+    { path: 'account-history', component: AccountHistoryComponent, data: {MENU_CODE: 'ACCOUNT-HISTORY'}, canActivate: [AuthGuard] },
+    { path: 'report-quantity', component: ReportQuantityComponent, data: {MENU_CODE: 'REPORT-QUANTITY'}, canActivate: [AuthGuard] }
   ]
 }];
 
@@ -30,7 +32,8 @@ export const smsRoutes: Routes = [{
   declarations: [
     StatisticComponent,
     DataSmsComponent,
-    AccountHistoryComponent
+    AccountHistoryComponent,
+    ReportQuantityComponent
   ],
   imports: [
     FormsModule,

@@ -45,6 +45,7 @@ export class AccountDiscountComponent implements OnInit {
   public otpSmsDataOtp: string = '';
   public senderNameDataOtp: string = '';
   public phoneReceiveOtp: string = '';
+  public dateStart: string = "";
 
   constructor(
     private dataService: DataService,

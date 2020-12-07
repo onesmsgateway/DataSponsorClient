@@ -1,0 +1,117 @@
+<article>
+    <section>
+        <div class="page-title clearfix">
+            <div class="title_left">
+                <h3>{{'report_quantity.title' | translate}}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_title clearfix">
+                        <h2>{{ 'global.search' | translate }}</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link" onclick="collapseBox(this)"><i
+                                        class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="x_content">
+                        <form class="row form-horizontal form-label-left input_mask" #formSearch="ngForm"
+                            (ngSubmit)="searchForm(formSearch.value)">
+                            <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                                <div class="col-md-2 col-sm-3 col-xs-12 form-group">
+                                    <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccount"
+                                        [settings]="settingsFilterAccount" name="slAccount">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-3 col-xs-12 form-group">
+                                    <angular2-multiselect [data]="dataAmt" [(ngModel)]="selectedAmt"
+                                        [settings]="settingsFilterAmt" name="slAmt">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-3 col-xs-12 form-group">
+                                    <angular2-multiselect [data]="dataVol" [(ngModel)]="selectedVol"
+                                        [settings]="settingsFilterVol" name="slVol">
+                                    </angular2-multiselect>
+                                </div>
+                                <div class="col-md-2 col-sm-3 col-xs-12 form-group">
+                                    <input type="number" class="form-control" name="dateUse" [(ngModel)]="dateUse"
+                                        placeholder="{{ 'report_quantity.inDate_use' | translate }}">
+                                </div>
+                                <div class="col-md-2 col-sm-3 col-xs-12 form-group">
+                                    <input type="text" class="form-control" name="fromDate" bsDatepicker
+                                        [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
+                                        placeholder="{{ 'report_quantity.from_date' | translate }}"
+                                        [(ngModel)]="timeFrom">
+                                </div>
+                                <div class="col-md-2 col-sm-3 col-xs-12 form-group">
+                                    <input type="text" class="form-control" name="toDate" bsDatepicker
+                                        [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
+                                        placeholder="{{ 'report_quantity.to_date' | translate }}" [(ngModel)]="timeTo">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-left: 10px; margin-right: 10px;">
+                                <div class="col-md-12 col-sm-6 col-xs-12 form-group" style="float: right;">
+                                    <button type="submit" style="float: right; margin-right: 0;"
+                                        class="btn btn-primary btn-sm">
+                                        {{ 'global.search' | translate }}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel portlet">
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 form-group has-feedback">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered clear-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width: 40px; vertical-align: middle;">
+                                                    {{'global.order' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="vertical-align: middle; white-space: nowrap;">
+                                                    {{'report_quantity.amt' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="vertical-align: middle; white-space: nowrap;">
+                                                    {{'report_quantity.package' | translate}}</th>
+                                                    <th class="text-center"
+                                                    style="vertical-align: middle; white-space: nowrap;">
+                                                    {{'report_quantity.vol' | translate}}</th>
+                                                <th class="text-center"
+                                                    style="width: 30%; vertical-align: middle; white-space: nowrap;">
+                                                    {{'report_quantity.date_use' | translate}}</th>
+                                                    <th class="text-center"
+                                                    style="vertical-align: middle; white-space: nowrap;">
+                                                    {{'report_quantity.total' | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of dataDetail; let i = index" [attr.data-index]="i">
+                                                <td class="text-center">
+                                                    {{(i+1)}}</td>
+                                                <td class="text-center">{{item.DATA_AMT | number: '.0'}}</td>
+                                                <td>{{item.PACKAGE_NAME}}</td>
+                                                <td class="text-center">{{item.DATA_VOL}}</td>
+                                                <td class="text-center">{{item.DATE_USE}}</td>
+                                                <td class="text-center">{{item.TOTAL}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
