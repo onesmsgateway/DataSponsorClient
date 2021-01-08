@@ -34,6 +34,7 @@ export class PackageTelcoComponent implements OnInit {
   public dataNum: string = '';
   public amt: string = '';
   public dateUse: string = '';
+  public isCode: boolean = false;
 
   public formEditPackage: FormGroup;
   public settingsFilterTelco = {};
@@ -71,7 +72,8 @@ export class PackageTelcoComponent implements OnInit {
       telco: new FormControl(),
       dataNum: new FormControl(),
       amt: new FormControl(),
-      dateUse: new FormControl()
+      dateUse: new FormControl(),
+      isCode: new FormControl()
     });
 
     this.dataTelco.push({ "id": "VIETTEL", "itemName": "Viettel" });
@@ -156,8 +158,10 @@ export class PackageTelcoComponent implements OnInit {
       return;
     }
 
+    let IS_MONEY_DATA_CODE = pkCr.isCode == true ? 1 : 0;
+
     let response: any = await this.dataService.postAsync('/api/PackageTelco', {
-      PACKAGE_NAME, PACKAGE_NAME_DISPLAY, TELCO, DATA, AMT, DATE_USE
+      PACKAGE_NAME, PACKAGE_NAME_DISPLAY, TELCO, DATA, AMT, DATE_USE, IS_MONEY_DATA_CODE
     })
     if (response.err_code == 0) {
       this.getData();
@@ -181,7 +185,6 @@ export class PackageTelcoComponent implements OnInit {
 
   // show update modal
   async confirmUpdateModal(id) {
-    debugger
     let response: any = await this.dataService.getAsync('/api/PackageTelco/GetPackageTelcoById?id=' + id)
     if (response.err_code == 0) {
       let dataSmsTemp = response.data[0];
@@ -192,7 +195,8 @@ export class PackageTelcoComponent implements OnInit {
         telco: new FormControl([{ "id": dataSmsTemp.TELCO, "itemName": dataSmsTemp.TELCO }]),
         dataNum: new FormControl(dataSmsTemp.DATA),
         amt: new FormControl(dataSmsTemp.AMT),
-        dateUse: new FormControl(dataSmsTemp.DATE_USE)
+        dateUse: new FormControl(dataSmsTemp.DATE_USE),
+        isCode: new FormControl(dataSmsTemp.IS_MONEY_DATA_CODE)
       });
       this.showModalUpdate.show();
     } else {
@@ -232,8 +236,10 @@ export class PackageTelcoComponent implements OnInit {
       return;
     }
 
+    let IS_MONEY_DATA_CODE = formData.isCode.value == true ? 1 : 0;
+
     let response: any = await this.dataService.putAsync('/api/PackageTelco/' + ID, {
-      PACKAGE_NAME, PACKAGE_NAME_DISPLAY, TELCO, DATA, AMT, DATE_USE
+      PACKAGE_NAME, PACKAGE_NAME_DISPLAY, TELCO, DATA, AMT, DATE_USE, IS_MONEY_DATA_CODE
     })
     if (response.err_code == 0) {
       this.getData();

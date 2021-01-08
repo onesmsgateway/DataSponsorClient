@@ -535,7 +535,8 @@
         "create_domain": "Thêm mới gói cước",
         "edit_domain": "Sửa gói cước",
         "inPackage_name_display": "Nhập tên hiển thị",
-        "package_name_display": "Tên hiển thị"
+        "package_name_display": "Tên hiển thị",
+        "is_code": "Là data code?"
     },
     "data-campaign": {
         "title": "Danh sách đơn hàng chờ duyệt",

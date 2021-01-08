@@ -140,30 +140,38 @@
             <form #formAdd="ngForm" (ngSubmit)="createPackage(formAdd)">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package.package_name' | translate}}</label>
                             <input type="text" class="form-control" name="packageName" [(ngModel)]="packageName" placeholder="{{ 'package.inPackage_name' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package_telco.package_name_display' | translate}}</label>
                             <input type="text" class="form-control" name="packageNameDisplay" [(ngModel)]="packageNameDisplay" placeholder="{{ 'package_telco.inPackage_name_display' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package_telco.telco' | translate}}</label>
                             <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco" [settings]="settingsFilterTelco" name="telco">
                             </angular2-multiselect>
                         </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12 pull-right" style="padding:0">
+                            <label>&nbsp;</label>
+                            <div class="checkbox" style="margin: 0;">
+                                <label><input type="checkbox" value="" class="checkbox" name="isCode"
+                                        [(ngModel)]="isCode">
+                                    <span>{{ 'package_telco.is_code' | translate }}</span> </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package.package_data' | translate}}</label>
                             <input type="number" class="form-control" name="dataNum" [(ngModel)]="dataNum" placeholder="{{ 'package.data_from' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package.date_use' | translate}}</label>
                             <input type="number" class="form-control" name="dateUse" [(ngModel)]="dateUse" placeholder="{{ 'package.date_use' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package.amt' | translate}}</label>
                             <input type="number" class="form-control" name="amt" [(ngModel)]="amt" placeholder="{{ 'package.amt' | translate }}">
                         </div>
@@ -192,30 +200,38 @@
                 <div class="modal-body">
                     <div class="row">
                         <input type="hidden" formControlName="id">
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package.package_name' | translate}}</label>
                             <input type="text" class="form-control" formControlName="packageName" [(ngModel)]="packageName" placeholder="{{ 'package.inPackage_name' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package_telco.package_name_display' | translate}}</label>
                             <input type="text" class="form-control" formControlName="packageNameDisplay" placeholder="{{ 'package_telco.inPackage_name_display' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package_telco.telco' | translate}}</label>
                             <angular2-multiselect [data]="dataTelco" [(ngModel)]="selectedTelco" [settings]="settingsFilterTelco" formControlName="telco">
                             </angular2-multiselect>
                         </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12 pull-right" style="padding:0">
+                            <label>&nbsp;</label>
+                            <div class="checkbox" style="margin: 0;">
+                                <label><input type="checkbox" value="" class="checkbox" formControlName="isCode"
+                                        [(ngModel)]="isCode">
+                                    <span>{{ 'package_telco.is_code' | translate }}</span> </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package.package_data' | translate}}</label>
                             <input type="number" class="form-control" formControlName="dataNum" placeholder="{{ 'package.data_from' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package.date_use' | translate}}</label>
                             <input type="number" class="form-control" formControlName="dateUse" placeholder="{{ 'package.date_use' | translate }}">
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                             <label>{{'package.amt' | translate}}</label>
                             <input type="number" class="form-control" formControlName="amt" placeholder="{{ 'package.amt' | translate }}">
                         </div>

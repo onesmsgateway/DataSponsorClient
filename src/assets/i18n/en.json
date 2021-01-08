@@ -527,7 +527,8 @@
         "create_domain": "Insert package",
         "edit_domain": "Edit package",
         "inPackage_name_display": "Input package name display",
-        "package_name_display": "Package name display"
+        "package_name_display": "Package name display",
+        "is_code": "Is data code?"
     },
     "data-campaign": {
         "title": "List orders wait approve",
