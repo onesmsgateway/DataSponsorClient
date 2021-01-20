@@ -127,6 +127,7 @@ export class AccountComponent implements OnInit {
       bankName: new FormControl(),
       bankAccount: new FormControl(),
       bankAccountName: new FormControl(),
+      limitWarning: new FormControl(),
 
       isAdmin: new FormControl(),
       isActive: new FormControl(),
@@ -397,12 +398,13 @@ export class AccountComponent implements OnInit {
     let CREATE_USER = this.authService.currentUserValue.USER_NAME;
     let DLVR_URL = this.model.dlvrURL;
     let EMAIL_REPORT = this.model.emailReport;
+    let CREDIT_LINE_IN_MONTH_CSKH = this.model.limitWarning;
 
     let dataInsert = await this.dataService.postAsync('/api/account', {
       USER_NAME, PASSWORD, FULL_NAME, PHONE, SKYPE, EMAIL,
       COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME,
       DLVR, DLVR_URL, EMAIL_REPORT, CUSTOMER_IP,
-      IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH,
+      IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH, CREDIT_LINE_IN_MONTH_CSKH,
       PARENT_ID, ROLE_ACCESS, CREATE_USER, ENABLE_SMS_LOOP, AVATAR, BANK_ID
     });
 
@@ -483,6 +485,7 @@ export class AccountComponent implements OnInit {
         isActive: new FormControl(dataAccount.IS_ACTIVE),
         enableSmsCSKH: new FormControl(dataAccount.ENABLE_SMS_CSKH),
         checkSendSmsLoop: new FormControl(dataAccount.IS_SEND_SMS_LOOP),
+        limitWarning: new FormControl(dataAccount.CREDIT_LINE_IN_MONTH_CSKH),
 
         dlvr: new FormControl(dataAccount.DLVR),
         dlvrURL: new FormControl(dataAccount.DLVR_URL),
@@ -516,6 +519,7 @@ export class AccountComponent implements OnInit {
     let BANK_ID = formData.bankName.value.length > 0 ? formData.bankName.value[0].id : "";
     let BANK_ACCOUNT = formData.bankAccount.value;
     let BANK_ACCOUNT_NAME = formData.bankAccountName.value;
+    let CREDIT_LINE_IN_MONTH_CSKH = formData.limitWarning.value;
 
     let IS_ADMIN = formData.isAdmin.value == true ? 1 : 0;
     let IS_ACTIVE = formData.isActive.value == true ? 1 : 0;
@@ -544,7 +548,7 @@ export class AccountComponent implements OnInit {
       return;
     }
     let response = await this.dataService.putAsync('/api/account/PutAccount?accountid=' + ACCOUNT_ID, {
-      FULL_NAME, PHONE, SKYPE, CUSTOMER_IP, EMAIL, COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME, DLVR, DLVR_URL, IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH, PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR, BANK_ID
+      FULL_NAME, PHONE, SKYPE, CUSTOMER_IP, EMAIL, COMPANY_NAME, PAYMENT_TYPE, BANK_NAME, BANK_ACCOUNT, BANK_ACCOUNT_NAME, DLVR, DLVR_URL, IS_ADMIN, IS_ACTIVE, ENABLE_SMS_CSKH, PARENT_ID, ROLE_ACCESS, EDIT_USER, IS_SEND_SMS_LOOP, AVATAR, BANK_ID, CREDIT_LINE_IN_MONTH_CSKH
     })
     if (response) {
       if (response.err_code == 0) {

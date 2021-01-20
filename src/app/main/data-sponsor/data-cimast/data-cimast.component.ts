@@ -20,7 +20,7 @@ export class DataCimastComponent implements OnInit {
   @ViewChild('viewDataAccountCimastTransModal', { static: false }) public viewDataAccountCimastTransModal: ModalDirective;
   @ViewChild('createDataCimastModalDetail', { static: false }) public createDataCimastModalDetail: ModalDirective;
   @ViewChild('createDataCimastFreeModalDetail', { static: false }) public createDataCimastFreeModalDetail: ModalDirective;
-  
+  @ViewChild('confirmOtp', { static: false }) public confirmOtp: ModalDirective;
 
   public dataAccountCimast;
   public dataQuotaHistory = [];
@@ -40,6 +40,16 @@ export class DataCimastComponent implements OnInit {
   public isAdmin: boolean = false;
   public ok: boolean = false;
   public checkUserLogin: boolean = false;
+  public intervalId = null;
+  public limit_time: string = '';
+  public countermin: number;
+  public countersec: number;
+  public numberOtp: number;
+  public disable_resend_otp: boolean = false;
+  public otpSmsDataOtp: string = '';
+  public senderNameDataOtp: string = '';
+  public phoneReceiveOtp: string = '';
+  public dateStart: string = "";
 
   public settingsFilterAccount = {};
   public dataAccount = [];
@@ -51,11 +61,6 @@ export class DataCimastComponent implements OnInit {
   public selectedType = [];
   public dataType = [];
   public settingsFilterType = {};
-
-  public timeTo = new Date();
-  public timeFrom = new Date(this.timeTo.getTime() - (30 * 24 * 60 * 60 * 1000));
-  public fromDate: string = "";
-  public toDate: string = "";
 
   public TOTAL_AMT;
   public ACCOUNT_ID;
@@ -114,10 +119,9 @@ export class DataCimastComponent implements OnInit {
 
   async ngOnInit() {
     this.account_Index = this.activatedRoute.snapshot.queryParamMap.get('account');
-    this.toDate = this.utilityService.formatDateToString(this.timeTo, "yyyyMMdd");
-    this.fromDate = this.utilityService.formatDateToString(this.timeFrom, "yyyyMMdd");
     await this.bindDataAccount();
     await this.getDataTotal();
+    this.GetDataSysVarOtp();
   }
 
   // get total data
@@ -189,12 +193,10 @@ export class DataCimastComponent implements OnInit {
   //#endregion
   //#region Load data
   public async getDataAccountCimast() {
-    let FROM_DATE = this.fromDate;
-    let TO_DATE = this.toDate;
     let account = [];
     if (this.account_Index != null && this.account_Index != "") {
       let response = await this.dataService.getAsync('/api/DataCimast/GetDataCimastPaging?pageIndex=' + this.pagination.pageIndex + '&pageSize=' +
-        this.pagination.pageSize + "&account_id=" + this.account_Index + "&from_date=" + FROM_DATE + "&to_date=" + TO_DATE);
+        this.pagination.pageSize + "&account_id=" + this.account_Index + "&from_date=20200101&to_date=20300101");
       this.loadData(response);
     } else {
       if (this.isAdmin)
@@ -202,7 +204,7 @@ export class DataCimastComponent implements OnInit {
       else
         account.push(this.selectedAccountID.length != 0 && this.selectedAccountID[0].id != "" ? this.selectedAccountID[0].id : this.authService.currentUserValue.ACCOUNT_ID);
       let response = await this.dataService.getAsync('/api/DataCimast/GetDataCimastPaging?pageIndex=' + this.pagination.pageIndex + '&pageSize=' +
-        this.pagination.pageSize + "&account_id=" + account + "&from_date=" + FROM_DATE + "&to_date=" + TO_DATE);
+        this.pagination.pageSize + "&account_id=" + account + "&from_date=20200101&to_date=20300101");
       this.loadData(response);
     }
   }
@@ -305,40 +307,11 @@ export class DataCimastComponent implements OnInit {
   }
   //#endregion
 
-  onChangeFromDate(event) {
-
-    this.fromDate = this.utilityService.formatDateToString(event, "yyyyMMdd");
-    if (this.fromDate == '19700101') {
-      this.fromDate = '';
-    }
-    if (this.fromDate !== '' && this.toDate !== '') {
-      if (this.fromDate > this.toDate) {
-        this.notificationService.displayWarnMessage("Ngày lọc chưa thỏa mãn");
-        return;
-      }
-    }
-    this.getDataAccountCimast();
-  }
-
-  onChangeToDate(event) {
-    this.toDate = this.utilityService.formatDateToString(event, "yyyyMMdd");
-    if (this.toDate == '19700101') {
-      this.toDate = '';
-    }
-    if (this.fromDate !== '' && this.toDate !== '') {
-      if (this.fromDate > this.toDate) {
-        this.notificationService.displayWarnMessage("Ngày lọc chưa thỏa mãn");
-        return;
-      }
-    }
-    this.getDataAccountCimast();
-  }
   async confirmInsertDataCimast() {
     let ACCOUNT_ID = this.ACCOUNT_ID;
     let TOTAL_AMT = this.TOTAL_AMT;
     let TYPE = this.TYPE;
     let DESCRIPTION = this.DESCRIPTION;
-    debugger
     let account: any = await this.dataService.getAsync('/api/DataCimast/GetDataAccount?isAdmin=false&account_id=' + ACCOUNT_ID);
     if (account != null && account.data.length > 0) {
       // update data account cimast
@@ -366,7 +339,6 @@ export class DataCimastComponent implements OnInit {
         return;
       }
     }
-
     else {
       // insert data account cimast
       let TOTAL_USE = 0;
@@ -379,10 +351,6 @@ export class DataCimastComponent implements OnInit {
           return;
         }
       }
-      // else if (this.TOTAL_AMT + this.total_amt_system_remain > this.total_amt_telco) {
-      //   this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-75") + (TOTAL_AMT - this.total_amt_system));
-      //   return;
-      // }
       let response = await this.dataService.postAsync('/api/DataCimast', {
         ACCOUNT_ID, TYPE, DESCRIPTION, TOTAL_DATA, TOTAL_USE, TOTAL_REMAIN, TOTAL_AMT
       });
@@ -465,4 +433,86 @@ export class DataCimastComponent implements OnInit {
     this.createDataCimastFreeModalDetail.hide();
   }
 
+  async startTimer() {
+    this.countermin = Number(this.limit_time) - 1;
+    this.countersec = 59;
+    this.intervalId = setInterval(() => {
+      this.disable_resend_otp = false;
+      if (this.countersec - 1 == -1) {
+        this.countermin -= 1;
+        this.countersec = 59
+      }
+      else {
+        this.countersec -= 1
+      }
+      if (this.countermin === 0 && this.countersec == 0) {
+        this.disable_resend_otp = true;
+        clearInterval(this.intervalId)
+      }
+    }, 1000)
+  }
+
+  async GetDataSysVarOtp() {
+    let result = await this.dataService.getAsync('/api/SysVar/GetSysVarOtp');
+    if (result) {
+      if (result.err_code == 0) {
+        this.otpSmsDataOtp = result.data[0].VAR_VALUE;
+        this.limit_time = result.data[1].VAR_VALUE;
+        this.senderNameDataOtp = result.data[2].VAR_VALUE;
+        this.phoneReceiveOtp = result.data[3].VAR_VALUE;
+      }
+    }
+  }
+
+  async confirmOtphide() {
+    clearInterval(this.intervalId);
+    this.confirmOtp.hide();
+  }
+  async checkOtpLength() {
+    if (this.numberOtp != null && this.numberOtp.toString().length > 6) {
+      this.numberOtp = Number(this.numberOtp.toString().substr(0, 5));
+    }
+  }
+  async resendOtp() {
+    this.createDataOtp();
+  }
+
+  async createDataOtp() {
+    let response: any = await this.dataService.postAsync('/api/DataOtp/InsertDataOtp?phone=' + this.phoneReceiveOtp + '&telco=&account_id=' + 
+    this.authService.currentUserValue.ACCOUNT_ID + '&sender_name=' + this.senderNameDataOtp + '&otp_sms=' + this.otpSmsDataOtp)
+    if (response) {
+      if (response.err_code == 0) {
+        this.confirmOtp.show();
+        this.startTimer();
+      } else {
+        this.notificationService.displaySuccessMessage(this.utilityService.getErrorMessage("110"));
+        return;
+      }
+    }
+  }
+
+  async confirmSendDataOtp() {
+    let otp = this.numberOtp;
+    if (otp == 0 && otp == null) {
+      this.notificationService.displayWarnMessage(this.utilityService.translate('data_otp.inputOtp'));
+      return;
+    }
+    let response: any = await this.dataService.getAsync('/api/DataOtp/GetDataOtpByOtp?otp=' + otp)
+    if (response) {
+      if (response.err_code == 0) {
+        this.confirmOtp.hide();
+        this.confirmInsertDataCimast();
+      }
+      else if (response.err_code == -117) {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-117"));
+        return;
+      } else if (response.err_code == -118) {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("-118"));
+        return;
+      } else {
+        this.notificationService.displayErrorMessage(this.utilityService.getErrorMessage("110"));
+        return;
+      }
+    }
+  }
 }

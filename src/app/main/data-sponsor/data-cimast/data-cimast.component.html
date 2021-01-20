@@ -15,15 +15,7 @@
                             <angular2-multiselect [data]="dataAccount" [(ngModel)]="selectedAccountID" [settings]="settingsFilterAccount" (onSelect)="onItemSelect()" (onDeSelect)="OnItemDeSelect()" name="accountID">
                             </angular2-multiselect>
                         </div>
-                        <!-- tim kiem theo ngay -->
-                        <div class="col-md-2 col-sm-6 col-xs-12 form-group">
-                            <input type="text" class="form-control" name="fromDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.from_date' | translate }}" [(ngModel)]="timeFrom" (ngModelChange)="onChangeFromDate($event)">
-                        </div>
-                        <div class="col-md-2 col-sm-6 col-xs-12 form-group">
-                            <input type="text" class="form-control" name="toDate" bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}" placeholder="{{ 'statistic-data-sms.to_date' | translate }}" [(ngModel)]="timeTo" (ngModelChange)="onChangeToDate($event)">
-                        </div>
-
-                        <div class="col-md-3 col-sm-6 col-xs-12 form-group has-feedback content-end">
+                        <div class="col-md-9 col-sm-6 col-xs-12 form-group has-feedback content-end">
                             <p style="font-weight:bold;color:blue">
                                 {{'data_cimast.label_system' | translate}}{{total_amt_system_remain | number: '.0'}} / {{total_amt_system | number: '.0'}}
                             </p>
@@ -58,6 +50,8 @@
                                                     {{'data_cimast.account' | translate}}</th>
                                                 <th class="text-center">{{'data_cimast.total_amt' | translate}} (VNĐ)
                                                 </th>
+                                                <th class="text-center">{{'data_cimast.total_remain' | translate}} (VNĐ)
+                                                </th>
                                                 <th class="text-center">{{'data_cimast.total_data_vol' | translate}} (MB)
                                                 </th>
                                                 <th class="text-center">{{'data_cimast.type' | translate}}</th>
@@ -72,6 +66,7 @@
                                                 <td class="text-center">{{i + 1}}</td>
                                                 <td>{{item.USER_NAME}}</td>
                                                 <td>{{item.TOTAL_AMT | number:'.0'}}</td>
+                                                <td>{{item.TOTAL_REMAIN | number:'.0'}}</td>
                                                 <td>{{item.TOTAL_DATA_VOL | number:'.0'}}</td>
                                                 <td>{{item.TYPE}}</td>
                                                 <td>{{item.CREATE_DATE}}</td>
@@ -156,7 +151,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-sm" (click)="createDataCimastModalDetail.hide()">{{ 'global.cancel' | translate }}</button>
-                <button type="button" class="btn btn-success btn-sm" (click)="confirmInsertDataCimast()" *ngIf="isAdmin">{{ 'global.confirm' | translate }}</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="createDataOtp()" *ngIf="isAdmin">{{ 'global.confirm' | translate }}</button>
             </div>
         </div>
     </div>
@@ -281,6 +276,40 @@
                         <button type="button" class="btn btn-default" (click)="viewDataAccountCimastTransModal.hide()">{{ 'global.back' | translate }}</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal gui otp -->
+<div class="modal fade" bsModal #confirmOtp="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-static-name" class="modal-title pull-left">{{'send_data.confirmOtp' | translate}}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="confirmOtp.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <b class="b-font">{{'send_data.messageOtp' | translate}}</b><br />
+                </div>
+                <div class="row margin-top">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="number" class="form-control" name="numberOtp" [(ngModel)]="numberOtp" placeholder="{{'send_data.inputOtp' | translate}}" (keyup)="checkOtpLength()" (keydown)="checkOtpLength()">
+                    </div>
+                </div>
+                <div class="margin-top">
+                    <label style="font-style: italic; font-size: 12px;">{{'send_data.sendinputOtp' | translate}}&nbsp;
+                       <span style="color: red;">{{countermin}}:{{countersec}}</span>&nbsp;giây</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm pull-left" (click)="resendOtp()" [disabled]="!disable_resend_otp">{{'send_data.sendto' | translate}}</button>
+                <button type="button" class="btn btn-default btn-sm" (click)="confirmOtphide()">{{'global.cancel' | translate}}</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="confirmSendDataOtp()">
+                    {{'global.confirm' | translate}}</button>
             </div>
         </div>
     </div>

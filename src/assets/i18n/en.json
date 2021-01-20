@@ -164,6 +164,7 @@
         "permission": "Permission",
         "reset_pass": "Reset pass",
         "confirm_reset_pass": "Are you sure want to reset your password?",
+        "limit_month_cskh": "Limit warning",
         "send_cskh": "Send sms CSKH",
         "send_qc": "Send sms QC",
         "send_otp": "Send OTP",

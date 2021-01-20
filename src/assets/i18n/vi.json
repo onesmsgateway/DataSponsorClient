@@ -190,7 +190,7 @@
         "permission": "Phân quyền",
         "reset_pass": "Đặt lại MK",
         "confirm_reset_pass": "Bạn có chắc chắn muốn đặt lại mật khẩu?",
-        "limit_month_cskh": "Hạn mức tin/tháng CSKH",
+        "limit_month_cskh": "Hạn mức cảnh báo",
         "limit_month_qc": "Hạn mức tin/tháng QC",
         "limit_day_cskh": "Hạn mức tin/ngày CSKH",
         "limit_day_qc": "Hạn mức tin/ngày QC",

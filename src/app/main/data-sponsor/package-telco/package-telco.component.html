@@ -64,6 +64,7 @@
                                             <tr>
                                                 <th class="text-center">STT</th>
                                                 <th class="text-center"> {{ 'package.package_name' | translate }}</th>
+                                                <th class="text-center"> {{ 'package_telco.package_name_display' | translate }}</th>
                                                 <th class="text-center"> {{ 'package_telco.telco' | translate }}</th>
                                                 <th class="text-center">{{ 'package.package_data' | translate }} (MB)
                                                 </th>
@@ -73,6 +74,7 @@
                                                     {{ 'package.date_use' | translate }}</th>
                                                 <th class="text-center">
                                                     {{ 'package.create_date' | translate }}
+                                                    
                                                 </th>
                                                 <th class="text-center">
                                                     {{ 'package.create_user' | translate }}
@@ -84,6 +86,7 @@
                                             <tr *ngFor="let item of dataPackage; let i = index" [attr.data-index]="i">
                                                 <td class="text-center" scope="row">{{i+1}}</td>
                                                 <td>{{item.PACKAGE_NAME}}</td>
+                                                <td>{{item.PACKAGE_NAME_DISPLAY}}</td>
                                                 <td>{{item.TELCO}}</td>
                                                 <td class="text-center">{{item.DATA | number}}</td>
                                                 <td>{{item.AMT | number }}</td>

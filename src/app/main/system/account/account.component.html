@@ -368,7 +368,14 @@
                                         [ngClass]="{ 'is-invalid': f.submitted}" />
                                 </div>
                             </div>
-
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label>{{'account.limit_month_cskh' | translate}}</label>
+                                    <input type="text" class="form-control" name="limitWarning"
+                                        [(ngModel)]="model.limitWarning" #limitWarning="ngModel"
+                                        [ngClass]="{ 'is-invalid': f.submitted}" />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="row">
@@ -564,6 +571,12 @@
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label>{{'account.company' | translate}}</label>
                                     <input type="text" class="form-control" formControlName="companyName" required="" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label>{{'account.limit_month_cskh' | translate}}</label>
+                                    <input type="text" class="form-control" formControlName="limitWarning" required="" />
                                 </div>
                             </div>
                         </div>
