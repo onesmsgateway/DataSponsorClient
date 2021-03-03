@@ -63,7 +63,7 @@
                                     <angular2-multiselect [data]="dataSendData" [(ngModel)]="selectedSendData" [settings]="settingsFilterSendData" name="senddata" (onSelect)="ChangeDropdownList()" (onDeSelect)="ChangeDropdownList()">
                                     </angular2-multiselect>
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+                                <div class="col-md-3 col-sm-6 col-xs-12 form-group">
                                     <div class="checkbox" style="display: inline-block">
                                         <label> <input type="checkbox" value="" class="checkbox" name="viettel" required=""
                                                             checked="isCheckVTL" (change)="onChangeVTL($event.currentTarget.checked)">
@@ -149,6 +149,8 @@
                                                     {{'statistic-data-sms.content' | translate}}</th>
                                                 <th class="text-center" style="width: 150px; vertical-align: middle;">
                                                     {{'statistic-data-sms.time_send' | translate}}</th>
+                                                <th class="text-center" style="width: 70px; vertical-align: middle;">
+                                                    {{'statistic-data-sms.count_send' | translate}}</th>
                                                 <th class="text-center" style="width: 70px; vertical-align: middle; white-space: nowrap;">
                                                     {{'statistic-data-sms.is_send' | translate}}</th>
                                                 <th class="text-center" style="width: 130px; vertical-align: middle; white-space: nowrap;">
@@ -167,6 +169,7 @@
                                                 <td class="text-center">{{item.TELCO}}</td>
                                                 <td><textarea class="form-control" rows="1" style="resize: vertical;" readonly>{{item.SMS_CONTENT}}</textarea></td>
                                                 <td class="text-center">{{item.TIME_SCHEDULE}}</td>
+                                                <td class="text-center">{{item.COUNT_SEND}}</td>
                                                 <td class="box-checkbox-table"><input type="checkbox" [checked]="item.IS_SEND_SMS == 1 ? true : false" class="checkbox" disabled></td>
                                                 <td class="text-center">{{item.CODE_RECEIVE}}</td>
                                             </tr>

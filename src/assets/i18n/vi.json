@@ -602,7 +602,8 @@
         "inTelco": "Chọn nhà mạng",
         "inPackageGPC": "Chọn gói cước Vina",
         "inPackageVMS": "Chọn gói cước Mobi",
-        "choose_data": "Chọn dung lượng"
+        "choose_data": "Chọn dung lượng",
+        "count_send": "Số lần gửi"
     },
     "data-sms": {
         "text_countmes1": "Nội dung tin nhắn",
@@ -939,5 +940,15 @@
         "inDate_use": "Nhập số ngày sử dụng",
         "from_date": "Từ ngày",
         "to_date": "Đến ngày"
+    },
+    "package_limited": {
+        "title": "Giới hạn số lần gửi gói cước",
+        "account": "Tài khoản",
+        "package_name": "Gói cước",
+        "limited": "Hạn mức",
+        "counts": "Đã gửi",
+        "curr_date": "Ngày",
+        "add": "Thêm giới hạn gói cước",
+        "del": "Bạn chắc chắn muốn xóa giới hạn gói cước"
     }
 }

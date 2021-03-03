@@ -585,7 +585,8 @@
         "inPackageVTL": "Choose package Viettel",
         "inPackageGPC": "Choose package Vina",
         "inPackageVMS": "Choose package Mobi",
-        "choose_data": "Choose data"
+        "choose_data": "Choose data",
+        "count_send": "Number send"
     },
     "data-sms": {
         "text_countmes1": "sms content",
@@ -873,5 +874,15 @@
         "inDate_use": "Input date use",
         "from_date": "From date",
         "to_date": "To date"
+    },
+    "package_limited": {
+        "title": "Limit the number of times to send the package",
+        "account": "Account",
+        "package_name": "Gói Package",
+        "limited": "Limited",
+        "counts": "Sent",
+        "curr_date": "Date",
+        "add": "Add package limited",
+        "del": "Are you sure package limited"
     }
 }
